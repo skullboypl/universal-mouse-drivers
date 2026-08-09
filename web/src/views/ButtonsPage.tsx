@@ -147,8 +147,8 @@ export function ButtonsPage() {
             height={artH}
           />
           {state.buttons.map((b) => {
-            // Demo uses generated art coords; live Redragon uses OEM/API layout.
-            const pos = !isDemo ? posById.get(b.id) : undefined
+            // Admin layouts (king-ultra / umd-demo) override baked-in defaults.
+            const pos = posById.get(b.id)
             const uiX = pos?.uiX ?? b.uiX
             const uiY = pos?.uiY ?? b.uiY
             return (
