@@ -5,12 +5,13 @@ export const KING_ULTRA_IDENTITY: DeviceIdentity = {
   id: 'redragon-king-ultra',
   brand: 'Redragon',
   model: 'King Ultra (M916OB-ULT)',
-  tagline: '3-mode PAW3950 - WebHID protocol in progress',
+  tagline: '3-mode · PixArt PAW3395',
   vendorId: 0x3554,
   productIds: [0xf54d, 0xf54f, 0xf510],
   hidIds: ['3554:F54D', '3554:F54F', '3554:F510'],
   status: 'wip',
-  sensor: 'PAW3950',
+  /** Confirmed on M916OB-ULT hardware (OEM Config.ini base64 says 3950 - do not treat as dual SKU). */
+  sensor: 'PixArt PAW3395',
   imageUrl: '/devices/king-ultra/mouse.png',
   logoUrl: '/devices/king-ultra/logo.svg',
   /** OEM 2Button/dev1.png */

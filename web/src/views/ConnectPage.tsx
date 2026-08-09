@@ -196,7 +196,10 @@ export function ConnectPage() {
                 <strong>
                   {d.brand} {d.model}
                 </strong>
-                <span className={styles.meta}>{d.tagline}</span>
+                <span className={styles.meta}>
+                  {d.sensor ? `Sensor ${d.sensor}` : d.tagline}
+                  {d.sensor && d.tagline ? ` · ${d.tagline}` : null}
+                </span>
               </div>
               <div className={styles.supportMeta}>
                 <span className={styles.ids}>{d.hidIds.join(' · ')}</span>
