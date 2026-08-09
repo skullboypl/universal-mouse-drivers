@@ -2,15 +2,18 @@
 
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/Button'
-import { MOUSE_ART } from '@/devices/redragon-king-ultra/buttons'
-import type { ButtonPosition } from '@/lib/store'
+import type { ButtonPosition, LayoutId } from '@/lib/store'
+import { LAYOUT_META } from '@/lib/store'
 import page from '@/views/ButtonsPage.module.css'
 
 export function AdminButtonsEditor({
+  layoutId,
   initial,
 }: {
+  layoutId: LayoutId
   initial: ButtonPosition[]
 }) {
+  const meta = LAYOUT_META[layoutId]
   const [positions, setPositions] = useState(initial)
   const [dragId, setDragId] = useState<number | null>(null)
   const [status, setStatus] = useState<string | null>(null)
@@ -26,17 +29,17 @@ export function AdminButtonsEditor({
     setDragId(id)
   }
 
-  function onPointerMove(
-    e: React.PointerEvent<HTMLDivElement>,
-  ) {
+  function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
     if (dragId == null) return
-    const wrap = e.currentTarget.querySelector('[data-art]') as HTMLElement | null
+    const wrap = e.currentTarget.querySelector(
+      '[data-art]',
+    ) as HTMLElement | null
     if (!wrap) return
     const rect = wrap.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * MOUSE_ART.width
-    const y = ((e.clientY - rect.top) / rect.height) * MOUSE_ART.height
-    const uiX = Math.round(Math.min(MOUSE_ART.width, Math.max(0, x)))
-    const uiY = Math.round(Math.min(MOUSE_ART.height, Math.max(0, y)))
+    const x = ((e.clientX - rect.left) / rect.width) * meta.width
+    const y = ((e.clientY - rect.top) / rect.height) * meta.height
+    const uiX = Math.round(Math.min(meta.width, Math.max(0, x)))
+    const uiY = Math.round(Math.min(meta.height, Math.max(0, y)))
     setPositions((prev) =>
       prev.map((p) => (p.id === dragId ? { ...p, uiX, uiY } : p)),
     )
@@ -53,13 +56,13 @@ export function AdminButtonsEditor({
       const res = await fetch('/api/admin/buttons', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ positions }),
+        body: JSON.stringify({ layoutId, positions }),
       })
       if (!res.ok) {
         setStatus('Zapis nieudany')
         return
       }
-      setStatus('Zapisano do /app/data/umd-store.json')
+      setStatus(`Zapisano ${layoutId} → umd-store.json`)
     } catch {
       setStatus('Błąd sieci')
     } finally {
@@ -68,11 +71,11 @@ export function AdminButtonsEditor({
   }
 
   return (
-    <section className="panel">
-      <h2 className="panel-label">Pozycje badge 1–6 (przeciągnij)</h2>
+    <section className="panel" style={{ marginBottom: 16 }}>
+      <h2 className="panel-label">{meta.label} - badge 1–6</h2>
       <p className="muted" style={{ marginTop: 0 }}>
-        Współrzędne w przestrzeni zdjęcia {MOUSE_ART.width}×{MOUSE_ART.height}.
-        Po zapisie UI Przyciski bierze je z API.
+        Przeciągnij numery. Przestrzeń {meta.width}×{meta.height} ·{' '}
+        <code className="mono">{meta.imageUrl}</code>
       </p>
 
       <div
@@ -81,13 +84,20 @@ export function AdminButtonsEditor({
         onPointerUp={onPointerUp}
         onPointerLeave={onPointerUp}
       >
-        <div className={page.mouseWrap} data-art>
+        <div
+          className={page.mouseWrap}
+          data-art
+          style={{
+            width: 'min(520px, 100%)',
+            aspectRatio: `${meta.width} / ${meta.height}`,
+          }}
+        >
           <img
             className={page.mouseArt}
-            src="/devices/king-ultra/mouse.png"
-            alt="King Ultra"
-            width={MOUSE_ART.width}
-            height={MOUSE_ART.height}
+            src={meta.imageUrl}
+            alt={meta.label}
+            width={meta.width}
+            height={meta.height}
             draggable={false}
           />
           {[1, 2, 3, 4, 5, 6].map((id) => {
@@ -99,8 +109,8 @@ export function AdminButtonsEditor({
                 type="button"
                 className={`${page.badge} ${dragId === id ? page.badgeActive : ''}`}
                 style={{
-                  left: `${(p.uiX / MOUSE_ART.width) * 100}%`,
-                  top: `${(p.uiY / MOUSE_ART.height) * 100}%`,
+                  left: `${(p.uiX / meta.width) * 100}%`,
+                  top: `${(p.uiY / meta.height) * 100}%`,
                   cursor: 'grab',
                   touchAction: 'none',
                 }}
@@ -121,6 +131,7 @@ export function AdminButtonsEditor({
           background: 'var(--bg-elevated)',
           borderRadius: 8,
           overflow: 'auto',
+          maxHeight: 160,
         }}
       >
         {JSON.stringify(positions, null, 2)}
@@ -128,7 +139,7 @@ export function AdminButtonsEditor({
 
       <div className="row" style={{ marginTop: 12 }}>
         <Button variant="primary" disabled={saving} onClick={() => void save()}>
-          {saving ? 'Zapisywanie…' : 'Zapisz pozycje'}
+          {saving ? 'Zapisywanie…' : `Zapisz ${layoutId === 'king-ultra-hero' ? 'hero' : 'przyciski'}`}
         </Button>
         {status && <span className="muted">{status}</span>}
       </div>

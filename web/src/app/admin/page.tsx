@@ -16,14 +16,15 @@ export default async function AdminPage() {
       <>
         <h1 className="page-title">UMD Admin</h1>
         <p className="page-sub">
-          Zaloguj się, żeby ustawiać pozycje przycisków 1–6.
+          Zaloguj się, żeby ustawiać pozycje przycisków 1–6 (Buttons + Hero).
         </p>
         <AdminLoginForm />
       </>
     )
   }
 
-  const positions = getButtonLayout('king-ultra')
+  const buttonsLayout = getButtonLayout('king-ultra')
+  const heroLayout = getButtonLayout('king-ultra-hero')
   const tray = getDownloadMeta('trayBattery')
   const trayPath = tray ? path.join(downloadsDir(), tray.filename) : null
   const trayPresent = trayPath ? fs.existsSync(trayPath) : false
@@ -65,7 +66,8 @@ export default async function AdminPage() {
         </p>
       </section>
 
-      <AdminButtonsEditor initial={positions} />
+      <AdminButtonsEditor layoutId="king-ultra" initial={buttonsLayout} />
+      <AdminButtonsEditor layoutId="king-ultra-hero" initial={heroLayout} />
     </>
   )
 }

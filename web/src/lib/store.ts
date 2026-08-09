@@ -19,22 +19,56 @@ export interface DownloadMeta {
   updatedAt?: string
 }
 
+/** Buttons page OEM art + Connect hero art. */
+export type LayoutId = 'king-ultra' | 'king-ultra-hero'
+
 export interface UmdStore {
   version: number
   buttonLayouts: Record<string, ButtonPosition[]>
   downloads: Record<string, DownloadMeta>
 }
 
-const DEFAULT_LAYOUT: ButtonPosition[] = KING_ULTRA_BUTTONS.map((b) => ({
+export const LAYOUT_META: Record<
+  LayoutId,
+  { label: string; imageUrl: string; width: number; height: number }
+> = {
+  'king-ultra': {
+    label: 'Przyciski (OEM mouse.png)',
+    imageUrl: '/devices/king-ultra/mouse.png',
+    width: 432,
+    height: 356,
+  },
+  'king-ultra-hero': {
+    label: 'Hero connect (mouse-hero.png)',
+    imageUrl: '/brand/mouse-hero.png',
+    width: 1200,
+    height: 1521,
+  },
+}
+
+const DEFAULT_BUTTONS: ButtonPosition[] = KING_ULTRA_BUTTONS.map((b) => ({
   id: b.id,
   uiX: b.uiX,
   uiY: b.uiY,
 }))
 
+/** Starting points for hero - tune in /admin. */
+const DEFAULT_HERO: ButtonPosition[] = [
+  { id: 1, uiX: 500, uiY: 640 },
+  { id: 2, uiX: 700, uiY: 620 },
+  { id: 3, uiX: 600, uiY: 520 },
+  { id: 4, uiX: 380, uiY: 760 },
+  { id: 5, uiX: 360, uiY: 900 },
+  { id: 6, uiX: 720, uiY: 820 },
+]
+
 function defaultStore(): UmdStore {
   return {
     version: 1,
-    buttonLayouts: { 'king-ultra': DEFAULT_LAYOUT },
+    buttonLayouts: {
+      'king-ultra': DEFAULT_BUTTONS,
+      'king-ultra-hero': DEFAULT_HERO,
+    },
     downloads: {
       trayBattery: {
         id: 'trayBattery',
@@ -67,19 +101,23 @@ function seedIfMissing() {
   fs.writeFileSync(target, JSON.stringify(defaultStore(), null, 2), 'utf8')
 }
 
+function ensureLayouts(store: UmdStore): UmdStore {
+  if (!store.buttonLayouts) store.buttonLayouts = {}
+  if (!store.buttonLayouts['king-ultra']) {
+    store.buttonLayouts['king-ultra'] = DEFAULT_BUTTONS
+  }
+  if (!store.buttonLayouts['king-ultra-hero']) {
+    store.buttonLayouts['king-ultra-hero'] = DEFAULT_HERO
+  }
+  if (!store.downloads) store.downloads = defaultStore().downloads
+  return store
+}
+
 export function readStore(): UmdStore {
   seedIfMissing()
   try {
     const raw = fs.readFileSync(storePath(), 'utf8')
-    const parsed = JSON.parse(raw) as UmdStore
-    if (!parsed.buttonLayouts?.['king-ultra']) {
-      parsed.buttonLayouts = {
-        ...parsed.buttonLayouts,
-        'king-ultra': DEFAULT_LAYOUT,
-      }
-    }
-    if (!parsed.downloads) parsed.downloads = defaultStore().downloads
-    return parsed
+    return ensureLayouts(JSON.parse(raw) as UmdStore)
   } catch {
     return defaultStore()
   }
@@ -92,17 +130,20 @@ export function writeStore(store: UmdStore) {
   fs.renameSync(tmp, storePath())
 }
 
-export function getButtonLayout(deviceId = 'king-ultra'): ButtonPosition[] {
+export function getButtonLayout(layoutId: LayoutId | string = 'king-ultra'): ButtonPosition[] {
   const store = readStore()
-  return store.buttonLayouts[deviceId] ?? DEFAULT_LAYOUT
+  if (layoutId === 'king-ultra-hero') {
+    return store.buttonLayouts['king-ultra-hero'] ?? DEFAULT_HERO
+  }
+  return store.buttonLayouts[layoutId] ?? DEFAULT_BUTTONS
 }
 
 export function setButtonLayout(
-  deviceId: string,
+  layoutId: string,
   positions: ButtonPosition[],
 ): ButtonPosition[] {
   const store = readStore()
-  store.buttonLayouts[deviceId] = positions
+  store.buttonLayouts[layoutId] = positions
   writeStore(store)
   return positions
 }

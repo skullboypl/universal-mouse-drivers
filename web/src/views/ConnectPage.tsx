@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { UMD } from '../brand/umd'
 import { Button } from '../components/Button'
@@ -12,6 +13,9 @@ import { useLocale } from '../i18n/LocaleContext'
 import { useT } from '../i18n/useT'
 import { useDeviceSession } from '../session/DeviceSessionContext'
 import styles from './ConnectPage.module.css'
+
+type HeroPos = { id: number; uiX: number; uiY: number }
+const HERO_ART = { width: 1200, height: 1521 } as const
 
 function resolveCatalogImage(
   catalogId: string,
@@ -43,6 +47,16 @@ export function ConnectPage() {
   const { connectMock, connectWebHid, webHidOk, savedDevices } =
     useDeviceSession()
   const tr = useT()
+  const [heroBadges, setHeroBadges] = useState<HeroPos[]>([])
+
+  useEffect(() => {
+    void fetch('/api/buttons?layoutId=king-ultra-hero')
+      .then((r) => r.json())
+      .then((data: { positions?: HeroPos[] }) => {
+        if (Array.isArray(data.positions)) setHeroBadges(data.positions)
+      })
+      .catch(() => undefined)
+  }, [])
 
   async function goHid(productId?: number) {
     try {
@@ -91,14 +105,31 @@ export function ConnectPage() {
             </a>
           </p>
         </div>
-        <div className={styles.heroVisual} aria-hidden>
-          <div className={styles.glow} />
-          <img
-            className={styles.mouse}
-            src="/brand/mouse-hero.png"
-            alt=""
-            draggable={false}
-          />
+        <div className={styles.heroVisual}>
+          <div className={styles.glow} aria-hidden />
+          <div className={styles.heroArt}>
+            <img
+              className={styles.mouse}
+              src="/brand/mouse-hero.png"
+              alt=""
+              draggable={false}
+              width={HERO_ART.width}
+              height={HERO_ART.height}
+            />
+            {heroBadges.map((b) => (
+              <span
+                key={b.id}
+                className={styles.heroBadge}
+                style={{
+                  left: `${(b.uiX / HERO_ART.width) * 100}%`,
+                  top: `${(b.uiY / HERO_ART.height) * 100}%`,
+                }}
+                aria-hidden
+              >
+                {b.id}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 

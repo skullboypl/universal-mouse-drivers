@@ -86,16 +86,41 @@
   z-index: 0;
 }
 
-.mouse {
+.heroArt {
   position: relative;
   z-index: 1;
   width: min(460px, 100%);
-  height: auto;
+  aspect-ratio: 1200 / 1521;
+  animation: umd-rise 0.7s 0.08s ease-out both;
+}
+
+.mouse {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 28px 40px rgba(0, 0, 0, 0.55));
-  animation: umd-rise 0.7s 0.08s ease-out both;
   user-select: none;
   pointer-events: none;
+}
+
+.heroBadge {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border-radius: 7px;
+  background: var(--accent-hot, #ff2800);
+  color: #fff;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .section {

@@ -34,7 +34,7 @@ export function ButtonsPage() {
   const [layout, setLayout] = useState<Pos[] | null>(null)
 
   useEffect(() => {
-    void fetch('/api/buttons')
+    void fetch('/api/buttons?layoutId=king-ultra')
       .then((r) => r.json())
       .then((data: { positions?: Pos[] }) => {
         if (Array.isArray(data.positions)) setLayout(data.positions)

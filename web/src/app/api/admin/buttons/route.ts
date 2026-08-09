@@ -4,19 +4,30 @@ import {
   getButtonLayout,
   setButtonLayout,
   type ButtonPosition,
+  type LayoutId,
 } from '@/lib/store'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+const ALLOWED: LayoutId[] = ['king-ultra', 'king-ultra-hero']
+
+function parseLayoutId(raw: unknown): LayoutId {
+  if (raw === 'king-ultra-hero') return 'king-ultra-hero'
+  return 'king-ultra'
+}
+
+export async function GET(req: Request) {
   const user = await getAdminSession()
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+  const layoutId = parseLayoutId(
+    new URL(req.url).searchParams.get('layoutId'),
+  )
   return NextResponse.json({
-    deviceId: 'king-ultra',
-    positions: getButtonLayout('king-ultra'),
+    layoutId,
+    positions: getButtonLayout(layoutId),
   })
 }
 
@@ -26,8 +37,13 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
   const body = (await req.json().catch(() => null)) as {
+    layoutId?: string
     positions?: ButtonPosition[]
   } | null
+  const layoutId = parseLayoutId(body?.layoutId)
+  if (!ALLOWED.includes(layoutId)) {
+    return NextResponse.json({ error: 'bad layoutId' }, { status: 400 })
+  }
   const positions = body?.positions
   if (!Array.isArray(positions) || positions.length === 0) {
     return NextResponse.json({ error: 'positions required' }, { status: 400 })
@@ -41,6 +57,6 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'invalid position' }, { status: 400 })
     }
   }
-  const saved = setButtonLayout('king-ultra', positions)
-  return NextResponse.json({ ok: true, positions: saved })
+  const saved = setButtonLayout(layoutId, positions)
+  return NextResponse.json({ ok: true, layoutId, positions: saved })
 }
