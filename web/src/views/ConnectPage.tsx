@@ -197,8 +197,9 @@ export function ConnectPage() {
                   {d.brand} {d.model}
                 </strong>
                 <span className={styles.meta}>
-                  {d.sensor ? `Sensor ${d.sensor}` : d.tagline}
-                  {d.sensor && d.tagline ? ` · ${d.tagline}` : null}
+                  {d.sensor
+                    ? `Sensor ${d.sensor}${d.tagline && !d.tagline.includes(d.sensor) ? ` · ${d.tagline}` : ''}`
+                    : d.tagline}
                 </span>
               </div>
               <div className={styles.supportMeta}>

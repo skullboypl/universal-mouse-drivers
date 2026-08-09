@@ -5,7 +5,7 @@ export const KING_ULTRA_IDENTITY: DeviceIdentity = {
   id: 'redragon-king-ultra',
   brand: 'Redragon',
   model: 'King Ultra (M916OB-ULT)',
-  tagline: '3-mode · PixArt PAW3395',
+  tagline: '3-mode gaming mouse',
   vendorId: 0x3554,
   productIds: [0xf54d, 0xf54f, 0xf510],
   hidIds: ['3554:F54D', '3554:F54F', '3554:F510'],
