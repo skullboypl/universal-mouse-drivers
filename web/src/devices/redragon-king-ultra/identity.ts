@@ -13,6 +13,9 @@ export const KING_ULTRA_IDENTITY: DeviceIdentity = {
   sensor: 'PAW3950',
   imageUrl: '/devices/king-ultra/mouse.png',
   logoUrl: '/devices/king-ultra/logo.svg',
+  /** OEM 2Button/dev1.png */
+  artWidth: 432,
+  artHeight: 356,
 }
 
 export function isKingUltraDevice(vendorId: number, productId: number): boolean {

@@ -157,6 +157,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
     const transport = createMockTransport()
     await d.attach(transport)
     mergeDraft(d)
+    d.applyDemoSkin()
     d.patchSettings({ language: uiLocale() })
     transportKindRef.current = 'mock'
     setTransportKind('mock')

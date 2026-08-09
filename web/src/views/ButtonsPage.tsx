@@ -55,6 +55,8 @@ export function ButtonsPage() {
   const mouseSrc =
     driver.identity.imageUrl ?? '/devices/king-ultra/mouse.png'
   const logoSrc = driver.identity.logoUrl
+  const artW = driver.identity.artWidth ?? MOUSE_ART.width
+  const artH = driver.identity.artHeight ?? MOUSE_ART.height
 
   return (
     <div className="page">
@@ -125,16 +127,21 @@ export function ButtonsPage() {
             <img src={logoSrc} alt="" draggable={false} />
           </div>
         ) : null}
-        <div className={page.mouseWrap}>
+        <div
+          className={page.mouseWrap}
+          style={{ aspectRatio: `${artW} / ${artH}` }}
+        >
           <img
             className={page.mouseArt}
             src={mouseSrc}
             alt={driver.identity.model}
-            width={MOUSE_ART.width}
-            height={MOUSE_ART.height}
+            width={artW}
+            height={artH}
           />
           {state.buttons.map((b) => {
-            const pos = posById.get(b.id)
+            // Demo uses generated art coords; live Redragon uses OEM/API layout.
+            const useApiLayout = driver.identity.id !== 'umd-demo'
+            const pos = useApiLayout ? posById.get(b.id) : undefined
             const uiX = pos?.uiX ?? b.uiX
             const uiY = pos?.uiY ?? b.uiY
             return (
@@ -143,8 +150,8 @@ export function ButtonsPage() {
                 type="button"
                 className={`${page.badge} ${focusId === b.id ? page.badgeActive : ''}`}
                 style={{
-                  left: `${(uiX / MOUSE_ART.width) * 100}%`,
-                  top: `${(uiY / MOUSE_ART.height) * 100}%`,
+                  left: `${(uiX / artW) * 100}%`,
+                  top: `${(uiY / artH) * 100}%`,
                 }}
                 title={`${b.id}. ${tr(`buttons.action.${b.action}` as MessageKey)}`}
                 onClick={() => setFocusId(b.id)}

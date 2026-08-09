@@ -112,4 +112,7 @@ export interface DeviceIdentity {
   imageUrl?: string
   /** Brand / product logo - used as blurred backdrop behind device UI. */
   logoUrl?: string
+  /** Pixel size of imageUrl (badge positioning space). */
+  artWidth?: number
+  artHeight?: number
 }

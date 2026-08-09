@@ -32,6 +32,8 @@ import {
   UsbCommandId,
   type ProtocolCommand,
 } from './protocol'
+import { DEMO_BUTTONS, DEMO_IDENTITY } from '../demo/identity'
+import type { DeviceIdentity } from '../types'
 import { actionToKeyFun, keyFunToAction, KING_ULTRA_BUTTONS } from './buttons'
 import { KING_ULTRA_IDENTITY } from './identity'
 
@@ -45,9 +47,13 @@ const DPI_DEBOUNCE_MS = 220
 const SENSOR_DEBOUNCE_MS = 220
 
 export class KingUltraDriver {
-  readonly identity = KING_ULTRA_IDENTITY
+  private _identity: DeviceIdentity = KING_ULTRA_IDENTITY
   private state: DeviceState
   private transport: Transport | null = null
+
+  get identity(): DeviceIdentity {
+    return this._identity
+  }
   lastWriteError: string | null = null
   lastWriteOk = false
   /** Last flash read-back / online probe result for UI. */
@@ -123,6 +129,26 @@ export class KingUltraDriver {
       }
     } else if (transport.kind === 'mock') {
       this.mouseReachable = true
+    }
+
+    // Demo transport → fictional UMD mouse art. WebHID → real Redragon King Ultra.
+    if (transport.kind === 'mock') {
+      this._identity = DEMO_IDENTITY
+      this.state = {
+        ...this.state,
+        buttons: DEMO_BUTTONS.map((b) => ({ ...b })),
+        info: {
+          ...this.state.info,
+          // Keep demo labels friendly in Settings
+          driveVersion: '0.1.0-demo',
+        },
+      }
+    } else {
+      this._identity = KING_ULTRA_IDENTITY
+      this.state = {
+        ...this.state,
+        buttons: KING_ULTRA_BUTTONS.map((b) => ({ ...b })),
+      }
     }
 
     // OEM UsbServer_Start → encryption + PC driver. Heavy flash sync is separate
@@ -867,9 +893,33 @@ export class KingUltraDriver {
     })
   }
 
+  /** After draft merge on mock transport - keep fictional mouse art. */
+  applyDemoSkin() {
+    this._identity = DEMO_IDENTITY
+    const prev = this.state
+    this.state = {
+      ...prev,
+      buttons: DEMO_BUTTONS.map((b) => {
+        const saved = prev.buttons.find((x) => x.id === b.id)
+        return {
+          ...b,
+          action: saved?.action ?? b.action,
+          macroId: saved?.macroId,
+        }
+      }),
+      info: { ...prev.info, driveVersion: '0.1.0-demo' },
+    }
+  }
+
   restoreDefaults() {
     const info = this.state.info
-    this.state = { ...createDefaultState(), info, profileIndex: this.state.profileIndex }
+    const demo = this._identity.id === DEMO_IDENTITY.id
+    this.state = {
+      ...createDefaultState(),
+      info,
+      profileIndex: this.state.profileIndex,
+      ...(demo ? { buttons: DEMO_BUTTONS.map((b) => ({ ...b })) } : {}),
+    }
   }
 
   exportProfile(): string {
@@ -889,8 +939,15 @@ export class KingUltraDriver {
 
   importProfile(json: string) {
     const data = JSON.parse(json) as Partial<DeviceState> & { device?: string }
-    if (data.device && data.device !== this.identity.id) {
-      throw new Error('Profile does not match King Ultra')
+    const templates =
+      this._identity.id === DEMO_IDENTITY.id ? DEMO_BUTTONS : KING_ULTRA_BUTTONS
+    if (
+      data.device &&
+      data.device !== this.identity.id &&
+      data.device !== KING_ULTRA_IDENTITY.id &&
+      data.device !== DEMO_IDENTITY.id
+    ) {
+      throw new Error('Profile does not match this device')
     }
     const sensor = data.sensor
       ? {
@@ -902,7 +959,7 @@ export class KingUltraDriver {
             this.state.sensor.dpiStageCount,
         }
       : this.state.sensor
-    const buttons = KING_ULTRA_BUTTONS.map((tmpl) => {
+    const buttons = templates.map((tmpl) => {
       const saved = data.buttons?.find((b) => b.id === tmpl.id)
       return {
         ...tmpl,
