@@ -33,14 +33,22 @@ export function ButtonsPage() {
   const [focusId, setFocusId] = useState<number | null>(null)
   const [layout, setLayout] = useState<Pos[] | null>(null)
 
+  const isDemo = driver?.identity.id === 'umd-demo'
+  const layoutId = isDemo ? 'umd-demo' : 'king-ultra'
+
   useEffect(() => {
-    void fetch('/api/buttons?layoutId=king-ultra')
+    if (!connected || !driver) return
+    let cancelled = false
+    void fetch(`/api/buttons?layoutId=${layoutId}`)
       .then((r) => r.json())
       .then((data: { positions?: Pos[] }) => {
-        if (Array.isArray(data.positions)) setLayout(data.positions)
+        if (!cancelled && Array.isArray(data.positions)) setLayout(data.positions)
       })
       .catch(() => undefined)
-  }, [])
+    return () => {
+      cancelled = true
+    }
+  }, [connected, driver, layoutId])
 
   const posById = useMemo(() => {
     const m = new Map<number, Pos>()
@@ -51,8 +59,6 @@ export function ButtonsPage() {
   if (!connected || !state || !driver) {
     return <ClientRedirect href={lp('/')} />
   }
-
-  const isDemo = driver.identity.id === 'umd-demo'
   const mouseSrc = isDemo
     ? '/devices/demo/mouse.png'
     : (driver.identity.imageUrl ?? '/devices/king-ultra/mouse.png')

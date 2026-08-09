@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/Button'
+import { DEMO_BUTTONS } from '@/devices/demo/identity'
 import { KING_ULTRA_BUTTONS } from '@/devices/redragon-king-ultra/buttons'
 import type { ButtonPosition, LayoutId } from '@/lib/layouts'
 import { LAYOUT_META } from '@/lib/layouts'
@@ -13,12 +14,32 @@ const BUTTON_META = KING_ULTRA_BUTTONS.map((b) => ({
   action: b.action,
 }))
 
-function ensureSix(positions: ButtonPosition[]): ButtonPosition[] {
+function defaultPositions(layoutId: LayoutId): ButtonPosition[] {
+  if (layoutId === 'umd-demo') {
+    return DEMO_BUTTONS.map((b) => ({ id: b.id, uiX: b.uiX, uiY: b.uiY }))
+  }
+  if (layoutId === 'king-ultra-hero') {
+    return [
+      { id: 1, uiX: 500, uiY: 640 },
+      { id: 2, uiX: 700, uiY: 620 },
+      { id: 3, uiX: 600, uiY: 520 },
+      { id: 4, uiX: 380, uiY: 760 },
+      { id: 5, uiX: 360, uiY: 900 },
+      { id: 6, uiX: 720, uiY: 820 },
+    ]
+  }
+  return KING_ULTRA_BUTTONS.map((b) => ({ id: b.id, uiX: b.uiX, uiY: b.uiY }))
+}
+
+function ensureSix(
+  layoutId: LayoutId,
+  positions: ButtonPosition[],
+): ButtonPosition[] {
+  const defaults = defaultPositions(layoutId)
   return BUTTON_META.map((m) => {
     const found = positions.find((p) => p.id === m.id)
     if (found) return found
-    const def = KING_ULTRA_BUTTONS.find((b) => b.id === m.id)!
-    return { id: m.id, uiX: def.uiX, uiY: def.uiY }
+    return defaults.find((d) => d.id === m.id) ?? { id: m.id, uiX: 0, uiY: 0 }
   })
 }
 
@@ -30,7 +51,7 @@ export function AdminButtonsEditor({
   initial: ButtonPosition[]
 }) {
   const meta = LAYOUT_META[layoutId]
-  const [positions, setPositions] = useState(() => ensureSix(initial))
+  const [positions, setPositions] = useState(() => ensureSix(layoutId, initial))
   const [dragId, setDragId] = useState<number | null>(null)
   const [selectedId, setSelectedId] = useState<number>(1)
   const [status, setStatus] = useState<string | null>(null)
@@ -102,24 +123,7 @@ export function AdminButtonsEditor({
   }
 
   function resetDefaults() {
-    if (layoutId === 'king-ultra') {
-      setPositions(
-        KING_ULTRA_BUTTONS.map((b) => ({
-          id: b.id,
-          uiX: b.uiX,
-          uiY: b.uiY,
-        })),
-      )
-      return
-    }
-    setPositions([
-      { id: 1, uiX: 500, uiY: 640 },
-      { id: 2, uiX: 700, uiY: 620 },
-      { id: 3, uiX: 600, uiY: 520 },
-      { id: 4, uiX: 380, uiY: 760 },
-      { id: 5, uiX: 360, uiY: 900 },
-      { id: 6, uiX: 720, uiY: 820 },
-    ])
+    setPositions(defaultPositions(layoutId))
   }
 
   return (
@@ -259,7 +263,9 @@ export function AdminButtonsEditor({
             ? 'Zapisywanie…'
             : layoutId === 'king-ultra-hero'
               ? 'Zapisz pozycje hero'
-              : 'Zapisz pozycje przycisków'}
+              : layoutId === 'umd-demo'
+                ? 'Zapisz pozycje demo'
+                : 'Zapisz pozycje przycisków'}
         </Button>
         <Button onClick={resetDefaults}>Reset domyślnych</Button>
         {status && <span className="muted">{status}</span>}

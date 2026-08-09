@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { DEMO_BUTTONS } from '@/devices/demo/identity'
 import { KING_ULTRA_BUTTONS } from '@/devices/redragon-king-ultra/buttons'
 import {
   type ButtonPosition,
@@ -43,12 +44,19 @@ const DEFAULT_HERO: ButtonPosition[] = [
   { id: 6, uiX: 720, uiY: 820 },
 ]
 
+const DEFAULT_DEMO: ButtonPosition[] = DEMO_BUTTONS.map((b) => ({
+  id: b.id,
+  uiX: b.uiX,
+  uiY: b.uiY,
+}))
+
 function defaultStore(): UmdStore {
   return {
     version: 1,
     buttonLayouts: {
       'king-ultra': DEFAULT_BUTTONS,
       'king-ultra-hero': DEFAULT_HERO,
+      'umd-demo': DEFAULT_DEMO,
     },
     downloads: {
       trayBattery: {
@@ -90,6 +98,9 @@ function ensureLayouts(store: UmdStore): UmdStore {
   if (!store.buttonLayouts['king-ultra-hero']) {
     store.buttonLayouts['king-ultra-hero'] = DEFAULT_HERO
   }
+  if (!store.buttonLayouts['umd-demo']) {
+    store.buttonLayouts['umd-demo'] = DEFAULT_DEMO
+  }
   if (!store.downloads) store.downloads = defaultStore().downloads
   return store
 }
@@ -115,6 +126,9 @@ export function getButtonLayout(layoutId: LayoutId | string = 'king-ultra'): But
   const store = readStore()
   if (layoutId === 'king-ultra-hero') {
     return store.buttonLayouts['king-ultra-hero'] ?? DEFAULT_HERO
+  }
+  if (layoutId === 'umd-demo') {
+    return store.buttonLayouts['umd-demo'] ?? DEFAULT_DEMO
   }
   return store.buttonLayouts[layoutId] ?? DEFAULT_BUTTONS
 }

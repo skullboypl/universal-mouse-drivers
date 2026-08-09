@@ -1,16 +1,11 @@
 import { NextResponse } from 'next/server'
-import { LAYOUT_META, type LayoutId } from '@/lib/layouts'
+import { LAYOUT_META, parseLayoutId } from '@/lib/layouts'
 import { getButtonLayout } from '@/lib/store'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-function parseLayoutId(raw: string | null): LayoutId {
-  if (raw === 'king-ultra-hero') return 'king-ultra-hero'
-  return 'king-ultra'
-}
-
-/** Public read - badge positions (buttons page or hero). */
+/** Public read - badge positions (buttons page, demo, or hero). */
 export async function GET(req: Request) {
   const layoutId = parseLayoutId(
     new URL(req.url).searchParams.get('layoutId'),

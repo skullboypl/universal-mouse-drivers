@@ -27,6 +27,7 @@ export default async function AdminPage() {
   }
 
   const buttonsLayout = getButtonLayout('king-ultra')
+  const demoLayout = getButtonLayout('umd-demo')
   const heroLayout = getButtonLayout('king-ultra-hero')
   const trayMeta = getDownloadMeta('trayBattery')
   const filename = trayMeta?.filename ?? 'UmdBatteryTray.exe'
@@ -46,6 +47,7 @@ export default async function AdminPage() {
       <AdminDashboard
         user={user}
         buttonsLayout={buttonsLayout}
+        demoLayout={demoLayout}
         heroLayout={heroLayout}
         tray={{
           present: trayPresent,

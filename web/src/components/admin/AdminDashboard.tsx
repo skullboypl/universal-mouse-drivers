@@ -4,16 +4,18 @@ import { useState } from 'react'
 import { AdminButtonsEditor } from '@/components/admin/AdminButtonsEditor'
 import type { ButtonPosition } from '@/lib/layouts'
 
-type Tab = 'buttons' | 'hero' | 'tray'
+type Tab = 'buttons' | 'demo' | 'hero' | 'tray'
 
 export function AdminDashboard({
   user,
   buttonsLayout,
+  demoLayout,
   heroLayout,
   tray,
 }: {
   user: string
   buttonsLayout: ButtonPosition[]
+  demoLayout: ButtonPosition[]
   heroLayout: ButtonPosition[]
   tray: {
     present: boolean
@@ -45,7 +47,8 @@ export function AdminDashboard({
       >
         {(
           [
-            ['buttons', 'Przyciski na myszce'],
+            ['buttons', 'King Ultra'],
+            ['demo', 'Demo mouse'],
             ['hero', 'Hero connect'],
             ['tray', 'Tray .exe'],
           ] as const
@@ -76,17 +79,28 @@ export function AdminDashboard({
       {tab === 'buttons' && (
         <>
           <p className="muted" style={{ marginTop: 0 }}>
-            Pozycje badge’y na stronie Buttons (OEM mouse.png) — przeciągnij na
-            grafice albo ustaw X/Y.
+            Badge’y na stronie Buttons dla King Ultra (
+            <code className="mono">/devices/king-ultra/mouse.png</code>).
           </p>
           <AdminButtonsEditor layoutId="king-ultra" initial={buttonsLayout} />
+        </>
+      )}
+
+      {tab === 'demo' && (
+        <>
+          <p className="muted" style={{ marginTop: 0 }}>
+            Badge’y na profilu demo (
+            <code className="mono">/devices/demo/mouse.png</code> · 1536×1024).
+          </p>
+          <AdminButtonsEditor layoutId="umd-demo" initial={demoLayout} />
         </>
       )}
 
       {tab === 'hero' && (
         <>
           <p className="muted" style={{ marginTop: 0 }}>
-            Pozycje numerów na hero Connect (mouse-hero.png).
+            Numery na hero Connect (
+            <code className="mono">/brand/mouse-hero.png</code>).
           </p>
           <AdminButtonsEditor layoutId="king-ultra-hero" initial={heroLayout} />
         </>

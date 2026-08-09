@@ -1,20 +1,10 @@
 import { NextResponse } from 'next/server'
 import { getAdminSession } from '@/lib/auth'
-import {
-  getButtonLayout,
-  setButtonLayout,
-} from '@/lib/store'
-import type { ButtonPosition, LayoutId } from '@/lib/layouts'
+import { LAYOUT_IDS, parseLayoutId, type ButtonPosition } from '@/lib/layouts'
+import { getButtonLayout, setButtonLayout } from '@/lib/store'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
-
-const ALLOWED: LayoutId[] = ['king-ultra', 'king-ultra-hero']
-
-function parseLayoutId(raw: unknown): LayoutId {
-  if (raw === 'king-ultra-hero') return 'king-ultra-hero'
-  return 'king-ultra'
-}
 
 export async function GET(req: Request) {
   const user = await getAdminSession()
@@ -40,7 +30,7 @@ export async function PUT(req: Request) {
     positions?: ButtonPosition[]
   } | null
   const layoutId = parseLayoutId(body?.layoutId)
-  if (!ALLOWED.includes(layoutId)) {
+  if (!LAYOUT_IDS.includes(layoutId)) {
     return NextResponse.json({ error: 'bad layoutId' }, { status: 400 })
   }
   const positions = body?.positions
