@@ -1,0 +1,30 @@
+import type { DeviceIdentity } from '../types'
+
+/** Hard whitelist — never include Fenrir (33E4) or Wooting (31E3). */
+export const KING_ULTRA_IDENTITY: DeviceIdentity = {
+  id: 'redragon-king-ultra',
+  brand: 'Redragon',
+  model: 'King Ultra (M916OB-ULT)',
+  tagline: '3-mode PAW3950 — WebHID protocol in progress',
+  vendorId: 0x3554,
+  productIds: [0xf54d, 0xf54f, 0xf510],
+  hidIds: ['3554:F54D', '3554:F54F', '3554:F510'],
+  status: 'wip',
+  sensor: 'PAW3950',
+  imageUrl: '/devices/king-ultra/mouse.png',
+  logoUrl: '/devices/king-ultra/logo.svg',
+}
+
+export function isKingUltraDevice(vendorId: number, productId: number): boolean {
+  return (
+    vendorId === KING_ULTRA_IDENTITY.vendorId &&
+    KING_ULTRA_IDENTITY.productIds.includes(productId)
+  )
+}
+
+export function hidFilters(): Array<{ vendorId: number; productId: number }> {
+  return KING_ULTRA_IDENTITY.productIds.map((productId) => ({
+    vendorId: KING_ULTRA_IDENTITY.vendorId,
+    productId,
+  }))
+}

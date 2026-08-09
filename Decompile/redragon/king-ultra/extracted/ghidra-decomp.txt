@@ -1,0 +1,3801 @@
+=== DECOMPILE KEY FUNCS MouseDriveBeta.exe ===
+
+################################################################
+## SetCurrentConfig
+entry=00406dc4 size=21
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x0040a4db) overlaps instruction at (ram,0x0040a4da)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+/* WARNING: Removing unreachable block (ram,0x00409e4c) */
+/* WARNING: Removing unreachable block (ram,0x00409e57) */
+/* WARNING: Removing unreachable block (ram,0x00409e67) */
+/* WARNING: Removing unreachable block (ram,0x00409e7b) */
+/* WARNING: Removing unreachable block (ram,0x00409e8b) */
+/* WARNING: Removing unreachable block (ram,0x00409e93) */
+/* WARNING: Removing unreachable block (ram,0x00409e32) */
+/* WARNING: Removing unreachable block (ram,0x00409e9e) */
+/* WARNING: Removing unreachable block (ram,0x00409eae) */
+/* WARNING: Removing unreachable block (ram,0x00409eb6) */
+/* WARNING: Removing unreachable block (ram,0x00409eb8) */
+/* WARNING: Removing unreachable block (ram,0x00409f34) */
+/* WARNING: Removing unreachable block (ram,0x00409f4b) */
+/* WARNING: Removing unreachable block (ram,0x00409f61) */
+/* WARNING: Removing unreachable block (ram,0x00409f83) */
+/* WARNING: Removing unreachable block (ram,0x00409f24) */
+/* WARNING: Removing unreachable block (ram,0x00409f99) */
+/* WARNING: Removing unreachable block (ram,0x00409fb6) */
+/* WARNING: Removing unreachable block (ram,0x00409fc1) */
+/* WARNING: Removing unreachable block (ram,0x00409fb4) */
+/* WARNING: Removing unreachable block (ram,0x00409f42) */
+/* WARNING: Removing unreachable block (ram,0x00409ed6) */
+/* WARNING: Removing unreachable block (ram,0x00409eec) */
+/* WARNING: Removing unreachable block (ram,0x00409ef9) */
+/* WARNING: Removing unreachable block (ram,0x00409e87) */
+/* WARNING: Removing unreachable block (ram,0x00409ef8) */
+/* WARNING: Removing unreachable block (ram,0x00409efd) */
+/* WARNING: Removing unreachable block (ram,0x00409f09) */
+/* WARNING: Removing unreachable block (ram,0x00409f0e) */
+/* WARNING: Removing unreachable block (ram,0x0040a020) */
+/* WARNING: Removing unreachable block (ram,0x0040a02d) */
+/* WARNING: Removing unreachable block (ram,0x0040a04c) */
+/* WARNING: Removing unreachable block (ram,0x0040a093) */
+/* WARNING: Removing unreachable block (ram,0x0040a0c0) */
+/* WARNING: Removing unreachable block (ram,0x0040a110) */
+/* WARNING: Removing unreachable block (ram,0x0040a14e) */
+/* WARNING: Removing unreachable block (ram,0x0040a16f) */
+/* WARNING: Removing unreachable block (ram,0x0040a183) */
+/* WARNING: Removing unreachable block (ram,0x0040a131) */
+/* WARNING: Removing unreachable block (ram,0x0040a19c) */
+/* WARNING: Removing unreachable block (ram,0x0040a1d4) */
+/* WARNING: Removing unreachable block (ram,0x0040a16d) */
+/* WARNING: Removing unreachable block (ram,0x0040a103) */
+/* WARNING: Removing unreachable block (ram,0x0040a0e1) */
+/* WARNING: Removing unreachable block (ram,0x00409eba) */
+/* WARNING: Removing unreachable block (ram,0x00409e42) */
+/* WARNING: Removing unreachable block (ram,0x00409404) */
+/* WARNING: Removing unreachable block (ram,0x0040940c) */
+/* WARNING: Removing unreachable block (ram,0x00407d8c) */
+/* WARNING: Removing unreachable block (ram,0x00407b1a) */
+/* WARNING: Removing unreachable block (ram,0x00407ad5) */
+/* WARNING: Removing unreachable block (ram,0x00407a99) */
+/* WARNING: Removing unreachable block (ram,0x00407aa1) */
+/* WARNING: Removing unreachable block (ram,0x00407a50) */
+/* WARNING: Removing unreachable block (ram,0x00407a53) */
+/* WARNING: Removing unreachable block (ram,0x00407a6c) */
+/* WARNING: Removing unreachable block (ram,0x00407a1a) */
+/* WARNING: Removing unreachable block (ram,0x00407977) */
+/* WARNING: Removing unreachable block (ram,0x004078be) */
+/* WARNING: Removing unreachable block (ram,0x004078b8) */
+/* WARNING: Removing unreachable block (ram,0x004078eb) */
+/* WARNING: Removing unreachable block (ram,0x004078e6) */
+/* WARNING: Removing unreachable block (ram,0x004078f9) */
+/* WARNING: Removing unreachable block (ram,0x0040791d) */
+/* WARNING: Removing unreachable block (ram,0x004078fd) */
+/* WARNING: Removing unreachable block (ram,0x00407902) */
+/* WARNING: Removing unreachable block (ram,0x00407910) */
+/* WARNING: Removing unreachable block (ram,0x00407916) */
+/* WARNING: Removing unreachable block (ram,0x00407931) */
+/* WARNING: Removing unreachable block (ram,0x00407933) */
+/* WARNING: Removing unreachable block (ram,0x00407957) */
+/* WARNING: Removing unreachable block (ram,0x00407929) */
+/* WARNING: Removing unreachable block (ram,0x0040791a) */
+/* WARNING: Removing unreachable block (ram,0x00407952) */
+/* WARNING: Removing unreachable block (ram,0x004078cc) */
+/* WARNING: Removing unreachable block (ram,0x0040789c) */
+/* WARNING: Removing unreachable block (ram,0x00407541) */
+/* WARNING: Removing unreachable block (ram,0x0040748e) */
+/* WARNING: Removing unreachable block (ram,0x004074ba) */
+/* WARNING: Removing unreachable block (ram,0x0040793a) */
+/* WARNING: Removing unreachable block (ram,0x00407974) */
+/* WARNING: Removing unreachable block (ram,0x00407946) */
+/* WARNING: Removing unreachable block (ram,0x00407937) */
+/* WARNING: Removing unreachable block (ram,0x00407951) */
+/* WARNING: Removing unreachable block (ram,0x00407975) */
+/* WARNING: Removing unreachable block (ram,0x00407955) */
+/* WARNING: Removing unreachable block (ram,0x0040795a) */
+/* WARNING: Removing unreachable block (ram,0x0040795b) */
+/* WARNING: Removing unreachable block (ram,0x004079ab) */
+/* WARNING: Removing unreachable block (ram,0x0040797b) */
+/* WARNING: Removing unreachable block (ram,0x00407988) */
+/* WARNING: Removing unreachable block (ram,0x0040798c) */
+/* WARNING: Removing unreachable block (ram,0x0040795d) */
+/* WARNING: Removing unreachable block (ram,0x00407972) */
+/* WARNING: Removing unreachable block (ram,0x00407978) */
+/* WARNING: Removing unreachable block (ram,0x0040798f) */
+/* WARNING: Removing unreachable block (ram,0x00407992) */
+/* WARNING: Removing unreachable block (ram,0x004079a3) */
+/* WARNING: Removing unreachable block (ram,0x004079a7) */
+/* WARNING: Removing unreachable block (ram,0x004079ad) */
+/* WARNING: Removing unreachable block (ram,0x004079c0) */
+/* WARNING: Removing unreachable block (ram,0x004079c4) */
+/* WARNING: Removing unreachable block (ram,0x004079c5) */
+/* WARNING: Removing unreachable block (ram,0x004079c7) */
+/* WARNING: Removing unreachable block (ram,0x004079de) */
+/* WARNING: Removing unreachable block (ram,0x004079e4) */
+/* WARNING: Removing unreachable block (ram,0x004079ea) */
+/* WARNING: Removing unreachable block (ram,0x004079ec) */
+/* WARNING: Removing unreachable block (ram,0x004079f6) */
+/* WARNING: Removing unreachable block (ram,0x004079fa) */
+/* WARNING: Removing unreachable block (ram,0x004079fd) */
+/* WARNING: Removing unreachable block (ram,0x00407a38) */
+/* WARNING: Removing unreachable block (ram,0x00407a39) */
+/* WARNING: Removing unreachable block (ram,0x00407a3c) */
+/* WARNING: Removing unreachable block (ram,0x00407aba) */
+/* WARNING: Removing unreachable block (ram,0x00407a49) */
+/* WARNING: Removing unreachable block (ram,0x00407a4d) */
+/* WARNING: Removing unreachable block (ram,0x00407a1d) */
+/* WARNING: Removing unreachable block (ram,0x00407a6d) */
+/* WARNING: Removing unreachable block (ram,0x00407aec) */
+/* WARNING: Removing unreachable block (ram,0x00407ae4) */
+/* WARNING: Removing unreachable block (ram,0x00407abe) */
+/* WARNING: Removing unreachable block (ram,0x00407abc) */
+/* WARNING: Removing unreachable block (ram,0x00407ac9) */
+/* WARNING: Removing unreachable block (ram,0x00407acd) */
+/* WARNING: Removing unreachable block (ram,0x00407a9d) */
+/* WARNING: Removing unreachable block (ram,0x00407aa5) */
+/* WARNING: Removing unreachable block (ram,0x00407a55) */
+/* WARNING: Removing unreachable block (ram,0x00407a5d) */
+/* WARNING: Removing unreachable block (ram,0x00407adf) */
+/* WARNING: Removing unreachable block (ram,0x00407a64) */
+/* WARNING: Removing unreachable block (ram,0x00407a68) */
+/* WARNING: Removing unreachable block (ram,0x00407a6e) */
+/* WARNING: Removing unreachable block (ram,0x00407a71) */
+/* WARNING: Removing unreachable block (ram,0x00407a78) */
+/* WARNING: Removing unreachable block (ram,0x00407a05) */
+/* WARNING: Removing unreachable block (ram,0x00407a7e) */
+/* WARNING: Removing unreachable block (ram,0x00407a82) */
+/* WARNING: Removing unreachable block (ram,0x00407a88) */
+/* WARNING: Removing unreachable block (ram,0x00407a2d) */
+/* WARNING: Removing unreachable block (ram,0x00407a1e) */
+/* WARNING: Removing unreachable block (ram,0x00407a32) */
+/* WARNING: Removing unreachable block (ram,0x00407a36) */
+/* WARNING: Removing unreachable block (ram,0x00407a07) */
+/* WARNING: Removing unreachable block (ram,0x00407a0d) */
+/* WARNING: Removing unreachable block (ram,0x00407a14) */
+/* WARNING: Removing unreachable block (ram,0x00407a18) */
+/* WARNING: Removing unreachable block (ram,0x00407a98) */
+/* WARNING: Removing unreachable block (ram,0x00407a9c) */
+/* WARNING: Removing unreachable block (ram,0x00407ab2) */
+/* WARNING: Removing unreachable block (ram,0x00407ab6) */
+/* WARNING: Removing unreachable block (ram,0x00407ae0) */
+/* WARNING: Removing unreachable block (ram,0x00407af7) */
+/* WARNING: Removing unreachable block (ram,0x00407afb) */
+/* WARNING: Removing unreachable block (ram,0x00407ae3) */
+/* WARNING: Removing unreachable block (ram,0x00407b0e) */
+/* WARNING: Removing unreachable block (ram,0x00407b31) */
+/* WARNING: Removing unreachable block (ram,0x00407b12) */
+/* WARNING: Removing unreachable block (ram,0x00407ae2) */
+/* WARNING: Removing unreachable block (ram,0x00407b03) */
+/* WARNING: Removing unreachable block (ram,0x00407b15) */
+/* WARNING: Removing unreachable block (ram,0x00407b21) */
+/* WARNING: Removing unreachable block (ram,0x00407b25) */
+/* WARNING: Removing unreachable block (ram,0x00407b27) */
+/* WARNING: Removing unreachable block (ram,0x00407b29) */
+/* WARNING: Removing unreachable block (ram,0x00407b3c) */
+/* WARNING: Removing unreachable block (ram,0x00407b40) */
+/* WARNING: Removing unreachable block (ram,0x00407b5f) */
+/* WARNING: Removing unreachable block (ram,0x00407b48) */
+/* WARNING: Removing unreachable block (ram,0x00407b46) */
+/* WARNING: Removing unreachable block (ram,0x00407b53) */
+/* WARNING: Removing unreachable block (ram,0x00407b76) */
+/* WARNING: Removing unreachable block (ram,0x00407b57) */
+/* WARNING: Removing unreachable block (ram,0x00407b5a) */
+/* WARNING: Removing unreachable block (ram,0x00407b6a) */
+/* WARNING: Removing unreachable block (ram,0x00407b6c) */
+/* WARNING: Removing unreachable block (ram,0x00407b8d) */
+/* WARNING: Removing unreachable block (ram,0x00407b6e) */
+/* WARNING: Removing unreachable block (ram,0x00407b81) */
+/* WARNING: Removing unreachable block (ram,0x00407ba4) */
+/* WARNING: Removing unreachable block (ram,0x00407b85) */
+/* WARNING: Removing unreachable block (ram,0x00407b93) */
+/* WARNING: Removing unreachable block (ram,0x00407b98) */
+/* WARNING: Removing unreachable block (ram,0x00407bbb) */
+/* WARNING: Removing unreachable block (ram,0x00407b9c) */
+/* WARNING: Removing unreachable block (ram,0x00407b9f) */
+/* WARNING: Removing unreachable block (ram,0x00407b78) */
+/* WARNING: Removing unreachable block (ram,0x00407b02) */
+/* WARNING: Removing unreachable block (ram,0x00407d5e) */
+/* WARNING: Removing unreachable block (ram,0x00407d56) */
+/* WARNING: Removing unreachable block (ram,0x00407d30) */
+/* WARNING: Removing unreachable block (ram,0x00407d2b) */
+/* WARNING: Removing unreachable block (ram,0x00407d3b) */
+/* WARNING: Removing unreachable block (ram,0x00407d3f) */
+/* WARNING: Removing unreachable block (ram,0x00407d0f) */
+/* WARNING: Removing unreachable block (ram,0x00407d09) */
+/* WARNING: Removing unr
+/* truncated */
+
+
+################################################################
+## ReadConfig
+entry=00406db0 size=19
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x0040a4db) overlaps instruction at (ram,0x0040a4da)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+/* WARNING: Removing unreachable block (ram,0x00409e4c) */
+/* WARNING: Removing unreachable block (ram,0x00409e57) */
+/* WARNING: Removing unreachable block (ram,0x00409e67) */
+/* WARNING: Removing unreachable block (ram,0x00409e7b) */
+/* WARNING: Removing unreachable block (ram,0x00409e8b) */
+/* WARNING: Removing unreachable block (ram,0x00409e93) */
+/* WARNING: Removing unreachable block (ram,0x00409e32) */
+/* WARNING: Removing unreachable block (ram,0x00409e9e) */
+/* WARNING: Removing unreachable block (ram,0x00409eae) */
+/* WARNING: Removing unreachable block (ram,0x00409eb6) */
+/* WARNING: Removing unreachable block (ram,0x00409eb8) */
+/* WARNING: Removing unreachable block (ram,0x00409f34) */
+/* WARNING: Removing unreachable block (ram,0x00409f4b) */
+/* WARNING: Removing unreachable block (ram,0x00409f61) */
+/* WARNING: Removing unreachable block (ram,0x00409f83) */
+/* WARNING: Removing unreachable block (ram,0x00409f24) */
+/* WARNING: Removing unreachable block (ram,0x00409f99) */
+/* WARNING: Removing unreachable block (ram,0x00409fb6) */
+/* WARNING: Removing unreachable block (ram,0x00409fc1) */
+/* WARNING: Removing unreachable block (ram,0x00409fb4) */
+/* WARNING: Removing unreachable block (ram,0x00409f42) */
+/* WARNING: Removing unreachable block (ram,0x00409ed6) */
+/* WARNING: Removing unreachable block (ram,0x00409eec) */
+/* WARNING: Removing unreachable block (ram,0x00409ef9) */
+/* WARNING: Removing unreachable block (ram,0x00409e87) */
+/* WARNING: Removing unreachable block (ram,0x00409ef8) */
+/* WARNING: Removing unreachable block (ram,0x00409efd) */
+/* WARNING: Removing unreachable block (ram,0x00409f09) */
+/* WARNING: Removing unreachable block (ram,0x00409f0e) */
+/* WARNING: Removing unreachable block (ram,0x0040a020) */
+/* WARNING: Removing unreachable block (ram,0x0040a02d) */
+/* WARNING: Removing unreachable block (ram,0x0040a04c) */
+/* WARNING: Removing unreachable block (ram,0x0040a093) */
+/* WARNING: Removing unreachable block (ram,0x0040a0c0) */
+/* WARNING: Removing unreachable block (ram,0x0040a110) */
+/* WARNING: Removing unreachable block (ram,0x0040a14e) */
+/* WARNING: Removing unreachable block (ram,0x0040a16f) */
+/* WARNING: Removing unreachable block (ram,0x0040a183) */
+/* WARNING: Removing unreachable block (ram,0x0040a131) */
+/* WARNING: Removing unreachable block (ram,0x0040a19c) */
+/* WARNING: Removing unreachable block (ram,0x0040a1d4) */
+/* WARNING: Removing unreachable block (ram,0x0040a16d) */
+/* WARNING: Removing unreachable block (ram,0x0040a103) */
+/* WARNING: Removing unreachable block (ram,0x0040a0e1) */
+/* WARNING: Removing unreachable block (ram,0x00409eba) */
+/* WARNING: Removing unreachable block (ram,0x00409e42) */
+/* WARNING: Removing unreachable block (ram,0x00409404) */
+/* WARNING: Removing unreachable block (ram,0x0040940c) */
+/* WARNING: Removing unreachable block (ram,0x00407d8c) */
+/* WARNING: Removing unreachable block (ram,0x00407b1a) */
+/* WARNING: Removing unreachable block (ram,0x00407ad5) */
+/* WARNING: Removing unreachable block (ram,0x00407a99) */
+/* WARNING: Removing unreachable block (ram,0x00407aa1) */
+/* WARNING: Removing unreachable block (ram,0x00407a50) */
+/* WARNING: Removing unreachable block (ram,0x00407a53) */
+/* WARNING: Removing unreachable block (ram,0x00407a6c) */
+/* WARNING: Removing unreachable block (ram,0x00407a1a) */
+/* WARNING: Removing unreachable block (ram,0x00407977) */
+/* WARNING: Removing unreachable block (ram,0x004078be) */
+/* WARNING: Removing unreachable block (ram,0x004078b8) */
+/* WARNING: Removing unreachable block (ram,0x004078eb) */
+/* WARNING: Removing unreachable block (ram,0x004078e6) */
+/* WARNING: Removing unreachable block (ram,0x004078f9) */
+/* WARNING: Removing unreachable block (ram,0x0040791d) */
+/* WARNING: Removing unreachable block (ram,0x004078fd) */
+/* WARNING: Removing unreachable block (ram,0x00407902) */
+/* WARNING: Removing unreachable block (ram,0x00407910) */
+/* WARNING: Removing unreachable block (ram,0x00407916) */
+/* WARNING: Removing unreachable block (ram,0x00407931) */
+/* WARNING: Removing unreachable block (ram,0x00407933) */
+/* WARNING: Removing unreachable block (ram,0x00407957) */
+/* WARNING: Removing unreachable block (ram,0x00407929) */
+/* WARNING: Removing unreachable block (ram,0x0040791a) */
+/* WARNING: Removing unreachable block (ram,0x00407952) */
+/* WARNING: Removing unreachable block (ram,0x004078cc) */
+/* WARNING: Removing unreachable block (ram,0x0040789c) */
+/* WARNING: Removing unreachable block (ram,0x00407541) */
+/* WARNING: Removing unreachable block (ram,0x0040748e) */
+/* WARNING: Removing unreachable block (ram,0x004074ba) */
+/* WARNING: Removing unreachable block (ram,0x0040793a) */
+/* WARNING: Removing unreachable block (ram,0x00407974) */
+/* WARNING: Removing unreachable block (ram,0x00407946) */
+/* WARNING: Removing unreachable block (ram,0x00407937) */
+/* WARNING: Removing unreachable block (ram,0x00407951) */
+/* WARNING: Removing unreachable block (ram,0x00407975) */
+/* WARNING: Removing unreachable block (ram,0x00407955) */
+/* WARNING: Removing unreachable block (ram,0x0040795a) */
+/* WARNING: Removing unreachable block (ram,0x0040795b) */
+/* WARNING: Removing unreachable block (ram,0x004079ab) */
+/* WARNING: Removing unreachable block (ram,0x0040797b) */
+/* WARNING: Removing unreachable block (ram,0x00407988) */
+/* WARNING: Removing unreachable block (ram,0x0040798c) */
+/* WARNING: Removing unreachable block (ram,0x0040795d) */
+/* WARNING: Removing unreachable block (ram,0x00407972) */
+/* WARNING: Removing unreachable block (ram,0x00407978) */
+/* WARNING: Removing unreachable block (ram,0x0040798f) */
+/* WARNING: Removing unreachable block (ram,0x00407992) */
+/* WARNING: Removing unreachable block (ram,0x004079a3) */
+/* WARNING: Removing unreachable block (ram,0x004079a7) */
+/* WARNING: Removing unreachable block (ram,0x004079ad) */
+/* WARNING: Removing unreachable block (ram,0x004079c0) */
+/* WARNING: Removing unreachable block (ram,0x004079c4) */
+/* WARNING: Removing unreachable block (ram,0x004079c5) */
+/* WARNING: Removing unreachable block (ram,0x004079c7) */
+/* WARNING: Removing unreachable block (ram,0x004079de) */
+/* WARNING: Removing unreachable block (ram,0x004079e4) */
+/* WARNING: Removing unreachable block (ram,0x004079ea) */
+/* WARNING: Removing unreachable block (ram,0x004079ec) */
+/* WARNING: Removing unreachable block (ram,0x004079f6) */
+/* WARNING: Removing unreachable block (ram,0x004079fa) */
+/* WARNING: Removing unreachable block (ram,0x004079fd) */
+/* WARNING: Removing unreachable block (ram,0x00407a38) */
+/* WARNING: Removing unreachable block (ram,0x00407a39) */
+/* WARNING: Removing unreachable block (ram,0x00407a3c) */
+/* WARNING: Removing unreachable block (ram,0x00407aba) */
+/* WARNING: Removing unreachable block (ram,0x00407a49) */
+/* WARNING: Removing unreachable block (ram,0x00407a4d) */
+/* WARNING: Removing unreachable block (ram,0x00407a1d) */
+/* WARNING: Removing unreachable block (ram,0x00407a6d) */
+/* WARNING: Removing unreachable block (ram,0x00407aec) */
+/* WARNING: Removing unreachable block (ram,0x00407ae4) */
+/* WARNING: Removing unreachable block (ram,0x00407abe) */
+/* WARNING: Removing unreachable block (ram,0x00407abc) */
+/* WARNING: Removing unreachable block (ram,0x00407ac9) */
+/* WARNING: Removing unreachable block (ram,0x00407acd) */
+/* WARNING: Removing unreachable block (ram,0x00407a9d) */
+/* WARNING: Removing unreachable block (ram,0x00407aa5) */
+/* WARNING: Removing unreachable block (ram,0x00407a55) */
+/* WARNING: Removing unreachable block (ram,0x00407a5d) */
+/* WARNING: Removing unreachable block (ram,0x00407adf) */
+/* WARNING: Removing unreachable block (ram,0x00407a64) */
+/* WARNING: Removing unreachable block (ram,0x00407a68) */
+/* WARNING: Removing unreachable block (ram,0x00407a6e) */
+/* WARNING: Removing unreachable block (ram,0x00407a71) */
+/* WARNING: Removing unreachable block (ram,0x00407a78) */
+/* WARNING: Removing unreachable block (ram,0x00407a05) */
+/* WARNING: Removing unreachable block (ram,0x00407a7e) */
+/* WARNING: Removing unreachable block (ram,0x00407a82) */
+/* WARNING: Removing unreachable block (ram,0x00407a88) */
+/* WARNING: Removing unreachable block (ram,0x00407a2d) */
+/* WARNING: Removing unreachable block (ram,0x00407a1e) */
+/* WARNING: Removing unreachable block (ram,0x00407a32) */
+/* WARNING: Removing unreachable block (ram,0x00407a36) */
+/* WARNING: Removing unreachable block (ram,0x00407a07) */
+/* WARNING: Removing unreachable block (ram,0x00407a0d) */
+/* WARNING: Removing unreachable block (ram,0x00407a14) */
+/* WARNING: Removing unreachable block (ram,0x00407a18) */
+/* WARNING: Removing unreachable block (ram,0x00407a98) */
+/* WARNING: Removing unreachable block (ram,0x00407a9c) */
+/* WARNING: Removing unreachable block (ram,0x00407ab2) */
+/* WARNING: Removing unreachable block (ram,0x00407ab6) */
+/* WARNING: Removing unreachable block (ram,0x00407ae0) */
+/* WARNING: Removing unreachable block (ram,0x00407af7) */
+/* WARNING: Removing unreachable block (ram,0x00407afb) */
+/* WARNING: Removing unreachable block (ram,0x00407ae3) */
+/* WARNING: Removing unreachable block (ram,0x00407b0e) */
+/* WARNING: Removing unreachable block (ram,0x00407b31) */
+/* WARNING: Removing unreachable block (ram,0x00407b12) */
+/* WARNING: Removing unreachable block (ram,0x00407ae2) */
+/* WARNING: Removing unreachable block (ram,0x00407b03) */
+/* WARNING: Removing unreachable block (ram,0x00407b15) */
+/* WARNING: Removing unreachable block (ram,0x00407b21) */
+/* WARNING: Removing unreachable block (ram,0x00407b25) */
+/* WARNING: Removing unreachable block (ram,0x00407b27) */
+/* WARNING: Removing unreachable block (ram,0x00407b29) */
+/* WARNING: Removing unreachable block (ram,0x00407b3c) */
+/* WARNING: Removing unreachable block (ram,0x00407b40) */
+/* WARNING: Removing unreachable block (ram,0x00407b5f) */
+/* WARNING: Removing unreachable block (ram,0x00407b48) */
+/* WARNING: Removing unreachable block (ram,0x00407b46) */
+/* WARNING: Removing unreachable block (ram,0x00407b53) */
+/* WARNING: Removing unreachable block (ram,0x00407b76) */
+/* WARNING: Removing unreachable block (ram,0x00407b57) */
+/* WARNING: Removing unreachable block (ram,0x00407b5a) */
+/* WARNING: Removing unreachable block (ram,0x00407b6a) */
+/* WARNING: Removing unreachable block (ram,0x00407b6c) */
+/* WARNING: Removing unreachable block (ram,0x00407b8d) */
+/* WARNING: Removing unreachable block (ram,0x00407b6e) */
+/* WARNING: Removing unreachable block (ram,0x00407b81) */
+/* WARNING: Removing unreachable block (ram,0x00407ba4) */
+/* WARNING: Removing unreachable block (ram,0x00407b85) */
+/* WARNING: Removing unreachable block (ram,0x00407b93) */
+/* WARNING: Removing unreachable block (ram,0x00407b98) */
+/* WARNING: Removing unreachable block (ram,0x00407bbb) */
+/* WARNING: Removing unreachable block (ram,0x00407b9c) */
+/* WARNING: Removing unreachable block (ram,0x00407b9f) */
+/* WARNING: Removing unreachable block (ram,0x00407b78) */
+/* WARNING: Removing unreachable block (ram,0x00407b02) */
+/* WARNING: Removing unreachable block (ram,0x00407d5e) */
+/* WARNING: Removing unreachable block (ram,0x00407d56) */
+/* WARNING: Removing unreachable block (ram,0x00407d30) */
+/* WARNING: Removing unreachable block (ram,0x00407d2b) */
+/* WARNING: Removing unreachable block (ram,0x00407d3b) */
+/* WARNING: Removing unreachable block (ram,0x00407d3f) */
+/* WARNING: Removing unreachable block (ram,0x00407d0f) */
+/* WARNING: Removing unreachable block (ram,0x00407d09) */
+/* WARNING: Removing unr
+/* truncated */
+
+
+################################################################
+## UsbFinder_WriteDeviceData
+entry=00406a5c size=23
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+
+bool __fastcall UsbFinder_WriteDeviceData(byte *command,byte length)
+
+{
+  uint uVar1;
+  uint uVar2;
+  char cVar3;
+  byte bVar4;
+  byte bVar5;
+  char *in_EAX;
+  int *piVar6;
+  char *pcVar7;
+  uint *puVar8;
+  undefined3 uVar10;
+  uint uVar9;
+  char cVar12;
+  undefined2 uVar13;
+  byte *pbVar11;
+  undefined3 in_register_00000009;
+  char *pcVar14;
+  undefined4 unaff_EBX;
+  char *pcVar15;
+  int unaff_EBP;
+  int iVar16;
+  char *unaff_ESI;
+  uint *puVar17;
+  uint *unaff_EDI;
+  
+  pcVar14 = (char *)CONCAT31(in_register_00000009,length);
+  cVar12 = (char)((uint)command >> 8);
+                    /* .NET CLR Managed Code */
+  pcVar15 = (char *)CONCAT22((short)((uint)unaff_EBX >> 0x10),
+                             CONCAT11((char)((uint)unaff_EBX >> 8) - cVar12,(byte)unaff_EBX));
+  *in_EAX = *in_EAX + (char)in_EAX;
+  cVar3 = (char)in_EAX + -8 + *pcVar15;
+  pcVar7 = (char *)CONCAT22((short)((uint)in_EAX >> 0x10),
+                            CONCAT11((char)((uint)in_EAX >> 8) - cVar12,cVar3));
+  *pcVar7 = *pcVar7 + cVar3;
+  piVar6 = (int *)CONCAT31((int3)((uint)pcVar7 >> 8),cVar3 - *pcVar14);
+  iVar16 = unaff_EBP + *piVar6;
+  pcVar7 = (char *)((uint)piVar6 ^ *(uint *)command);
+  cVar3 = (char)pcVar7;
+  *unaff_ESI = *unaff_ESI + cVar3;
+  uVar13 = (undefined2)((uint)command >> 0x10);
+  out((short)pcVar14,pcVar7);
+  *pcVar7 = *pcVar7 + cVar3;
+  pcVar7 = (char *)CONCAT31((int3)((uint)pcVar7 >> 8),cVar3 + -7);
+  pbVar11 = (byte *)CONCAT22(uVar13,(ushort)(byte)command);
+  *pcVar7 = *pcVar7 + cVar3 + -7;
+  puVar8 = (uint *)(pcVar7 + -(int)pcRam00013428);
+  *pcVar15 = *pcVar15 + '\x01' + (pcVar7 < pcRam00013428);
+  bVar4 = (byte)puVar8;
+  pcVar14[iVar16] = pcVar14[iVar16] + bVar4;
+  uVar2 = *puVar8;
+  *(byte *)puVar8 = (byte)*puVar8 + bVar4;
+  puVar17 = (uint *)(unaff_ESI + (uint)CARRY1((byte)uVar2,bVar4) + *puVar8);
+  uVar10 = (undefined3)((uint)puVar8 >> 8);
+  *puVar8 = (uint)puVar8;
+  *(byte *)puVar8 = (byte)*puVar8 + bVar4;
+  *puVar8 = *puVar8 ^ (uint)puVar8;
+  bVar5 = *pbVar11;
+  *pbVar11 = *pbVar11 + length;
+  bVar5 = bVar4 + 10 + CARRY1(bVar5,length);
+  pbVar11 = (byte *)CONCAT22(uVar13,CONCAT11(*(undefined1 *)CONCAT31(uVar10,bVar5),(byte)command));
+  *pbVar11 = *pbVar11 | bVar5;
+  *(byte *)puVar17 = (char)*puVar17 + bVar5;
+  piVar6 = (int *)(iVar16 + 0x1000026);
+  *piVar6 = (int)(pbVar11 + (uint)(bVar5 < 0x7e) + *piVar6);
+  uVar9 = CONCAT31(uVar10,bVar5 + 0x82) | *unaff_EDI;
+  uVar1 = (uint)((byte)unaff_EBX < *(byte *)((int)unaff_EDI + uVar9 + 0x79c1618));
+  pcVar7 = (char *)*puVar17;
+  uVar2 = *puVar17;
+  *puVar17 = (uVar2 - (int)pcVar14) - uVar1;
+  piVar6 = (int *)((int)unaff_EDI +
+                  CONCAT31(in_register_00000009,
+                           (length - (char)*puVar17) -
+                           (pcVar7 < pcVar14 || uVar2 - (int)pcVar14 < uVar1)) + *(int *)pbVar11);
+  *piVar6 = *piVar6 + CONCAT31((int3)(uVar9 >> 8),(char)uVar9 + -0x28) +
+            (uint)(0x6e < (byte)((char)uVar9 + 0x47U));
+                    /* WARNING: Bad instruction - Truncating control flow here */
+  halt_baddata();
+}
+
+
+
+################################################################
+## UsbFinder_ReadWriteDeviceData
+entry=00406a44 size=23
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+
+byte * __fastcall UsbFinder_ReadWriteDeviceData(byte *command,byte length)
+
+{
+  uint uVar1;
+  uint uVar2;
+  char cVar3;
+  byte bVar4;
+  byte bVar5;
+  char *in_EAX;
+  undefined3 uVar10;
+  int *piVar6;
+  char *pcVar7;
+  uint *puVar8;
+  uint uVar9;
+  char cVar12;
+  undefined2 uVar13;
+  byte *pbVar11;
+  undefined3 in_register_00000009;
+  char *pcVar14;
+  byte bVar15;
+  undefined4 unaff_EBX;
+  int unaff_EBP;
+  int iVar17;
+  char *unaff_ESI;
+  uint *puVar18;
+  uint *unaff_EDI;
+  char *pcVar16;
+  
+  pcVar14 = (char *)CONCAT31(in_register_00000009,length);
+  cVar12 = (char)((uint)command >> 8);
+                    /* .NET CLR Managed Code */
+  pcVar16 = (char *)CONCAT22((short)((uint)unaff_EBX >> 0x10),
+                             CONCAT11((char)((uint)unaff_EBX >> 8) - cVar12,(char)unaff_EBX));
+  *in_EAX = *in_EAX + (char)in_EAX;
+  uVar10 = (undefined3)((uint)in_EAX >> 8);
+  cVar3 = (char)in_EAX + -8 + *pcVar16;
+  *(char *)CONCAT31(uVar10,cVar3) = *(char *)CONCAT31(uVar10,cVar3) + cVar3;
+  iVar17 = *(int *)CONCAT31(uVar10,cVar3 - *pcVar14);
+  bVar4 = cVar3 - *pcVar14 ^ *command;
+  pcVar7 = (char *)CONCAT31(uVar10,bVar4);
+  *unaff_ESI = *unaff_ESI + bVar4;
+  bVar15 = ((char)unaff_EBX - cVar12) - unaff_ESI[0x28];
+  pcVar16 = (char *)CONCAT31((int3)((uint)pcVar16 >> 8),bVar15);
+  out((short)pcVar14,pcVar7);
+  *pcVar7 = *pcVar7 + bVar4;
+  cVar3 = (bVar4 - 8) + *pcVar16;
+  pcVar7 = (char *)CONCAT22((short)((uint)in_EAX >> 0x10),
+                            CONCAT11((char)((uint)in_EAX >> 8) - cVar12,cVar3));
+  *pcVar7 = *pcVar7 + cVar3;
+  piVar6 = (int *)CONCAT31((int3)((uint)pcVar7 >> 8),cVar3 - *pcVar14);
+  iVar17 = unaff_EBP + iVar17 + *piVar6;
+  pcVar7 = (char *)((uint)piVar6 ^ *(uint *)command);
+  cVar3 = (char)pcVar7;
+  *unaff_ESI = *unaff_ESI + cVar3;
+  uVar13 = (undefined2)((uint)command >> 0x10);
+  out((short)pcVar14,pcVar7);
+  *pcVar7 = *pcVar7 + cVar3;
+  pcVar7 = (char *)CONCAT31((int3)((uint)pcVar7 >> 8),cVar3 + -7);
+  pbVar11 = (byte *)CONCAT22(uVar13,(ushort)(byte)command);
+  *pcVar7 = *pcVar7 + cVar3 + -7;
+  puVar8 = (uint *)(pcVar7 + -(int)pcRam00013428);
+  *pcVar16 = *pcVar16 + '\x01' + (pcVar7 < pcRam00013428);
+  bVar5 = (byte)puVar8;
+  pcVar14[iVar17] = pcVar14[iVar17] + bVar5;
+  uVar2 = *puVar8;
+  *(byte *)puVar8 = (byte)*puVar8 + bVar5;
+  puVar18 = (uint *)(unaff_ESI + (uint)CARRY1((byte)uVar2,bVar5) + *puVar8);
+  uVar10 = (undefined3)((uint)puVar8 >> 8);
+  *puVar8 = (uint)puVar8;
+  *(byte *)puVar8 = (byte)*puVar8 + bVar5;
+  *puVar8 = *puVar8 ^ (uint)puVar8;
+  bVar4 = *pbVar11;
+  *pbVar11 = *pbVar11 + length;
+  bVar4 = bVar5 + 10 + CARRY1(bVar4,length);
+  pbVar11 = (byte *)CONCAT22(uVar13,CONCAT11(*(undefined1 *)CONCAT31(uVar10,bVar4),(byte)command));
+  *pbVar11 = *pbVar11 | bVar4;
+  *(byte *)puVar18 = (char)*puVar18 + bVar4;
+  piVar6 = (int *)(iVar17 + 0x1000026);
+  *piVar6 = (int)(pbVar11 + (uint)(bVar4 < 0x7e) + *piVar6);
+  uVar9 = CONCAT31(uVar10,bVar4 + 0x82) | *unaff_EDI;
+  uVar1 = (uint)(bVar15 < *(byte *)((int)unaff_EDI + uVar9 + 0x79c1618));
+  pcVar7 = (char *)*puVar18;
+  uVar2 = *puVar18;
+  *puVar18 = (uVar2 - (int)pcVar14) - uVar1;
+  piVar6 = (int *)((int)unaff_EDI +
+                  CONCAT31(in_register_00000009,
+                           (length - (char)*puVar18) -
+                           (pcVar7 < pcVar14 || uVar2 - (int)pcVar14 < uVar1)) + *(int *)pbVar11);
+  *piVar6 = *piVar6 + CONCAT31((int3)(uVar9 >> 8),(char)uVar9 + -0x28) +
+            (uint)(0x6e < (byte)((char)uVar9 + 0x47U));
+                    /* WARNING: Bad instruction - Truncating control flow here */
+  halt_baddata();
+}
+
+
+
+################################################################
+## ReadCurrentDPI
+entry=00406e33 size=19
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x0040a4db) overlaps instruction at (ram,0x0040a4da)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+/* WARNING: Removing unreachable block (ram,0x00409e4c) */
+/* WARNING: Removing unreachable block (ram,0x00409e57) */
+/* WARNING: Removing unreachable block (ram,0x00409e67) */
+/* WARNING: Removing unreachable block (ram,0x00409e7b) */
+/* WARNING: Removing unreachable block (ram,0x00409e8b) */
+/* WARNING: Removing unreachable block (ram,0x00409e93) */
+/* WARNING: Removing unreachable block (ram,0x00409e32) */
+/* WARNING: Removing unreachable block (ram,0x00409e9e) */
+/* WARNING: Removing unreachable block (ram,0x00409eae) */
+/* WARNING: Removing unreachable block (ram,0x00409eb6) */
+/* WARNING: Removing unreachable block (ram,0x00409eb8) */
+/* WARNING: Removing unreachable block (ram,0x00409f34) */
+/* WARNING: Removing unreachable block (ram,0x00409f4b) */
+/* WARNING: Removing unreachable block (ram,0x00409f61) */
+/* WARNING: Removing unreachable block (ram,0x00409f83) */
+/* WARNING: Removing unreachable block (ram,0x00409f24) */
+/* WARNING: Removing unreachable block (ram,0x00409f99) */
+/* WARNING: Removing unreachable block (ram,0x00409fb6) */
+/* WARNING: Removing unreachable block (ram,0x00409fc1) */
+/* WARNING: Removing unreachable block (ram,0x00409fb4) */
+/* WARNING: Removing unreachable block (ram,0x00409f42) */
+/* WARNING: Removing unreachable block (ram,0x00409ed6) */
+/* WARNING: Removing unreachable block (ram,0x00409eec) */
+/* WARNING: Removing unreachable block (ram,0x00409ef9) */
+/* WARNING: Removing unreachable block (ram,0x00409e87) */
+/* WARNING: Removing unreachable block (ram,0x00409ef8) */
+/* WARNING: Removing unreachable block (ram,0x00409efd) */
+/* WARNING: Removing unreachable block (ram,0x00409f09) */
+/* WARNING: Removing unreachable block (ram,0x00409f0e) */
+/* WARNING: Removing unreachable block (ram,0x0040a020) */
+/* WARNING: Removing unreachable block (ram,0x0040a02d) */
+/* WARNING: Removing unreachable block (ram,0x0040a04c) */
+/* WARNING: Removing unreachable block (ram,0x0040a093) */
+/* WARNING: Removing unreachable block (ram,0x0040a0c0) */
+/* WARNING: Removing unreachable block (ram,0x0040a110) */
+/* WARNING: Removing unreachable block (ram,0x0040a14e) */
+/* WARNING: Removing unreachable block (ram,0x0040a16f) */
+/* WARNING: Removing unreachable block (ram,0x0040a183) */
+/* WARNING: Removing unreachable block (ram,0x0040a131) */
+/* WARNING: Removing unreachable block (ram,0x0040a19c) */
+/* WARNING: Removing unreachable block (ram,0x0040a1d4) */
+/* WARNING: Removing unreachable block (ram,0x0040a16d) */
+/* WARNING: Removing unreachable block (ram,0x0040a103) */
+/* WARNING: Removing unreachable block (ram,0x0040a0e1) */
+/* WARNING: Removing unreachable block (ram,0x00409eba) */
+/* WARNING: Removing unreachable block (ram,0x00409e42) */
+/* WARNING: Removing unreachable block (ram,0x00409404) */
+/* WARNING: Removing unreachable block (ram,0x0040940c) */
+/* WARNING: Removing unreachable block (ram,0x00407d8c) */
+/* WARNING: Removing unreachable block (ram,0x00407b1a) */
+/* WARNING: Removing unreachable block (ram,0x00407ad5) */
+/* WARNING: Removing unreachable block (ram,0x00407a99) */
+/* WARNING: Removing unreachable block (ram,0x00407aa1) */
+/* WARNING: Removing unreachable block (ram,0x00407a50) */
+/* WARNING: Removing unreachable block (ram,0x00407a53) */
+/* WARNING: Removing unreachable block (ram,0x00407a6c) */
+/* WARNING: Removing unreachable block (ram,0x00407a1a) */
+/* WARNING: Removing unreachable block (ram,0x00407977) */
+/* WARNING: Removing unreachable block (ram,0x004078be) */
+/* WARNING: Removing unreachable block (ram,0x004078b8) */
+/* WARNING: Removing unreachable block (ram,0x004078eb) */
+/* WARNING: Removing unreachable block (ram,0x004078e6) */
+/* WARNING: Removing unreachable block (ram,0x004078f9) */
+/* WARNING: Removing unreachable block (ram,0x0040791d) */
+/* WARNING: Removing unreachable block (ram,0x004078fd) */
+/* WARNING: Removing unreachable block (ram,0x00407902) */
+/* WARNING: Removing unreachable block (ram,0x00407910) */
+/* WARNING: Removing unreachable block (ram,0x00407916) */
+/* WARNING: Removing unreachable block (ram,0x00407931) */
+/* WARNING: Removing unreachable block (ram,0x00407933) */
+/* WARNING: Removing unreachable block (ram,0x00407957) */
+/* WARNING: Removing unreachable block (ram,0x00407929) */
+/* WARNING: Removing unreachable block (ram,0x0040791a) */
+/* WARNING: Removing unreachable block (ram,0x00407952) */
+/* WARNING: Removing unreachable block (ram,0x004078cc) */
+/* WARNING: Removing unreachable block (ram,0x0040789c) */
+/* WARNING: Removing unreachable block (ram,0x00407541) */
+/* WARNING: Removing unreachable block (ram,0x0040748e) */
+/* WARNING: Removing unreachable block (ram,0x004074ba) */
+/* WARNING: Removing unreachable block (ram,0x0040793a) */
+/* WARNING: Removing unreachable block (ram,0x00407974) */
+/* WARNING: Removing unreachable block (ram,0x00407946) */
+/* WARNING: Removing unreachable block (ram,0x00407937) */
+/* WARNING: Removing unreachable block (ram,0x00407951) */
+/* WARNING: Removing unreachable block (ram,0x00407975) */
+/* WARNING: Removing unreachable block (ram,0x00407955) */
+/* WARNING: Removing unreachable block (ram,0x0040795a) */
+/* WARNING: Removing unreachable block (ram,0x0040795b) */
+/* WARNING: Removing unreachable block (ram,0x004079ab) */
+/* WARNING: Removing unreachable block (ram,0x0040797b) */
+/* WARNING: Removing unreachable block (ram,0x00407988) */
+/* WARNING: Removing unreachable block (ram,0x0040798c) */
+/* WARNING: Removing unreachable block (ram,0x0040795d) */
+/* WARNING: Removing unreachable block (ram,0x00407972) */
+/* WARNING: Removing unreachable block (ram,0x00407978) */
+/* WARNING: Removing unreachable block (ram,0x0040798f) */
+/* WARNING: Removing unreachable block (ram,0x00407992) */
+/* WARNING: Removing unreachable block (ram,0x004079a3) */
+/* WARNING: Removing unreachable block (ram,0x004079a7) */
+/* WARNING: Removing unreachable block (ram,0x004079ad) */
+/* WARNING: Removing unreachable block (ram,0x004079c0) */
+/* WARNING: Removing unreachable block (ram,0x004079c4) */
+/* WARNING: Removing unreachable block (ram,0x004079c5) */
+/* WARNING: Removing unreachable block (ram,0x004079c7) */
+/* WARNING: Removing unreachable block (ram,0x004079de) */
+/* WARNING: Removing unreachable block (ram,0x004079e4) */
+/* WARNING: Removing unreachable block (ram,0x004079ea) */
+/* WARNING: Removing unreachable block (ram,0x004079ec) */
+/* WARNING: Removing unreachable block (ram,0x004079f6) */
+/* WARNING: Removing unreachable block (ram,0x004079fa) */
+/* WARNING: Removing unreachable block (ram,0x004079fd) */
+/* WARNING: Removing unreachable block (ram,0x00407a38) */
+/* WARNING: Removing unreachable block (ram,0x00407a39) */
+/* WARNING: Removing unreachable block (ram,0x00407a3c) */
+/* WARNING: Removing unreachable block (ram,0x00407aba) */
+/* WARNING: Removing unreachable block (ram,0x00407a49) */
+/* WARNING: Removing unreachable block (ram,0x00407a4d) */
+/* WARNING: Removing unreachable block (ram,0x00407a1d) */
+/* WARNING: Removing unreachable block (ram,0x00407a6d) */
+/* WARNING: Removing unreachable block (ram,0x00407aec) */
+/* WARNING: Removing unreachable block (ram,0x00407ae4) */
+/* WARNING: Removing unreachable block (ram,0x00407abe) */
+/* WARNING: Removing unreachable block (ram,0x00407abc) */
+/* WARNING: Removing unreachable block (ram,0x00407ac9) */
+/* WARNING: Removing unreachable block (ram,0x00407acd) */
+/* WARNING: Removing unreachable block (ram,0x00407a9d) */
+/* WARNING: Removing unreachable block (ram,0x00407aa5) */
+/* WARNING: Removing unreachable block (ram,0x00407a55) */
+/* WARNING: Removing unreachable block (ram,0x00407a5d) */
+/* WARNING: Removing unreachable block (ram,0x00407adf) */
+/* WARNING: Removing unreachable block (ram,0x00407a64) */
+/* WARNING: Removing unreachable block (ram,0x00407a68) */
+/* WARNING: Removing unreachable block (ram,0x00407a6e) */
+/* WARNING: Removing unreachable block (ram,0x00407a71) */
+/* WARNING: Removing unreachable block (ram,0x00407a78) */
+/* WARNING: Removing unreachable block (ram,0x00407a05) */
+/* WARNING: Removing unreachable block (ram,0x00407a7e) */
+/* WARNING: Removing unreachable block (ram,0x00407a82) */
+/* WARNING: Removing unreachable block (ram,0x00407a88) */
+/* WARNING: Removing unreachable block (ram,0x00407a2d) */
+/* WARNING: Removing unreachable block (ram,0x00407a1e) */
+/* WARNING: Removing unreachable block (ram,0x00407a32) */
+/* WARNING: Removing unreachable block (ram,0x00407a36) */
+/* WARNING: Removing unreachable block (ram,0x00407a07) */
+/* WARNING: Removing unreachable block (ram,0x00407a0d) */
+/* WARNING: Removing unreachable block (ram,0x00407a14) */
+/* WARNING: Removing unreachable block (ram,0x00407a18) */
+/* WARNING: Removing unreachable block (ram,0x00407a98) */
+/* WARNING: Removing unreachable block (ram,0x00407a9c) */
+/* WARNING: Removing unreachable block (ram,0x00407ab2) */
+/* WARNING: Removing unreachable block (ram,0x00407ab6) */
+/* WARNING: Removing unreachable block (ram,0x00407ae0) */
+/* WARNING: Removing unreachable block (ram,0x00407af7) */
+/* WARNING: Removing unreachable block (ram,0x00407afb) */
+/* WARNING: Removing unreachable block (ram,0x00407ae3) */
+/* WARNING: Removing unreachable block (ram,0x00407b0e) */
+/* WARNING: Removing unreachable block (ram,0x00407b31) */
+/* WARNING: Removing unreachable block (ram,0x00407b12) */
+/* WARNING: Removing unreachable block (ram,0x00407ae2) */
+/* WARNING: Removing unreachable block (ram,0x00407b03) */
+/* WARNING: Removing unreachable block (ram,0x00407b15) */
+/* WARNING: Removing unreachable block (ram,0x00407b21) */
+/* WARNING: Removing unreachable block (ram,0x00407b25) */
+/* WARNING: Removing unreachable block (ram,0x00407b27) */
+/* WARNING: Removing unreachable block (ram,0x00407b29) */
+/* WARNING: Removing unreachable block (ram,0x00407b3c) */
+/* WARNING: Removing unreachable block (ram,0x00407b40) */
+/* WARNING: Removing unreachable block (ram,0x00407b5f) */
+/* WARNING: Removing unreachable block (ram,0x00407b48) */
+/* WARNING: Removing unreachable block (ram,0x00407b46) */
+/* WARNING: Removing unreachable block (ram,0x00407b53) */
+/* WARNING: Removing unreachable block (ram,0x00407b76) */
+/* WARNING: Removing unreachable block (ram,0x00407b57) */
+/* WARNING: Removing unreachable block (ram,0x00407b5a) */
+/* WARNING: Removing unreachable block (ram,0x00407b6a) */
+/* WARNING: Removing unreachable block (ram,0x00407b6c) */
+/* WARNING: Removing unreachable block (ram,0x00407b8d) */
+/* WARNING: Removing unreachable block (ram,0x00407b6e) */
+/* WARNING: Removing unreachable block (ram,0x00407b81) */
+/* WARNING: Removing unreachable block (ram,0x00407ba4) */
+/* WARNING: Removing unreachable block (ram,0x00407b85) */
+/* WARNING: Removing unreachable block (ram,0x00407b93) */
+/* WARNING: Removing unreachable block (ram,0x00407b98) */
+/* WARNING: Removing unreachable block (ram,0x00407bbb) */
+/* WARNING: Removing unreachable block (ram,0x00407b9c) */
+/* WARNING: Removing unreachable block (ram,0x00407b9f) */
+/* WARNING: Removing unreachable block (ram,0x00407b78) */
+/* WARNING: Removing unreachable block (ram,0x00407b02) */
+/* WARNING: Removing unreachable block (ram,0x00407d5e) */
+/* WARNING: Removing unreachable block (ram,0x00407d56) */
+/* WARNING: Removing unreachable block (ram,0x00407d30) */
+/* WARNING: Removing unreachable block (ram,0x00407d2b) */
+/* WARNING: Removing unreachable block (ram,0x00407d3b) */
+/* WARNING: Removing unreachable block (ram,0x00407d3f) */
+/* WARNING: Removing unreachable block (ram,0x00407d0f) */
+/* WARNING: Removing unreachable block (ram,0x00407d09) */
+/* WARNING: Removing unr
+/* truncated */
+
+
+################################################################
+## ReadReportRate
+entry=00406e47 size=19
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x0040a4db) overlaps instruction at (ram,0x0040a4da)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+/* WARNING: Removing unreachable block (ram,0x00409e4c) */
+/* WARNING: Removing unreachable block (ram,0x00409e57) */
+/* WARNING: Removing unreachable block (ram,0x00409e67) */
+/* WARNING: Removing unreachable block (ram,0x00409e7b) */
+/* WARNING: Removing unreachable block (ram,0x00409e8b) */
+/* WARNING: Removing unreachable block (ram,0x00409e93) */
+/* WARNING: Removing unreachable block (ram,0x00409e32) */
+/* WARNING: Removing unreachable block (ram,0x00409e9e) */
+/* WARNING: Removing unreachable block (ram,0x00409eae) */
+/* WARNING: Removing unreachable block (ram,0x00409eb6) */
+/* WARNING: Removing unreachable block (ram,0x00409eb8) */
+/* WARNING: Removing unreachable block (ram,0x00409f34) */
+/* WARNING: Removing unreachable block (ram,0x00409f4b) */
+/* WARNING: Removing unreachable block (ram,0x00409f61) */
+/* WARNING: Removing unreachable block (ram,0x00409f83) */
+/* WARNING: Removing unreachable block (ram,0x00409f24) */
+/* WARNING: Removing unreachable block (ram,0x00409f99) */
+/* WARNING: Removing unreachable block (ram,0x00409fb6) */
+/* WARNING: Removing unreachable block (ram,0x00409fc1) */
+/* WARNING: Removing unreachable block (ram,0x00409fb4) */
+/* WARNING: Removing unreachable block (ram,0x00409f42) */
+/* WARNING: Removing unreachable block (ram,0x00409ed6) */
+/* WARNING: Removing unreachable block (ram,0x00409eec) */
+/* WARNING: Removing unreachable block (ram,0x00409ef9) */
+/* WARNING: Removing unreachable block (ram,0x00409e87) */
+/* WARNING: Removing unreachable block (ram,0x00409ef8) */
+/* WARNING: Removing unreachable block (ram,0x00409efd) */
+/* WARNING: Removing unreachable block (ram,0x00409f09) */
+/* WARNING: Removing unreachable block (ram,0x00409f0e) */
+/* WARNING: Removing unreachable block (ram,0x0040a020) */
+/* WARNING: Removing unreachable block (ram,0x0040a02d) */
+/* WARNING: Removing unreachable block (ram,0x0040a04c) */
+/* WARNING: Removing unreachable block (ram,0x0040a093) */
+/* WARNING: Removing unreachable block (ram,0x0040a0c0) */
+/* WARNING: Removing unreachable block (ram,0x0040a110) */
+/* WARNING: Removing unreachable block (ram,0x0040a14e) */
+/* WARNING: Removing unreachable block (ram,0x0040a16f) */
+/* WARNING: Removing unreachable block (ram,0x0040a183) */
+/* WARNING: Removing unreachable block (ram,0x0040a131) */
+/* WARNING: Removing unreachable block (ram,0x0040a19c) */
+/* WARNING: Removing unreachable block (ram,0x0040a1d4) */
+/* WARNING: Removing unreachable block (ram,0x0040a16d) */
+/* WARNING: Removing unreachable block (ram,0x0040a103) */
+/* WARNING: Removing unreachable block (ram,0x0040a0e1) */
+/* WARNING: Removing unreachable block (ram,0x00409eba) */
+/* WARNING: Removing unreachable block (ram,0x00409e42) */
+/* WARNING: Removing unreachable block (ram,0x00409404) */
+/* WARNING: Removing unreachable block (ram,0x0040940c) */
+/* WARNING: Removing unreachable block (ram,0x00407d8c) */
+/* WARNING: Removing unreachable block (ram,0x00407b1a) */
+/* WARNING: Removing unreachable block (ram,0x00407ad5) */
+/* WARNING: Removing unreachable block (ram,0x00407a99) */
+/* WARNING: Removing unreachable block (ram,0x00407aa1) */
+/* WARNING: Removing unreachable block (ram,0x00407a50) */
+/* WARNING: Removing unreachable block (ram,0x00407a53) */
+/* WARNING: Removing unreachable block (ram,0x00407a6c) */
+/* WARNING: Removing unreachable block (ram,0x00407a1a) */
+/* WARNING: Removing unreachable block (ram,0x00407977) */
+/* WARNING: Removing unreachable block (ram,0x004078be) */
+/* WARNING: Removing unreachable block (ram,0x004078b8) */
+/* WARNING: Removing unreachable block (ram,0x004078eb) */
+/* WARNING: Removing unreachable block (ram,0x004078e6) */
+/* WARNING: Removing unreachable block (ram,0x004078f9) */
+/* WARNING: Removing unreachable block (ram,0x0040791d) */
+/* WARNING: Removing unreachable block (ram,0x004078fd) */
+/* WARNING: Removing unreachable block (ram,0x00407902) */
+/* WARNING: Removing unreachable block (ram,0x00407910) */
+/* WARNING: Removing unreachable block (ram,0x00407916) */
+/* WARNING: Removing unreachable block (ram,0x00407931) */
+/* WARNING: Removing unreachable block (ram,0x00407933) */
+/* WARNING: Removing unreachable block (ram,0x00407957) */
+/* WARNING: Removing unreachable block (ram,0x00407929) */
+/* WARNING: Removing unreachable block (ram,0x0040791a) */
+/* WARNING: Removing unreachable block (ram,0x00407952) */
+/* WARNING: Removing unreachable block (ram,0x004078cc) */
+/* WARNING: Removing unreachable block (ram,0x0040789c) */
+/* WARNING: Removing unreachable block (ram,0x00407541) */
+/* WARNING: Removing unreachable block (ram,0x0040748e) */
+/* WARNING: Removing unreachable block (ram,0x004074ba) */
+/* WARNING: Removing unreachable block (ram,0x0040793a) */
+/* WARNING: Removing unreachable block (ram,0x00407974) */
+/* WARNING: Removing unreachable block (ram,0x00407946) */
+/* WARNING: Removing unreachable block (ram,0x00407937) */
+/* WARNING: Removing unreachable block (ram,0x00407951) */
+/* WARNING: Removing unreachable block (ram,0x00407975) */
+/* WARNING: Removing unreachable block (ram,0x00407955) */
+/* WARNING: Removing unreachable block (ram,0x0040795a) */
+/* WARNING: Removing unreachable block (ram,0x0040795b) */
+/* WARNING: Removing unreachable block (ram,0x004079ab) */
+/* WARNING: Removing unreachable block (ram,0x0040797b) */
+/* WARNING: Removing unreachable block (ram,0x00407988) */
+/* WARNING: Removing unreachable block (ram,0x0040798c) */
+/* WARNING: Removing unreachable block (ram,0x0040795d) */
+/* WARNING: Removing unreachable block (ram,0x00407972) */
+/* WARNING: Removing unreachable block (ram,0x00407978) */
+/* WARNING: Removing unreachable block (ram,0x0040798f) */
+/* WARNING: Removing unreachable block (ram,0x00407992) */
+/* WARNING: Removing unreachable block (ram,0x004079a3) */
+/* WARNING: Removing unreachable block (ram,0x004079a7) */
+/* WARNING: Removing unreachable block (ram,0x004079ad) */
+/* WARNING: Removing unreachable block (ram,0x004079c0) */
+/* WARNING: Removing unreachable block (ram,0x004079c4) */
+/* WARNING: Removing unreachable block (ram,0x004079c5) */
+/* WARNING: Removing unreachable block (ram,0x004079c7) */
+/* WARNING: Removing unreachable block (ram,0x004079de) */
+/* WARNING: Removing unreachable block (ram,0x004079e4) */
+/* WARNING: Removing unreachable block (ram,0x004079ea) */
+/* WARNING: Removing unreachable block (ram,0x004079ec) */
+/* WARNING: Removing unreachable block (ram,0x004079f6) */
+/* WARNING: Removing unreachable block (ram,0x004079fa) */
+/* WARNING: Removing unreachable block (ram,0x004079fd) */
+/* WARNING: Removing unreachable block (ram,0x00407a38) */
+/* WARNING: Removing unreachable block (ram,0x00407a39) */
+/* WARNING: Removing unreachable block (ram,0x00407a3c) */
+/* WARNING: Removing unreachable block (ram,0x00407aba) */
+/* WARNING: Removing unreachable block (ram,0x00407a49) */
+/* WARNING: Removing unreachable block (ram,0x00407a4d) */
+/* WARNING: Removing unreachable block (ram,0x00407a1d) */
+/* WARNING: Removing unreachable block (ram,0x00407a6d) */
+/* WARNING: Removing unreachable block (ram,0x00407aec) */
+/* WARNING: Removing unreachable block (ram,0x00407ae4) */
+/* WARNING: Removing unreachable block (ram,0x00407abe) */
+/* WARNING: Removing unreachable block (ram,0x00407abc) */
+/* WARNING: Removing unreachable block (ram,0x00407ac9) */
+/* WARNING: Removing unreachable block (ram,0x00407acd) */
+/* WARNING: Removing unreachable block (ram,0x00407a9d) */
+/* WARNING: Removing unreachable block (ram,0x00407aa5) */
+/* WARNING: Removing unreachable block (ram,0x00407a55) */
+/* WARNING: Removing unreachable block (ram,0x00407a5d) */
+/* WARNING: Removing unreachable block (ram,0x00407adf) */
+/* WARNING: Removing unreachable block (ram,0x00407a64) */
+/* WARNING: Removing unreachable block (ram,0x00407a68) */
+/* WARNING: Removing unreachable block (ram,0x00407a6e) */
+/* WARNING: Removing unreachable block (ram,0x00407a71) */
+/* WARNING: Removing unreachable block (ram,0x00407a78) */
+/* WARNING: Removing unreachable block (ram,0x00407a05) */
+/* WARNING: Removing unreachable block (ram,0x00407a7e) */
+/* WARNING: Removing unreachable block (ram,0x00407a82) */
+/* WARNING: Removing unreachable block (ram,0x00407a88) */
+/* WARNING: Removing unreachable block (ram,0x00407a2d) */
+/* WARNING: Removing unreachable block (ram,0x00407a1e) */
+/* WARNING: Removing unreachable block (ram,0x00407a32) */
+/* WARNING: Removing unreachable block (ram,0x00407a36) */
+/* WARNING: Removing unreachable block (ram,0x00407a07) */
+/* WARNING: Removing unreachable block (ram,0x00407a0d) */
+/* WARNING: Removing unreachable block (ram,0x00407a14) */
+/* WARNING: Removing unreachable block (ram,0x00407a18) */
+/* WARNING: Removing unreachable block (ram,0x00407a98) */
+/* WARNING: Removing unreachable block (ram,0x00407a9c) */
+/* WARNING: Removing unreachable block (ram,0x00407ab2) */
+/* WARNING: Removing unreachable block (ram,0x00407ab6) */
+/* WARNING: Removing unreachable block (ram,0x00407ae0) */
+/* WARNING: Removing unreachable block (ram,0x00407af7) */
+/* WARNING: Removing unreachable block (ram,0x00407afb) */
+/* WARNING: Removing unreachable block (ram,0x00407ae3) */
+/* WARNING: Removing unreachable block (ram,0x00407b0e) */
+/* WARNING: Removing unreachable block (ram,0x00407b31) */
+/* WARNING: Removing unreachable block (ram,0x00407b12) */
+/* WARNING: Removing unreachable block (ram,0x00407ae2) */
+/* WARNING: Removing unreachable block (ram,0x00407b03) */
+/* WARNING: Removing unreachable block (ram,0x00407b15) */
+/* WARNING: Removing unreachable block (ram,0x00407b21) */
+/* WARNING: Removing unreachable block (ram,0x00407b25) */
+/* WARNING: Removing unreachable block (ram,0x00407b27) */
+/* WARNING: Removing unreachable block (ram,0x00407b29) */
+/* WARNING: Removing unreachable block (ram,0x00407b3c) */
+/* WARNING: Removing unreachable block (ram,0x00407b40) */
+/* WARNING: Removing unreachable block (ram,0x00407b5f) */
+/* WARNING: Removing unreachable block (ram,0x00407b48) */
+/* WARNING: Removing unreachable block (ram,0x00407b46) */
+/* WARNING: Removing unreachable block (ram,0x00407b53) */
+/* WARNING: Removing unreachable block (ram,0x00407b76) */
+/* WARNING: Removing unreachable block (ram,0x00407b57) */
+/* WARNING: Removing unreachable block (ram,0x00407b5a) */
+/* WARNING: Removing unreachable block (ram,0x00407b6a) */
+/* WARNING: Removing unreachable block (ram,0x00407b6c) */
+/* WARNING: Removing unreachable block (ram,0x00407b8d) */
+/* WARNING: Removing unreachable block (ram,0x00407b6e) */
+/* WARNING: Removing unreachable block (ram,0x00407b81) */
+/* WARNING: Removing unreachable block (ram,0x00407ba4) */
+/* WARNING: Removing unreachable block (ram,0x00407b85) */
+/* WARNING: Removing unreachable block (ram,0x00407b93) */
+/* WARNING: Removing unreachable block (ram,0x00407b98) */
+/* WARNING: Removing unreachable block (ram,0x00407bbb) */
+/* WARNING: Removing unreachable block (ram,0x00407b9c) */
+/* WARNING: Removing unreachable block (ram,0x00407b9f) */
+/* WARNING: Removing unreachable block (ram,0x00407b78) */
+/* WARNING: Removing unreachable block (ram,0x00407b02) */
+/* WARNING: Removing unreachable block (ram,0x00407d5e) */
+/* WARNING: Removing unreachable block (ram,0x00407d56) */
+/* WARNING: Removing unreachable block (ram,0x00407d30) */
+/* WARNING: Removing unreachable block (ram,0x00407d2b) */
+/* WARNING: Removing unreachable block (ram,0x00407d3b) */
+/* WARNING: Removing unreachable block (ram,0x00407d3f) */
+/* WARNING: Removing unreachable block (ram,0x00407d0f) */
+/* WARNING: Removing unreachable block (ram,0x00407d09) */
+/* WARNING: Removing unr
+/* truncated */
+
+
+################################################################
+## BufferToDPILed
+entry=00405028 size=78
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x004053fa) overlaps instruction at (ram,0x004053f9)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+/* WARNING: Removing unreachable block (ram,0x00405392) */
+
+void __fastcall BufferToDPILed(byte *data,undefined *dpiLed)
+
+{
+  undefined4 uVar1;
+  uint uVar2;
+  char cVar3;
+  char cVar4;
+  byte bVar5;
+  char cVar6;
+  undefined4 in_EAX;
+  ushort uVar14;
+  int *piVar7;
+  char *pcVar8;
+  undefined3 uVar13;
+  char *pcVar9;
+  int *piVar10;
+  int *piVar11;
+  int *piVar12;
+  byte bVar15;
+  undefined1 *puVar16;
+  int *piVar17;
+  char *pcVar18;
+  byte bVar22;
+  undefined1 uVar23;
+  int unaff_EBX;
+  byte *pbVar24;
+  int iVar25;
+  int iVar26;
+  int *piVar29;
+  undefined1 *puVar30;
+  undefined4 *puVar31;
+  int *unaff_EBP;
+  int unaff_ESI;
+  byte *pbVar32;
+  byte *pbVar33;
+  byte *pbVar34;
+  byte *unaff_EDI;
+  undefined2 in_ES;
+  byte in_AF;
+  bool bVar35;
+  byte in_TF;
+  byte in_IF;
+  bool bVar36;
+  byte in_NT;
+  byte in_AC;
+  byte in_VIF;
+  byte in_VIP;
+  byte in_ID;
+  int *piStack_34;
+  undefined2 uStack_24;
+  undefined2 uStack_22;
+  byte bVar19;
+  byte bVar20;
+  undefined2 uVar21;
+  char cVar27;
+  undefined2 uVar28;
+  
+                    /* .NET CLR Managed Code */
+  cRam28020000 = cRam28020000 << 1;
+  uVar2 = (uint)dpiLed >> 8;
+  cVar4 = (char)((uint)dpiLed >> 8);
+  pcVar8 = (char *)(uVar2 << 8);
+  cVar27 = (char)data;
+  *pcVar8 = *pcVar8 + cVar27;
+  *(char *)(unaff_EBX + 0x280a0000) = *(char *)(unaff_EBX + 0x280a0000) - cVar4;
+  uVar14 = (ushort)((uint)in_EAX >> 0x10);
+  pbVar32 = (byte *)CONCAT22(uVar14,(ushort)(byte)in_EAX);
+  *pcVar8 = *pcVar8 + cVar27;
+  uVar21 = (undefined2)((uint)data >> 0x10);
+  bVar19 = (byte)((uint)data >> 8) | *pbVar32;
+  puVar16 = (undefined1 *)CONCAT22(uVar21,CONCAT11(bVar19,cVar27));
+  out((short)pcVar8,pbVar32);
+  *pbVar32 = *pbVar32 + (byte)in_EAX;
+  *(undefined1 *)(unaff_ESI + 0x2b060000) = *(undefined1 *)(unaff_ESI + 0x2b060000);
+  puVar16[0x3060000] = puVar16[0x3060000] - cVar4;
+  cRam28020000 = cRam28020000 << 1;
+  *(char *)(uVar2 << 8) = *(char *)(uVar2 << 8) + cVar27;
+  puVar16[-0x5af60000] = puVar16[-0x5af60000] - (char)((uint)unaff_EBX >> 8);
+  piVar7 = (int *)((uVar14 & 2) * 0x10000);
+  unaff_EDI[0x2a0a0000] = unaff_EDI[0x2a0a0000] - cVar4;
+  *(char *)piVar7 = (char)*piVar7;
+  pcVar8 = (char *)((int)piVar7 + *piVar7);
+  pbVar32 = (byte *)(unaff_ESI + *piVar7 + -1);
+  bVar22 = (byte)pcVar8;
+  *pcVar8 = *pcVar8 + bVar22;
+  *(char *)((int)pcVar8 * 2) = *(char *)((int)pcVar8 * 2) + bVar19;
+  *puVar16 = *puVar16;
+  *pbVar32 = *pbVar32 << 1;
+  *pcVar8 = *pcVar8 + bVar22;
+  cVar4 = *pcVar8;
+  pcVar9 = (char *)(uVar2 * 0x100);
+  *pcVar9 = *pcVar9 + cVar27;
+  cVar6 = (char)((uint)pcVar9 >> 8);
+  *(char *)(unaff_EBX + 0x280a0000) = *(char *)(unaff_EBX + 0x280a0000) - cVar6;
+  pbVar33 = (byte *)CONCAT22((short)((uint)pcVar8 >> 0x10),(ushort)bVar22);
+  *pcVar9 = *pcVar9 + cVar27;
+  bVar5 = *pbVar33;
+  out((short)pcVar9,pbVar33);
+  *pbVar33 = *pbVar33 + bVar22;
+  bVar20 = *pbVar32;
+  unaff_EDI[0x2b060000] = unaff_EDI[0x2b060000];
+  cVar3 = (bVar22 - 9) + bVar20 + *pbVar32;
+  pcVar8 = (char *)CONCAT31((int3)((uint)pbVar33 >> 8),cVar3);
+  pcVar9[0x3060000] = pcVar9[0x3060000] - cVar6;
+  *pbVar32 = *pbVar32 << 1;
+  *pcVar8 = *pcVar8 + cVar3;
+  piVar17 = (int *)CONCAT22(uVar21,CONCAT11((bVar19 + cVar4 | bVar5) + *pcVar8,cVar27));
+  piVar7 = (int *)(uVar2 << 8);
+  *(char *)piVar7 = (char)*piVar7 + cVar27;
+code_r0x004050bc:
+  do {
+    cVar27 = (char)((uint)unaff_EBX >> 8);
+    *(char *)(piVar17 + -0x16bd8000) = (char)piVar17[-0x16bd8000] - cVar27;
+    *pcVar8 = *pcVar8 + (char)pcVar8;
+    uVar13 = (undefined3)((uint)pcVar8 >> 8);
+    cVar4 = (char)pcVar8 + *(char *)((int)piVar17 + 0x2000026);
+    pcVar9 = (char *)CONCAT31(uVar13,cVar4);
+    bVar22 = (byte)((uint)piVar7 >> 8);
+    unaff_EDI[0x2a0a0000] = unaff_EDI[0x2a0a0000] - bVar22;
+    cVar3 = (char)((uint)piVar17 >> 8);
+    uVar28 = (undefined2)((uint)unaff_EBX >> 0x10);
+    cVar27 = cVar27 - cVar3;
+    pbVar24 = (byte *)CONCAT22(uVar28,CONCAT11(cVar27,(char)unaff_EBX));
+    *pcVar9 = *pcVar9 + cVar4;
+    cVar4 = cVar4 + -7;
+    pcVar9 = (char *)CONCAT31(uVar13,cVar4);
+    uVar21 = (undefined2)((uint)piVar17 >> 0x10);
+    bVar20 = cVar3 + *pcVar9;
+    pcVar18 = (char *)CONCAT22(uVar21,CONCAT11(bVar20,(char)piVar17));
+    pcVar9 = (char *)(int)(short)pcVar9;
+    *pcVar9 = *pcVar9 + cVar4;
+    piVar10 = (int *)CONCAT31((int3)(char)((uint)pcVar8 >> 8),cVar4 - (char)*piVar7);
+    pbVar33 = pbVar24 + 0x2a060000;
+    bVar5 = *pbVar33;
+    *pbVar33 = *pbVar33 - bVar22;
+    pbVar33 = pbVar32 + (uint)(bVar5 < bVar22) + *piVar10;
+    pbVar32 = (byte *)((int)piVar10 + *piVar10);
+    bVar5 = (byte)pbVar32 ^ *pbVar32;
+    pbVar32 = (byte *)CONCAT31((int3)((uint)pbVar32 >> 8),bVar5);
+    *pbVar32 = *pbVar32 + bVar5;
+    *(int *)pbVar32 = *(int *)pbVar32 - (int)pbVar32;
+    cVar4 = (char)piVar7;
+    *pcVar18 = *pcVar18 + cVar4;
+    bVar36 = SCARRY1(cVar4,*pbVar33);
+    piVar7 = (int *)CONCAT31((int3)((uint)piVar7 >> 8),cVar4 + *pbVar33);
+    bVar35 = (char)(cVar4 + *pbVar33) < '\0';
+    do {
+      while (bVar5 = (byte)pbVar32, bVar36 == bVar35) {
+        *pbVar24 = *pbVar24 ^ bVar5;
+        *(byte *)piVar7 = (char)*piVar7 + bVar22;
+        *pbVar32 = *pbVar32 + bVar5;
+        *pcVar18 = *pcVar18 + bVar20;
+        bVar19 = *pbVar32;
+        *pbVar32 = *pbVar32 + bVar5;
+        iVar26 = *piVar7;
+        iVar25 = *piVar7;
+        *piVar7 = (int)(pbVar32 + iVar25 + CARRY1(bVar19,bVar5));
+        bVar35 = *piVar7 < 0;
+        bVar36 = SCARRY4(iVar26,(int)pbVar32) !=
+                 SCARRY4((int)(pbVar32 + iVar25),(uint)CARRY1(bVar19,bVar5));
+      }
+      *pbVar32 = *pbVar32 + bVar5;
+      uVar13 = (undefined3)((uint)pbVar32 >> 8);
+      cVar4 = (bVar5 + 0x75) - (0xfd < bVar5);
+      cVar4 = cVar4 - *(char *)CONCAT31(uVar13,cVar4);
+      pbVar32 = (byte *)CONCAT31(uVar13,cVar4);
+      bVar36 = SCARRY1((char)*piVar7,cVar4);
+      *(char *)piVar7 = (char)*piVar7 + cVar4;
+      bVar35 = (char)*piVar7 < '\0';
+    } while (bVar36 == bVar35);
+    *pbVar32 = *pbVar32 + cVar4;
+    bVar5 = cVar4 + 0x16;
+    piVar17 = (int *)CONCAT22(uVar21,CONCAT11(bVar20 | *pbVar24,(char)piVar17));
+    unaff_EBX = CONCAT22(uVar28,CONCAT11(cVar27 + pbVar24[-0xe],(char)unaff_EBX));
+    *(char *)CONCAT31(uVar13,bVar5) = *(char *)CONCAT31(uVar13,bVar5) + bVar5;
+    cVar4 = cVar4 + '\x1c';
+    pcVar8 = (char *)CONCAT31(uVar13,cVar4);
+    pbVar32 = pbVar33;
+  } while (bVar5 < 0xfa);
+  *pcVar8 = *pcVar8 + cVar4;
+  _uStack_24 = CONCAT22(uStack_22,in_ES);
+  pbVar24 = unaff_EDI + 1;
+  pbVar32 = pbVar33 + 1;
+  *unaff_EDI = *pbVar33;
+  *(char *)piVar7 = (char)*piVar7 + (cVar4 - *pcVar8);
+  bVar20 = (byte)in_ES;
+  bVar5 = bVar20 | *pbVar32;
+  bVar35 = bVar5 < 0x32;
+  cVar4 = bVar5 - 0x32;
+  pcVar8 = (char *)CONCAT31((int3)((uint)_uStack_24 >> 8),cVar4);
+  out(0x2a,cVar4);
+  if (cVar4 == '\0' || (char)bVar5 < '2') {
+    pbVar24 = unaff_EDI + 2;
+    pbVar32 = pbVar33 + 2;
+    goto code_r0x0040512b;
+  }
+code_r0x00405128:
+  if (!bVar35) goto code_r0x004050d1;
+code_r0x0040512b:
+  cVar4 = *pcVar8;
+  cVar3 = (char)pcVar8;
+  *pcVar8 = *pcVar8 + cVar3;
+  _uStack_24 = CONCAT22(uStack_22,in_ES);
+  if (SCARRY1(cVar4,cVar3) == *pcVar8 < '\0') goto code_r0x00405123;
+  *pcVar8 = *pcVar8 + cVar3;
+  bVar35 = SCARRY1(cVar3,'\x02');
+  cVar3 = cVar3 + '\x02';
+  pcVar8 = (char *)CONCAT31((int3)((uint)pcVar8 >> 8),cVar3);
+  while( true ) {
+    if (bVar35 == cVar3 < '\0') goto code_r0x0040512b;
+    bVar5 = (byte)pcVar8;
+    *pcVar8 = *pcVar8 + bVar5;
+    uVar13 = (undefined3)((uint)pcVar8 >> 8);
+    cVar4 = bVar5 + 2;
+    pcVar8 = (char *)CONCAT31(uVar13,cVar4);
+    if (bVar5 < 0xfe) {
+      cVar3 = *pcVar8;
+      *pcVar8 = *pcVar8 + cVar4;
+      piVar10 = unaff_EBP;
+      pbVar33 = pbVar24;
+      if (SCARRY1(cVar3,cVar4)) goto code_r0x004051be;
+    }
+    else {
+      pcVar8[0x7d] = pcVar8[0x7d] + (char)((uint)piVar7 >> 8);
+    }
+    *pcVar8 = *pcVar8 + cVar4;
+    bVar5 = bVar5 + 0x2c;
+    pbVar33 = (byte *)CONCAT31(uVar13,bVar5);
+    bVar22 = *pbVar33;
+    *pbVar33 = *pbVar33 + bVar5;
+    pbVar34 = pbVar32 + (uint)CARRY1(bVar22,bVar5) + *(int *)pbVar33;
+    pbVar33 = pbVar33 + *(int *)pbVar33 + -1;
+    bVar22 = (byte)pbVar33;
+    *pbVar33 = *pbVar33 + bVar22;
+    bVar19 = (byte)((uint)piVar17 >> 8);
+    *(byte *)piVar17 = (char)*piVar17 + bVar19;
+    bVar5 = *pbVar33;
+    *pbVar33 = *pbVar33 + bVar22;
+    iVar26 = *piVar7;
+    iVar25 = *piVar7;
+    *piVar7 = (int)(pbVar33 + iVar25 + CARRY1(bVar5,bVar22));
+    bVar35 = *piVar7 < 0;
+    bVar36 = SCARRY4(iVar26,(int)pbVar33) !=
+             SCARRY4((int)(pbVar33 + iVar25),(uint)CARRY1(bVar5,bVar22));
+    piVar10 = piVar7;
+    while (bVar36 == bVar35) {
+      *pbVar33 = *pbVar33 + bVar22;
+      *(int *)pbVar33 = *(int *)pbVar33 - (int)pbVar33;
+      cVar4 = (char)piVar10;
+      *(char *)piVar17 = (char)*piVar17 + cVar4;
+      piVar10 = (int *)CONCAT31((int3)((uint)piVar10 >> 8),cVar4 + *pbVar34);
+      bVar35 = (char)(cVar4 + *pbVar34) < '\0';
+      bVar36 = SCARRY1(cVar4,*pbVar34);
+    }
+    *pbVar33 = *pbVar33 + bVar22;
+    uVar13 = (undefined3)((uint)pbVar33 >> 8);
+    cVar4 = bVar22 + 2;
+    pcVar8 = (char *)CONCAT31(uVar13,cVar4);
+    *pcVar8 = *pcVar8 + cVar4;
+    *(int *)((int)unaff_EBP + -9) = (int)(pbVar24 + *(int *)((int)unaff_EBP + -9));
+    *pcVar8 = *pcVar8 + cVar4;
+    cVar3 = bVar22 + 4;
+    bVar35 = cVar3 < '\0';
+    *(undefined2 *)(pbVar34 + -4) = in_ES;
+    bVar36 = SCARRY1(cVar4,'\x02');
+    while (bVar36 == bVar35) {
+      bVar35 = false;
+      bVar36 = false;
+    }
+    *(char *)CONCAT31(uVar13,cVar3) = *(char *)CONCAT31(uVar13,cVar3) + cVar3;
+    cVar4 = bVar22 + 6;
+    pcVar8 = (char *)CONCAT31(uVar13,cVar4);
+    pbVar32 = pbVar34 + 1;
+    *pcVar8 = *pcVar8 + cVar4;
+    uVar21 = (undefined2)((uint)unaff_EBX >> 0x10);
+    cVar27 = (char)((uint)unaff_EBX >> 8) + *(char *)((int)piVar10 + -7);
+    pbVar33 = (byte *)CONCAT22(uVar21,CONCAT11(cVar27,(char)unaff_EBX));
+    *pcVar8 = *pcVar8 + cVar4;
+    bVar5 = bVar22 + 0x1c;
+    cVar3 = (char)piVar17;
+    bVar19 = bVar19 | *pbVar33;
+    piVar17 = (int *)CONCAT22((short)((uint)piVar17 >> 0x10),CONCAT11(bVar19,cVar3));
+    *(undefined2 *)(pbVar34 + -4) = in_ES;
+    unaff_EBX = CONCAT22(uVar21,CONCAT11(cVar27 + pbVar33[-7],(char)unaff_EBX));
+    *(char *)CONCAT31(uVar13,bVar5) = *(char *)CONCAT31(uVar13,bVar5) + bVar5;
+    cVar4 = bVar22 + 0x22;
+    pcVar8 = (char *)CONCAT31(uVar13,cVar4);
+    if (0xf9 < bVar5) break;
+    pcVar9 = (char *)((int)piVar10 + (int)pcVar8);
+    bVar35 = SCARRY1(*pcVar9,cVar4);
+    *pcVar9 = *pcVar9 + cVar4;
+    cVar3 = *pcVar9;
+    piVar7 = piVar10;
+    unaff_EBP = piVar10;
+  }
+  *pcVar8 = *pcVar8 + cVar4;
+  *(undefined2 *)(pbVar34 + -0xc) = in_ES;
+  pbVar33 = pbVar24 + 1;
+  *pbVar24 = *pbVar32;
+  *(char *)piVar10 = (char)*piVar10 + (cVar4 - *pcVar8);
+  *(undefined2 *)(pbVar34 + -0x10) = in_ES;
+  uVar1 = *(undefined4 *)(pbVar34 + -0xc);
+  bVar5 = (byte)uVar1 | pbVar34[2];
+  pbVar32 = pbVar34 + 3;
+  pcVar8 = (char *)CONCAT22((short)((uint)uVar1 >> 0x10),
+                            CONCAT11((byte)((uint)uVar1 >> 8) ^ bVar19,bVar5));
+  do {
+    piVar7 = (int *)(uint)*pbVar33;
+  } while (-1 < (char)*pbVar33);
+  *pcVar8 = *pcVar8 + bVar5;
+  do {
+    cVar4 = (char)pcVar8;
+    pcVar8 = (char *)CONCAT31((int3)((uint)pcVar8 >> 8),cVar4 + '\x02');
+  } while (-3 < cVar4);
+  while( true ) {
+    bVar5 = (byte)pcVar8;
+    *pcVar8 = *pcVar8 + bVar5;
+    cVar6 = bVar5 + 2;
+    pcVar8 = (char *)CONCAT31((int3)((uint)pcVar8 >> 8),cVar6);
+    pcVar9 = (char *)((int)piVar10 + 0x1000026);
+    cVar27 = *pcVar9;
+    cVar4 = *pcVar9;
+  
+/* truncated */
+
+
+################################################################
+## USBReadAllFlashData
+entry=00416f51 size=21
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Instruction at (ram,0x00416f9b) overlaps instruction at (ram,0x00416f97)
+    */
+/* WARNING: Unknown calling convention -- yet parameter storage is locked */
+
+void USBReadAllFlashData(void)
+
+{
+  code *pcVar1;
+  char cVar2;
+  byte bVar3;
+  byte *in_EAX;
+  undefined3 uVar9;
+  int iVar6;
+  int *piVar7;
+  byte *pbVar8;
+  char *in_ECX;
+  char cVar10;
+  char *in_EDX;
+  char *unaff_EBX;
+  char *unaff_EBP;
+  byte *unaff_ESI;
+  int unaff_EDI;
+  undefined2 in_SS;
+  bool bVar11;
+  byte abStack_8 [4];
+  char *pcStack_4;
+  char *pcVar4;
+  int iVar5;
+  
+                    /* .NET CLR Managed Code */
+  unaff_ESI[1] = unaff_ESI[1] - (char)((uint)in_ECX >> 8);
+  bVar3 = *unaff_ESI;
+  cVar2 = (char)in_EAX;
+  *unaff_ESI = *unaff_ESI + cVar2;
+  cVar10 = (char)((uint)in_EDX >> 8);
+  pcVar4 = unaff_EBX;
+  if (*unaff_ESI != 0 && SCARRY1(bVar3,cVar2) == (char)*unaff_ESI < '\0') {
+    uVar9 = (undefined3)((uint)in_EAX >> 8);
+    cVar2 = cVar2 + 'r';
+    pcVar4 = (char *)CONCAT31(uVar9,cVar2);
+    pcVar4[0x6f] = pcVar4[0x6f] + cVar10;
+    *pcVar4 = *pcVar4 + cVar2;
+    bVar3 = cVar2 - *pcVar4;
+    *unaff_EBX = *unaff_EBX + (char)in_EDX;
+    bRam00097500 = bRam00097500 ^ bVar3;
+    pcVar4 = (char *)(unaff_EDI + 0x73110000);
+    cVar2 = *pcVar4;
+    *pcVar4 = *pcVar4 + bVar3;
+    if (SCARRY1(cVar2,bVar3)) {
+      *unaff_ESI = *unaff_ESI + bVar3;
+      bVar3 = bVar3 | *unaff_ESI;
+    }
+    iVar5 = CONCAT31(uVar9,bVar3);
+    pcVar4 = (char *)((uint)unaff_EBX & 0xff);
+    cVar2 = (char)unaff_EBX;
+    iVar6 = iVar5 + 0x3060400;
+    unaff_EBP = in_ECX;
+    pcStack_4 = in_ECX;
+    if (iVar5 < -0x3060400) {
+      piVar7 = (int *)(iVar5 + -0x4a78f400);
+      *piVar7 = *piVar7 + (int)piVar7;
+      in_EAX = (byte *)CONCAT31((int3)((uint)piVar7 >> 8),(char)piVar7 + '\v');
+      if ((char)piVar7 < -0xb) goto code_r0x00416fad;
+      pbVar8 = in_EAX + 0x387b0400;
+      *(byte **)pbVar8 = pbVar8 + *(int *)pbVar8;
+      bVar11 = 0xf3 < (byte)pbVar8;
+      iVar6 = CONCAT31((int3)((uint)pbVar8 >> 8),(byte)pbVar8 + 0xc);
+    }
+    else {
+      pbVar8 = abStack_8 + (int)in_ECX;
+      bVar11 = CARRY1(*pbVar8,(byte)iVar6);
+      *pbVar8 = *pbVar8 + (byte)iVar6;
+    }
+    in_EAX = (byte *)((iVar6 + -0x20081233) - (uint)bVar11);
+    *in_EAX = *in_EAX;
+  }
+  cVar2 = (char)pcVar4;
+  *in_ECX = *in_ECX + cVar10;
+code_r0x00416fad:
+  *in_EAX = *in_EAX | (byte)((uint)in_EAX >> 8);
+  *in_EAX = *in_EAX;
+  unaff_EBP[0x59] = unaff_EBP[0x59] + cVar2;
+  pcVar4 = (char *)((uint)in_EAX | 0x1c);
+  *pcVar4 = *pcVar4 + (char)pcVar4;
+  puRamfe011216 = &stack0x00000000 + (int)puRamfe011216;
+  pcStack_4 = (char *)CONCAT22(pcStack_4._2_2_,in_SS);
+  *in_EDX = *in_EDX + (char)pcVar4;
+  out(*(undefined4 *)unaff_ESI,(short)in_EDX);
+  pcVar1 = (code *)swi(3);
+  (*pcVar1)();
+  return;
+}
+
+
+
+################################################################
+## UpdataUSBData
+entry=00417a30 size=26
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Instruction at (ram,0x00417af8) overlaps instruction at (ram,0x00417af7)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+/* WARNING: Unknown calling convention -- yet parameter storage is locked */
+
+void UpdataUSBData(void)
+
+{
+  undefined4 uVar1;
+  code *pcVar2;
+  undefined4 *puVar3;
+  undefined2 *puVar4;
+  uint uVar5;
+  byte bVar6;
+  char cVar7;
+  byte bVar8;
+  undefined4 in_EAX;
+  byte *pbVar9;
+  undefined3 uVar16;
+  byte *pbVar10;
+  uint uVar11;
+  char *pcVar12;
+  int *piVar13;
+  uint *puVar14;
+  char *pcVar15;
+  char cVar18;
+  byte *in_ECX;
+  int iVar17;
+  undefined2 uVar19;
+  int *in_EDX;
+  int *piVar20;
+  undefined1 uVar21;
+  char cVar23;
+  int unaff_EBX;
+  byte bVar24;
+  uint *puVar22;
+  int unaff_EBP;
+  byte *unaff_ESI;
+  uint *unaff_EDI;
+  undefined2 in_ES;
+  undefined2 in_SS;
+  char in_AF;
+  bool bVar25;
+  int *in_stack_fffffff8;
+  
+                    /* .NET CLR Managed Code */
+  uVar19 = (undefined2)((uint)unaff_EBX >> 0x10);
+  uVar21 = (undefined1)unaff_EBX;
+  cVar23 = (char)((uint)unaff_EBX >> 8) + *(char *)(unaff_EBX + 0x73);
+  puVar22 = (uint *)CONCAT22(uVar19,CONCAT11(cVar23,uVar21));
+  bVar6 = (char)in_EAX + 0x2c;
+  pbVar10 = (byte *)CONCAT31((int3)((uint)in_EAX >> 8),bVar6);
+  iVar17 = *in_EDX;
+  *in_EDX = *in_EDX + unaff_EBP;
+  pbVar9 = (byte *)*in_EDX;
+  if (*in_EDX == 0 || SCARRY4(iVar17,unaff_EBP) != *in_EDX < 0) {
+    if (*in_EDX == 0 || SCARRY4(iVar17,unaff_EBP) != *in_EDX < 0) goto code_r0x00417af5;
+  }
+  else {
+    cVar7 = (char)in_EAX + 'T';
+    pbVar9 = (byte *)CONCAT22((short)((uint)in_EAX >> 0x10),
+                              CONCAT11((cVar7 < '\0') << 7 | (cVar7 == '\0') << 6 | in_AF << 4 |
+                                       ((POPCOUNT(cVar7) & 1U) == 0) << 2 | 2U | 0xd7 < bVar6,cVar7)
+                             );
+    *pbVar9 = *pbVar9 + cVar7;
+    bVar6 = (byte)((uint)in_ECX >> 8);
+    cVar18 = bVar6 + *pbVar9;
+    pbVar9 = (byte *)CONCAT31((int3)((uint)pbVar9 >> 8),
+                              cVar7 + *(char *)((int)pbVar9 * 2) + CARRY1(bVar6,*pbVar9));
+    in_stack_fffffff8 = (int *)CONCAT22((short)((uint)in_stack_fffffff8 >> 0x10),in_ES);
+    cVar7 = cVar18 - *unaff_ESI;
+    in_ECX = (byte *)CONCAT22((short)((uint)in_ECX >> 0x10),CONCAT11(cVar7,(char)in_ECX));
+    if (cVar7 != '\0' && (char)*unaff_ESI <= cVar18) goto code_r0x00417aa9;
+    do {
+      uVar16 = (undefined3)((uint)pbVar9 >> 8);
+      bVar8 = (char)pbVar9 + 0x28;
+      pbVar9 = (byte *)CONCAT31(uVar16,bVar8);
+      bVar6 = *pbVar9;
+      bRam2a060000 = bVar8;
+      *pbVar9 = *pbVar9 + bVar8;
+      unaff_ESI = unaff_ESI + (uint)CARRY1(bVar6,bVar8) + *(int *)pbVar9;
+      cVar7 = bVar8 + *pbVar9;
+      pbVar9 = (byte *)CONCAT31(uVar16,cVar7);
+      *pbVar9 = *pbVar9 + cVar7;
+      *pbVar9 = *pbVar9 + cVar7;
+      *pbVar9 = *pbVar9 + cVar7;
+      *(char *)in_EDX = (char)*in_EDX + cVar7;
+    } while ((POPCOUNT((char)*in_EDX) & 1U) != 0);
+    puVar3 = (undefined4 *)*in_stack_fffffff8;
+    cVar7 = cVar7 + -0xc + (0x90 < (byte)(cVar7 + 0x7eU));
+    *unaff_ESI = *unaff_ESI + cVar7;
+    cVar23 = cVar23 + (char)puVar22[-2];
+    puVar22 = (uint *)CONCAT22(uVar19,CONCAT11(cVar23,uVar21));
+    puVar4 = (undefined2 *)*puVar3;
+    cVar18 = cVar7 + -0x13;
+    pcVar12 = (char *)CONCAT31(uVar16,cVar18);
+    unaff_EDI = unaff_EDI + 1;
+    in_ES = *puVar4;
+    bVar6 = *unaff_ESI;
+    *unaff_ESI = *unaff_ESI + cVar18;
+    if (*unaff_ESI == 0 || SCARRY1(bVar6,cVar18) != (char)*unaff_ESI < '\0') goto code_r0x00417ada;
+    *puVar4 = in_ES;
+    in_ECX[(int)puVar22] = in_ECX[(int)puVar22] + cVar7 + 'h';
+    in_EDX = (int *)CONCAT31((int3)((uint)((int)in_EDX + -1) >> 8),
+                             (byte)(char *)((int)in_EDX + -1) ^ *in_ECX);
+    puVar22 = (uint *)CONCAT22(uVar19,CONCAT11(cVar23 + *(char *)((int)puVar22 + 7),uVar21));
+    pbVar10 = (byte *)(CONCAT31(uVar16,cVar7 + 'h') + 0x5c7e0400);
+  }
+  cVar7 = (char)pbVar10;
+  cVar23 = cVar7 + 'o';
+  pbVar10 = (byte *)CONCAT31((int3)((uint)pbVar10 >> 8),cVar23);
+  pbRam2a060006 = pbVar10;
+  if (cVar23 == '\0' || cVar7 < -0x6f) goto code_r0x00417af8;
+  do {
+    pbVar9 = (byte *)CONCAT31((int3)((uint)pbVar10 >> 8),(char)pbVar10 + '{');
+    in_EDX = (int *)((int)in_EDX + -1);
+code_r0x00417aa9:
+    in_stack_fffffff8 = (int *)CONCAT22((short)((uint)in_stack_fffffff8 >> 0x10),in_ES);
+    cVar23 = (char)pbVar9;
+    pbVar9[(int)puVar22] = pbVar9[(int)puVar22] + cVar23;
+    *pbVar9 = *pbVar9 ^ (byte)in_EDX;
+    puVar22 = (uint *)CONCAT22((short)((uint)puVar22 >> 0x10),
+                               CONCAT11((char)((uint)puVar22 >> 8) + (char)puVar22[0x1e],
+                                        (char)puVar22));
+    uVar16 = (undefined3)((uint)pbVar9 >> 8);
+    cVar7 = cVar23 + -0x13;
+    if (-0x70 < (char)(cVar23 + '~')) {
+      *unaff_ESI = *unaff_ESI + cVar7;
+      in_EDX = (int *)CONCAT22((short)((uint)in_EDX >> 0x10),
+                               CONCAT11((char)((uint)in_EDX >> 8) - *unaff_ESI,(byte)in_EDX));
+      cVar7 = cVar23 + 'm';
+    }
+    iVar17 = *in_stack_fffffff8;
+    pcVar12 = (char *)CONCAT31(uVar16,cVar7 + '\x02');
+    *pcVar12 = *pcVar12 - (char)in_EDX;
+    *(undefined2 *)(iVar17 + -4) = in_ES;
+    in_EDX = (int *)CONCAT31((int3)((uint)in_EDX >> 8),(char)in_EDX - unaff_ESI[2]);
+    *unaff_ESI = *unaff_ESI - (char)in_ECX;
+    *(undefined2 *)(iVar17 + -8) = in_ES;
+    pcVar12 = (char *)CONCAT31(uVar16,cVar7 + 'v');
+code_r0x00417ada:
+    uVar16 = (undefined3)((uint)pcVar12 >> 8);
+    bVar6 = (char)pcVar12 + 2;
+    pcVar12 = (char *)CONCAT31(uVar16,bVar6);
+    *pcVar12 = *pcVar12 - (char)in_EDX;
+    uVar11 = CONCAT31(uVar16,bVar6);
+    uVar5 = *puVar22;
+    bRam00019600 = bRam00019600 ^ bVar6;
+    pcVar12 = (char *)(uVar11 + 0x16110000);
+    *pcVar12 = *pcVar12 + (char)in_ECX;
+    in_EDX = (int *)CONCAT31((int3)((uint)in_EDX >> 8),(char)in_EDX - (char)uVar5 | *unaff_ESI);
+    pbVar10 = (byte *)(uVar11 | *puVar22);
+    pbVar9 = pbVar10;
+code_r0x00417af5:
+    if ((POPCOUNT((uint)pbVar9 & 0xff) & 1U) == 0) {
+      cVar23 = (char)(pbVar10 + *(int *)pbVar10);
+      bVar25 = SCARRY1(cVar23,'\f');
+      bVar6 = cVar23 + 0xc;
+      pbVar10 = (byte *)CONCAT31((int3)((uint)(pbVar10 + *(int *)pbVar10) >> 8),bVar6);
+      piVar20 = in_EDX;
+      pbVar9 = unaff_ESI;
+      do {
+        in_EDX = piVar20;
+        unaff_ESI = pbVar9;
+        if (bVar6 == 0 || bVar25 != (char)bVar6 < '\0') {
+code_r0x00417b4e:
+          uVar19 = CONCAT11((byte)((uint)in_EDX >> 8) | *(byte *)((int)in_EDX + -0x11),(char)in_EDX)
+          ;
+          pcVar12 = (char *)CONCAT22((short)((uint)in_EDX >> 0x10),uVar19);
+          iVar17 = *(int *)pbVar10;
+          *(int *)pbVar10 = *(int *)pbVar10 - (int)pbVar10;
+          pbVar9 = unaff_ESI;
+          if (!SBORROW4(iVar17,(int)pbVar10)) {
+            unaff_EDI = (uint *)((int)unaff_EDI + *(int *)(&stack0x00000000 + (int)in_ECX * 8));
+            pbVar10[unaff_EBP] = pbVar10[unaff_EBP] + (char)pbVar10;
+            puVar22 = (uint *)((int)puVar22 + 1);
+            uVar16 = (undefined3)((uint)pbVar10 >> 8);
+            bVar6 = (char)pbVar10 + *pbVar10;
+            cVar23 = (char)in_ECX;
+            in_ECX = (byte *)CONCAT22((short)((uint)in_ECX >> 0x10),
+                                      CONCAT11((byte)((uint)in_ECX >> 8) |
+                                               *(byte *)CONCAT31(uVar16,bVar6),cVar23));
+            pbVar10 = (byte *)CONCAT31(uVar16,bVar6 | *in_ECX);
+            *pcVar12 = *pcVar12 + cVar23;
+            pbVar9 = unaff_ESI + 4;
+            out(*(undefined4 *)unaff_ESI,uVar19);
+          }
+          bVar6 = *pbVar10;
+          *pbVar10 = *pbVar10 + (byte)pbVar10;
+          pbVar10 = pbVar10 + (uint)CARRY1(bVar6,(byte)pbVar10) + *(int *)(pbVar10 + (int)unaff_EDI)
+          ;
+          *(byte **)in_ECX = pbVar10 + *(int *)in_ECX;
+          cVar23 = (char)pbVar10;
+          *pbVar10 = *pbVar10 + cVar23;
+          *(uint *)((int)puVar22 + -0x35) = *(uint *)((int)puVar22 + -0x35) | (uint)unaff_EDI;
+          *pbVar10 = *pbVar10 + cVar23;
+          uVar16 = (undefined3)((uint)pbVar10 >> 8);
+          bVar8 = cVar23 - 7;
+          puVar14 = (uint *)CONCAT31(uVar16,bVar8);
+          *pbVar9 = *pbVar9 ^ bVar8;
+          *(char *)((int)puVar14 * 3) = *(char *)((int)puVar14 * 3) + bVar8;
+          bVar6 = (byte)in_ECX & 0x1f;
+          *puVar14 = *puVar14 << bVar6 | *puVar14 >> 0x20 - bVar6;
+          *(byte *)puVar14 = (char)*puVar14 + bVar8;
+          puVar22[-0xd] = puVar22[-0xd] | (uint)unaff_EDI;
+          *(byte *)puVar14 = (char)*puVar14 + bVar8;
+          in_ECX[(int)pcVar12] = in_ECX[(int)pcVar12] + cVar23 + -0xe;
+          uVar1 = in(uVar19);
+          *(undefined4 *)((int)unaff_EDI + 1) = uVar1;
+          cVar23 = cVar23 + 'a' + *(char *)CONCAT31(uVar16,cVar23 + 'a');
+          pcVar15 = (char *)CONCAT31(uVar16,cVar23);
+          uVar5 = puVar22[0x12];
+          *(char *)((int)pcVar15 * 3) = *(char *)((int)pcVar15 * 3) + cVar23;
+          pcVar12 = (char *)((uint)pcVar12 & 0xffffff00);
+          *pcVar15 = *pcVar15 + cVar23;
+          puVar14 = (uint *)(CONCAT22((short)((uint)puVar22 >> 0x10),
+                                      CONCAT11((byte)((uint)puVar22 >> 8) | (byte)uVar5,
+                                               (char)puVar22)) + -0x33);
+          *puVar14 = *puVar14 | (uint)((int)unaff_EDI + 5U);
+          *pcVar15 = *pcVar15 + cVar23;
+          *pcVar12 = *pcVar12 + cVar23 + '%';
+          out(*(undefined4 *)pbVar9,(short)pcVar12);
+          pcVar2 = (code *)swi(3);
+          (*pcVar2)(in_ES,puVar22,puVar22,in_SS,in_ES);
+          return;
+        }
+        uVar16 = (undefined3)((uint)pbVar10 >> 8);
+        bVar8 = (char)pbVar10 + 8;
+        pbVar10 = (byte *)CONCAT31(uVar16,bVar8);
+        unaff_ESI = pbVar9 + 4;
+        out(*(undefined4 *)pbVar9,(short)piVar20);
+        bVar6 = *pbVar10;
+        *pbVar10 = *pbVar10 + bVar8;
+        in_stack_fffffff8 = (int *)CONCAT22((short)((uint)in_stack_fffffff8 >> 0x10),in_ES);
+        cVar23 = bVar8 + (char)*puVar22 + CARRY1(bVar6,bVar8);
+        cRam02000021 = cRam02000021 + '\x01';
+        iVar17 = (int)in_ECX - *(int *)(in_ECX + CONCAT31(uVar16,cVar23));
+        cVar23 = cVar23 + (char)*puVar22 + (in_ECX < *(byte **)(in_ECX + CONCAT31(uVar16,cVar23)));
+        pcVar12 = (char *)CONCAT31(uVar16,cVar23);
+        bVar24 = (byte)((uint)puVar22 >> 8);
+        in_EDX = (int *)CONCAT31((int3)((uint)piVar20 >> 8),(char)piVar20 - bVar24);
+        *pcVar12 = *pcVar12 + cVar23;
+        pcVar12 = (char *)((uint)in_ECX | *unaff_EDI);
+        bVar8 = (byte)iVar17;
+        in_ECX = (byte *)CONCAT22((short)((uint)iVar17 >> 0x10),
+                                  CONCAT11((byte)((uint)iVar17 >> 8) | (byte)*unaff_EDI,bVar8));
+        bVar6 = *in_ECX;
+        *in_ECX = *in_ECX + bVar8;
+        in_SS = in_ES;
+        if ((POPCOUNT(*in_ECX) & 1U) != 0) goto code_r0x00417aef;
+        cVar23 = (char)pcVar12;
+        *pcVar12 = *pcVar12 + cVar23;
+        uVar16 = (undefined3)((uint)pcVar12 >> 8);
+        pbVar10 = (byte *)CONCAT31(uVar16,cVar23 + '-');
+        *in_ECX = *in_ECX | bVar8;
+        if ((POPCOUNT(*in_ECX) & 1U) == 0) {
+          *pbVar10 = *pbVar10 + cVar23 + '-';
+          piVar13 = (int *)CONCAT31(uVar16,cVar23 + 'Y');
+          bVar24 = bVar24 | *(byte *)((int)puVar22 + (int)in_ECX * 2);
+          iVar17 = CONCAT22((short)((uint)puVar22 >> 0x10),CONCAT11(bVar24,(char)puVar22));
+          *piVar13 = *piVar13 + (int)piVar13;
+          pbVar9[0x55] = pbVar9[0x55] + bVar24;
+          pcVar12 = (char *)in(0x19);
+          pcVar12[0x12] = pcVar12[0x12] + (char)((uint)piVar20 >> 8);
+          unaff_EDI = (uint *)((int)unaff_EDI + *(int *)(iVar17 + (int)in_ECX * 8));
+          pcVar12[unaff_EBP] = pcVar12[unaff_EBP] + (char)pcVar12;
+          puVar22 = (uint
+/* truncated */
+
+
+################################################################
+## ValueToDPI
+entry=00440f60 size=613
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x00443b35) overlaps instruction at (ram,0x00443b34)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+/* WARNING: This function may have set the stack pointer */
+/* WARNING: Removing unreachable block (ram,0x00443b83) */
+/* WARNING: Removing unreachable block (ram,0x004439f6) */
+/* WARNING: Removing unreachable block (ram,0x00443a00) */
+/* WARNING: Removing unreachable block (ram,0x00443a01) */
+/* WARNING: Removing unreachable block (ram,0x00443a07) */
+/* WARNING: Removing unreachable block (ram,0x00443a7b) */
+/* WARNING: Removing unreachable block (ram,0x00443a3e) */
+/* WARNING: Removing unreachable block (ram,0x00443a40) */
+/* WARNING: Removing unreachable block (ram,0x00443a45) */
+/* WARNING: Removing unreachable block (ram,0x00443acb) */
+/* WARNING: Removing unreachable block (ram,0x00443b40) */
+/* WARNING: Removing unreachable block (ram,0x00443a59) */
+/* WARNING: Removing unreachable block (ram,0x00443a5c) */
+/* WARNING: Removing unreachable block (ram,0x00443acd) */
+/* WARNING: Removing unreachable block (ram,0x00443a5e) */
+/* WARNING: Removing unreachable block (ram,0x00443a6e) */
+/* WARNING: Removing unreachable block (ram,0x00443a70) */
+/* WARNING: Removing unreachable block (ram,0x00443ae1) */
+/* WARNING: Removing unreachable block (ram,0x00443a72) */
+/* WARNING: Removing unreachable block (ram,0x00443a3f) */
+/* WARNING: Removing unreachable block (ram,0x004439fa) */
+/* WARNING: Removing unreachable block (ram,0x00443a03) */
+/* WARNING: Removing unreachable block (ram,0x00443a05) */
+/* WARNING: Removing unreachable block (ram,0x004439fc) */
+/* WARNING: Removing unreachable block (ram,0x00443a08) */
+/* WARNING: Removing unreachable block (ram,0x00443a0a) */
+/* WARNING: Removing unreachable block (ram,0x00443a0c) */
+/* WARNING: Removing unreachable block (ram,0x00443a0e) */
+/* WARNING: Removing unreachable block (ram,0x00443a73) */
+/* WARNING: Removing unreachable block (ram,0x00443a41) */
+/* WARNING: Removing unreachable block (ram,0x00443a43) */
+/* WARNING: Removing unreachable block (ram,0x00443a7d) */
+/* WARNING: Removing unreachable block (ram,0x00443a7f) */
+/* WARNING: Removing unreachable block (ram,0x00443a81) */
+/* WARNING: Removing unreachable block (ram,0x00443a09) */
+/* WARNING: Removing unreachable block (ram,0x00443a14) */
+/* WARNING: Removing unreachable block (ram,0x00443a88) */
+/* WARNING: Removing unreachable block (ram,0x00443a74) */
+/* WARNING: Removing unreachable block (ram,0x00443a78) */
+/* WARNING: Removing unreachable block (ram,0x00443a82) */
+/* WARNING: Removing unreachable block (ram,0x00443a84) */
+/* WARNING: Removing unreachable block (ram,0x00443a86) */
+/* WARNING: Removing unreachable block (ram,0x00443a8c) */
+/* WARNING: Removing unreachable block (ram,0x00443a91) */
+/* WARNING: Removing unreachable block (ram,0x00443a93) */
+/* WARNING: Removing unreachable block (ram,0x00443b07) */
+/* WARNING: Removing unreachable block (ram,0x00443a95) */
+/* WARNING: Removing unreachable block (ram,0x00443a98) */
+/* WARNING: Removing unreachable block (ram,0x00443b09) */
+/* WARNING: Removing unreachable block (ram,0x00443a9a) */
+/* WARNING: Removing unreachable block (ram,0x00443b18) */
+/* WARNING: Removing unreachable block (ram,0x00443aa9) */
+/* WARNING: Removing unreachable block (ram,0x00443ab7) */
+/* WARNING: Removing unreachable block (ram,0x00443ab0) */
+/* WARNING: Removing unreachable block (ram,0x00443ac6) */
+/* WARNING: Removing unreachable block (ram,0x00443ae9) */
+/* WARNING: Removing unreachable block (ram,0x00443af3) */
+/* WARNING: Removing unreachable block (ram,0x00443af5) */
+/* WARNING: Removing unreachable block (ram,0x004439c4) */
+/* WARNING: Removing unreachable block (ram,0x004439ce) */
+/* WARNING: Removing unreachable block (ram,0x004439d8) */
+/* WARNING: Removing unreachable block (ram,0x004439c7) */
+/* WARNING: Removing unreachable block (ram,0x004439e2) */
+/* WARNING: Removing unreachable block (ram,0x004439d1) */
+/* WARNING: Removing unreachable block (ram,0x00443960) */
+/* WARNING: Removing unreachable block (ram,0x00442cad) */
+/* WARNING: Removing unreachable block (ram,0x004417f6) */
+/* WARNING: Removing unreachable block (ram,0x004417f4) */
+/* WARNING: Removing unreachable block (ram,0x004417ea) */
+/* WARNING: Removing unreachable block (ram,0x004417fa) */
+/* WARNING: Removing unreachable block (ram,0x004417fb) */
+/* WARNING: Removing unreachable block (ram,0x0044185b) */
+/* WARNING: Removing unreachable block (ram,0x00441b5b) */
+/* WARNING: Removing unreachable block (ram,0x00442a42) */
+/* WARNING: Removing unreachable block (ram,0x00443522) */
+/* WARNING: Removing unreachable block (ram,0x004434f2) */
+/* WARNING: Removing unreachable block (ram,0x00443770) */
+/* WARNING: Removing unreachable block (ram,0x004439ec) */
+/* WARNING: Removing unreachable block (ram,0x00443988) */
+/* WARNING: Removing unreachable block (ram,0x00443ab9) */
+/* WARNING: Removing unreachable block (ram,0x00443abf) */
+/* WARNING: Removing unreachable block (ram,0x00443ad5) */
+/* WARNING: Removing unreachable block (ram,0x00443ace) */
+/* WARNING: Removing unreachable block (ram,0x00443ae4) */
+/* WARNING: Removing unreachable block (ram,0x00443add) */
+/* WARNING: Removing unreachable block (ram,0x00443ae3) */
+/* WARNING: Removing unreachable block (ram,0x00443ae5) */
+/* WARNING: Removing unreachable block (ram,0x00443afc) */
+/* WARNING: Removing unreachable block (ram,0x00443b02) */
+/* WARNING: Removing unreachable block (ram,0x00443b12) */
+/* WARNING: Removing unreachable block (ram,0x00443b1d) */
+/* WARNING: Removing unreachable block (ram,0x00443b24) */
+/* WARNING: Removing unreachable block (ram,0x00443b26) */
+/* WARNING: Removing unreachable block (ram,0x00443b43) */
+/* WARNING: Removing unreachable block (ram,0x00443b28) */
+/* WARNING: Removing unreachable block (ram,0x00443b27) */
+/* WARNING: Removing unreachable block (ram,0x00443b2a) */
+/* WARNING: Removing unreachable block (ram,0x00443b54) */
+/* WARNING: Removing unreachable block (ram,0x00443b2c) */
+/* WARNING: Removing unreachable block (ram,0x00443b99) */
+/* WARNING: Removing unreachable block (ram,0x00443b9f) */
+/* WARNING: Removing unreachable block (ram,0x00443b35) */
+/* WARNING: Removing unreachable block (ram,0x00443b2e) */
+/* WARNING: Removing unreachable block (ram,0x00443b60) */
+/* WARNING: Removing unreachable block (ram,0x00443b62) */
+/* WARNING: Removing unreachable block (ram,0x00443b64) */
+/* WARNING: Removing unreachable block (ram,0x00443bb2) */
+/* WARNING: Removing unreachable block (ram,0x00443bd3) */
+/* WARNING: Removing unreachable block (ram,0x00443763) */
+/* WARNING: Removing unreachable block (ram,0x004437c0) */
+/* WARNING: Removing unreachable block (ram,0x00443814) */
+/* WARNING: Removing unreachable block (ram,0x00443817) */
+/* WARNING: Removing unreachable block (ram,0x0044381c) */
+/* WARNING: Removing unreachable block (ram,0x00443819) */
+/* WARNING: Removing unreachable block (ram,0x00443823) */
+/* WARNING: Removing unreachable block (ram,0x00443820) */
+/* WARNING: Removing unreachable block (ram,0x00443826) */
+/* WARNING: Removing unreachable block (ram,0x00443828) */
+/* WARNING: Removing unreachable block (ram,0x0044382b) */
+/* WARNING: Removing unreachable block (ram,0x00443835) */
+/* WARNING: Removing unreachable block (ram,0x0044383a) */
+/* WARNING: Removing unreachable block (ram,0x0044383d) */
+/* WARNING: Removing unreachable block (ram,0x00443832) */
+/* WARNING: Removing unreachable block (ram,0x00443840) */
+/* WARNING: Removing unreachable block (ram,0x0044389b) */
+/* WARNING: Removing unreachable block (ram,0x00443950) */
+/* WARNING: Removing unreachable block (ram,0x004438e2) */
+/* WARNING: Removing unreachable block (ram,0x0044390e) */
+/* WARNING: Removing unreachable block (ram,0x00443937) */
+/* WARNING: Removing unreachable block (ram,0x0044393e) */
+/* WARNING: Removing unreachable block (ram,0x00443955) */
+/* WARNING: Type propagation algorithm not settling */
+/* WARNING: Restarted to delay deadcode elimination for space: ram */
+
+void __fastcall ValueToDPI(int InValue)
+
+{
+  unkbyte10 Var1;
+  uint uVar2;
+  longlong lVar3;
+  code *pcVar4;
+  float *pfVar5;
+  char cVar6;
+  byte bVar7;
+  char cVar8;
+  char *in_EAX;
+  uint3 uVar24;
+  uint uVar9;
+  int iVar10;
+  uint uVar11;
+  uint uVar12;
+  uint uVar13;
+  char *pcVar14;
+  int *piVar15;
+  uint *puVar16;
+  undefined3 uVar25;
+  uint *puVar17;
+  undefined1 *puVar18;
+  int iVar19;
+  byte *pbVar20;
+  int *piVar21;
+  int *piVar22;
+  char *pcVar23;
+  undefined1 uVar26;
+  byte *pbVar27;
+  byte *pbVar28;
+  undefined4 extraout_ECX;
+  int *extraout_ECX_00;
+  int *extraout_ECX_01;
+  undefined4 uVar29;
+  int extraout_ECX_02;
+  byte *extraout_ECX_03;
+  char cVar30;
+  byte bVar31;
+  byte bVar34;
+  uint *in_EDX;
+  uint *puVar32;
+  uint *puVar33;
+  char cVar35;
+  undefined3 uVar36;
+  uint *extraout_EDX;
+  byte bVar37;
+  byte bVar38;
+  char cVar39;
+  short sVar40;
+  char cVar43;
+  undefined4 unaff_EBX;
+  byte bVar42;
+  uint *puVar41;
+  undefined2 *puVar44;
+  undefined2 *puVar45;
+  undefined2 *puVar46;
+  int *piVar47;
+  undefined4 *puVar48;
+  undefined1 *puVar49;
+  undefined2 *puVar50;
+  undefined4 *puVar51;
+  undefined4 *puVar52;
+  undefined1 *puVar53;
+  undefined4 *puVar54;
+  uint *puVar55;
+  undefined2 *puVar56;
+  uint *puVar57;
+  undefined4 *puVar58;
+  int *piVar59;
+  undefined1 *puVar60;
+  int *piVar61;
+  undefined1 *puVar62;
+  undefined2 *puVar63;
+  undefined4 *puVar64;
+  uint *puVar65;
+  uint *puVar66;
+  undefined1 *puVar67;
+  undefined1 *puVar68;
+  undefined2 *puVar69;
+  undefined4 *puVar70;
+  undefined1 *puVar71;
+  undefined4 *puVar72;
+  undefined4 *puVar73;
+  uint *puVar74;
+  undefined1 *puVar75;
+  undefined2 *puVar76;
+  undefined2 *puVar77;
+  undefined4 *puVar78;
+  undefined4 *puVar79;
+  undefined2 *puVar80;
+  undefined2 *puVar81;
+  undefined2 *puVar82;
+  undefined4 *puVar83;
+  undefined2 *puVar84;
+  undefined1 *puVar85;
+  undefined4 *puVar86;
+  undefined4 *puVar87;
+  undefined2 *puVar88;
+  undefined2 *puVar89;
+  undefined2 *puVar90;
+  undefined2 *puVar91;
+  undefined2 *puVar92;
+  undefined2 *puVar93;
+  undefined4 *puVar94;
+  undefined2 *puVar95;
+  undefined2 *puVar96;
+  undefined2 *puVar97;
+  undefined4 *puVar98;
+  undefined2 *puVar99;
+  undefined4 *puVar100;
+  undefined2 *puVar101;
+  undefined2 *puVar102;
+  undefined4 *puVar103;
+  undefined2 *puVar104;
+  undefined2 *puVar105;
+  undefined2 *puVar106;
+  undefined2 *puVar107;
+  int *piVar108;
+  undefined4 *puVar109;
+  undefined4 *puVar110;
+  undefined4 *puVar111;
+  undefined4 *puVar112;
+  undefined2 *puVar113;
+  undefined2 *puVar114;
+  undefined2 *puVar115;
+  undefined2 *puVar116;
+  undefined2 *puVar117;
+  undefined2 *puVar118;
+  undefined2 *puVar119;
+  undefined2 *puVar120;
+  undefined2 *puVar121;
+  undefined2 *puVar122;
+  undefined2 *puVar123;
+  undefined2 *puVar124;
+  undefined4 *puVar125;
+  undefined2 *puVar126;
+  undefined2 *puVar127;
+  undefined2 *puVar128;
+  undefined1 *puVar129;
+  undefined2 *puVar130;
+  undefined2 *puVar131;
+  undefined4 *puVar132;
+  undefined4 *puVar133;
+  undefined2 *puVar134;
+  undefined2 *puVar135;
+  undefined2 *puVar136;
+  int *piVar137;
+  int *piVar138;
+  int *piVar139;
+  undefined4 *puVar140;
+  undefined4 *puVar141;
+  undefined4 *puVar142;
+  undefined1 *puVar143;
+  int *piVar144;
+  undefined2 *puVar145;
+  undefined2 *puVar146;
+  undefined2 *puVar147;
+  undefined4 *puVar148;
+  undefined4 *puVar149;
+  undefined4 *puVar150;
+  uint *puVar151;
+  uint *puVar152;
+  undefined4 *puVar153;
+  undefined4 *puVar154;
+  undefined4 *puVar155;
+  undefined4 *puVar156;
+  undefined1 *puVar157;
+  undefined1 *puVar158;
+  undefine
+/* truncated */
+
+
+################################################################
+## GetSensorDPI
+entry=004347e4 size=296
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x004348aa) overlaps instruction at (ram,0x004348a7)
+    */
+/* WARNING: Removing unreachable block (ram,0x0043482f) */
+/* WARNING: Removing unreachable block (ram,0x0043487b) */
+
+void __fastcall GetSensorDPI(undefined *sensorDPI)
+
+{
+  byte bVar1;
+  byte bVar3;
+  byte bVar4;
+  char cVar5;
+  byte bVar14;
+  undefined3 uVar15;
+  int iVar6;
+  byte *in_EAX;
+  uint *puVar7;
+  char *pcVar8;
+  int *piVar9;
+  uint uVar10;
+  uint uVar11;
+  uint uVar12;
+  uint uVar13;
+  char *pcVar16;
+  char *pcVar17;
+  char *extraout_ECX;
+  char cVar18;
+  char cVar21;
+  uint *in_EDX;
+  byte bVar22;
+  byte *pbVar19;
+  uint *puVar20;
+  undefined1 uVar23;
+  uint *unaff_EBX;
+  undefined2 uVar24;
+  int unaff_EBP;
+  uint *unaff_ESI;
+  uint *puVar25;
+  uint *unaff_EDI;
+  undefined2 in_ES;
+  undefined2 in_CS;
+  undefined2 uVar26;
+  undefined2 in_SS;
+  byte in_AF;
+  bool bVar27;
+  ulonglong uVar28;
+  undefined2 unaff_retaddr;
+  uint uStack_14;
+  short asStack_10 [2];
+  uint uStack_c;
+  undefined4 uStack_8;
+  undefined4 uStack_4;
+  byte bVar2;
+  
+code_r0x004347e4:
+  do {
+                    /* .NET CLR Managed Code */
+    *(byte *)((int)in_EDX + (int)in_EAX) = *(byte *)((int)in_EDX + (int)in_EAX) - (char)in_EAX;
+    bVar4 = (byte)sensorDPI;
+    *(byte *)in_EDX = (byte)*in_EDX + bVar4;
+    puVar25 = unaff_ESI + 1;
+    out(*unaff_ESI,(short)in_EDX);
+    puVar7 = (uint *)((uint)(in_EAX + 0x280a0002) & *unaff_EBX);
+    uVar10 = *in_EDX;
+    bVar27 = SCARRY1((byte)*in_EDX,bVar4);
+    *(byte *)in_EDX = (byte)*in_EDX + bVar4;
+    bVar3 = (byte)unaff_EBX;
+    if (!CARRY1((byte)uVar10,bVar4)) {
+      do {
+        uStack_4 = 0;
+        bVar4 = (byte)((uint)unaff_EBX >> 8);
+        uVar26 = (undefined2)((uint)unaff_EBX >> 0x10);
+        unaff_ESI = puVar25;
+        if (bVar27) {
+          unaff_EBX = (uint *)CONCAT22(uVar26,CONCAT11(bVar4 + *(byte *)((int)unaff_EBX + -0x43),
+                                                       bVar3));
+          goto code_r0x00434824;
+        }
+        cVar18 = (char)in_EDX;
+        *(char *)puVar7 = (char)*puVar7 - cVar18;
+        uVar10 = *in_EDX;
+        bVar14 = (byte)sensorDPI;
+        *(byte *)in_EDX = (byte)*in_EDX + bVar14;
+        if (CARRY1((byte)uVar10,bVar14)) goto code_r0x00434805;
+        bVar27 = SCARRY1((byte)*in_EDX,bVar14);
+        *(byte *)in_EDX = (byte)*in_EDX + bVar14;
+        bVar14 = (byte)*in_EDX;
+        while( true ) {
+          bVar22 = (byte)((uint)in_EDX >> 8);
+          uVar24 = (undefined2)((uint)in_EDX >> 0x10);
+          if (bVar27 == (char)bVar14 < '\0') break;
+          cVar5 = (char)(char *)((int)puVar7 + *puVar7) + '\x02';
+          puVar7 = (uint *)CONCAT31((int3)((int)puVar7 + *puVar7 >> 8),cVar5);
+          if ((POPCOUNT(cVar5) & 1U) != 0) {
+            pcVar8 = (char *)((int)puVar7 * 2 + 0x28250a00);
+            *pcVar8 = *pcVar8 - bVar4;
+code_r0x004347ff:
+            *(char *)puVar7 = (char)*puVar7 + (char)puVar7;
+            in_EDX = (uint *)CONCAT22(uVar24,CONCAT11(bVar22 | *(byte *)((int)unaff_EBX + 0x2b),
+                                                      cVar18));
+            unaff_ESI = puVar25;
+            uStack_8 = puVar7;
+            goto code_r0x00434805;
+          }
+          uVar15 = (undefined3)((int)puVar7 + *puVar7 >> 8);
+          bVar14 = (char)(char *)((int)puVar7 + *puVar7) + 0x6f;
+          pcVar8 = (char *)CONCAT31(uVar15,bVar14);
+          LOCK();
+          *pcVar8 = *pcVar8 + bVar14;
+          UNLOCK();
+          bVar14 = bVar14 | (byte)*in_EDX;
+          puVar7 = (uint *)CONCAT31(uVar15,bVar14);
+          if ((POPCOUNT(bVar14) & 1U) != 0) goto code_r0x004347ff;
+          uVar10 = *puVar7;
+          unaff_ESI = puVar25 + 1;
+          out(*puVar25,(short)in_EDX);
+          sensorDPI = sensorDPI + -1;
+          *(byte *)in_EDX = (byte)*in_EDX + (char)sensorDPI;
+          piVar9 = (int *)(CONCAT31((int3)((int)puVar7 + uVar10 >> 8),
+                                    (char)(char *)((int)puVar7 + uVar10) + '\x16') | *in_EDX);
+          if ((POPCOUNT((uint)piVar9 & 0xff) & 1U) != 0) goto code_r0x0043480a;
+          uVar10 = CONCAT31((int3)((uint)((int)piVar9 + *piVar9) >> 8),
+                            (char)(char *)((int)piVar9 + *piVar9) + '\f');
+          uStack_8 = (uint *)CONCAT22(uStack_8._2_2_,in_SS);
+          puVar7 = (uint *)(uVar10 | 0xa538);
+          pbVar19 = (byte *)((int)in_EDX + -0x43);
+          bVar1 = *pbVar19;
+          bVar2 = *pbVar19;
+          *pbVar19 = *pbVar19 + bVar22;
+          bVar14 = *pbVar19;
+          uStack_c = 0;
+          uVar28 = CONCAT44(in_EDX,uVar10) | 0xa538;
+          if (SCARRY1(bVar2,bVar22)) goto code_r0x0043486b;
+          bVar27 = false;
+          puVar25 = unaff_ESI;
+          if (!CARRY1(bVar1,bVar22)) {
+            asStack_10[0] = 0;
+            asStack_10[1] = 0;
+            *puVar7 = *puVar7 + unaff_EBP;
+            uVar28 = CONCAT44(in_EDX,uVar10) | 0xa538;
+code_r0x0043486b:
+            while( true ) {
+              pbVar19 = (byte *)(uVar28 >> 0x20);
+              in_AF = 9 < ((byte)uVar28 & 0xf) | in_AF;
+              uVar10 = CONCAT31((int3)(uVar28 >> 8),(byte)uVar28 + in_AF * '\x06') & 0xffffff0f;
+              cVar18 = (char)uVar10;
+              pcVar8 = (char *)CONCAT22((short)(uVar10 >> 0x10),
+                                        CONCAT11((char)(uVar28 >> 8) + in_AF,cVar18));
+              uVar15 = (undefined3)((uint)pcVar8 >> 8);
+              bVar4 = cVar18 + *pcVar8;
+              uVar26 = (undefined2)((uint)sensorDPI >> 0x10);
+              bVar3 = (byte)sensorDPI;
+              bVar14 = (byte)((uint)sensorDPI >> 8) | *(byte *)CONCAT31(uVar15,bVar4);
+              iVar6 = CONCAT31(uVar15,bVar4 | *(byte *)CONCAT22(uVar26,CONCAT11(bVar14,bVar3)));
+              bVar4 = *pbVar19;
+              *pbVar19 = *pbVar19 + bVar3;
+              pcVar8 = (char *)(iVar6 + *(int *)((int)unaff_ESI + iVar6) + (uint)CARRY1(bVar4,bVar3)
+                               );
+              *(uint *)(pbVar19 + -0x2a90fbef) = *(uint *)(pbVar19 + -0x2a90fbef) | (uint)unaff_EBX;
+              *pcVar8 = *pcVar8 + (char)pcVar8;
+              pcVar16 = (char *)CONCAT22(uVar26,CONCAT11(bVar14 | *(byte *)(asStack_10 +
+                                                                           (int)unaff_EDI),bVar3));
+              uStack_14 = CONCAT22(uStack_14._2_2_,in_ES);
+              *(uint *)(pbVar19 + 0x7b8d18) = *(uint *)(pbVar19 + 0x7b8d18) | (uint)unaff_EBX;
+              *pcVar16 = *pcVar16 + (char)pcVar8;
+              pcVar8 = (char *)((uint)pcVar8 & 0x9d001f16);
+              out(*unaff_ESI,(short)(uVar28 >> 0x20));
+              unaff_EDI = unaff_EDI + 1;
+              puVar25 = unaff_ESI + 2;
+              uVar10 = CONCAT31((int3)((uint)pcVar8 >> 8),(char)pcVar8 + *pcVar8);
+              puVar20 = (uint *)CONCAT31((int3)(uVar28 >> 0x28),
+                                         (byte)(uVar28 >> 0x20) | (byte)*unaff_EBX);
+              uVar11 = uVar10 + 0x2b061316;
+              uVar10 = (uint)(0xd4f9ece9 < uVar10);
+              uVar12 = uVar11 + *unaff_EDI;
+              puVar7 = (uint *)(uVar12 + uVar10);
+              uVar10 = (uint)(CARRY4(uVar11,*unaff_EDI) || CARRY4(uVar12,uVar10));
+              pcVar8 = pcVar16 + *puVar7;
+              pcVar17 = pcVar8 + uVar10;
+              iRam289a0611 = (int)puVar7 +
+                             (uint)(CARRY4((uint)pcVar16,*puVar7) || CARRY4((uint)pcVar8,uVar10)) +
+                             iRam289a0611;
+              uVar12 = (uint)puVar7 | 5;
+              uVar10 = *puVar25;
+              *(byte *)puVar25 = (byte)*puVar25 + (byte)uVar12;
+              uVar10 = (uint)CARRY1((byte)uVar10,(byte)uVar12);
+              puVar7 = (uint *)(uVar12 + *unaff_EDI + uVar10);
+              uVar10 = (uint)(CARRY4(uVar12,*unaff_EDI) || CARRY4(uVar12 + *unaff_EDI,uVar10));
+              pcVar8 = pcVar17 + *puVar7;
+              *puVar7 = (uint)(pcVar8 + uVar10 +
+                              (uint)(CARRY4((uint)pcVar17,*puVar7) || CARRY4((uint)pcVar8,uVar10)) +
+                              *puVar7);
+              uVar24 = (undefined2)((uint)unaff_EBX >> 0x10);
+              uVar23 = SUB41(unaff_EBX,0);
+              cVar5 = (char)((uint)unaff_EBX >> 8) + *(byte *)((int)unaff_EBX + -0x43);
+              uVar26 = SUB42(puVar20,0);
+              out(*puVar25,uVar26);
+              cVar18 = (char)(pcVar8 + uVar10);
+              *(char *)puVar20 = (char)*puVar20 + cVar18;
+              cVar5 = cVar5 + *(char *)(CONCAT22(uVar24,CONCAT11(cVar5,uVar23)) + -0x42);
+              puVar25 = unaff_ESI + 4;
+              out(unaff_ESI[3],uVar26);
+              *(char *)puVar20 = (char)*puVar20 + cVar18;
+              unaff_EBX = (uint *)CONCAT22(uVar24,CONCAT11(cVar5 + *(char *)(CONCAT22(uVar24,
+                                                  CONCAT11(cVar5,uVar23)) + -0x44),uVar23));
+              unaff_ESI = unaff_ESI + 5;
+              out(*puVar25,uVar26);
+              *(char *)puVar20 = (char)*puVar20 + cVar18 + -1;
+              piVar9 = (int *)(uStack_14 | *puVar20);
+              if ((int)piVar9 < 0) break;
+              asStack_10[0] = (short)unaff_EBP;
+              uStack_14 = CONCAT22(uStack_14._2_2_,in_CS);
+              uVar26 = 0x1306;
+              uVar28 = func_0x00050c28();
+              sensorDPI = extraout_ECX;
+              in_ES = in_CS;
+              in_CS = uVar26;
+            }
+            bVar4 = (byte)((int)piVar9 + *piVar9);
+            uVar13 = CONCAT31((int3)((uint)((int)piVar9 + *piVar9) >> 8),bVar4 + 0x2b);
+            uVar12 = (uint)(0xd4 < bVar4);
+            uVar10 = *unaff_ESI;
+            uVar11 = *unaff_ESI + uVar13;
+            *unaff_ESI = uVar11 + uVar12;
+            uVar10 = (uint)(CARRY4(uVar10,uVar13) || CARRY4(uVar11,uVar12));
+            uVar13 = uStack_c + *unaff_ESI + uVar10;
+            uVar11 = (uint)(CARRY4(uStack_c,*unaff_ESI) || CARRY4(uStack_c + *unaff_ESI,uVar10));
+            uVar10 = *unaff_ESI;
+            uVar12 = *unaff_ESI;
+            *unaff_ESI = uVar12 + uVar13 + uVar11;
+            iRama332698e = iRama332698e + uVar13 +
+                           (uint)(CARRY4(uVar10,uVar13) || CARRY4(uVar12 + uVar13,uVar11));
+            *unaff_EDI = *unaff_EDI | (uint)puVar20;
+                    /* WARNING: Bad instruction - Truncating control flow here */
+            halt_baddata();
+          }
+        }
+        bVar27 = false;
+        in_EDX = (uint *)CONCAT22(uVar24,CONCAT11(bVar22 | *(byte *)((int)in_EDX + -99),cVar18));
+      } while( true );
+    }
+    cVar5 = (char)in_EDX;
+    cVar21 = (char)((uint)in_EDX >> 8) - *(byte *)((int)in_EDX + 1);
+    in_EDX = (uint *)CONCAT22((short)((uint)in_EDX >> 0x10),CONCAT11(cVar21,cVar5));
+    uVar10 = *puVar7;
+    cVar18 = (char)puVar7;
+    *(char *)puVar7 = (char)*puVar7 + cVar18;
+    if (!SCARRY1((char)uVar10,cVar18)) {
+      unaff_EBP = CONCAT22((short)((uint)unaff_EBP >> 0x10),(short)unaff_EBP + (short)*puVar7);
+      uVar10 = *puVar7;
+      unaff_EBX = (uint *)CONCAT31((int3)((uint)unaff_EBX >> 8),bVar3 | (byte)*unaff_EDI);
+      *(byte *)unaff_EBX = (byte)*unaff_EBX + cVar21;
+      bVar3 = (byte)(char *)((int)puVar7 + uVar10);
+      *(byte *)unaff_EBX = (byte)*unaff_EBX | bVar3;
+      *(byte *)((int)unaff_EBX + 3) = *(byte *)((int)unaff_EBX + 3) - cVar5;
+      *(byte *)in_EDX = (byte)*in_EDX + bVar4;
+      uVar15 = (undefined3)((int)puVar7 + uVar10 >> 8);
+      bVar3 = bVar3 - (byte)*unaff_EBX;
+      pbVar19 = (byte *)((int)unaff_EBX + CONCAT31(uVar15,bVar3));
+      *pbVar19 = *pbVar19 - cVar5;
+      uVar10 = *in_EDX;
+      LOCK();
+      uVar12 = *unaff_EBX;
+      *(byte *)unaff_EBX = bVar3;
+      UNLOCK();
+      iVar6 = CONCAT31(uVar15,(byte)uVar12) + 0x66128;
+      out(*puVar25,CONCAT11(cV
+/* truncated */
+
+
+################################################################
+## SetReportRateHz
+entry=00434ce8 size=118
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x00434e4d) overlaps instruction at (ram,0x00434e4b)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+/* WARNING: Type propagation algorithm not settling */
+
+void __fastcall SetReportRateHz(char *Hz)
+
+{
+  byte bVar1;
+  longlong lVar2;
+  char cVar3;
+  byte bVar4;
+  byte bVar5;
+  uint *in_EAX;
+  byte *pbVar6;
+  char *pcVar7;
+  char *pcVar8;
+  uint uVar9;
+  int iVar10;
+  ushort uVar14;
+  undefined3 uVar13;
+  uint **ppuVar11;
+  uint *puVar12;
+  byte bVar15;
+  byte bVar16;
+  undefined2 uVar17;
+  int *extraout_ECX;
+  uint *in_EDX;
+  uint *extraout_EDX;
+  undefined1 uVar18;
+  char cVar20;
+  uint *unaff_EBX;
+  undefined2 uVar21;
+  byte *pbVar19;
+  uint unaff_EBP;
+  byte *unaff_ESI;
+  byte *pbVar22;
+  uint *unaff_EDI;
+  undefined2 in_ES;
+  undefined2 in_CS;
+  int unaff_FS_OFFSET;
+  byte in_AF;
+  bool bVar23;
+  bool bVar24;
+  undefined2 unaff_retaddr;
+  undefined1 auStack_2c [16];
+  undefined4 uStack_1c;
+  undefined2 uStack_18;
+  undefined2 uStack_14;
+  uint *puStack_10;
+  undefined2 uStack_c;
+  uint uStack_8;
+  uint *puStack_4;
+  
+  do {
+                    /* .NET CLR Managed Code */
+    unaff_EBX = (uint *)CONCAT22((short)((uint)unaff_EBX >> 0x10),
+                                 CONCAT11((char)((uint)unaff_EBX >> 8) +
+                                          *(byte *)((int)unaff_EBX + -0x72),(char)unaff_EBX));
+    puStack_4 = (uint *)((uint)puStack_4 & 0xffff0000);
+    pbVar6 = (byte *)((int)unaff_EDI + unaff_EBP * 2);
+    *pbVar6 = *pbVar6 + (char)in_EAX;
+    cVar3 = (char)Hz;
+    *(byte *)in_EDX = (byte)*in_EDX + cVar3;
+    pbVar6 = unaff_ESI + 4;
+    out(*(undefined4 *)unaff_ESI,(short)in_EDX);
+    *(byte *)in_EDX = (byte)*in_EDX + cVar3;
+    Hz = (char *)CONCAT22((short)((uint)Hz >> 0x10),
+                          CONCAT11((byte)((uint)Hz >> 8) | (byte)*unaff_EBX,cVar3));
+    unaff_EDI = (uint *)((int)unaff_EDI + 1);
+    uStack_8 = CONCAT22(uStack_8._2_2_,in_ES);
+    unaff_ESI = unaff_ESI + 8;
+    out(*(undefined4 *)pbVar6,(short)in_EDX);
+    *(byte *)in_EDX = (byte)*in_EDX + cVar3;
+    uStack_18 = in_CS;
+    if ((byte)*in_EDX == 0) goto code_r0x00434d0a;
+    *(byte *)in_EAX = (byte)*in_EAX + (char)in_EAX;
+    *unaff_EBX = (uint)(*unaff_EBX + (int)Hz);
+    bVar23 = *unaff_EBX == 0;
+    while( true ) {
+      uStack_18 = in_CS;
+      if (!bVar23) {
+        *Hz = (char)*(int *)Hz + (char)in_EDX;
+        goto code_r0x00434d6c;
+      }
+code_r0x00434d0a:
+      cVar3 = (char)in_EAX;
+      *(byte *)in_EAX = (byte)*in_EAX + cVar3;
+      uVar17 = (undefined2)((uint)Hz >> 0x10);
+      cVar20 = (char)Hz;
+      bVar15 = (char)((uint)Hz >> 8) + *(byte *)((int)unaff_EBX + (int)unaff_ESI);
+      Hz = (char *)CONCAT22(uVar17,CONCAT11(bVar15,cVar20));
+      in_ES = unaff_retaddr;
+      in_CS = uStack_18;
+      if (bVar15 == 0) goto code_r0x00434d72;
+      *(byte *)in_EAX = (byte)*in_EAX + cVar3;
+      bVar4 = (byte)((uint)in_EAX >> 8);
+      in_EAX = (uint *)CONCAT22((short)((uint)in_EAX >> 0x10),CONCAT11(bVar4 + bRam0002a16f,cVar3));
+      if (CARRY1(bVar4,bRam0002a16f)) break;
+      lVar2 = (longlong)(int)*in_EAX * 0x70;
+      pbVar6 = (byte *)lVar2;
+      if ((int)pbVar6 == lVar2) {
+        bVar4 = *pbVar6;
+        bVar5 = (byte)lVar2;
+        bVar1 = *pbVar6;
+        *pbVar6 = *pbVar6 + bVar5;
+        if (SCARRY1(bVar1,bVar5)) {
+          cVar3 = bVar5 - CARRY1(bVar4,bVar5);
+          *Hz = (char)*(int *)Hz + cVar3;
+          in_EAX = (uint *)(CONCAT31((int3)((ulonglong)lVar2 >> 8),cVar3) | 0x9062c09);
+          pbVar6 = unaff_ESI;
+          goto code_r0x00434d4f;
+        }
+      }
+      else {
+        pbVar6[0x28] = pbVar6[0x28] + (char)((uint)in_EDX >> 8);
+      }
+      pbVar6 = pbVar6 + *(int *)pbVar6;
+      bVar4 = *pbVar6;
+      *(byte *)in_EDX = (byte)*in_EDX + cVar20;
+      Hz = (char *)CONCAT22(uVar17,CONCAT11((bVar15 | bVar4) + *(char *)((uint)pbVar6 | 0x12),cVar20
+                                           ));
+      bVar15 = (byte)(char *)((uint)pbVar6 | 0x12);
+      in_AF = 9 < (bVar15 & 0xf) | in_AF;
+      uVar9 = CONCAT31((int3)((uint)pbVar6 >> 8),bVar15 + in_AF * '\x06') & 0xffffff0f;
+      cVar3 = (char)uVar9;
+      pcVar8 = (char *)CONCAT22((short)(uVar9 >> 0x10),
+                                CONCAT11((char)((uint)pbVar6 >> 8) + in_AF,cVar3));
+      pcVar7 = (char *)CONCAT31((int3)((uint)pcVar8 >> 8),cVar3 + *pcVar8 | (byte)*unaff_EBX);
+      pcVar8 = (char *)((int)pcVar7 * 2 + -0x5d90f600);
+      *pcVar8 = *pcVar8 - (char)((uint)unaff_EBX >> 8);
+      puStack_10 = unaff_EDI;
+code_r0x00434d3f:
+      in_EAX = (uint *)CONCAT31((int3)((uint)pcVar7 >> 8),(char)pcVar7 + *pcVar7);
+      while( true ) {
+        out(*(undefined4 *)unaff_ESI,(short)in_EDX);
+        *(byte *)in_EAX = (byte)*in_EAX;
+        bVar15 = (byte)((uint)Hz >> 8) | bRam0611deb1;
+        Hz = (char *)CONCAT22((short)((uint)Hz >> 0x10),CONCAT11(bVar15,(char)Hz));
+        pbVar6 = unaff_ESI + 4;
+        if (bVar15 == 0) {
+code_r0x00434d4f:
+          bVar15 = (byte)in_EAX;
+          *(byte *)in_EAX = (byte)*in_EAX + bVar15;
+          pcRam09062c09 = pcRam09062c09 + (int)Hz;
+          unaff_ESI = pbVar6 + 4;
+          out(*(undefined4 *)pbVar6,(short)in_EDX);
+          *(byte *)in_EDX = (byte)*in_EDX + (char)Hz;
+          *(byte *)in_EAX = (byte)*in_EAX + bVar15;
+          *in_EAX = (uint)(*in_EAX + (int)in_EDX);
+          *(byte *)in_EAX = (byte)*in_EAX + bVar15;
+          uVar9 = *in_EAX;
+          in_EAX = (uint *)CONCAT31((int3)((uint)in_EAX >> 8),bVar15 + (byte)*in_EAX);
+          *in_EAX = (uint)((int)in_EAX + (uint)CARRY1(bVar15,(byte)uVar9) + *in_EAX);
+          *(char *)(unaff_FS_OFFSET + (int)Hz) = *(char *)(unaff_FS_OFFSET + (int)Hz) + (char)in_EDX
+          ;
+          in_CS = uStack_18;
+          puStack_4 = unaff_EBX;
+code_r0x00434d6c:
+          bVar15 = (byte)in_EAX;
+          *(byte *)in_EAX = (byte)*in_EAX + bVar15;
+          uVar9 = *in_EAX;
+          *(byte *)in_EAX = (byte)*in_EAX + bVar15;
+          unaff_ESI = unaff_ESI + (uint)CARRY1((byte)uVar9,bVar15) + *in_EAX;
+code_r0x00434d72:
+          in_EAX = in_EAX + 0x6b40;
+        }
+        else {
+          *in_EAX = (uint)(*in_EAX + (int)in_EAX);
+          *(byte *)in_EAX = (byte)*in_EAX + (byte)in_EAX;
+          *(byte *)unaff_EBX = (byte)*unaff_EBX + (char)in_EDX;
+          bRam0001ad00 = bRam0001ad00 ^ (byte)in_EAX;
+          unaff_ESI = unaff_ESI + 4;
+          in_CS = uStack_18;
+        }
+        cVar3 = (char)in_EAX;
+        bVar24 = SCARRY1(cRam02110001,cVar3);
+        cRam02110001 = cRam02110001 + cVar3;
+        bVar23 = cRam02110001 == '\0';
+        if (bVar24 == cRam02110001 < '\0') break;
+        puStack_4 = (uint *)CONCAT22(puStack_4._2_2_,in_ES);
+        *(byte *)((int)in_EDX + (int)in_EAX) = *(byte *)((int)in_EDX + (int)in_EAX) + cVar3;
+        unaff_EDI = (uint *)((int)unaff_EDI + *(int *)(unaff_EBP - 0x75));
+        uStack_8 = CONCAT22(uStack_8._2_2_,in_ES);
+        pbVar6 = (byte *)((int)unaff_EBX + (int)in_EAX);
+        *pbVar6 = *pbVar6 + cVar3;
+        pbVar22 = unaff_ESI;
+        if ((POPCOUNT(*pbVar6) & 1U) != 0) goto code_r0x00434de7;
+code_r0x00434d8d:
+        *(byte *)((int)unaff_EDI + (int)in_EDX) =
+             *(byte *)((int)unaff_EDI + (int)in_EDX) + (char)in_EAX;
+        *Hz = (char)*(int *)Hz + (char)in_EAX;
+        pcVar8 = (char *)((uint)in_EAX & 0x9d2c1f16);
+        out(*(undefined4 *)pbVar22,(short)in_EDX);
+        unaff_EDI = unaff_EBX + 1;
+        unaff_ESI = pbVar22 + 8;
+        Hz = (char *)CONCAT31((int3)((uint)Hz >> 8),(byte)Hz | (byte)*in_EDX);
+        in_EAX = (uint *)CONCAT31((int3)((uint)pcVar8 >> 8),(char)pcVar8 + *pcVar8 + *unaff_ESI);
+        uStack_18 = in_CS;
+        while( true ) {
+          iVar10 = *(int *)Hz;
+          cVar3 = (char)in_EAX;
+          *Hz = (char)*(int *)Hz + cVar3;
+          if (SCARRY1((char)iVar10,cVar3) == (char)*(int *)Hz < '\0') break;
+          puStack_10 = (uint *)CONCAT22(puStack_10._2_2_,in_ES);
+          unaff_ESI[(int)in_EDX] = unaff_ESI[(int)in_EDX] + cVar3;
+          unaff_EBP = unaff_EBP | *unaff_EBX;
+          cVar3 = cVar3 + '\x02';
+          pcVar7 = (char *)CONCAT31((int3)((uint)in_EAX >> 8),cVar3);
+          if ((POPCOUNT(cVar3) & 1U) != 0) goto code_r0x00434d3f;
+          *(byte *)((int)unaff_EDI + (int)pcVar7) = *(byte *)((int)unaff_EDI + (int)pcVar7) + cVar3;
+          in_CS = 0x9e0a;
+          uStack_1c = 0x434dc3;
+          uStack_14 = in_ES;
+          uStack_c = in_ES;
+          func_0x00023828();
+          Hz = (char *)extraout_ECX;
+          in_EDX = extraout_EDX;
+          in_ES = puStack_10._0_2_;
+          while( true ) {
+            uVar9 = uStack_8 | *unaff_EDI;
+            uStack_8 = CONCAT22(uStack_8._2_2_,in_ES);
+            cVar3 = (char)uVar9;
+            out(2,cVar3);
+            uVar13 = (undefined3)(uVar9 >> 8);
+            if (0 < (int)uVar9) {
+              ppuVar11 = (uint **)CONCAT31(uVar13,cVar3 + '\x16');
+              goto code_r0x00434e2a;
+            }
+            bVar4 = cVar3 + 0x7c;
+            *(int *)Hz = *(int *)Hz + CONCAT31(uVar13,bVar4);
+            pbVar6 = (byte *)((int)unaff_EBX + (int)unaff_EDI * 2);
+            *pbVar6 = *pbVar6 + bVar4;
+            iVar10 = CONCAT22((short)(uVar9 >> 0x10),(ushort)bVar4);
+            pbVar6 = (byte *)(iVar10 + unaff_EBP);
+            bVar15 = *pbVar6;
+            *pbVar6 = *pbVar6 + bVar4;
+            if (CARRY1(bVar15,bVar4) || *pbVar6 == 0) {
+              bVar23 = bVar4 < 0x32;
+              in_EAX = (uint *)CONCAT31((int3)((uint)iVar10 >> 8),cVar3 + 'J');
+              puVar12 = in_EDX;
+              pbVar22 = unaff_ESI;
+              if ((char)(cVar3 + 'J') != '\0' && '1' < (char)bVar4) goto code_r0x00434e46;
+            }
+            else {
+              *unaff_ESI = *unaff_ESI + bVar4;
+              in_EAX = (uint *)(iVar10 + 0x2c02fe17);
+code_r0x00434de7:
+              unaff_EBX = (uint *)CONCAT22((short)((uint)unaff_EBX >> 0x10),
+                                           CONCAT11((byte)((uint)unaff_EBX >> 8) ^
+                                                    (byte)unaff_EDI[0x17],(char)unaff_EBX));
+              puVar12 = in_EDX;
+              pbVar22 = unaff_ESI;
+            }
+            bVar5 = (char)in_EAX + 0x7c;
+            *(int *)Hz = *(int *)Hz + CONCAT31((int3)((uint)in_EAX >> 8),bVar5);
+            pbVar6 = (byte *)((int)unaff_EBX + (int)unaff_EDI * 2);
+            *pbVar6 = *pbVar6 + bVar5;
+            uVar14 = (ushort)((uint)in_EAX >> 0x10);
+            pbVar6 = (byte *)((int)unaff_EDI + (int)unaff_EBX);
+            bVar15 = *pbVar6;
+            *pbVar6 = *pbVar6 + bVar5;
+            bVar4 = *pbVar22;
+            bVar16 = (byte)((uint)Hz >> 8);
+            bVar1 = *pbVar22 + bVar16;
+            *pbVar22 = bVar1 + CARRY1(bVar15,bVar5);
+            unaff_EDI = (uint *)((int)unaff_EDI +
+                                (uint)(CARRY1(bVar4,bVar16) || CARRY1(bVar1,CARRY1(bVar15,bVar5))) +
+                                unaff_EDI[0x17]);
+            bVar15 = (char)in_EAX - 8;
+            *(int *)Hz = *(int *)Hz + CONCAT31((int3)(((uint)uVar14 << 0x10) >> 8),bVar15);
+            pbVar6 = (byte *)((int)unaff_EBX + (int)unaff_EDI * 2);
+            *pbVar6 = *pbVar6 + bVar15;
+            *(byte *)((int)unaff_EDI + (int)unaff_EBX) =
+                 *(byte *)((int)unaff_EDI + (int)unaff_EBX) + bVar15;
+            *(byte *)unaff_EBX = (byte)*unaff_EBX & (byte)((uint)puVar12 >> 8);
+            uVar13 = (undefined3)(((uint)uVar14 << 0x10) >> 8);
+            bVar4 = bVar15 | 2;
+            in_EDX = (uint *)(CONCAT31(uVar13,bVar15) | 2);
+            if ((POPCOUNT(bVar4) & 1U) != 0) {
+              in_EAX = (uint *)CONCAT31(uVar13,bVar4 | (byte)*puVar12);
+              in_EDX = pu
+/* truncated */
+
+
+################################################################
+## EnterPairByFeature
+entry=00404ddc size=39
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x004053fa) overlaps instruction at (ram,0x004053f9)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+/* WARNING: Removing unreachable block (ram,0x00405392) */
+
+bool __fastcall EnterPairByFeature(char *endPoint,byte cid,byte mid)
+
+{
+  short sVar1;
+  byte bVar2;
+  undefined4 uVar3;
+  uint3 uVar4;
+  byte bVar5;
+  char cVar6;
+  byte bVar7;
+  int *in_EAX;
+  ushort *puVar8;
+  uint *puVar9;
+  int iVar10;
+  char *pcVar11;
+  undefined3 uVar19;
+  char *pcVar12;
+  byte *pbVar13;
+  ushort uVar20;
+  byte *pbVar14;
+  int *piVar15;
+  int *piVar16;
+  int *piVar17;
+  byte *pbVar18;
+  char cVar21;
+  char cVar24;
+  byte bVar25;
+  undefined2 uVar27;
+  undefined1 *puVar22;
+  byte bVar26;
+  char *pcVar23;
+  byte bVar30;
+  uint3 in_register_00000009;
+  undefined1 *puVar28;
+  int *piVar29;
+  char cVar31;
+  undefined1 uVar32;
+  char cVar34;
+  undefined4 unaff_EBX;
+  undefined2 uVar35;
+  int iVar33;
+  int *piVar36;
+  undefined1 *puVar37;
+  undefined4 *puVar38;
+  char *unaff_EBP;
+  int *piVar39;
+  byte *unaff_ESI;
+  byte *pbVar40;
+  byte *pbVar41;
+  byte *unaff_EDI;
+  undefined2 in_ES;
+  int unaff_FS_OFFSET;
+  bool in_CF;
+  bool bVar42;
+  byte in_AF;
+  bool bVar43;
+  byte in_TF;
+  byte in_IF;
+  bool bVar44;
+  byte in_NT;
+  byte in_AC;
+  byte in_VIF;
+  byte in_VIP;
+  byte in_ID;
+  int *piStack_8c;
+  undefined2 uStack_7c;
+  undefined2 uStack_7a;
+  
+  pbVar13 = (byte *)CONCAT31(in_register_00000009,cid);
+                    /* .NET CLR Managed Code */
+  if (in_CF) {
+    *in_EAX = (int)(*in_EAX + (int)in_EAX);
+    endPoint = (char *)CONCAT22((short)((uint)endPoint >> 0x10),
+                                CONCAT11((char)((uint)endPoint >> 8) + unaff_EDI[0xd],
+                                         (byte)endPoint | *pbVar13));
+    *in_EAX = (int)(*in_EAX + (int)in_EAX);
+    in_EAX = (int *)CONCAT22((short)((uint)in_EAX >> 0x10),
+                             CONCAT11((byte)((uint)in_EAX >> 8) | *unaff_ESI,(char)in_EAX));
+  }
+  cVar24 = (char)((uint)endPoint >> 8);
+  uVar35 = (undefined2)((uint)unaff_EBX >> 0x10);
+  bVar26 = (byte)unaff_EBX;
+  cVar34 = (char)((uint)unaff_EBX >> 8) - cVar24;
+  *(char *)in_EAX = (char)*in_EAX + (char)in_EAX;
+  iVar10 = CONCAT31((int3)((uint)in_EAX >> 8),(char)in_EAX + -9);
+  puVar8 = (ushort *)(iVar10 + *(int *)(unaff_EBP + iVar10));
+  sVar1 = ((ushort)puVar8 & 3) - (*puVar8 & 3);
+  *puVar8 = *puVar8 + (ushort)(0 < sVar1) * sVar1;
+  *unaff_ESI = *unaff_ESI + (char)puVar8;
+  iVar10 = CONCAT31((int3)((uint)puVar8 >> 8),(char)puVar8 - *unaff_ESI);
+  pbVar41 = *(byte **)(iVar10 + *(int *)(unaff_EBP + iVar10));
+  bVar7 = (byte)pbVar41;
+  *unaff_ESI = *unaff_ESI + bVar7;
+  puVar9 = (uint *)CONCAT31((int3)((uint)pbVar41 >> 8),bVar7 - *pbVar41);
+  pbVar40 = unaff_ESI + (uint)(bVar7 < *pbVar41) + *puVar9;
+  iVar10 = (int)puVar9 + *puVar9;
+  bVar7 = (byte)iVar10;
+  bVar42 = 9 < (bVar7 & 0xf);
+  bVar2 = bVar42 | in_AF;
+  bVar5 = bVar7 + bVar2 * '\x06' + (0x99 < bVar7 || CARRY4((uint)puVar9,*puVar9)) * '`';
+  pbVar41 = (byte *)CONCAT31((int3)((uint)iVar10 >> 8),bVar5);
+  *pbVar41 = *pbVar41 + bVar5;
+  bVar25 = (byte)((uint)iVar10 >> 8);
+  *pbVar40 = *pbVar40 + bVar25;
+  bVar7 = *pbVar41;
+  *pbVar41 = *pbVar41 + bVar5;
+  piVar15 = (int *)(CONCAT22(uVar35,CONCAT11(cVar34,bVar26)) + 0xc);
+  *piVar15 = (int)(pbVar40 + (uint)CARRY1(bVar7,bVar5) + *piVar15);
+  *(byte **)pbVar41 = pbVar41 + *(int *)pbVar41;
+  bVar7 = *pbVar13;
+  uVar27 = (undefined2)((uint)endPoint >> 0x10);
+  cVar24 = cVar24 + unaff_EDI[0xd];
+  *(byte **)pbVar41 = pbVar41 + *(int *)pbVar41;
+  pcVar11 = (char *)CONCAT22((short)((uint)iVar10 >> 0x10),CONCAT11(bVar25 | *pbVar40,bVar5));
+  cVar34 = cVar34 - cVar24;
+  *pcVar11 = *pcVar11 + bVar5;
+  iVar10 = CONCAT31((int3)((uint)pcVar11 >> 8),bVar5 - 9);
+  iVar10 = iVar10 + *(int *)(unaff_EBP + iVar10);
+  *(char *)(unaff_FS_OFFSET + iVar10) = *(char *)(unaff_FS_OFFSET + iVar10) + (char)iVar10;
+  iVar10 = CONCAT31((int3)((uint)iVar10 >> 8),(char)iVar10 - *pbVar40);
+  pcVar11 = (char *)(iVar10 + *(int *)(unaff_EBP + iVar10));
+  *(undefined2 *)pcVar11 = in_ES;
+  cVar6 = (char)pcVar11;
+  *pbVar40 = *pbVar40 + cVar6;
+  cVar21 = ((byte)endPoint | bVar7) - pbVar40[0x28];
+  out((short)pbVar13,pcVar11);
+  *pcVar11 = *pcVar11 + cVar6;
+  uVar19 = (undefined3)((uint)pcVar11 >> 8);
+  cVar6 = cVar6 + -6;
+  piVar15 = (int *)CONCAT31(uVar19,cVar6);
+  *unaff_EBP = *unaff_EBP - (char)((uint)pcVar11 >> 8);
+  *pbVar40 = *pbVar40 + cVar6;
+  cVar24 = cVar24 - (char)*piVar15;
+  pcVar11 = (char *)CONCAT22(uVar27,CONCAT11(cVar24,cVar21));
+  *pbVar40 = *pbVar40 + cVar6;
+  cVar31 = bVar26 - *pbVar40;
+  pbVar40 = pbVar40 + (uint)(bVar26 < *pbVar40) + *piVar15;
+  pcVar12 = (char *)(CONCAT31(uVar19,cVar6 + (char)*piVar15) + -1);
+  bVar5 = (byte)pcVar12;
+  *pcVar12 = *pcVar12 + bVar5;
+  *(char *)((int)pcVar12 * 2) = *(char *)((int)pcVar12 * 2) + cVar24;
+  *pcVar11 = *pcVar11 + cid;
+  *pcVar11 = *pcVar11 << 1;
+  *pcVar12 = *pcVar12 + bVar5;
+  cVar6 = *pcVar12;
+  pcVar23 = (char *)((uint)in_register_00000009 * 0x100);
+  *pcVar23 = *pcVar23 + cVar21;
+  pcVar11 = (char *)(CONCAT31((int3)(CONCAT22(uVar35,CONCAT11(cVar34,bVar26)) >> 8),cVar31) +
+                    0x280a0000);
+  bVar30 = (byte)in_register_00000009;
+  *pcVar11 = *pcVar11 - bVar30;
+  pbVar13 = (byte *)CONCAT22((short)((uint)pcVar12 >> 0x10),(ushort)bVar5);
+  *pcVar23 = *pcVar23 + cVar21;
+  bVar25 = cVar24 + cVar6 | *pbVar13;
+  pcVar11 = (char *)CONCAT22(uVar27,CONCAT11(bVar25,cVar21));
+  out((short)pcVar23,pbVar13);
+  *pbVar13 = *pbVar13 + bVar5;
+  uVar19 = (undefined3)((uint)pbVar13 >> 8);
+  bVar7 = *pbVar40;
+  unaff_EDI[0x2b060000] = unaff_EDI[0x2b060000] - cVar21;
+  cVar6 = (bVar5 - 9) + bVar7 + *pbVar40;
+  puVar9 = (uint *)CONCAT31(uVar19,cVar6);
+  pcVar23[0x6060000] = pcVar23[0x6060000] - bVar25;
+  *pcVar11 = *pcVar11 << 1;
+  *(char *)puVar9 = (char)*puVar9 + cVar6;
+  cVar24 = bVar25 + (char)*puVar9;
+  pcVar12 = (char *)((uint)in_register_00000009 << 8);
+  *pcVar12 = *pcVar12 + cVar21;
+  pcVar11 = (char *)(CONCAT22(uVar27,CONCAT11(cVar24,cVar21)) + -0x5af60000);
+  *pcVar11 = *pcVar11 - cVar34;
+  *puVar9 = *puVar9 & (uint)puVar9;
+  *pcVar12 = *pcVar12 + cVar6;
+  unaff_EDI[0x2a0a0000] = unaff_EDI[0x2a0a0000] - bVar30;
+  cVar34 = cVar34 - cVar24;
+  iVar10 = CONCAT22(uVar35,CONCAT11(cVar34,cVar31));
+  *(char *)puVar9 = (char)*puVar9 + cVar6;
+  cVar6 = cVar6 + -7;
+  pcVar11 = (char *)CONCAT31(uVar19,cVar6);
+  cVar24 = cVar24 + *pcVar11;
+  puVar22 = (undefined1 *)CONCAT22(uVar27,CONCAT11(cVar24,cVar21));
+  *pcVar11 = *pcVar11 + cVar6;
+  bVar5 = cVar6 - *pcVar12;
+  pbVar13 = (byte *)CONCAT31(uVar19,bVar5);
+  *(char *)(iVar10 + 0x2a060000) = *(char *)(iVar10 + 0x2a060000) - cVar24;
+  bVar7 = *pbVar13;
+  *pbVar13 = *pbVar13 + bVar5;
+  pbVar40 = pbVar40 + (uint)CARRY1(bVar7,bVar5) + *(int *)pbVar13;
+  pcVar11 = (char *)(CONCAT31(uVar19,bVar5 + *pbVar13) + -1);
+  bVar5 = (byte)pcVar11;
+  *pcVar11 = *pcVar11 + bVar5;
+  *(char *)((int)pcVar11 * 2) = *(char *)((int)pcVar11 * 2) + cVar24;
+  *puVar22 = *puVar22;
+  *pcVar11 = *pcVar11 << 1;
+  *pcVar11 = *pcVar11 + bVar5;
+  cVar6 = *pcVar11;
+  pcVar12 = (char *)((uint)in_register_00000009 * 0x100);
+  *pcVar12 = *pcVar12 + cVar21;
+  *(char *)(iVar10 + 0x280a0000) = *(char *)(iVar10 + 0x280a0000) - bVar30;
+  pbVar13 = (byte *)CONCAT22((short)((uint)pcVar11 >> 0x10),(ushort)bVar5);
+  *pcVar12 = *pcVar12 + cVar21;
+  bVar25 = cVar24 + cVar6 | *pbVar13;
+  out((short)pcVar12,pbVar13);
+  *pbVar13 = *pbVar13 + bVar5;
+  uVar19 = (undefined3)((uint)pbVar13 >> 8);
+  bVar7 = *pbVar40;
+  puVar22 = (undefined1 *)(CONCAT22(uVar27,CONCAT11(bVar25,cVar21)) + 0x2b060000);
+  *puVar22 = *puVar22;
+  bVar5 = (bVar5 - 9) + bVar7 + *pbVar40;
+  pbVar41 = (byte *)CONCAT31(uVar19,bVar5);
+  pcVar11 = (char *)((int)pbVar41 * 2 + -0x2ff9fa00);
+  *pcVar11 = *pcVar11 - bVar25;
+  *pbVar41 = *pbVar41 & bVar5;
+  *pcVar12 = *pcVar12 + bVar5;
+  pcVar12[0x280a0000] = pcVar12[0x280a0000] - bVar30;
+  *pbVar41 = *pbVar41 & bVar5;
+  *pcVar12 = *pcVar12 + bVar5;
+  pbVar13 = unaff_EDI + 0x2a0a0000;
+  bVar7 = *pbVar13;
+  *pbVar13 = *pbVar13 - bVar30;
+  pbVar40 = pbVar40 + (uint)(bVar7 < bVar30) + *(int *)pbVar41;
+  pbVar13 = (byte *)(CONCAT31(uVar19,bVar5 + *pbVar41) + -1);
+  bVar26 = (byte)pbVar13;
+  *pbVar13 = *pbVar13 + bVar26;
+  *(undefined1 *)((int)pbVar13 * 2) = *(undefined1 *)((int)pbVar13 * 2);
+  *pcVar12 = *pcVar12 << 1;
+  *pbVar13 = *pbVar13 + bVar26;
+  bVar7 = *pbVar13;
+  pcVar11 = (char *)((uint)in_register_00000009 * 0x100);
+  *pcVar11 = *pcVar11;
+  *(char *)(iVar10 + 0x280a0000) = *(char *)(iVar10 + 0x280a0000) - bVar30;
+  uVar20 = (ushort)((uint)pbVar13 >> 0x10);
+  pbVar13 = (byte *)CONCAT22(uVar20,(ushort)bVar26);
+  *pcVar11 = *pcVar11;
+  bVar5 = *pbVar13;
+  out((short)pcVar11,pbVar13);
+  *pbVar13 = *pbVar13 + bVar26;
+  uVar19 = (undefined3)((uint)pbVar13 >> 8);
+  bVar25 = *pbVar40;
+  pcVar11[0x2b060000] = pcVar11[0x2b060000];
+  bVar25 = (bVar26 - 9) + bVar25 + *pbVar40;
+  pbVar13 = (byte *)CONCAT31(uVar19,bVar25);
+  unaff_EBP[0x6060000] = unaff_EBP[0x6060000] - (bVar7 | bVar5);
+  *pcVar11 = *pcVar11 << 1;
+  *pbVar13 = *pbVar13 + bVar25;
+  bVar26 = (bVar7 | bVar5) + *pbVar13;
+  pcVar12 = (char *)((uint)in_register_00000009 * 0x100);
+  *pcVar12 = *pcVar12;
+  pcVar11 = (char *)(CONCAT22(0xa50a,(ushort)bVar26 << 8) + -0x5af60000);
+  *pcVar11 = *pcVar11 - cVar34;
+  bVar25 = bVar25 & *pbVar13;
+  *pcVar12 = *pcVar12 + bVar25;
+  unaff_EDI[0x2a0a0000] = unaff_EDI[0x2a0a0000] - bVar30;
+  pcVar11 = (char *)CONCAT22(uVar35,CONCAT11(cVar34 - bVar26,cVar31));
+  *(char *)CONCAT31(uVar19,bVar25) = *(char *)CONCAT31(uVar19,bVar25) + bVar25;
+  bVar26 = bVar26 + *(char *)CONCAT31(uVar19,bVar25 - 7);
+  puVar22 = (undefined1 *)CONCAT22(0xa50a,(ushort)bVar26 << 8);
+  *pcVar11 = *pcVar11 + cVar31;
+  bVar5 = cVar31 - *pcVar12;
+  pbVar14 = (byte *)CONCAT31((int3)((uint)pcVar11 >> 8),bVar5);
+  pbVar40[0x2a060000] = pbVar40[0x2a060000] - bVar26;
+  bVar7 = *pbVar14;
+  *pbVar14 = *pbVar14 + bVar5;
+  iVar10 = (uint)CARRY1(bVar7,bVar5) + *(int *)pbVar14;
+  pbVar14 = pbVar14 + *(int *)pbVar14;
+  pbVar13 = pbVar40 + iVar10 + -1;
+  cVar6 = (char)pbVar14;
+  *pbVar14 = *pbVar14 + cVar6;
+  *(char *)((int)pbVar14 * 2) = *(char *)((int)pbVar14 * 2) + bVar26;
+  *puVar22 = *puVar22;
+  *(byte *)((int)pbVar14 * 2) = *(byte *)((int)pbVar14 * 2) >> 1;
+  *pcVar12 = *pcVar12 + cVar6;
+  pcVar12[0x280a0000] = pcVar12[0x280a0000] - bVar30;
+  *pcVar12 = *pcVar12;
+  pcVar11 = (char *)((int)pbVar14 * 2 + 0x280a0a00);
+  *pcVar11 = *pcVar11 - bVar30;
+  out((short)pcVar12,pbVar14);
+  *pbVar14 = *pbVar14 + cVar6;
+  uVar19 = (undefined3)((uint)pbVar14 >> 8);
+  cVar6 = cVar6 + -9 + *pbVar13;
+  puVar22 = (undefined1 *)(CONCAT31(uVar19,cVar6) * 2 + 0x72b0600);
+  *puVar22 = *puVar22;
+  cVar6 = cVar6 + *pbVar13;
+  unaff_EDI[0x3060000] = unaff_EDI[0x3060000] - bVar26;
+  pbVar41 = (byte *)(CONCAT31(uVar19,cVar6) * 2);
+  *pbVar41 = *pbVar41 >> 1;
+  *pcVar12 = *pcVar12 + cVar6;
+  pcVar12[0x280a0000] = pcVar12[0x280a0000] - bVar30;
+  *pcVar12 = *pcVar12 + cVar6;
+  piVar15 = (int *)((int)CONCAT31(uVar19,cVar6) * 2);
+  *piVar15 = *piVar15 + -0x28060200;
+  pbVar41 = (byte *)((uint)uVar20 << 0x10);
+  *pcVar12 = *pcVar12;
+  bVar5 = cVar6 - *(char *)CONCAT31(uVar19,cVar6);
+  piVar15 = (int *)CONCAT31(uVar19,bVar5);
+  *pbVar41 = *pbVar41;
+  *pbVar41 = *pbVar41 ^ bVar5;
+  *(byte *)piVar15 = (char)*piVar15 + bVar5;
+  *(undefined1 *)((int)piVar15 * 2) = *(undefined1 *)((int)piVar15 * 2);
+  *(byte *)((int)piVar15 * 2) = *(byte *)((int)piVar15 * 2) >> 1;
+  *pcVar12 = *pcVar12 + bVar5;
+  pcVar12[0x280a0000] = pcVar12[0x280a0000] - bVar30;
+  pbVar18 = (byte *)((uint)uVar20 * 0x10000);
+  *pcVar12 = *pcVar12
+/* truncated */
+
+
+################################################################
+## SetVidPid
+entry=00406cff size=23
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x0040a4db) overlaps instruction at (ram,0x0040a4da)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+/* WARNING: Removing unreachable block (ram,0x00409e4c) */
+/* WARNING: Removing unreachable block (ram,0x00409e57) */
+/* WARNING: Removing unreachable block (ram,0x00409e67) */
+/* WARNING: Removing unreachable block (ram,0x00409e7b) */
+/* WARNING: Removing unreachable block (ram,0x00409e8b) */
+/* WARNING: Removing unreachable block (ram,0x00409e93) */
+/* WARNING: Removing unreachable block (ram,0x00409e32) */
+/* WARNING: Removing unreachable block (ram,0x00409e9e) */
+/* WARNING: Removing unreachable block (ram,0x00409eae) */
+/* WARNING: Removing unreachable block (ram,0x00409eb6) */
+/* WARNING: Removing unreachable block (ram,0x00409eb8) */
+/* WARNING: Removing unreachable block (ram,0x00409f34) */
+/* WARNING: Removing unreachable block (ram,0x00409f4b) */
+/* WARNING: Removing unreachable block (ram,0x00409f61) */
+/* WARNING: Removing unreachable block (ram,0x00409f83) */
+/* WARNING: Removing unreachable block (ram,0x00409f24) */
+/* WARNING: Removing unreachable block (ram,0x00409f99) */
+/* WARNING: Removing unreachable block (ram,0x00409fb6) */
+/* WARNING: Removing unreachable block (ram,0x00409fc1) */
+/* WARNING: Removing unreachable block (ram,0x00409fb4) */
+/* WARNING: Removing unreachable block (ram,0x00409f42) */
+/* WARNING: Removing unreachable block (ram,0x00409ed6) */
+/* WARNING: Removing unreachable block (ram,0x00409eec) */
+/* WARNING: Removing unreachable block (ram,0x00409ef9) */
+/* WARNING: Removing unreachable block (ram,0x00409e87) */
+/* WARNING: Removing unreachable block (ram,0x00409ef8) */
+/* WARNING: Removing unreachable block (ram,0x00409efd) */
+/* WARNING: Removing unreachable block (ram,0x00409f09) */
+/* WARNING: Removing unreachable block (ram,0x00409f0e) */
+/* WARNING: Removing unreachable block (ram,0x0040a020) */
+/* WARNING: Removing unreachable block (ram,0x0040a02d) */
+/* WARNING: Removing unreachable block (ram,0x0040a04c) */
+/* WARNING: Removing unreachable block (ram,0x0040a093) */
+/* WARNING: Removing unreachable block (ram,0x0040a0c0) */
+/* WARNING: Removing unreachable block (ram,0x0040a110) */
+/* WARNING: Removing unreachable block (ram,0x0040a14e) */
+/* WARNING: Removing unreachable block (ram,0x0040a16f) */
+/* WARNING: Removing unreachable block (ram,0x0040a183) */
+/* WARNING: Removing unreachable block (ram,0x0040a131) */
+/* WARNING: Removing unreachable block (ram,0x0040a19c) */
+/* WARNING: Removing unreachable block (ram,0x0040a1d4) */
+/* WARNING: Removing unreachable block (ram,0x0040a16d) */
+/* WARNING: Removing unreachable block (ram,0x0040a103) */
+/* WARNING: Removing unreachable block (ram,0x0040a0e1) */
+/* WARNING: Removing unreachable block (ram,0x00409eba) */
+/* WARNING: Removing unreachable block (ram,0x00409e42) */
+/* WARNING: Removing unreachable block (ram,0x00409404) */
+/* WARNING: Removing unreachable block (ram,0x0040940c) */
+/* WARNING: Removing unreachable block (ram,0x00407d8c) */
+/* WARNING: Removing unreachable block (ram,0x00407b1a) */
+/* WARNING: Removing unreachable block (ram,0x00407ad5) */
+/* WARNING: Removing unreachable block (ram,0x00407a99) */
+/* WARNING: Removing unreachable block (ram,0x00407aa1) */
+/* WARNING: Removing unreachable block (ram,0x00407a50) */
+/* WARNING: Removing unreachable block (ram,0x00407a53) */
+/* WARNING: Removing unreachable block (ram,0x00407a6c) */
+/* WARNING: Removing unreachable block (ram,0x00407a1a) */
+/* WARNING: Removing unreachable block (ram,0x00407977) */
+/* WARNING: Removing unreachable block (ram,0x004078be) */
+/* WARNING: Removing unreachable block (ram,0x004078b8) */
+/* WARNING: Removing unreachable block (ram,0x004078eb) */
+/* WARNING: Removing unreachable block (ram,0x004078e6) */
+/* WARNING: Removing unreachable block (ram,0x004078f9) */
+/* WARNING: Removing unreachable block (ram,0x0040791d) */
+/* WARNING: Removing unreachable block (ram,0x004078fd) */
+/* WARNING: Removing unreachable block (ram,0x00407902) */
+/* WARNING: Removing unreachable block (ram,0x00407910) */
+/* WARNING: Removing unreachable block (ram,0x00407916) */
+/* WARNING: Removing unreachable block (ram,0x00407931) */
+/* WARNING: Removing unreachable block (ram,0x00407933) */
+/* WARNING: Removing unreachable block (ram,0x00407957) */
+/* WARNING: Removing unreachable block (ram,0x00407929) */
+/* WARNING: Removing unreachable block (ram,0x0040791a) */
+/* WARNING: Removing unreachable block (ram,0x00407952) */
+/* WARNING: Removing unreachable block (ram,0x004078cc) */
+/* WARNING: Removing unreachable block (ram,0x0040789c) */
+/* WARNING: Removing unreachable block (ram,0x00407541) */
+/* WARNING: Removing unreachable block (ram,0x0040748e) */
+/* WARNING: Removing unreachable block (ram,0x004074ba) */
+/* WARNING: Removing unreachable block (ram,0x0040793a) */
+/* WARNING: Removing unreachable block (ram,0x00407974) */
+/* WARNING: Removing unreachable block (ram,0x00407946) */
+/* WARNING: Removing unreachable block (ram,0x00407937) */
+/* WARNING: Removing unreachable block (ram,0x00407951) */
+/* WARNING: Removing unreachable block (ram,0x00407975) */
+/* WARNING: Removing unreachable block (ram,0x00407955) */
+/* WARNING: Removing unreachable block (ram,0x0040795a) */
+/* WARNING: Removing unreachable block (ram,0x0040795b) */
+/* WARNING: Removing unreachable block (ram,0x004079ab) */
+/* WARNING: Removing unreachable block (ram,0x0040797b) */
+/* WARNING: Removing unreachable block (ram,0x00407988) */
+/* WARNING: Removing unreachable block (ram,0x0040798c) */
+/* WARNING: Removing unreachable block (ram,0x0040795d) */
+/* WARNING: Removing unreachable block (ram,0x00407972) */
+/* WARNING: Removing unreachable block (ram,0x00407978) */
+/* WARNING: Removing unreachable block (ram,0x0040798f) */
+/* WARNING: Removing unreachable block (ram,0x00407992) */
+/* WARNING: Removing unreachable block (ram,0x004079a3) */
+/* WARNING: Removing unreachable block (ram,0x004079a7) */
+/* WARNING: Removing unreachable block (ram,0x004079ad) */
+/* WARNING: Removing unreachable block (ram,0x004079c0) */
+/* WARNING: Removing unreachable block (ram,0x004079c4) */
+/* WARNING: Removing unreachable block (ram,0x004079c5) */
+/* WARNING: Removing unreachable block (ram,0x004079c7) */
+/* WARNING: Removing unreachable block (ram,0x004079de) */
+/* WARNING: Removing unreachable block (ram,0x004079e4) */
+/* WARNING: Removing unreachable block (ram,0x004079ea) */
+/* WARNING: Removing unreachable block (ram,0x004079ec) */
+/* WARNING: Removing unreachable block (ram,0x004079f6) */
+/* WARNING: Removing unreachable block (ram,0x004079fa) */
+/* WARNING: Removing unreachable block (ram,0x004079fd) */
+/* WARNING: Removing unreachable block (ram,0x00407a38) */
+/* WARNING: Removing unreachable block (ram,0x00407a39) */
+/* WARNING: Removing unreachable block (ram,0x00407a3c) */
+/* WARNING: Removing unreachable block (ram,0x00407aba) */
+/* WARNING: Removing unreachable block (ram,0x00407a49) */
+/* WARNING: Removing unreachable block (ram,0x00407a4d) */
+/* WARNING: Removing unreachable block (ram,0x00407a1d) */
+/* WARNING: Removing unreachable block (ram,0x00407a6d) */
+/* WARNING: Removing unreachable block (ram,0x00407aec) */
+/* WARNING: Removing unreachable block (ram,0x00407ae4) */
+/* WARNING: Removing unreachable block (ram,0x00407abe) */
+/* WARNING: Removing unreachable block (ram,0x00407abc) */
+/* WARNING: Removing unreachable block (ram,0x00407ac9) */
+/* WARNING: Removing unreachable block (ram,0x00407acd) */
+/* WARNING: Removing unreachable block (ram,0x00407a9d) */
+/* WARNING: Removing unreachable block (ram,0x00407aa5) */
+/* WARNING: Removing unreachable block (ram,0x00407a55) */
+/* WARNING: Removing unreachable block (ram,0x00407a5d) */
+/* WARNING: Removing unreachable block (ram,0x00407adf) */
+/* WARNING: Removing unreachable block (ram,0x00407a64) */
+/* WARNING: Removing unreachable block (ram,0x00407a68) */
+/* WARNING: Removing unreachable block (ram,0x00407a6e) */
+/* WARNING: Removing unreachable block (ram,0x00407a71) */
+/* WARNING: Removing unreachable block (ram,0x00407a78) */
+/* WARNING: Removing unreachable block (ram,0x00407a05) */
+/* WARNING: Removing unreachable block (ram,0x00407a7e) */
+/* WARNING: Removing unreachable block (ram,0x00407a82) */
+/* WARNING: Removing unreachable block (ram,0x00407a88) */
+/* WARNING: Removing unreachable block (ram,0x00407a2d) */
+/* WARNING: Removing unreachable block (ram,0x00407a1e) */
+/* WARNING: Removing unreachable block (ram,0x00407a32) */
+/* WARNING: Removing unreachable block (ram,0x00407a36) */
+/* WARNING: Removing unreachable block (ram,0x00407a07) */
+/* WARNING: Removing unreachable block (ram,0x00407a0d) */
+/* WARNING: Removing unreachable block (ram,0x00407a14) */
+/* WARNING: Removing unreachable block (ram,0x00407a18) */
+/* WARNING: Removing unreachable block (ram,0x00407a98) */
+/* WARNING: Removing unreachable block (ram,0x00407a9c) */
+/* WARNING: Removing unreachable block (ram,0x00407ab2) */
+/* WARNING: Removing unreachable block (ram,0x00407ab6) */
+/* WARNING: Removing unreachable block (ram,0x00407ae0) */
+/* WARNING: Removing unreachable block (ram,0x00407af7) */
+/* WARNING: Removing unreachable block (ram,0x00407afb) */
+/* WARNING: Removing unreachable block (ram,0x00407ae3) */
+/* WARNING: Removing unreachable block (ram,0x00407b0e) */
+/* WARNING: Removing unreachable block (ram,0x00407b31) */
+/* WARNING: Removing unreachable block (ram,0x00407b12) */
+/* WARNING: Removing unreachable block (ram,0x00407ae2) */
+/* WARNING: Removing unreachable block (ram,0x00407b03) */
+/* WARNING: Removing unreachable block (ram,0x00407b15) */
+/* WARNING: Removing unreachable block (ram,0x00407b21) */
+/* WARNING: Removing unreachable block (ram,0x00407b25) */
+/* WARNING: Removing unreachable block (ram,0x00407b27) */
+/* WARNING: Removing unreachable block (ram,0x00407b29) */
+/* WARNING: Removing unreachable block (ram,0x00407b3c) */
+/* WARNING: Removing unreachable block (ram,0x00407b40) */
+/* WARNING: Removing unreachable block (ram,0x00407b5f) */
+/* WARNING: Removing unreachable block (ram,0x00407b48) */
+/* WARNING: Removing unreachable block (ram,0x00407b46) */
+/* WARNING: Removing unreachable block (ram,0x00407b53) */
+/* WARNING: Removing unreachable block (ram,0x00407b76) */
+/* WARNING: Removing unreachable block (ram,0x00407b57) */
+/* WARNING: Removing unreachable block (ram,0x00407b5a) */
+/* WARNING: Removing unreachable block (ram,0x00407b6a) */
+/* WARNING: Removing unreachable block (ram,0x00407b6c) */
+/* WARNING: Removing unreachable block (ram,0x00407b8d) */
+/* WARNING: Removing unreachable block (ram,0x00407b6e) */
+/* WARNING: Removing unreachable block (ram,0x00407b81) */
+/* WARNING: Removing unreachable block (ram,0x00407ba4) */
+/* WARNING: Removing unreachable block (ram,0x00407b85) */
+/* WARNING: Removing unreachable block (ram,0x00407b93) */
+/* WARNING: Removing unreachable block (ram,0x00407b98) */
+/* WARNING: Removing unreachable block (ram,0x00407bbb) */
+/* WARNING: Removing unreachable block (ram,0x00407b9c) */
+/* WARNING: Removing unreachable block (ram,0x00407b9f) */
+/* WARNING: Removing unreachable block (ram,0x00407b78) */
+/* WARNING: Removing unreachable block (ram,0x00407b02) */
+/* WARNING: Removing unreachable block (ram,0x00407d5e) */
+/* WARNING: Removing unreachable block (ram,0x00407d56) */
+/* WARNING: Removing unreachable block (ram,0x00407d30) */
+/* WARNING: Removing unreachable block (ram,0x00407d2b) */
+/* WARNING: Removing unreachable block (ram,0x00407d3b) */
+/* WARNING: Removing unreachable block (ram,0x00407d3f) */
+/* WARNING: Removing unreachable block (ram,0x00407d0f) */
+/* WARNING: Removing unreachable block (ram,0x00407d09) */
+/* WARNING: Removing unr
+/* truncated */
+
+
+################################################################
+## GetUsbDeviceAttribute
+entry=00406840 size=37
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x004069ec) overlaps instruction at (ram,0x004069ea)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+
+void __fastcall GetUsbDeviceAttribute(char *endpoint,undefined *hidd_attributes)
+
+{
+  byte bVar1;
+  byte bVar2;
+  uint uVar3;
+  int iVar4;
+  int iVar5;
+  int iVar6;
+  uint uVar7;
+  char cVar8;
+  byte bVar9;
+  char cVar10;
+  byte bVar11;
+  char cVar12;
+  byte bVar13;
+  int *in_EAX;
+  undefined4 uVar14;
+  undefined3 uVar26;
+  uint uVar15;
+  char *pcVar17;
+  char *pcVar18;
+  byte *pbVar19;
+  int iVar20;
+  char *pcVar21;
+  uint3 uVar27;
+  int *piVar22;
+  int *piVar23;
+  uint *puVar24;
+  uint uVar25;
+  byte bVar28;
+  byte bVar29;
+  undefined2 uVar31;
+  uint *puVar30;
+  byte bVar32;
+  char cVar33;
+  ushort uVar34;
+  undefined3 uVar36;
+  char *pcVar35;
+  char cVar38;
+  undefined4 unaff_EBX;
+  char *pcVar37;
+  byte *pbVar39;
+  int unaff_EBP;
+  int iVar40;
+  byte *unaff_ESI;
+  byte *pbVar41;
+  byte *pbVar42;
+  uint *puVar43;
+  uint *unaff_EDI;
+  undefined2 in_ES;
+  undefined2 in_SS;
+  undefined2 uVar44;
+  int unaff_FS_OFFSET;
+  bool in_CF;
+  bool bVar45;
+  byte in_AF;
+  byte in_TF;
+  byte in_IF;
+  byte in_NT;
+  byte in_AC;
+  byte in_VIF;
+  byte in_VIP;
+  byte in_ID;
+  byte *pbVar16;
+  
+                    /* .NET CLR Managed Code */
+  if (in_CF) {
+    *in_EAX = (int)(*in_EAX + (int)in_EAX);
+    endpoint = (char *)CONCAT22((short)((uint)endpoint >> 0x10),
+                                CONCAT11((char)((uint)endpoint >> 8) +
+                                         *(char *)((int)unaff_EDI + 0xd),
+                                         (byte)endpoint | *hidd_attributes));
+    *in_EAX = (int)(*in_EAX + (int)in_EAX);
+    in_EAX = (int *)CONCAT22((short)((uint)in_EAX >> 0x10),
+                             CONCAT11((byte)((uint)in_EAX >> 8) | *unaff_ESI,(char)in_EAX));
+  }
+  bVar13 = (byte)((uint)endpoint >> 8);
+  uVar44 = (undefined2)((uint)unaff_EBX >> 0x10);
+  cVar33 = (char)unaff_EBX;
+  cVar38 = (char)((uint)unaff_EBX >> 8) - bVar13;
+  pcVar17 = (char *)CONCAT22(uVar44,CONCAT11(cVar38,cVar33));
+  *(char *)in_EAX = (char)*in_EAX + (char)in_EAX;
+  iVar40 = *(int *)CONCAT31((int3)((uint)in_EAX >> 8),(char)in_EAX + -8);
+  uVar14 = in(0);
+  *unaff_ESI = *unaff_ESI + (char)uVar14;
+  uVar26 = (undefined3)((uint)uVar14 >> 8);
+  cVar8 = (char)uVar14 - *unaff_ESI;
+  iVar40 = unaff_EBP + iVar40 + *(int *)CONCAT31(uVar26,cVar8);
+  cVar8 = cVar8 + -1;
+  *unaff_ESI = *unaff_ESI + cVar8;
+  bVar9 = cVar8 - *(char *)CONCAT31(uVar26,cVar8);
+  pbVar19 = (byte *)CONCAT31(uVar26,bVar9);
+  bVar29 = *pbVar19;
+  *pbVar19 = *pbVar19 + bVar9;
+  pbVar41 = unaff_ESI + (-(uint)CARRY1(bVar29,bVar9) - *(int *)pbVar19);
+  puVar43 = (uint *)CONCAT31(uVar26,bVar9);
+  *puVar43 = *puVar43 & (uint)puVar43;
+  *(byte *)puVar43 = (byte)*puVar43 + bVar9;
+  *(byte *)puVar43 = (byte)*puVar43 ^ bVar9;
+  bVar28 = (byte)hidd_attributes;
+  *endpoint = *endpoint + bVar28;
+  cVar8 = (char)endpoint + pbVar41[0x28060a69];
+  pbVar19 = (byte *)CONCAT31((int3)((uint)endpoint >> 8),cVar8);
+  *hidd_attributes = *hidd_attributes + cVar8;
+  uVar3 = *(uint *)hidd_attributes;
+  uVar15 = CONCAT22((short)((uint)uVar14 >> 0x10),(ushort)bVar9) | uVar3;
+  *(char *)(uVar15 + 0x70a0000) = *(char *)(uVar15 + 0x70a0000) - cVar38;
+  pcVar21 = (char *)(uVar15 | 0xde);
+  *(char *)(unaff_EDI + -0x8fd8000) =
+       (char)unaff_EDI[-0x8fd8000] - (char)((uint)hidd_attributes >> 8);
+  *hidd_attributes = *hidd_attributes | bVar13;
+  bVar9 = (byte)pcVar21;
+  *pcVar21 = *pcVar21 + bVar9;
+  bVar29 = *pbVar19;
+  *pbVar19 = *pbVar19 + bVar9;
+  *pcVar21 = *pcVar21 + bVar9 + CARRY1(bVar29,bVar9);
+  *hidd_attributes = *hidd_attributes + bVar9;
+  *pcVar17 = *pcVar17 + cVar8;
+  cRam00070018 = cRam00070018 + cVar8;
+  *pcVar21 = *pcVar21 + bVar9;
+  bVar32 = (byte)(uVar3 >> 8);
+  uVar36 = (undefined3)((uint)hidd_attributes >> 8);
+  pcVar21 = (char *)CONCAT31(uVar36,bVar28 + bVar32);
+  uVar26 = (undefined3)(uVar15 >> 8);
+  bVar9 = (bVar9 - 2) + CARRY1(bVar28,bVar32);
+  puVar43 = (uint *)CONCAT31(uVar26,bVar9);
+  *(char **)pbVar19 = (char *)(*(int *)pbVar19 + (int)puVar43);
+  bVar29 = *pbVar41;
+  *pbVar41 = *pbVar41 + bVar9;
+  if (CARRY1(bVar29,bVar9)) {
+    uVar3 = *puVar43;
+    *puVar43 = (uint)(*puVar43 + (int)puVar43);
+    *pbVar19 = *pbVar19 + 1 + CARRY4(uVar3,(uint)puVar43);
+    pbVar42 = (byte *)(pcVar17 + (int)puVar43);
+    bVar29 = *pbVar42;
+    *pbVar42 = *pbVar42 + bVar9;
+    *pcVar21 = *pcVar21 + '\x01' + CARRY1(bVar29,bVar9);
+    pcVar17 = (char *)((int)puVar43 + iVar40);
+    *pcVar17 = *pcVar17 + bVar9;
+    out((short)pcVar21,puVar43);
+    *(byte *)puVar43 = (char)*puVar43 + bVar9;
+  }
+  piVar23 = (int *)CONCAT31(uVar26,bVar9 - 0xd);
+  bVar29 = pbVar41[0x11];
+  pcVar21 = (char *)CONCAT22(uVar44,CONCAT11(cVar38 + bVar29,cVar33));
+  *piVar23 = *piVar23 + (int)piVar23;
+  bVar9 = bVar9 - 9;
+  bVar32 = (bVar28 + bVar32) - bVar32;
+  pbVar42 = (byte *)CONCAT31(uVar36,bVar32);
+  *(char *)CONCAT31(uVar26,bVar9) = *(char *)CONCAT31(uVar26,bVar9) + bVar9;
+  bVar2 = *pbVar42;
+  bVar28 = *pbVar42;
+  cVar10 = bVar9 - *pbVar42;
+  piVar23 = (int *)CONCAT31(uVar26,cVar10);
+  if (cVar10 != '\0' && (char)bVar9 >= (char)bVar28) {
+    *piVar23 = *piVar23 + (int)piVar23;
+    piVar23 = (int *)CONCAT31(uVar26,cVar10 + '\x04');
+    *pbVar19 = *pbVar19 - bVar13;
+    *piVar23 = *piVar23 + (int)piVar23;
+    bVar11 = (cVar10 + '\x04') - (char)*piVar23;
+    pbVar16 = (byte *)CONCAT31(uVar26,bVar11);
+    bVar1 = *pbVar16;
+    *pbVar16 = *pbVar16 + bVar11;
+    pbVar41 = pbVar41 + (uint)CARRY1(bVar1,bVar11) + *(int *)pbVar16;
+    piVar23 = (int *)CONCAT31(uVar26,bVar11);
+  }
+  cVar10 = (char)piVar23 - ((cVar10 == '\0' || (char)bVar9 < (char)bVar28) && bVar9 < bVar2);
+  pcVar17 = (char *)CONCAT31((int3)((uint)piVar23 >> 8),cVar10);
+  *pcVar17 = *pcVar17 + cVar10;
+  pcVar17 = pcVar17 + -0x3110000;
+  *pcVar17 = *pcVar17 + (char)pcVar17;
+  *(byte **)pbVar42 = pbVar19 + *(int *)pbVar42;
+  uVar26 = (undefined3)((uint)pcVar17 >> 8);
+  cVar12 = (char)pcVar17 + *pbVar41;
+  piVar23 = (int *)CONCAT31(uVar26,cVar12);
+  pbVar39 = pbVar41 + -4;
+  *(undefined2 *)(pbVar41 + -4) = in_SS;
+  iVar4 = *piVar23;
+  uVar34 = (ushort)bVar32;
+  pcVar17 = (char *)CONCAT22((short)((uint)hidd_attributes >> 0x10),uVar34);
+  cVar10 = *pcVar17;
+  *pcVar17 = *pcVar17 + cVar8;
+  pbVar42 = pbVar41;
+  if (*pcVar17 != '\0' && SCARRY1(cVar10,cVar8) == *pcVar17 < '\0') {
+    *piVar23 = *piVar23 + (int)piVar23;
+    piVar23 = (int *)CONCAT31(uVar26,cVar12 + '\x06');
+    pbVar42 = pbVar41 + 4;
+    out(*(undefined4 *)pbVar41,uVar34);
+    in_SS = *(undefined2 *)(pbVar41 + -4);
+    *piVar23 = (int)(*piVar23 + (int)piVar23);
+    *(undefined2 *)(pbVar41 + -4) = in_ES;
+    pbVar19 = (byte *)CONCAT22((short)((uint)endpoint >> 0x10),
+                               CONCAT11(bVar13 - pbVar41[0x2c],cVar8));
+    out(uVar34,piVar23);
+    *(char *)piVar23 = (char)*piVar23 + cVar12 + '\x06';
+    pbVar39 = pbVar41 + -8;
+    *(undefined2 *)(pbVar41 + -8) = in_ES;
+    piVar23 = (int *)CONCAT31(uVar26,cVar12 + -4);
+  }
+  cVar8 = (char)piVar23 + *pcVar17;
+  *pbVar42 = *pbVar42 + cVar8;
+  cVar8 = cVar8 - *pcVar17;
+  pcVar18 = (char *)CONCAT31((int3)((uint)piVar23 >> 8),cVar8);
+  *pbVar42 = *pbVar42 + cVar8;
+  bVar28 = ((char)pbVar19 + pbVar42[0x12a2869]) - pbVar42[0x28];
+  out(uVar34,pcVar18);
+  *pcVar18 = *pcVar18 + cVar8;
+  *(undefined2 *)(pbVar39 + -4) = in_ES;
+  pcVar18 = (char *)CONCAT22((short)((uint)piVar23 >> 0x10),(ushort)(byte)(cVar8 - 6U));
+  *pcVar18 = *pcVar18 + (cVar8 - 6U);
+  *(undefined2 *)(pbVar39 + -8) = in_ES;
+  uVar31 = (undefined2)((uint)pbVar19 >> 0x10);
+  cVar10 = (char)((uint)pbVar19 >> 8) - *pcVar18;
+  pbVar19 = (byte *)(pcVar18 + -*(int *)CONCAT22(uVar31,CONCAT11(cVar10,bVar28)));
+  bVar13 = (byte)pbVar19;
+  *pbVar42 = *pbVar42 + bVar13;
+  uVar36 = (undefined3)((uint)pcVar17 >> 8);
+  cVar12 = bVar32 - *pcVar21;
+  pbVar41 = (byte *)CONCAT31(uVar36,cVar12);
+  *pbVar41 = *pbVar41 ^ bVar13;
+  bVar32 = (byte)((uint)pbVar19 >> 8);
+  *(byte *)unaff_EDI = (char)*unaff_EDI + bVar32;
+  *pbVar19 = *pbVar19 + bVar13;
+  *pbVar42 = *pbVar42 + bVar32;
+  bVar9 = *pbVar19;
+  *pbVar19 = *pbVar19 + bVar13;
+  piVar23 = (int *)(pcVar21 + 0xc);
+  *piVar23 = (int)(pbVar42 + (uint)CARRY1(bVar9,bVar13) + *piVar23);
+  *(byte **)pbVar19 = pbVar19 + *(int *)pbVar19;
+  bVar9 = *pbVar41;
+  *(undefined2 *)(pbVar39 + -0xc) = in_ES;
+  cVar10 = cVar10 + *(char *)((int)unaff_EDI + 0xd);
+  *(byte **)pbVar19 = pbVar19 + *(int *)pbVar19;
+  pcVar21 = (char *)CONCAT22((short)((uint)pbVar19 >> 0x10),CONCAT11(bVar32 | *pbVar42,bVar13));
+  cVar38 = (cVar38 + bVar29) - cVar10;
+  *pcVar21 = *pcVar21 + bVar13;
+  *(undefined2 *)(pbVar39 + -0x10) = in_ES;
+  uVar26 = (undefined3)((uint)pcVar21 >> 8);
+  cVar8 = bVar13 - 9;
+  *(undefined2 *)(pbVar39 + -0x14) = in_ES;
+  iVar5 = *(int *)CONCAT31(uVar26,cVar8);
+  *pbVar42 = *pbVar42 + cVar8;
+  iVar6 = *(int *)CONCAT31(uVar26,cVar8 - *pbVar42);
+  pbVar19 = (byte *)(CONCAT31(uVar26,cVar8 - *pbVar42) & 0xffffff01);
+  bVar29 = (byte)pbVar19;
+  *pbVar42 = *pbVar42 + bVar29;
+  piVar23 = (int *)CONCAT31((int3)((uint)pbVar19 >> 8),bVar29 - *pbVar19);
+  pbVar42 = pbVar42 + (uint)(bVar29 < *pbVar19) + *piVar23;
+  pbVar19 = (byte *)(piVar23 + 0xbc0);
+  bVar13 = (byte)((uint)pbVar19 >> 8);
+  *pbVar42 = *pbVar42 + bVar13;
+  bVar29 = *pbVar19;
+  bVar32 = (byte)pbVar19;
+  *pbVar19 = *pbVar19 + bVar32;
+  piVar23 = (int *)(CONCAT22(uVar44,CONCAT11(cVar38,cVar33)) + 0xc);
+  *piVar23 = (int)(pbVar42 + (uint)CARRY1(bVar29,bVar32) + *piVar23);
+  *(byte **)pbVar19 = pbVar19 + *(int *)pbVar19;
+  bVar29 = *pbVar41;
+  *(undefined2 *)(pbVar39 + -0x18) = in_ES;
+  cVar10 = cVar10 + *(char *)((int)unaff_EDI + 0xd);
+  *(byte **)pbVar19 = pbVar19 + *(int *)pbVar19;
+  pcVar21 = (char *)CONCAT22((short)((uint)pbVar19 >> 0x10),CONCAT11(bVar13 | *pbVar42,bVar32));
+  cVar38 = cVar38 - cVar10;
+  *pcVar21 = *pcVar21 + bVar32;
+  *(undefined2 *)(pbVar39 + -0x1c) = in_ES;
+  iVar20 = CONCAT31((int3)((uint)pcVar21 >> 8),bVar32 - 0xd);
+  *(undefined2 *)(pbVar39 + -0x20) = in_ES;
+  pcVar21 = (char *)(iVar20 + *(int *)(iVar20 + -0x21d7fbf2));
+  *pcVar21 = *pcVar21 + (char)pcVar21;
+  *(undefined2 *)(pbVar39 + -0x24) = in_ES;
+  iVar20 = CONCAT31((int3)((uint)pcVar21 >> 8),(char)pcVar21 - *pbVar42);
+  pbVar19 = (byte *)(iVar20 + *(int *)(iVar20 + 0x2528040e));
+  *(byte **)pbVar19 = pbVar19 + *(int *)pbVar19;
+  *(undefined2 *)(pbVar39 + -0x28) = in_ES;
+  uVar27 = (uint3)((uint)pbVar19 >> 8);
+  puVar43 = (uint *)(pbVar42 +
+                    (uint)((byte)pbVar19 < *pbVar19) +
+                    *(int *)CONCAT31(uVar27,(byte)pbVar19 - *pbVar19));
+  piVar22 = (int *)((uVar27 & 0x260000) * 0x100);
+  *(char *)piVar22 = (char)*piVar22;
+  piVar23 = (int *)(CONCAT22(uVar44,CONCAT11(cVar38,cVar33)) + 0xc);
+  *piVar23 = (int)(*piVar23 + (int)puVar43);
+  *piVar22 = (int)(*piVar22 + (int)piVar22);
+  bVar29 = bVar28 | bVar9 | bVar29 | *pbVar41;
+  *(undefined2 *)(pbVar39 + -0x2c) = in_ES;
+  cVar10 = cVar10 + *(char *)((int)unaff_EDI + 0xd);
+  *piVar22 = *piVar22 + (int)piVar22;
+  uVar27 = CONCAT21((short)((uint)piVar22 >> 0x10),(byte)*puVar43);
+  bVar9 = cVar38 - cVar10;
+  pcVar21 = (char *)CONCAT22(uVar44,CONCAT11(bVar9,cVar33));
+  *(undefined1 *)((uint)uVar27 << 8) = *(undefined1 *)((uint)uVar27 << 8);
+  *(undefined2 *)(pbVar39 + -0x30) = in_ES;
+  *(undefined2 *)(pbVar39 + -0x34) = in_ES;
+  iVar20 = *(int *)CONCAT31(uVar27,0xf8);
+  out(0,0xf8);
+  *(byte *)puVar43 = (byte)*puVar43 - 8;
+  piVar23 = (int *)CONCAT31(uVar27,-8 - (byte)*puVar43);
+  iVar40 = iVar40 + iVar4 + iVar5 + iVar6 + iVar20 + *piVar23;
+  piVar22 = (int *)((int)piVar23 + -0x2a060001);
+  *(byte **)(pbVar39 + -0x3
+/* truncated */
+
+
+################################################################
+## FindHidDevicesByDeviceId
+entry=00406730 size=55
+--- CALLERS ---
+--- C ---
+
+/* WARNING: Control flow encountered bad instruction data */
+/* WARNING: Instruction at (ram,0x004069ec) overlaps instruction at (ram,0x004069ea)
+    */
+/* WARNING: Unable to track spacebase fully for stack */
+/* WARNING: Removing unreachable block (ram,0x00406812) */
+/* WARNING: Removing unreachable block (ram,0x00406740) */
+
+byte * __fastcall FindHidDevicesByDeviceId(char *vid,char *pid,int interfaceId,int deviceId)
+
+{
+  byte bVar1;
+  byte bVar2;
+  uint uVar3;
+  int iVar4;
+  int iVar5;
+  uint uVar6;
+  bool bVar7;
+  char cVar8;
+  byte bVar9;
+  byte bVar10;
+  byte bVar11;
+  byte bVar12;
+  char cVar13;
+  byte bVar28;
+  int *in_EAX;
+  undefined3 uVar29;
+  byte *pbVar14;
+  byte *pbVar15;
+  uint3 uVar30;
+  int *piVar16;
+  undefined1 *puVar17;
+  undefined4 uVar18;
+  uint uVar19;
+  char *pcVar21;
+  char *pcVar22;
+  int iVar23;
+  char *pcVar24;
+  int *piVar25;
+  uint *puVar26;
+  uint uVar27;
+  byte bVar31;
+  char cVar33;
+  uint *puVar32;
+  ushort uVar34;
+  undefined3 uVar36;
+  char *pcVar35;
+  char cVar38;
+  undefined4 unaff_EBX;
+  undefined2 uVar39;
+  char *pcVar37;
+  byte *pbVar40;
+  int unaff_EBP;
+  int iVar41;
+  int iVar42;
+  byte *unaff_ESI;
+  byte *pbVar43;
+  uint *puVar44;
+  uint *unaff_EDI;
+  undefined2 in_ES;
+  undefined2 in_SS;
+  undefined2 uVar45;
+  int unaff_FS_OFFSET;
+  bool in_CF;
+  bool bVar46;
+  byte in_AF;
+  byte in_TF;
+  byte in_IF;
+  byte in_NT;
+  byte in_AC;
+  byte in_VIF;
+  byte in_VIP;
+  byte in_ID;
+  byte *pbVar20;
+  
+                    /* .NET CLR Managed Code */
+  if (in_CF) {
+    *in_EAX = (int)(*in_EAX + (int)in_EAX);
+    vid = (char *)CONCAT22((short)((uint)vid >> 0x10),
+                           CONCAT11((char)((uint)vid >> 8) + *(char *)((int)unaff_EDI + 0xd),
+                                    (byte)vid | *pid));
+    *in_EAX = (int)(*in_EAX + (int)in_EAX);
+    in_EAX = (int *)CONCAT22((short)((uint)in_EAX >> 0x10),
+                             CONCAT11((byte)((uint)in_EAX >> 8) | *unaff_ESI,(char)in_EAX));
+  }
+  cVar33 = (char)((uint)vid >> 8);
+  uVar39 = (undefined2)((uint)unaff_EBX >> 0x10);
+  cVar38 = (char)((uint)unaff_EBX >> 8) - cVar33;
+  *(char *)in_EAX = (char)*in_EAX + (char)in_EAX;
+  uVar29 = (undefined3)((uint)in_EAX >> 8);
+  cVar8 = (char)in_EAX + -5;
+  *(char *)CONCAT31(uVar29,cVar8) = *(char *)CONCAT31(uVar29,cVar8) + cVar8;
+  bVar9 = (cVar8 - *unaff_ESI) + 5;
+  pbVar14 = (byte *)CONCAT31(uVar29,bVar9);
+  bVar11 = (byte)((uint)in_EAX >> 8);
+  *pid = *pid - bVar11;
+  *(byte **)pbVar14 = pbVar14 + *(int *)pbVar14;
+  bVar10 = bVar9 - *pbVar14;
+  pbVar15 = (byte *)CONCAT31(uVar29,bVar10);
+  pbVar43 = unaff_ESI + (uint)(bVar9 < *pbVar14) + *(int *)pbVar15;
+  bVar9 = bVar10 + *pbVar15;
+  bVar7 = 9 < (bVar9 & 0xf);
+  bVar10 = bVar9 + (bVar7 | in_AF) * '\x06' + (0x99 < bVar9 || CARRY1(bVar10,*pbVar15)) * '`';
+  pbVar14 = (byte *)CONCAT31(uVar29,bVar10);
+  *pbVar14 = *pbVar14 + bVar10;
+  *pbVar43 = *pbVar43 + bVar11;
+  bVar9 = *pbVar14;
+  *pbVar14 = *pbVar14 + bVar10;
+  piVar25 = (int *)((uint)CONCAT21(uVar39,cVar38) * 0x100 + 0xc);
+  *piVar25 = (int)(pbVar43 + (uint)CARRY1(bVar9,bVar10) + *piVar25);
+  *(byte **)pbVar14 = pbVar14 + *(int *)pbVar14;
+  bVar31 = (byte)vid | *pid;
+  uVar45 = (undefined2)((uint)vid >> 0x10);
+  cVar33 = cVar33 + *(char *)((int)unaff_EDI + 0xd);
+  *(byte **)pbVar14 = pbVar14 + *(int *)pbVar14;
+  pcVar24 = (char *)CONCAT22((short)((uint)in_EAX >> 0x10),CONCAT11(bVar11 | *pbVar43,bVar10));
+  cVar38 = cVar38 - cVar33;
+  *pcVar24 = *pcVar24 + bVar10;
+  uVar29 = (undefined3)((uint)pcVar24 >> 8);
+  cVar8 = bVar10 - 9;
+  iVar42 = *(int *)CONCAT31(uVar29,cVar8);
+  *pbVar43 = *pbVar43 + cVar8;
+  piVar25 = (int *)CONCAT31(uVar29,cVar8 - *pbVar43);
+  iVar41 = unaff_EBP + iVar42 + *piVar25;
+  pbVar14 = (byte *)((uint)piVar25 & *(uint *)CONCAT22(uVar45,CONCAT11(cVar33,bVar31)));
+  bVar9 = (byte)pbVar14;
+  *pbVar43 = *pbVar43 + bVar9;
+  uVar29 = (undefined3)((uint)pbVar14 >> 8);
+  piVar25 = (int *)CONCAT31(uVar29,bVar9 - *pbVar14);
+  pbVar43 = pbVar43 + (uint)(bVar9 < *pbVar14) + *piVar25;
+  puVar44 = (uint *)CONCAT31(uVar29,(bVar9 - *pbVar14) + (char)*piVar25);
+  pbVar14 = (byte *)((uint)puVar44 & *puVar44);
+  bVar11 = (byte)pbVar14;
+  *pbVar14 = *pbVar14 + bVar11;
+  bVar9 = *pbVar14;
+  *pbVar14 = *pbVar14 + bVar11;
+  piVar25 = (int *)((uint)CONCAT21(uVar39,cVar38) * 0x100 + 0xc);
+  *piVar25 = (int)(pbVar43 + (uint)CARRY1(bVar9,bVar11) + *piVar25);
+  *(byte **)pbVar14 = pbVar14 + *(int *)pbVar14;
+  bVar10 = *pid;
+  cVar33 = cVar33 + *(char *)((int)unaff_EDI + 0xd);
+  *(byte **)pbVar14 = pbVar14 + *(int *)pbVar14;
+  bVar28 = (byte)((uint)pbVar14 >> 8) | *pbVar43;
+  pcVar24 = (char *)CONCAT22((short)((uint)pbVar14 >> 0x10),CONCAT11(bVar28,bVar11));
+  cVar38 = cVar38 - cVar33;
+  *pcVar24 = *pcVar24 + bVar11;
+  uVar29 = (undefined3)((uint)pcVar24 >> 8);
+  cVar8 = bVar11 - 7;
+  *(char *)CONCAT31(uVar29,cVar8) = *(char *)CONCAT31(uVar29,cVar8) + cVar8;
+  bVar9 = cVar8 - *pbVar43;
+  pbVar14 = (byte *)CONCAT31(uVar29,bVar9);
+  *pbVar43 = *pbVar43 - bVar28;
+  *(byte **)pbVar14 = pbVar14 + *(int *)pbVar14;
+  piVar25 = (int *)CONCAT31(uVar29,bVar9 - *pbVar14);
+  pbVar43 = pbVar43 + (uint)(bVar9 < *pbVar14) + *piVar25;
+  puVar44 = (uint *)CONCAT31(uVar29,(bVar9 - *pbVar14) + (char)*piVar25);
+  pbVar14 = (byte *)((uint)puVar44 & *puVar44);
+  bVar11 = (byte)pbVar14;
+  *pbVar14 = *pbVar14 + bVar11;
+  bVar9 = *pbVar14;
+  *pbVar14 = *pbVar14 + bVar11;
+  piVar25 = (int *)((uint)CONCAT21(uVar39,cVar38) * 0x100 + 0xc);
+  *piVar25 = (int)(pbVar43 + (uint)CARRY1(bVar9,bVar11) + *piVar25);
+  *(byte **)pbVar14 = pbVar14 + *(int *)pbVar14;
+  bVar31 = bVar31 | bVar10 | *pid;
+  cVar33 = cVar33 + *(char *)((int)unaff_EDI + 0xd);
+  *(byte **)pbVar14 = pbVar14 + *(int *)pbVar14;
+  bVar9 = (byte)((uint)pbVar14 >> 8) | *pbVar43;
+  pcVar24 = (char *)CONCAT22((short)((uint)pbVar14 >> 0x10),CONCAT11(bVar9,bVar11));
+  cVar38 = cVar38 - cVar33;
+  *pcVar24 = *pcVar24 + bVar11;
+  uVar29 = (undefined3)((uint)pcVar24 >> 8);
+  cVar8 = (bVar11 - 7) - bVar9;
+  *(char *)CONCAT31(uVar29,cVar8) = *(char *)CONCAT31(uVar29,cVar8) + cVar8;
+  bVar11 = cVar8 - *pbVar43;
+  pbVar14 = (byte *)CONCAT31(uVar29,bVar11);
+  *(byte *)unaff_EDI = (char)*unaff_EDI - bVar9;
+  *(byte **)pbVar14 = pbVar14 + *(int *)pbVar14;
+  bVar10 = *pbVar14;
+  piVar25 = (int *)CONCAT31(uVar29,bVar11 - *pbVar14);
+  iVar42 = *piVar25;
+  piVar25 = (int *)CONCAT31(uVar29,(bVar11 - *pbVar14) + (char)*piVar25);
+  pbVar15 = (byte *)((int)piVar25 - *piVar25);
+  bVar28 = (byte)pbVar15;
+  *pbVar15 = *pbVar15 + bVar28;
+  bVar9 = *pbVar15;
+  *pbVar15 = *pbVar15 + bVar28;
+  *unaff_EDI = *unaff_EDI + (uint)CONCAT21(uVar39,cVar38) * 0x100 + (uint)CARRY1(bVar9,bVar28);
+  pbVar14 = (byte *)(iVar41 + 0x1000026);
+  *pbVar14 = *pbVar14 & bVar31;
+  cVar38 = cVar38 - cVar33;
+  *pbVar15 = *pbVar15 + bVar28;
+  uVar30 = (uint3)((uint)pbVar15 >> 8);
+  cVar8 = bVar28 - 7;
+  *(char *)CONCAT31(uVar30,cVar8) = *(char *)CONCAT31(uVar30,cVar8) + cVar8;
+  bVar9 = cVar8 - pbVar43[(uint)(bVar11 < bVar10) + iVar42];
+  pbVar14 = (byte *)CONCAT31(uVar30,bVar9);
+  *pbVar14 = *pbVar14 - cVar33;
+  *(byte **)pbVar14 = pbVar14 + *(int *)pbVar14;
+  pbVar43 = pbVar43 + (uint)(bVar11 < bVar10) + iVar42 +
+            (uint)(bVar9 < *pbVar14) + *(int *)CONCAT31(uVar30,bVar9 - *pbVar14);
+  piVar16 = (int *)((uVar30 & 0x260000) * 0x100);
+  *(char *)piVar16 = (char)*piVar16;
+  piVar25 = (int *)((uint)CONCAT21(uVar39,cVar38) * 0x100 + 0xc);
+  *piVar25 = (int)(pbVar43 + *piVar25);
+  *piVar16 = (int)(*piVar16 + (int)piVar16);
+  bVar11 = bVar31 - (char)((uint)pbVar15 >> 8) | *pid;
+  bVar28 = cVar33 + *(char *)((int)unaff_EDI + 0xd);
+  pcVar24 = (char *)CONCAT22(uVar45,CONCAT11(bVar28,bVar11));
+  *piVar16 = *piVar16 + (int)piVar16;
+  uVar30 = CONCAT21((short)((uint)piVar16 >> 0x10),*pbVar43);
+  puVar17 = (undefined1 *)((uint)uVar30 << 8);
+  cVar38 = cVar38 - bVar28;
+  pcVar21 = (char *)((uint)CONCAT21(uVar39,cVar38) * 0x100);
+  *puVar17 = *puVar17;
+  iVar42 = *(int *)CONCAT31(uVar30,0xf8);
+  uVar18 = in(0);
+  *pbVar43 = *pbVar43 + (char)uVar18;
+  uVar29 = (undefined3)((uint)uVar18 >> 8);
+  cVar8 = (char)uVar18 - *pbVar43;
+  iVar42 = iVar41 + iVar42 + *(int *)CONCAT31(uVar29,cVar8);
+  cVar8 = cVar8 + -1;
+  *pbVar43 = *pbVar43 + cVar8;
+  bVar10 = cVar8 - *(char *)CONCAT31(uVar29,cVar8);
+  pbVar14 = (byte *)CONCAT31(uVar29,bVar10);
+  bVar9 = *pbVar14;
+  *pbVar14 = *pbVar14 + bVar10;
+  pbVar43 = pbVar43 + (-(uint)CARRY1(bVar9,bVar10) - *(int *)pbVar14);
+  puVar44 = (uint *)CONCAT31(uVar29,bVar10);
+  *puVar44 = *puVar44 & (uint)puVar44;
+  *(byte *)puVar44 = (byte)*puVar44 + bVar10;
+  *(byte *)puVar44 = (byte)*puVar44 ^ bVar10;
+  bVar31 = (byte)pid;
+  *pcVar24 = *pcVar24 + bVar31;
+  cVar8 = bVar11 + pbVar43[0x28060a69];
+  pbVar14 = (byte *)CONCAT31((int3)((uint)pcVar24 >> 8),cVar8);
+  *pid = *pid + cVar8;
+  uVar3 = *(uint *)pid;
+  uVar19 = CONCAT22((short)((uint)uVar18 >> 0x10),(ushort)bVar10) | uVar3;
+  *(char *)(uVar19 + 0x70a0000) = *(char *)(uVar19 + 0x70a0000) - cVar38;
+  pcVar24 = (char *)(uVar19 | 0xde);
+  *(char *)(unaff_EDI + -0x8fd8000) = (char)unaff_EDI[-0x8fd8000] - (char)((uint)pid >> 8);
+  *pid = *pid | bVar28;
+  bVar10 = (byte)pcVar24;
+  *pcVar24 = *pcVar24 + bVar10;
+  bVar9 = *pbVar14;
+  *pbVar14 = *pbVar14 + bVar10;
+  *pcVar24 = *pcVar24 + bVar10 + CARRY1(bVar9,bVar10);
+  *pid = *pid + bVar10;
+  *pcVar21 = *pcVar21 + cVar8;
+  cRam00070018 = cRam00070018 + cVar8;
+  *pcVar24 = *pcVar24 + bVar10;
+  bVar11 = (byte)(uVar3 >> 8);
+  uVar36 = (undefined3)((uint)pid >> 8);
+  pcVar24 = (char *)CONCAT31(uVar36,bVar31 + bVar11);
+  uVar29 = (undefined3)(uVar19 >> 8);
+  bVar10 = (bVar10 - 2) + CARRY1(bVar31,bVar11);
+  puVar44 = (uint *)CONCAT31(uVar29,bVar10);
+  *(char **)pbVar14 = (char *)(*(int *)pbVar14 + (int)puVar44);
+  bVar9 = *pbVar43;
+  *pbVar43 = *pbVar43 + bVar10;
+  if (CARRY1(bVar9,bVar10)) {
+    uVar3 = *puVar44;
+    *puVar44 = (uint)(*puVar44 + (int)puVar44);
+    *pbVar14 = *pbVar14 + 1 + CARRY4(uVar3,(uint)puVar44);
+    pbVar15 = (byte *)(pcVar21 + (int)puVar44);
+    bVar9 = *pbVar15;
+    *pbVar15 = *pbVar15 + bVar10;
+    *pcVar24 = *pcVar24 + '\x01' + CARRY1(bVar9,bVar10);
+    pcVar21 = (char *)((int)puVar44 + iVar42);
+    *pcVar21 = *pcVar21 + bVar10;
+    out((short)pcVar24,puVar44);
+    *(byte *)puVar44 = (char)*puVar44 + bVar10;
+  }
+  piVar25 = (int *)CONCAT31(uVar29,bVar10 - 0xd);
+  bVar9 = pbVar43[0x11];
+  pcVar24 = (char *)((uint)CONCAT21(uVar39,cVar38 + bVar9) * 0x100);
+  *piVar25 = *piVar25 + (int)piVar25;
+  bVar10 = bVar10 - 9;
+  bVar11 = (bVar31 + bVar11) - bVar11;
+  pbVar15 = (byte *)CONCAT31(uVar36,bVar11);
+  *(char *)CONCAT31(uVar29,bVar10) = *(char *)CONCAT31(uVar29,bVar10) + bVar10;
+  bVar31 = *pbVar15;
+  bVar2 = *pbVar15;
+  cVar33 = bVar10 - *pbVar15;
+  piVar25 = (int *)CONCAT31(uVar29,cVar33);
+  if (cVar33 != '\0' && (char)bVar10 >= (char)bVar2) {
+    *piVar25 = *piVar25 + (int)piVar25;
+    piVar25 = (int *)CONCAT31(uVar29,cVar33 + '\x04');
+    *pbVar14 = *pbVar14 - bVar28;
+    *piVar25 = *piVar25 + (int)piVar25;
+    bVar12 = (cVar33 + '\x04') - (char)*piVar25;
+    pbVar20 = (byte *)CONCAT31(uVar29,bVar12);
+    bVar1 = *pbVar20;
+    *pbVar20 = *pbVar20 + bVar12;
+    pbVar43 = pbVar43 + (uint)CARRY1(bVar1,bVar12) + *(int *)pbVar20;
+    piVar25 = (int *)CONCAT31(uVar29,bVar12);
+  }
+  cVar33 = (char)piVar25 - ((cVar33 == '\0' || (char)bVar10 < (char)bVar2) && bVar10 < bVar31);
+  pcVar21 = (char *)CONCAT31((int3)((uint)piVar25 >> 8),cVar33);
+  *pcVar21 = *pcVar21 + cVar33;
+  pcVar21 = pcVar21 + -0x3110000;
+  *pcVar21 = *pcVar21 + (char)pcVar21;
+  *(byte **)pbVar15 = pbVar14 + *(int *)pbVar15;
+  uVar29 = (undefined3)((uint)pcVar21 >> 8);
+  cVar13 = (char)pcVar21 + *pbVar43;
+  piVar25 = (int *)CONCAT31(uVar29,cVar13);
+  pbVar40 = pbV
+/* truncated */
+
+
+DONE

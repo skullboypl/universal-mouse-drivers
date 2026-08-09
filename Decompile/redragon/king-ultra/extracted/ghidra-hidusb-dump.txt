@@ -1,0 +1,124 @@
+=== PROGRAM HIDUsb-64.dll ===
+language=x86:LE:64:default
+
+## KEY: HidD_SetFeature
+STR @ 180022406
+  (no xrefs)
+
+## KEY: HidD_GetFeature
+  (string not found in memory)
+
+## KEY: HidD_GetAttributes
+STR @ 1800223f0
+  (no xrefs)
+
+## KEY: SetCurrentConfig
+STR @ 180020419
+  (no xrefs)
+STR @ 180020ff0
+  (no xrefs)
+
+## KEY: ReadConfig
+STR @ 180020239
+  (no xrefs)
+STR @ 180020e40
+  (no xrefs)
+
+## KEY: WriteDeviceData
+STR @ 18001ff60
+  (no xrefs)
+STR @ 180020011
+  (no xrefs)
+STR @ 1800208e2
+  (no xrefs)
+STR @ 180020987
+  (no xrefs)
+STR @ 180020c0d
+  (no xrefs)
+
+## KEY: ReadWriteDeviceData
+STR @ 18001ff5c
+  (no xrefs)
+STR @ 1800208de
+  (no xrefs)
+
+## KEY: ReadCurrentDPI
+STR @ 180020251
+  (no xrefs)
+STR @ 180020e55
+  (no xrefs)
+
+## KEY: ReadReportRate
+STR @ 18002030e
+  (no xrefs)
+STR @ 180020efd
+  (no xrefs)
+
+## KEY: CS_UsbServer_SetCurrentConfig
+STR @ 18002040c
+  XREF 18001f7c0 type=DATA func=? entry=?
+
+## KEY: CS_UsbFinder_WriteDeviceData
+STR @ 180020004
+  XREF 18001f738 type=DATA func=? entry=?
+
+## KEY: ReportId
+  (string not found in memory)
+
+## KEY: FeatureReportByteLength
+  (string not found in memory)
+
+## KEY: BufferToDPI
+STR @ 18001fb69
+  XREF 18001f684 type=DATA func=? entry=?
+STR @ 18001fb7a
+  XREF 18001f688 type=DATA func=? entry=?
+STR @ 18001fbd2
+  (no xrefs)
+
+## KEY: MacroKeyToBuffer
+STR @ 18002060c
+  XREF 18001f810 type=DATA func=? entry=?
+
+## KEY: ReadAllFlashData
+STR @ 1800201e5
+  (no xrefs)
+STR @ 180020df5
+  (no xrefs)
+
+## EXTERNAL INTERESTING
+EXT WriteFile @ EXTERNAL:0000000c
+  XREF 18001b0a8 func=?
+  XREF 18000e981 func=CS_UsbFinder_WriteDeviceData
+  XREF 18000ca6c func=UsbFinder_GetDeviceData
+  XREF 18000e787 func=FUN_18000e6c0
+  XREF 18001264e func=UsbReaderWriterServer
+  XREF 180015e73 func=FUN_180015cb0
+  XREF 18001545e func=FUN_180014cb0
+EXT HidD_SetFeature @ EXTERNAL:0000005b
+  XREF 18001b030 func=?
+  XREF 180015e59 func=FUN_180015cb0
+  XREF 18001544b func=FUN_180014cb0
+EXT HidD_GetHidGuid @ EXTERNAL:0000005c
+  XREF 18001b038 func=?
+  XREF 18000a00c func=UsbFinder_EnumHidDeviceList
+EXT HidD_GetAttributes @ EXTERNAL:0000005d
+  XREF 18001b040 func=?
+  XREF 18000d74b func=UsbFinder_GetUsbDeviceAttribute
+  XREF 18000d872 func=CS_UsbFinder_GetUsbDeviceAttribute
+EXT SetupDiEnumDeviceInterfaces @ EXTERNAL:0000005e
+  XREF 18001b2e8 func=?
+  XREF 18000a070 func=UsbFinder_EnumHidDeviceList
+  XREF 18000a198 func=UsbFinder_EnumHidDeviceList
+EXT SetupDiGetDeviceInterfaceDetailW @ EXTERNAL:0000005f
+  XREF 18001b2f0 func=?
+  XREF 18000a0d3 func=UsbFinder_EnumHidDeviceList
+  XREF 18000a0a1 func=UsbFinder_EnumHidDeviceList
+EXT SetupDiDestroyDeviceInfoList @ EXTERNAL:00000060
+  XREF 18001b2f8 func=?
+  XREF 18000a1a9 func=UsbFinder_EnumHidDeviceList
+EXT SetupDiGetClassDevsW @ EXTERNAL:00000061
+  XREF 18001b300 func=?
+  XREF 18000a022 func=UsbFinder_EnumHidDeviceList
+
+DONE

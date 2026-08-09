@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "buttonLayouts": {
+    "king-ultra": [
+      { "id": 1, "uiX": 700, "uiY": 430 },
+      { "id": 2, "uiX": 980, "uiY": 400 },
+      { "id": 3, "uiX": 820, "uiY": 360 },
+      { "id": 4, "uiX": 430, "uiY": 480 },
+      { "id": 5, "uiX": 460, "uiY": 600 },
+      { "id": 6, "uiX": 860, "uiY": 280 }
+    ]
+  },
+  "downloads": {
+    "trayBattery": {
+      "id": "trayBattery",
+      "filename": "UmdBatteryTray.exe",
+      "displayName": "UMD Battery Tray",
+      "version": "1.0.0",
+      "signed": false,
+      "notes": "Upload signed EV exe into Persistent Directory /app/data/downloads/"
+    }
+  }
+}

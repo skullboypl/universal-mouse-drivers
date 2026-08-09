@@ -1,0 +1,926 @@
+import { umdLog } from '@/debug/umdLog'
+import type { Transport } from '@/transport/types'
+import type {
+  ButtonAction,
+  DeviceState,
+  Macro,
+  SensorState,
+  SettingsState,
+} from '../types'
+import { createDefaultState, DPI_MAX_STAGES } from './defaults'
+import {
+  decodeDpi3950,
+  decodeInputReport,
+  decodeVersionReport,
+  dpiStageFlashBytes,
+  encodeCommand,
+  encodeSensorFlagWrites,
+  encodeWriteFlashByte,
+  FlashAddr,
+  flashBytesMatch,
+  hzToReportRateCode,
+  keyFunFlashBytes,
+  lodCodeToMm,
+  lodMmToCode,
+  pairChecksum,
+  peakCodeToMinutes,
+  peakTimeoutToCode,
+  reportRateCodeToHz,
+  sensorModeFromCode,
+  sensorModeToCode,
+  setDongleOnline,
+  UsbCommandId,
+  type ProtocolCommand,
+} from './protocol'
+import { actionToKeyFun, keyFunToAction, KING_ULTRA_BUTTONS } from './buttons'
+import { KING_ULTRA_IDENTITY } from './identity'
+
+function sleep(ms: number) {
+  return new Promise<void>((r) => setTimeout(r, ms))
+}
+
+export type DeviceWritePhase = 'idle' | 'queued' | 'writing' | 'ok' | 'error'
+
+const DPI_DEBOUNCE_MS = 220
+const SENSOR_DEBOUNCE_MS = 220
+
+export class KingUltraDriver {
+  readonly identity = KING_ULTRA_IDENTITY
+  private state: DeviceState
+  private transport: Transport | null = null
+  lastWriteError: string | null = null
+  lastWriteOk = false
+  /** Last flash read-back / online probe result for UI. */
+  lastVerifyNote: string | null = null
+  mouseReachable = false
+  writePhase: DeviceWritePhase = 'idle'
+  private writePhaseListeners = new Set<(p: DeviceWritePhase) => void>()
+  private dpiWriteTimer: ReturnType<typeof setTimeout> | null = null
+  private pendingDpi: { stageIndex: number; value: number } | null = null
+  private sensorWriteTimer: ReturnType<typeof setTimeout> | null = null
+  private pendingSensorPatch: Partial<SensorState> | null = null
+  private writeChain: Promise<void> = Promise.resolve()
+
+  constructor() {
+    this.state = createDefaultState()
+  }
+
+  getState(): DeviceState {
+    return this.state
+  }
+
+  onWritePhase(cb: (phase: DeviceWritePhase) => void): () => void {
+    this.writePhaseListeners.add(cb)
+    return () => {
+      this.writePhaseListeners.delete(cb)
+    }
+  }
+
+  private setWritePhase(phase: DeviceWritePhase) {
+    this.writePhase = phase
+    for (const cb of this.writePhaseListeners) cb(phase)
+  }
+
+  setTransport(transport: Transport) {
+    this.transport = transport
+  }
+
+  async attach(transport: Transport) {
+    this.transport = transport
+    await transport.connect()
+    this.state = {
+      ...createDefaultState(),
+      info: {
+        ...createDefaultState().info,
+        connection: transport.kind === 'mock' ? 'wireless' : 'unknown',
+        charging: transport.kind === 'mock',
+        batteryPercent: transport.kind === 'mock' ? 42 : null,
+        receiverFirmware: transport.kind === 'mock' ? 'v2.15' : '—',
+        mouseFirmware: transport.kind === 'mock' ? 'v2.18' : '—',
+      },
+    }
+    // CLI probe (tools/king_ultra_hid_probe.py): OR 0x80 into dataLen makes the
+    // 8K dongle return status=1 empty echoes; WITHOUT 0x80 encryption returns a
+    // real challenge response and Read/WriteFlash round-trip works.
+    // Keep online-bit OFF until we prove an 0x80 path is live on this firmware.
+    setDongleOnline(false)
+    if (transport.kind === 'webhid' && 'getDeviceInfo' in transport) {
+      const info = (
+        transport as Transport & {
+          getDeviceInfo?: () => { productId?: number } | null
+        }
+      ).getDeviceInfo?.()
+      if (info?.productId != null) {
+        const dongle =
+          info.productId === 0xf54f || info.productId === 0xf510
+        this.state = {
+          ...this.state,
+          info: {
+            ...this.state.info,
+            connection: dongle ? 'wireless' : 'corded',
+          },
+        }
+      }
+    } else if (transport.kind === 'mock') {
+      this.mouseReachable = true
+    }
+
+    // OEM UsbServer_Start → encryption + PC driver. Heavy flash sync is separate
+    // so the UI can open immediately after attach.
+    await this.trySend({ op: 'read_encryption' })
+    await this.trySend({ op: 'set_pc_driver', active: true })
+    await this.refreshBatteryQuick()
+  }
+
+  /** Fast path: online + battery only (no FW / flash map). */
+  async refreshBatteryQuick() {
+    await this.trySend({ op: 'read_online' })
+    await this.trySend({ op: 'read_info' })
+    const ack = this.readLastAck()
+    if (!ack) {
+      umdLog('driver', 'warn', 'no battery/online ack')
+      return
+    }
+    const parsed = decodeInputReport(ack)
+    umdLog('driver', 'info', 'device info ack', parsed)
+    if (!parsed) return
+    const hasBat =
+      parsed.commandId === 4 &&
+      (parsed.batteryPercent != null ||
+        (parsed.batVoltage != null && parsed.batVoltage > 0))
+    if (hasBat && parsed.batVoltage && parsed.batVoltage > 0) {
+      this.mouseReachable = true
+      this.state = {
+        ...this.state,
+        info: {
+          ...this.state.info,
+          batteryPercent: parsed.batteryPercent ?? null,
+          charging: Boolean(parsed.charging),
+        },
+      }
+    } else if (parsed.commandId === 4) {
+      umdLog(
+        'driver',
+        'warn',
+        'battery ack empty — dongle echo only; move mouse / wake it',
+      )
+    }
+  }
+
+  async refreshDeviceInfo() {
+    await this.refreshBatteryQuick()
+    await this.refreshFirmwareVersions()
+  }
+
+  /** Full post-connect sync: bulk flash map + firmware versions. */
+  async syncFromDevice() {
+    await this.probeFlashAndSync()
+    await this.refreshFirmwareVersions()
+  }
+
+  /** OEM ReadVersion (receiver) + GetSlaveVersion (mouse). */
+  async refreshFirmwareVersions() {
+    if (!this.transport || this.transport.kind === 'mock') return
+
+    const receiver = await this.readVersionOnce('read_version', UsbCommandId.ReadVersionID)
+    const mouse = await this.readVersionOnce(
+      'read_slave_version',
+      UsbCommandId.GetSlaveVersion,
+    )
+    umdLog('driver', 'info', 'firmware versions', { receiver, mouse })
+
+    if (!receiver && !mouse) return
+    this.state = {
+      ...this.state,
+      info: {
+        ...this.state.info,
+        receiverFirmware: receiver ?? this.state.info.receiverFirmware,
+        mouseFirmware: mouse ?? this.state.info.mouseFirmware,
+      },
+    }
+    if (mouse) this.mouseReachable = true
+  }
+
+  private async readVersionOnce(
+    op: 'read_version' | 'read_slave_version',
+    expectCmd: number,
+  ): Promise<string | null> {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await this.trySend({ op })
+      await sleep(40)
+      const ack = this.readLastAck()
+      if (!ack) continue
+      const ver = decodeVersionReport(ack, expectCmd)
+      if (ver) return ver.firmware
+      // Follow-up may have overwritten lastAck with a different cmd — try loose parse
+      const loose = decodeVersionReport(ack)
+      if (loose && loose.commandId === expectCmd) return loose.firmware
+      await sleep(80)
+    }
+    return null
+  }
+
+  /**
+   * OEM ReadAllFlashData = ReadFalshData(0, 0xC0, allFlag=1) in 10-byte chunks.
+   * One map read replaces dozens of tiny probes.
+   */
+  private async readFlashMap(total = 0xc0): Promise<Uint8Array | null> {
+    const map = new Uint8Array(total)
+    let filled = 0
+    const t0 = performance.now()
+
+    // OEM ReadAllFlashData → ReadFalshData(0, 0xC0, allFlag=1) in ≤10 B chunks.
+    for (let addr = 0; addr < total; addr += 10) {
+      const len = Math.min(10, total - addr)
+      const r = await this.trySend(
+        {
+          op: 'read_flash',
+          address: addr,
+          length: len,
+          allFlag: 1,
+        },
+        'bulk',
+      )
+      if (!r.applied) continue
+      const ack = this.readLastAck()
+      if (!ack) continue
+      const parsed = decodeInputReport(ack)
+      if (!parsed || parsed.commandId !== 8) continue
+      const at = parsed.address & 0xffff
+      if (at >= total) continue
+      const n = Math.min(len, parsed.payload.length, total - at)
+      if (n <= 0) continue
+      map.set(parsed.payload.subarray(0, n), at)
+      filled += n
+    }
+
+    umdLog('driver', 'info', 'flash map read', {
+      filled,
+      total,
+      ms: Math.round(performance.now() - t0),
+    })
+    return filled > 0 ? map : null
+  }
+
+  private sliceMap(
+    map: Uint8Array,
+    address: number,
+    length: number,
+  ): Uint8Array {
+    return map.subarray(address, Math.min(map.length, address + length))
+  }
+
+  async probeFlashAndSync() {
+    if (!this.transport || this.transport.kind === 'mock') return
+
+    await this.trySend({ op: 'set_pc_driver', active: true })
+
+    const map = await this.readFlashMap(0xc0)
+    if (!map) {
+      this.lastVerifyNote =
+        'Dongle OK, mouse flash unreachable (wake mouse / move it, close OEM app, retry)'
+      this.lastWriteOk = false
+      umdLog('driver', 'error', this.lastVerifyNote)
+      return
+    }
+
+    const ratePayload = this.sliceMap(map, FlashAddr.reportRate, 2)
+    const maxDpiPayload = this.sliceMap(map, FlashAddr.maxDpi, 2)
+    const dpiIdxPayload = this.sliceMap(map, FlashAddr.currentDpi, 2)
+    const stage0 = this.sliceMap(map, FlashAddr.dpiStage0, 4)
+
+    const live =
+      ratePayload.some((b) => b !== 0) ||
+      (maxDpiPayload[0] & 0xff) > 0 ||
+      dpiIdxPayload.some((b) => b !== 0) ||
+      stage0.some((b) => b !== 0)
+
+    this.mouseReachable = live
+    if (!live) {
+      this.lastVerifyNote =
+        'Dongle OK, mouse flash unreachable (wake mouse / move it, close OEM app, retry)'
+      this.lastWriteOk = false
+      umdLog('driver', 'error', this.lastVerifyNote)
+      return
+    }
+
+    let sensor = { ...this.state.sensor }
+
+    const hz = reportRateCodeToHz(ratePayload[0] & 0xff)
+    if (hz != null) sensor = { ...sensor, reportRate: hz }
+
+    const count = Math.min(
+      DPI_MAX_STAGES,
+      Math.max(1, maxDpiPayload[0] & 0xff),
+    )
+    let dpiStages = sensor.dpiStages.map((s) => ({
+      ...s,
+      enabled: s.index < count,
+    }))
+    let activeDpiIndex = sensor.activeDpiIndex
+    if (activeDpiIndex >= count) activeDpiIndex = count - 1
+    sensor = { ...sensor, dpiStageCount: count, dpiStages, activeDpiIndex }
+
+    const idx = dpiIdxPayload[0] & 0xff
+    if (idx < sensor.dpiStageCount) {
+      sensor = { ...sensor, activeDpiIndex: idx }
+    }
+
+    for (let i = 0; i < sensor.dpiStageCount; i++) {
+      const raw = this.sliceMap(map, FlashAddr.dpiStage0 + i * 4, 4)
+      if (raw.length >= 3 && raw.some((b) => b !== 0)) {
+        const value = decodeDpi3950(raw[0], raw[2])
+        dpiStages = dpiStages.map((s) =>
+          s.index === i ? { ...s, value, enabled: true } : s,
+        )
+      }
+    }
+    sensor = { ...sensor, dpiStages }
+
+    const lodRaw = this.sliceMap(map, FlashAddr.silenceHeight, 2)
+    sensor = { ...sensor, lodMm: lodCodeToMm(lodRaw[0] & 0xff) }
+
+    const modeRaw = this.sliceMap(map, FlashAddr.sensorPowerSavingEnable, 2)
+    sensor = { ...sensor, mode: sensorModeFromCode(modeRaw[0] & 0xff) }
+
+    sensor = {
+      ...sensor,
+      motionSync:
+        (this.sliceMap(map, FlashAddr.motionSyncEnable, 1)[0] & 0xff) !== 0,
+      angleSnapping:
+        (this.sliceMap(map, FlashAddr.linearCorrectionEnable, 1)[0] & 0xff) !==
+        0,
+      rippleControl:
+        (this.sliceMap(map, FlashAddr.rippleControlEnable, 1)[0] & 0xff) !== 0,
+    }
+
+    const peakEn = this.sliceMap(map, FlashAddr.sensorCustomSleepEnable, 1)[0]
+    const peakTime = this.sliceMap(map, FlashAddr.sensorSleepTime, 1)[0]
+    sensor = {
+      ...sensor,
+      peakPerformance: (peakEn & 0xff) !== 0,
+      ...(peakTime > 0
+        ? { peakPerformanceTimeoutMin: peakCodeToMinutes(peakTime & 0xff) }
+        : {}),
+    }
+
+    const debounceMs = this.sliceMap(map, FlashAddr.keyDebounceTime, 1)[0] & 0xff
+    sensor = {
+      ...sensor,
+      debounceMs: debounceMs === 0 ? sensor.debounceMs || 8 : debounceMs,
+      debounceEnabled: debounceMs > 0,
+    }
+
+    let buttons = this.state.buttons.map((b) => ({ ...b }))
+    for (const b of buttons) {
+      const raw = this.sliceMap(map, FlashAddr.keyFun0 + b.flashIndex * 4, 4)
+      if (raw.length >= 3 && !raw.every((x) => x === 0)) {
+        const action = keyFunToAction(raw[0], raw[1], raw[2])
+        buttons = buttons.map((x) =>
+          x.id === b.id ? { ...x, action } : x,
+        )
+      }
+    }
+
+    this.state = { ...this.state, sensor, buttons }
+    this.lastVerifyNote = `Mouse flash synced (stages=${sensor.dpiStageCount}, ${sensor.reportRate}Hz)`
+    this.lastWriteOk = true
+    umdLog('driver', 'info', 'probeFlashAndSync done', {
+      dpiStageCount: sensor.dpiStageCount,
+      reportRate: sensor.reportRate,
+      activeDpiIndex: sensor.activeDpiIndex,
+      lodMm: sensor.lodMm,
+      mode: sensor.mode,
+      debounceMs: sensor.debounceMs,
+      debounceEnabled: sensor.debounceEnabled,
+      buttons: buttons.map((b) => ({ id: b.id, action: b.action })),
+    })
+  }
+
+  private readLastAck(): Uint8Array | null {
+    const t = this.transport as Transport & {
+      getLastAck?: () => Uint8Array | null
+    }
+    return t?.getLastAck?.() ?? null
+  }
+
+  private async readFlashPayload(
+    address: number,
+    length: number,
+  ): Promise<Uint8Array | null> {
+    const r = await this.trySend({ op: 'read_flash', address, length })
+    if (!r.applied) return null
+    const ack = this.readLastAck()
+    if (!ack) return null
+    const parsed = decodeInputReport(ack)
+    if (!parsed || parsed.commandId !== 8) {
+      umdLog('driver', 'warn', 'read_flash unexpected ack', parsed)
+      return null
+    }
+    return parsed.payload
+  }
+
+  private async verifyDpiStage(
+    stageIndex: number,
+    dpi: number,
+  ): Promise<boolean> {
+    const expect = dpiStageFlashBytes(dpi)
+    const addr = FlashAddr.dpiStage0 + stageIndex * 4
+    for (let attempt = 0; attempt < 4; attempt++) {
+      const got = await this.readFlashPayload(addr, 4)
+      umdLog('driver', 'info', 'dpi verify', {
+        attempt,
+        addr,
+        expect,
+        got: got ? [...got] : null,
+      })
+      if (got && flashBytesMatch(got, expect, 4)) {
+        this.mouseReachable = true
+        return true
+      }
+      await sleep(120)
+    }
+    return false
+  }
+
+  private async verifyFlashByte(
+    address: number,
+    value: number,
+  ): Promise<boolean> {
+    const expect = [value & 0xff, pairChecksum(value)]
+    for (let attempt = 0; attempt < 4; attempt++) {
+      const got = await this.readFlashPayload(address, 2)
+      umdLog('driver', 'info', 'byte verify', {
+        attempt,
+        address,
+        expect,
+        got: got ? [...got] : null,
+      })
+      // Dongle echo is all-zero; real flash has value + pair checksum.
+      if (
+        got &&
+        got.length >= 2 &&
+        (got[0] & 0xff) === expect[0] &&
+        (got[1] & 0xff) === expect[1]
+      ) {
+        this.mouseReachable = true
+        return true
+      }
+      await sleep(120)
+    }
+    return false
+  }
+
+  async detach() {
+    if (this.transport) {
+      await this.trySend({ op: 'set_pc_driver', active: false })
+    }
+    await this.transport?.disconnect()
+    this.transport = null
+  }
+
+  private async trySend(
+    cmd: ProtocolCommand,
+    pace: 'default' | 'bulk' = 'default',
+  ) {
+    const encoded = encodeCommand(cmd)
+    if (!encoded || !this.transport) {
+      this.lastWriteOk = false
+      if (!encoded) this.lastWriteError = `No encode for ${cmd.op}`
+      return { applied: false as const }
+    }
+    try {
+      await this.transport.sendFeature(
+        encoded.reportId,
+        encoded.data,
+        encoded.outputData,
+        pace,
+      )
+      this.lastWriteOk = true
+      this.lastWriteError = null
+      umdLog('driver', 'info', 'wrote', cmd.op, {
+        wire17: [...encoded.outputData],
+        feature19: [...encoded.data].slice(0, 12),
+      })
+      return { applied: true as const }
+    } catch (err) {
+      this.lastWriteOk = false
+      this.lastWriteError = err instanceof Error ? err.message : String(err)
+      umdLog('driver', 'error', 'write failed', cmd.op, this.lastWriteError)
+      return { applied: false as const }
+    }
+  }
+
+  private async trySendAll(
+    reports: { reportId: number; data: Uint8Array; outputData?: Uint8Array }[],
+  ) {
+    if (!this.transport || reports.length === 0) return { applied: false as const }
+    let ok = true
+    for (const r of reports) {
+      try {
+        await this.transport.sendFeature(r.reportId, r.data, r.outputData)
+      } catch (err) {
+        ok = false
+        this.lastWriteOk = false
+        this.lastWriteError = err instanceof Error ? err.message : String(err)
+        console.error('[driver] write failed', this.lastWriteError)
+      }
+    }
+    if (ok) {
+      this.lastWriteOk = true
+      this.lastWriteError = null
+    }
+    return { applied: ok as boolean }
+  }
+
+  setProfile(index: number) {
+    this.state = { ...this.state, profileIndex: index }
+  }
+
+  setButtonAction(buttonId: number, action: ButtonAction) {
+    const button = this.state.buttons.find((b) => b.id === buttonId)
+    if (!button) return
+    this.state = {
+      ...this.state,
+      buttons: this.state.buttons.map((b) =>
+        b.id === buttonId ? { ...b, action } : b,
+      ),
+    }
+    const fun = actionToKeyFun(action)
+    this.setWritePhase('queued')
+    this.enqueueWrite(async () => {
+      umdLog('driver', 'info', 'flush button', {
+        buttonId,
+        flashIndex: button.flashIndex,
+        action,
+        fun,
+      })
+      await this.trySend({ op: 'set_pc_driver', active: true })
+      await this.trySend({
+        op: 'set_button',
+        flashIndex: button.flashIndex,
+        type: fun.type,
+        param1: fun.param1,
+        param2: fun.param2,
+      })
+      if (this.transport?.kind === 'webhid') {
+        const ok = await this.verifyKeyFun(
+          button.flashIndex,
+          fun.type,
+          fun.param1,
+          fun.param2,
+        )
+        this.lastWriteOk = ok
+        this.lastVerifyNote = ok
+          ? `Button ${buttonId} → ${action} verified`
+          : `Button ${buttonId} NOT in flash — wake mouse`
+        if (!ok) this.lastWriteError = this.lastVerifyNote
+      }
+    })
+  }
+
+  private async verifyKeyFun(
+    flashIndex: number,
+    type: number,
+    param1: number,
+    param2: number,
+  ): Promise<boolean> {
+    const expect = keyFunFlashBytes(type, param1, param2)
+    const addr = FlashAddr.keyFun0 + flashIndex * 4
+    for (let attempt = 0; attempt < 4; attempt++) {
+      const got = await this.readFlashPayload(addr, 4)
+      umdLog('driver', 'info', 'keyfun verify', {
+        attempt,
+        addr,
+        expect,
+        got: got ? [...got] : null,
+      })
+      if (got && flashBytesMatch(got, expect, 4)) return true
+      await sleep(120)
+    }
+    return false
+  }
+
+  /**
+   * UI-instant sensor patch. HID writes are debounced so sliders stay smooth.
+   */
+  patchSensor(patch: Partial<SensorState>) {
+    this.state = { ...this.state, sensor: { ...this.state.sensor, ...patch } }
+    this.pendingSensorPatch = { ...this.pendingSensorPatch, ...patch }
+    this.setWritePhase('queued')
+    if (this.sensorWriteTimer) clearTimeout(this.sensorWriteTimer)
+    this.sensorWriteTimer = setTimeout(() => {
+      this.sensorWriteTimer = null
+      const pending = this.pendingSensorPatch
+      this.pendingSensorPatch = null
+      if (pending) this.enqueueWrite(() => this.flushSensorPatch(pending))
+    }, SENSOR_DEBOUNCE_MS)
+  }
+
+  private async flushSensorPatch(patch: Partial<SensorState>) {
+    umdLog('driver', 'info', 'flush sensor', patch)
+    await this.trySend({ op: 'set_pc_driver', active: true })
+
+    const notes: string[] = []
+    let allOk = true
+    const webhid = this.transport?.kind === 'webhid'
+
+    const verify = async (address: number, value: number, label: string) => {
+      if (!webhid) return
+      const ok = await this.verifyFlashByte(address, value)
+      if (ok) notes.push(label)
+      else {
+        allOk = false
+        this.lastWriteError = `${label} NOT in flash — wake mouse / close OEM`
+        umdLog('driver', 'error', this.lastWriteError, { address, value })
+      }
+    }
+
+    if (patch.dpiStageCount != null) {
+      const count = this.state.sensor.dpiStageCount
+      await this.trySend({ op: 'set_dpi_stage_count', count })
+      await verify(FlashAddr.maxDpi, count, `stages=${count}`)
+    }
+    if (patch.reportRate != null) {
+      const code = hzToReportRateCode(patch.reportRate)
+      await this.trySend({ op: 'set_report_rate', hz: patch.reportRate })
+      if (code != null) {
+        await verify(FlashAddr.reportRate, code, `${patch.reportRate}Hz`)
+      }
+    }
+    if (patch.activeDpiIndex != null) {
+      await this.trySend({
+        op: 'set_active_dpi',
+        stageIndex: patch.activeDpiIndex,
+      })
+      await verify(
+        FlashAddr.currentDpi,
+        patch.activeDpiIndex,
+        `dpiIdx=${patch.activeDpiIndex}`,
+      )
+    }
+    if (patch.debounceMs != null || patch.debounceEnabled != null) {
+      const enabled = this.state.sensor.debounceEnabled
+      let ms = this.state.sensor.debounceMs & 0xff
+      // Turning on with 0ms → restore OEM default 8ms
+      if (enabled && ms === 0) {
+        ms = 8
+        this.state = {
+          ...this.state,
+          sensor: { ...this.state.sensor, debounceMs: ms },
+        }
+      }
+      const flashMs = enabled ? ms : 0
+      await this.trySend({
+        op: 'set_debounce',
+        ms,
+        enabled,
+      })
+      await verify(
+        FlashAddr.keyDebounceTime,
+        flashMs,
+        enabled ? `debounce=${ms}ms` : 'debounce=off',
+      )
+    }
+    if (
+      patch.rippleControl != null ||
+      patch.angleSnapping != null ||
+      patch.motionSync != null
+    ) {
+      const flags = {
+        ripple: this.state.sensor.rippleControl,
+        angle: this.state.sensor.angleSnapping,
+        motionSync: this.state.sensor.motionSync,
+      }
+      await this.trySendAll(encodeSensorFlagWrites(flags))
+      await verify(
+        FlashAddr.motionSyncEnable,
+        flags.motionSync ? 1 : 0,
+        `motion=${flags.motionSync ? 1 : 0}`,
+      )
+      await verify(
+        FlashAddr.linearCorrectionEnable,
+        flags.angle ? 1 : 0,
+        `angle=${flags.angle ? 1 : 0}`,
+      )
+      await verify(
+        FlashAddr.rippleControlEnable,
+        flags.ripple ? 1 : 0,
+        `ripple=${flags.ripple ? 1 : 0}`,
+      )
+    }
+    if (patch.lodMm != null) {
+      const code = lodMmToCode(patch.lodMm)
+      await this.trySend({ op: 'set_lod', mm: patch.lodMm })
+      await verify(FlashAddr.silenceHeight, code, `lod=${patch.lodMm}`)
+    }
+    if (patch.mode != null) {
+      const code = sensorModeToCode(patch.mode)
+      await this.trySend({ op: 'set_sensor_mode', mode: patch.mode })
+      await verify(FlashAddr.sensorPowerSavingEnable, code, `mode=${patch.mode}`)
+    }
+    if (patch.peakPerformance != null || patch.peakPerformanceTimeoutMin != null) {
+      const enabled = this.state.sensor.peakPerformance
+      const timeoutMin = this.state.sensor.peakPerformanceTimeoutMin
+      await this.trySend({
+        op: 'set_peak',
+        enabled,
+        timeoutMin,
+      })
+      await verify(
+        FlashAddr.sensorCustomSleepEnable,
+        enabled ? 1 : 0,
+        `peak=${enabled ? 1 : 0}`,
+      )
+      if (enabled) {
+        const tCode = peakTimeoutToCode(timeoutMin)
+        await this.trySendAll([
+          encodeWriteFlashByte(FlashAddr.sensorSleepTime, tCode),
+        ])
+        await verify(FlashAddr.sensorSleepTime, tCode, `peakTime=${timeoutMin}`)
+      }
+    }
+
+    this.lastWriteOk = allOk
+    this.lastVerifyNote = allOk
+      ? notes.length
+        ? `Verified: ${notes.join(', ')}`
+        : 'Sensor write OK'
+      : this.lastWriteError
+    if (!allOk && this.lastVerifyNote) this.lastWriteError = this.lastVerifyNote
+    umdLog('driver', allOk ? 'info' : 'error', this.lastVerifyNote)
+  }
+
+  setDpiStageCount(count: number) {
+    const max = this.state.sensor.dpiStages.length
+    const dpiStageCount = Math.min(max, Math.max(1, Math.round(count)))
+    const dpiStages = this.state.sensor.dpiStages.map((s) => ({
+      ...s,
+      enabled: s.index < dpiStageCount,
+    }))
+    let activeDpiIndex = this.state.sensor.activeDpiIndex
+    if (activeDpiIndex >= dpiStageCount) activeDpiIndex = dpiStageCount - 1
+    this.state = {
+      ...this.state,
+      sensor: { ...this.state.sensor, dpiStages, dpiStageCount, activeDpiIndex },
+    }
+    // Same debounced + verified path as Hz / LOD / mode.
+    this.patchSensor({ dpiStageCount, activeDpiIndex })
+  }
+
+  /** Instant UI; HID flush after debounce (does not block the caller). */
+  setDpiStage(index: number, value: number) {
+    const clamped = Math.min(
+      30000,
+      Math.max(50, Math.round(value / 50) * 50),
+    )
+    if (index < 0 || index >= this.state.sensor.dpiStageCount) return
+    const dpiStages = this.state.sensor.dpiStages.map((s) =>
+      s.index === index ? { ...s, value: clamped } : s,
+    )
+    this.state = {
+      ...this.state,
+      sensor: { ...this.state.sensor, dpiStages, activeDpiIndex: index },
+    }
+    this.pendingDpi = { stageIndex: index, value: clamped }
+    this.setWritePhase('queued')
+    if (this.dpiWriteTimer) clearTimeout(this.dpiWriteTimer)
+    this.dpiWriteTimer = setTimeout(() => {
+      this.dpiWriteTimer = null
+      const pending = this.pendingDpi
+      this.pendingDpi = null
+      if (pending) this.enqueueWrite(() => this.flushDpi(pending))
+    }, DPI_DEBOUNCE_MS)
+  }
+
+  private enqueueWrite(job: () => Promise<void>) {
+    this.writeChain = this.writeChain
+      .then(async () => {
+        this.setWritePhase('writing')
+        this.lastWriteError = null
+        await job()
+        if (this.lastWriteError) this.setWritePhase('error')
+        else {
+          this.lastWriteOk = true
+          this.setWritePhase('ok')
+        }
+      })
+      .catch((err) => {
+        this.lastWriteOk = false
+        this.lastWriteError = err instanceof Error ? err.message : String(err)
+        this.setWritePhase('error')
+        umdLog('driver', 'error', 'write queue failed', this.lastWriteError)
+      })
+  }
+
+  private async flushDpi(pending: { stageIndex: number; value: number }) {
+    umdLog('driver', 'info', 'flush dpi', pending)
+    await this.trySend({ op: 'set_pc_driver', active: true })
+    await this.trySend({
+      op: 'set_dpi',
+      stageIndex: pending.stageIndex,
+      value: pending.value,
+    })
+    await this.trySend({
+      op: 'set_active_dpi',
+      stageIndex: pending.stageIndex,
+    })
+    if (this.transport?.kind === 'webhid') {
+      const stageOk = await this.verifyDpiStage(
+        pending.stageIndex,
+        pending.value,
+      )
+      const idxOk = await this.verifyFlashByte(
+        FlashAddr.currentDpi,
+        pending.stageIndex,
+      )
+      const ok = stageOk && idxOk
+      this.lastWriteOk = ok
+      this.lastVerifyNote = ok
+        ? `DPI ${pending.value} verified in mouse flash`
+        : 'DPI NOT in flash — wake mouse / close OEM software'
+      if (!ok) this.lastWriteError = this.lastVerifyNote
+      umdLog('driver', ok ? 'info' : 'error', this.lastVerifyNote, {
+        stageOk,
+        idxOk,
+      })
+    }
+  }
+
+  setMacros(macros: Macro[]) {
+    this.state = { ...this.state, macros }
+  }
+
+  patchSettings(patch: Partial<SettingsState>) {
+    this.state = { ...this.state, settings: { ...this.state.settings, ...patch } }
+    this.setWritePhase('queued')
+    this.enqueueWrite(async () => {
+      if (patch.sleepAfterMin != null) {
+        await this.trySend({ op: 'set_sleep', minutes: patch.sleepAfterMin })
+      }
+      if (patch.longDistance != null) {
+        await this.trySend({
+          op: 'set_long_distance',
+          enabled: patch.longDistance,
+        })
+      }
+    })
+  }
+
+  restoreDefaults() {
+    const info = this.state.info
+    this.state = { ...createDefaultState(), info, profileIndex: this.state.profileIndex }
+  }
+
+  exportProfile(): string {
+    return JSON.stringify(
+      {
+        device: this.identity.id,
+        profileIndex: this.state.profileIndex,
+        buttons: this.state.buttons,
+        sensor: this.state.sensor,
+        macros: this.state.macros,
+        settings: this.state.settings,
+      },
+      null,
+      2,
+    )
+  }
+
+  importProfile(json: string) {
+    const data = JSON.parse(json) as Partial<DeviceState> & { device?: string }
+    if (data.device && data.device !== this.identity.id) {
+      throw new Error('Profile does not match King Ultra')
+    }
+    const sensor = data.sensor
+      ? {
+          ...this.state.sensor,
+          ...data.sensor,
+          dpiStageCount:
+            data.sensor.dpiStageCount ??
+            data.sensor.dpiStages?.filter((s) => s.enabled).length ??
+            this.state.sensor.dpiStageCount,
+        }
+      : this.state.sensor
+    const buttons = KING_ULTRA_BUTTONS.map((tmpl) => {
+      const saved = data.buttons?.find((b) => b.id === tmpl.id)
+      return {
+        ...tmpl,
+        action: saved?.action ?? tmpl.action,
+        macroId: saved?.macroId,
+      }
+    })
+    this.state = {
+      ...this.state,
+      buttons,
+      sensor,
+      macros: data.macros ?? this.state.macros,
+      settings: data.settings ?? this.state.settings,
+      profileIndex: data.profileIndex ?? this.state.profileIndex,
+    }
+  }
+
+  async flushToDevice(): Promise<{ wrote: boolean }> {
+    return { wrote: this.lastWriteOk }
+  }
+}

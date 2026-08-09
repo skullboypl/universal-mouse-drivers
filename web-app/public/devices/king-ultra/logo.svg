@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" fill="none" role="img" aria-label="Redragon">
+  <defs>
+    <linearGradient id="rd" x1="0" y1="0" x2="720" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff4a1a"/>
+      <stop offset="0.55" stop-color="#ff2800"/>
+      <stop offset="1" stop-color="#c41000"/>
+    </linearGradient>
+  </defs>
+  <!-- Soft diamond mark -->
+  <path
+    d="M72 28 L118 90 L72 152 L26 90 Z"
+    fill="url(#rd)"
+    opacity="0.9"
+  />
+  <path
+    d="M72 52 L98 90 L72 128 L46 90 Z"
+    fill="#1a1a1e"
+    opacity="0.55"
+  />
+  <text
+    x="148"
+    y="112"
+    fill="url(#rd)"
+    font-family="Arial Black, Impact, Segoe UI, sans-serif"
+    font-size="78"
+    font-weight="900"
+    letter-spacing="6"
+  >REDRAGON</text>
+  <text
+    x="152"
+    y="148"
+    fill="#ff2800"
+    fill-opacity="0.45"
+    font-family="Segoe UI, Arial, sans-serif"
+    font-size="18"
+    font-weight="600"
+    letter-spacing="10"
+  >KING ULTRA</text>
+</svg>

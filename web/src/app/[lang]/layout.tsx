@@ -1,0 +1,30 @@
+import { notFound } from 'next/navigation'
+import type { ReactNode } from 'react'
+import { Shell } from '@/components/Shell'
+import { LocaleProvider } from '@/i18n/LocaleContext'
+import { isLocale, type Locale } from '@/i18n/locale'
+import { DeviceSessionProvider } from '@/session/DeviceSessionContext'
+
+export function generateStaticParams() {
+  return [{ lang: 'pl' }, { lang: 'en' }]
+}
+
+export default async function LangLayout({
+  children,
+  params,
+}: {
+  children: ReactNode
+  params: Promise<{ lang: string }>
+}) {
+  const { lang } = await params
+  if (!isLocale(lang)) notFound()
+  const locale = lang as Locale
+
+  return (
+    <DeviceSessionProvider>
+      <LocaleProvider locale={locale}>
+        <Shell>{children}</Shell>
+      </LocaleProvider>
+    </DeviceSessionProvider>
+  )
+}

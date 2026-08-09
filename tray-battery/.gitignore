@@ -1,0 +1,19 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+*.user
+
+# Rider / VS
+.vs/
+.idea/
+*.suo
+
+# Signed artifacts / certs / local signing script (keep cert details out of the repo)
+*.pfx
+*.snk
+sign.ps1
+
+# OS
+Thumbs.db
+.DS_Store

@@ -1,0 +1,297 @@
+TYPE USBUpdateTool.UsbUpgradeFile
+  METHOD CS_CreateUpgradeFile (StringBuilder icName, Byte[] binFile, Int32 binArraySize) -> Byte[]
+  METHOD CS_SetNormalEndPoint (StringBuilder icName, Byte[] binFile, StringBuilder inputEndPoint, StringBuilder outputEndPoint) -> Byte[]
+  METHOD CS_SetBootEndPoint (StringBuilder icName, Byte[] binFile, StringBuilder inputEndPoint, StringBuilder outputEndPoint) -> Byte[]
+  METHOD CS_SetVersion (StringBuilder icName, Byte[] binFile, UInt32 version) -> Byte[]
+  METHOD CS_SetDeviceType (StringBuilder icName, Byte[] binFile, UInt32 deviceType) -> Byte[]
+  METHOD CS_SetICName (StringBuilder icName, Byte[] binFile, StringBuilder icNewName) -> Byte[]
+  METHOD CS_SetCidMid (StringBuilder icName, Byte[] binFile, Byte cid, Byte mid) -> Byte[]
+  METHOD CS_SetSensorName (StringBuilder icName, Byte[] binFile, StringBuilder sensorName) -> Byte[]
+  METHOD CS_SetProductName (StringBuilder icName, Byte[] binFile, StringBuilder productName) -> Byte[]
+  METHOD CS_IsValidUpgradeFile (Byte[] binFile) -> Boolean
+  METHOD CS_SplitFromUpgradeFile (Byte[] binFile, Int32 binArraySize, Int32 fileIndex) -> Byte[]
+  METHOD CS_AppendUpgradeFile (Byte[] sourceFile, Int32 sourceFileSize, Byte[] newFile, Int32 newFileSize) -> Byte[]
+  METHOD CS_SetPassward1 (StringBuilder passwrod1) -> Void
+  METHOD CS_SetPassward2 (StringBuilder passwrod2) -> Void
+  METHOD CS_isPassward1 () -> Boolean
+  METHOD CS_isPassward2 () -> Boolean
+  METHOD CS_UsbFinder_EnterPairByFeature (StringBuilder endpoint, Byte cid, Byte mid) -> Boolean
+  METHOD CS_UsbFinder_GetPairStatusByFeature (StringBuilder endpoint, Byte reportId, Int32 length) -> Byte[]
+  METHOD CS_UsbUpgrade_GetLogs () -> String[]
+  METHOD CreateUpgradeFile (String icName, Byte[] binFile) -> Byte[]
+  METHOD SetNormalEndPoint (String icName, Byte[] upgradeFile, String inputEndpoint, String outputEndpoint) -> Byte[]
+  METHOD SetBootEndPoint (String icName, Byte[] upgradeFile, String inputEndpoint, String outputEndpoint) -> Byte[]
+  METHOD SetVersion (String icName, Byte[] upgradeFile, UInt32 version) -> Byte[]
+  METHOD SetDeviceType (String icName, Byte[] upgradeFile, UInt32 deviceType) -> Byte[]
+  METHOD SetSensorName (String icName, Byte[] upgradeFile, String icNewName) -> Byte[]
+  METHOD SetCidMid (String icName, Byte[] upgradeFile, Byte cid, Byte mid) -> Byte[]
+  METHOD SetIcName (String icName, Byte[] upgradeFile, String sensorName) -> Byte[]
+  METHOD SetProductName (String icName, Byte[] upgradeFile, String productName) -> Byte[]
+  METHOD IsValidUpgradeFile (Byte[] upgradeFile) -> Boolean
+  METHOD SplitFromUpgradeFile (Byte[] sourceFile, Int32 fileIndex) -> Byte[]
+  METHOD AppendUpgradeFile (Byte[] sourceFile, Byte[] newFile) -> Byte[]
+  METHOD ByteToStruct (Byte[] bytes) -> UpgradeFileHeader
+  METHOD SetPassward1 (String password1) -> Void
+  METHOD SetPassward2 (String password2) -> Void
+  METHOD isPassward1 () -> Boolean
+  METHOD isPassward2 () -> Boolean
+  METHOD EnterPairByFeature (String endPoint, Byte cid, Byte mid) -> Boolean
+  METHOD GetPairStatusByFeature (String endPoint, Byte reportId, Int32 length) -> Byte[]
+  METHOD UsbUpgrade_GetLogs () -> String[]
+  METHOD .ctor () -> Void
+TYPE USBUpdateTool.UsbUpgradeFile32
+  METHOD CS_CreateUpgradeFile (StringBuilder icName, Byte[] binFile, Int32 binArraySize) -> Byte[]
+  METHOD CS_SetNormalEndPoint (StringBuilder icName, Byte[] binFile, StringBuilder inputEndPoint, StringBuilder outputEndPoint) -> Byte[]
+  METHOD CS_SetBootEndPoint (StringBuilder icName, Byte[] binFile, StringBuilder inputEndPoint, StringBuilder outputEndPoint) -> Byte[]
+  METHOD CS_SetVersion (StringBuilder icName, Byte[] binFile, UInt32 version) -> Byte[]
+  METHOD CS_SetDeviceType (StringBuilder icName, Byte[] binFile, UInt32 deviceType) -> Byte[]
+  METHOD CS_SetICName (StringBuilder icName, Byte[] binFile, StringBuilder icNewName) -> Byte[]
+  METHOD CS_SetCidMid (StringBuilder icName, Byte[] binFile, Byte cid, Byte mid) -> Byte[]
+  METHOD CS_SetSensorName (StringBuilder icName, Byte[] binFile, StringBuilder sensorName) -> Byte[]
+  METHOD CS_SetProductName (StringBuilder icName, Byte[] binFile, StringBuilder productName) -> Byte[]
+  METHOD CS_IsValidUpgradeFile (Byte[] binFile) -> Boolean
+  METHOD CS_SplitFromUpgradeFile (Byte[] binFile, Int32 binArraySize, Int32 fileIndex) -> Byte[]
+  METHOD CS_AppendUpgradeFile (Byte[] sourceFile, Int32 sourceFileSize, Byte[] newFile, Int32 newFileSize) -> Byte[]
+  METHOD CS_SetPassward1 (StringBuilder passwrod1) -> Void
+  METHOD CS_SetPassward2 (StringBuilder passwrod2) -> Void
+  METHOD CS_isPassward1 () -> Boolean
+  METHOD CS_isPassward2 () -> Boolean
+  METHOD CS_UsbFinder_EnterPairByFeature (StringBuilder endpoint, Byte cid, Byte mid) -> Boolean
+  METHOD CS_UsbFinder_GetPairStatusByFeature (StringBuilder endpoint, Byte reportId, Int32 length) -> Byte[]
+  METHOD CS_UsbUpgrade_GetLogs () -> String[]
+  METHOD .ctor () -> Void
+TYPE DriverLib.DataParser
+  METHOD CS_BufferToDPILed (Byte[] data, IntPtr dpiLed) -> Void
+  METHOD BufferToDPILed (Byte[] data, DPILed& dpiLed) -> Void
+TYPE DriverLib.DataParser32
+  METHOD CS_BufferToDPILed (Byte[] data, IntPtr dpiLed) -> Void
+TYPE DriverLib.UsbFinder
+  METHOD CS_UsbFinder_GetDllVersion () -> String[]
+  METHOD CS_StartUsbChanged (OnUsbChanged onUsbChanged, Int32 delayTimeout_ms) -> Void
+  METHOD CS_StopUsbChanged () -> Void
+  METHOD CS_SetUsbChangedCallBack (OnUsbChanged usbChangedCallBack, Int32 delayTimeout_ms) -> Void
+  METHOD CS_UsbFinder_EnumHidDeviceList () -> String[]
+  METHOD CS_UsbFinder_FindHidDevices (StringBuilder vid, StringBuilder pid) -> String[]
+  METHOD CS_UsbFinder_FindHidDevicesByKey (StringBuilder inputEndPoint) -> String[]
+  METHOD CS_UsbFinder_FindHidDevicesByDefaultDeviceId (StringBuilder vid, StringBuilder pid) -> String[]
+  METHOD CS_UsbFinder_FindHidDevicesByDeviceId (StringBuilder vid, StringBuilder pid, Int32 interfaceId, Int32 deviceId) -> String[]
+  METHOD CS_UsbFinder_GetDeviceInfo (StringBuilder endpoint, DeviceInfo& deviceInfo) -> Int32
+  METHOD CS_UsbFinder_ReadCidMid (StringBuilder endpoint, DeviceInfo& deviceInfo) -> Boolean
+  METHOD CS_UsbFinder_WriteCidMid (StringBuilder endpoint, Byte cid, Byte mid, Byte deviceType, DeviceInfo& deviceInfo) -> Boolean
+  METHOD CS_UsbFinder_GetVersion (StringBuilder endpoint) -> Int32
+  METHOD CS_UsbFinder_GetDeviceOnLine (StringBuilder endpoint) -> Boolean
+  METHOD CS_UsbFinder_GetDeviceOnLineWithUsbAddress (StringBuilder endpoint) -> Byte[]
+  METHOD CS_UsbUpgrade_Start (Byte[] binFile, OnUsbUpgradeDataReceived onUsbUpgradeDataReceived, Int32 waitTimeout) -> Boolean
+  METHOD CS_UsbUpgrade_FindBootDevices (Byte[] binFile, Int32 binArraySize) -> String[]
+  METHOD CS_UsbUpgrade_GetLogs () -> String[]
+  METHOD CS_UsbFinder_GetUsbDeviceAttribute (StringBuilder endpoint, HIDD_ATTRIBUTES& hidd_attributes) -> Void
+  METHOD CS_UsbFinder_GetSlaveVersion (StringBuilder endpoint, Int32& slaveVersion) -> Boolean
+  METHOD CS_UsbFinder_Set4KDongleRGB (StringBuilder endpoint, DongleRGB& dongleRGB) -> Byte
+  METHOD CS_UsbFinder_Get4KDongleRGBValue (StringBuilder endpoint, DongleRGB& dongleRGB) -> Boolean
+  METHOD CS_UsbFinder_SetDongleIDToMouse (StringBuilder endpoint, Byte[] usbDongleId) -> Boolean
+  METHOD CS_UsbFinder_OpenDevice (StringBuilder endpoint) -> Boolean
+  METHOD CS_UsbFinder_ReadWriteDeviceData (Byte[] command, Byte length) -> Byte[]
+  METHOD CS_UsbFinder_WriteDeviceData (Byte[] command, Byte length) -> Boolean
+  METHOD CS_UsbFinder_CloseDevice () -> Void
+  METHOD isWindow7 () -> Boolean
+  METHOD isX64System () -> Boolean
+  METHOD GetDllVersion () -> String[]
+  METHOD StartUsbChanged (OnUsbChanged onUsbChanged, Int32 delayTimeout_ms) -> Void
+  METHOD OnUserUsbChanged (Boolean isUsbPluged) -> Void
+  METHOD StopUsbChanged () -> Void
+  METHOD SetUsbChangedCallBack (OnUsbChanged usbChangedCallBack, Int32 delayTimeout_ms) -> Void
+  METHOD EnumHidDeviceList () -> String[]
+  METHOD FindHidDevices (String vid, String pid) -> String[]
+  METHOD FindHidDevices (String inputEndpoint) -> String[]
+  METHOD FindHidDevicesByDefaultDeviceId (String vid, String pid) -> String[]
+  METHOD FindHidDevicesByDeviceId (String vid, String pid, Int32 interfaceId, Int32 deviceId) -> String[]
+  METHOD GetDeviceInfo (String endPoint, DeviceInfo& deviceInfo) -> Void
+  METHOD GetVersion (String endPoint) -> Int32
+  METHOD GetDeviceOnLine (String endPoint) -> Boolean
+  METHOD GetDeviceOnLineWithAddress (String endPoint) -> Byte[]
+  METHOD GetUsbDeviceAttribute (String endpoint, HIDD_ATTRIBUTES& hidd_attributes) -> Void
+  METHOD BytesToIntptr (Byte[] bytes) -> IntPtr
+  METHOD UsbUpgrade_Start (Byte[] binFile, OnUpgradeDataReceived _onUsbUpgradeDataReceived, Int32 waitTimeout) -> Boolean
+  METHOD UserUsbUpgradeDataReceived (IntPtr pcmd, Int32 cmdLength) -> Void
+  METHOD FindBootDevices (Byte[] binFile) -> String[]
+  METHOD UsbUpgrade_GetLogs () -> String[]
+  METHOD ReadCidMid (String endPoint, DeviceInfo& deviceInfo) -> Void
+  METHOD WriteCidMid (String endPoint, Byte cid, Byte mid, Byte deviceType, DeviceInfo& deviceInfo) -> Void
+  METHOD GetSlaveVersion (String endPoint, Int32& slaveVersion) -> Boolean
+  METHOD SetDongleIDToMouse (String endpoint, Byte[] usbDongleId) -> Boolean
+  METHOD UsbFinder_OpenDevice (String endpoint) -> Boolean
+  METHOD UsbFinder_ReadWriteDeviceData (Byte[] command, Byte length) -> Byte[]
+  METHOD UsbFinder_WriteDeviceData (Byte[] command, Byte length) -> Boolean
+  METHOD UsbFinder_CloseDevice () -> Void
+  METHOD SetMousePairAddress (String device, Byte[] rfid) -> Void
+  METHOD .ctor () -> Void
+TYPE DriverLib.UsbFinder.OnUsbChanged
+  METHOD .ctor (Object object, IntPtr method) -> Void
+  METHOD Invoke (Boolean isUsbPluged) -> Void
+  METHOD BeginInvoke (Boolean isUsbPluged, AsyncCallback callback, Object object) -> IAsyncResult
+  METHOD EndInvoke (IAsyncResult result) -> Void
+TYPE DriverLib.UsbFinder.OnUsbUpgradeDataReceived
+  METHOD .ctor (Object object, IntPtr method) -> Void
+  METHOD Invoke (IntPtr pcmd, Int32 cmdLength) -> Void
+  METHOD BeginInvoke (IntPtr pcmd, Int32 cmdLength, AsyncCallback callback, Object object) -> IAsyncResult
+  METHOD EndInvoke (IAsyncResult result) -> Void
+TYPE DriverLib.UsbFinder.OnUpgradeDataReceived
+TYPE DriverLib.UsbFinder.HID_CODE_TYPE
+TYPE DriverLib.UsbFinder32
+  METHOD CS_UsbFinder_GetDllVersion () -> String[]
+  METHOD CS_StartUsbChanged (OnUsbChanged onUsbChanged, Int32 delayTimeout_ms) -> Void
+  METHOD CS_StopUsbChanged () -> Void
+  METHOD CS_SetUsbChangedCallBack (OnUsbChanged usbChangedCallBack, Int32 delayTimeout_ms) -> Void
+  METHOD CS_UsbFinder_EnumHidDeviceList () -> String[]
+  METHOD CS_UsbFinder_FindHidDevices (StringBuilder vid, StringBuilder pid) -> String[]
+  METHOD CS_UsbFinder_FindHidDevicesByKey (StringBuilder inputEndPoint) -> String[]
+  METHOD CS_UsbFinder_FindHidDevicesByDefaultDeviceId (StringBuilder vid, StringBuilder pid) -> String[]
+  METHOD CS_UsbFinder_FindHidDevicesByDeviceId (StringBuilder vid, StringBuilder pid, Int32 interfaceId, Int32 deviceId) -> String[]
+  METHOD CS_UsbFinder_GetDeviceInfo (StringBuilder endpoint, DeviceInfo& deviceInfo) -> Int32
+  METHOD CS_UsbFinder_ReadCidMid (StringBuilder endpoint, DeviceInfo& deviceInfo) -> Boolean
+  METHOD CS_UsbFinder_WriteCidMid (StringBuilder endpoint, Byte cid, Byte mid, Byte deviceType, DeviceInfo& deviceInfo) -> Boolean
+  METHOD CS_UsbFinder_GetVersion (StringBuilder endpoint) -> Int32
+  METHOD CS_UsbFinder_GetDeviceOnLine (StringBuilder endpoint) -> Boolean
+  METHOD CS_UsbFinder_GetDeviceOnLineWithUsbAddress (StringBuilder endpoint) -> Byte[]
+  METHOD CS_UsbUpgrade_Start (Byte[] binFile, OnUsbUpgradeDataReceived onUsbUpgradeDataReceived, Int32 waitTimeout) -> Boolean
+  METHOD CS_UsbUpgrade_FindBootDevices (Byte[] binFile, Int32 binArraySize) -> String[]
+  METHOD CS_UsbUpgrade_GetLogs () -> String[]
+  METHOD CS_UsbFinder_GetUsbDeviceAttribute (StringBuilder endpoint, HIDD_ATTRIBUTES& hidd_attributes) -> Void
+  METHOD CS_UsbFinder_GetSlaveVersion (StringBuilder endpoint, Int32& slaveVersion) -> Boolean
+  METHOD CS_UsbFinder_Set4KDongleRGB (StringBuilder endpoint, DongleRGB& dongleRGB) -> Byte
+  METHOD CS_UsbFinder_Get4KDongleRGBValue (StringBuilder endpoint, DongleRGB& dongleRGB) -> Boolean
+  METHOD CS_UsbFinder_SetDongleIDToMouse (StringBuilder endpoint, Byte[] usbDongleId) -> Boolean
+  METHOD CS_UsbFinder_OpenDevice (StringBuilder endpoint) -> Boolean
+  METHOD CS_UsbFinder_ReadWriteDeviceData (Byte[] command, Byte length) -> Byte[]
+  METHOD CS_UsbFinder_WriteDeviceData (Byte[] command, Byte length) -> Boolean
+  METHOD CS_UsbFinder_CloseDevice () -> Void
+  METHOD .ctor () -> Void
+TYPE DriverLib.UsbServer
+  METHOD CS_UsbServer_Thread () -> Void
+  METHOD CS_UsbServer_Start (StringBuilder inputEndpoint, StringBuilder outputEndpoint, OnUsbDataReceived onUsbDataReceived) -> Void
+  METHOD CS_UsbServer_Exit () -> Void
+  METHOD CS_UsbServer_ReadEncryption () -> Void
+  METHOD CS_UsbServer_SetPCDriverStatus (Boolean isActived) -> Void
+  METHOD CS_UsbServer_ReadOnLine () -> Void
+  METHOD CS_UsbServer_ReadBatteryLevel () -> Void
+  METHOD CS_UsbServer_SetClearSetting () -> Void
+  METHOD CS_UsbServer_ReadVersion () -> Void
+  METHOD CS_UsbServer_ReadFalshData (Int32 startAddress, Int32 length) -> Void
+  METHOD CS_UsbServer_ReadAllFlashData () -> Void
+  METHOD CS_UsbServer_ReadConfig () -> Void
+  METHOD CS_UsbServer_EnterDonglePair () -> Void
+  METHOD CS_UsbServer_EnterDonglePairWithCidMid (Byte cid, Byte mid) -> Void
+  METHOD CS_UsbServer_EnterDonglePairOnlyCid (Byte cid) -> Void
+  METHOD CS_UsbServer_ReadDonglePairStatus () -> Void
+  METHOD CS_UsbServer_SetVidPid (Int32 vid, Int32 pid) -> Void
+  METHOD CS_UsbServer_SetDeviceDescriptorString (StringBuilder DeviceDescriptorString) -> Void
+  METHOD CS_UsbServer_EnterUsbUpdateMode () -> Void
+  METHOD CS_UsbServer_SetCurrentConfig (Int32 configId) -> Void
+  METHOD CS_UsbServer_ReadCidMid () -> Void
+  METHOD CS_UsbServer_EnterMTKMode () -> Void
+  METHOD CS_UsbServer_GetCurrentDevice () -> String[]
+  METHOD CS_UsbServer_ReadCurrentDPI () -> Void
+  METHOD CS_UsbServer_ReadReportRate () -> Void
+  METHOD CS_UsbServer_ReadDPILed () -> Void
+  METHOD CS_UsbServer_ReadLedBar () -> Void
+  METHOD CS_UsbServer_SetBatteryOptimizeEnable (Boolean enable) -> Void
+  METHOD CS_UsbServer_SetBatteryOptimizeLastBattery (Int32 _elapsedSeconds, Byte lastBatPercent) -> Void
+  METHOD CS_UsbServer_SetBatteryOptimizeParam (Int32 _supportBatteryReplacement, Int32 _smoothChangesInterval, Int32 _smoothChangesIntervalInCharge85_100) -> Void
+  METHOD CS_UsbServer_SetBatteryOptimizeSection (Int32[] _BatVoltage) -> Void
+  METHOD CS_UsbServer_ReStartBatteryOptimize () -> Void
+  METHOD CS_ProtocolDataCompareUpdate (IntPtr writeFashDataMap, IntPtr compareFashDataMap) -> Void
+  METHOD CS_UsbServer_Set4KDongleRGB (DongleRGB& dongleRGB) -> Void
+  METHOD UsbServer_Get4KDongleRGBValue () -> Void
+  METHOD CS_UsbServer_SetLongRangeMode (Boolean enable) -> Void
+  METHOD CS_UsbServer_GetLongRangeMode () -> Void
+  METHOD UsbServer_GetSlaveVersion () -> Void
+  METHOD UsbServer_Thread () -> Void
+  METHOD Start (String inputEndpoint, String outputEndpoint, OnDataReceived _onDataReceived) -> Void
+  METHOD UserUsbDataReceived (IntPtr pcmd, Int32 cmdLength, IntPtr pdata, Int32 dataLength) -> Void
+  METHOD Exit () -> Void
+  METHOD ReadEncryptedData () -> Void
+  METHOD SetPCDriverStatus (Boolean isActived) -> Void
+  METHOD ReadOnLine () -> Void
+  METHOD ReadBatteryLevel () -> Void
+  METHOD EnterDonglePair () -> Void
+  METHOD EnterDonglePairWithCidMid (Byte cid, Byte mid) -> Void
+  METHOD EnterDonglePairOnlyCid (Byte cid) -> Void
+  METHOD ReadDonglePairStatus () -> Void
+  METHOD SetVidPid (Int32 vid, Int32 pid) -> Void
+  METHOD SetDeviceDescriptorString (String DeviceDescriptorString) -> Void
+  METHOD EnterUsbUpdateMode () -> Void
+  METHOD SetClearSetting () -> Void
+  METHOD ReadVersion () -> Void
+  METHOD ReadFalshData (Int32 address, Int32 length) -> Void
+  METHOD ReadAllFlashData () -> Void
+  METHOD ReadConfig () -> Void
+  METHOD SetCurrentConfig (Int32 configid) -> Void
+  METHOD GetCurrentEndPointPath () -> String
+  METHOD ReadCidMid () -> Void
+  METHOD EnterMTKMode () -> Void
+  METHOD ReadCurrentDPI () -> Void
+  METHOD ReadReportRate () -> Void
+  METHOD ReadDPILed () -> Void
+  METHOD ReadLedBar () -> Void
+  METHOD SetBatteryOptimizeEnable (Boolean enable) -> Void
+  METHOD SetBatteryOptimizeLastBattery (Int32 _elapsedSeconds, Byte lastBatPercent) -> Void
+  METHOD SetBatteryOptimizeParam (Int32 _supportBatteryReplacement, Int32 _smoothChangesInterval, Int32 _smoothChangesIntervalInCharge85_100) -> Void
+  METHOD SetBatteryOptimizeSection (Int32[] _BatVoltage) -> Void
+  METHOD ReStartBatteryOptimize () -> Void
+  METHOD ProtocolDataCompareUpdate (FlashDataMap writeFlashDataMap, FlashDataMap compareFlashDataMap) -> Void
+  METHOD Set4KDongleRGB (DongleRGB& dongleRGB) -> Void
+  METHOD Get4KDongleRGBValue () -> Void
+  METHOD SetLongRangeMode (Boolean enable) -> Void
+  METHOD GetLongRangeMode () -> Void
+  METHOD GetSlaveVersion () -> Void
+  METHOD .ctor () -> Void
+TYPE DriverLib.UsbServer.OnUsbDataReceived
+  METHOD .ctor (Object object, IntPtr method) -> Void
+  METHOD Invoke (IntPtr pcmd, Int32 cmdLength, IntPtr pdata, Int32 dataLength) -> Void
+  METHOD BeginInvoke (IntPtr pcmd, Int32 cmdLength, IntPtr pdata, Int32 dataLength, AsyncCallback callback, Object object) -> IAsyncResult
+  METHOD EndInvoke (IAsyncResult result) -> Void
+TYPE DriverLib.UsbServer.OnDataReceived
+TYPE DriverLib.UsbServer32
+  METHOD CS_UsbServer_Thread () -> Void
+  METHOD CS_UsbServer_Start (StringBuilder inputEndpoint, StringBuilder outputEndpoint, OnUsbDataReceived onUsbDataReceived) -> Void
+  METHOD CS_UsbServer_Exit () -> Void
+  METHOD CS_UsbServer_ReadEncryption () -> Void
+  METHOD CS_UsbServer_SetPCDriverStatus (Boolean isActived) -> Void
+  METHOD CS_UsbServer_ReadOnLine () -> Void
+  METHOD CS_UsbServer_ReadBatteryLevel () -> Void
+  METHOD CS_UsbServer_SetClearSetting () -> Void
+  METHOD CS_UsbServer_ReadVersion () -> Void
+  METHOD CS_UsbServer_ReadFalshData (Int32 startAddress, Int32 length) -> Void
+  METHOD CS_UsbServer_ReadAllFlashData () -> Void
+  METHOD CS_UsbServer_ReadConfig () -> Void
+  METHOD CS_UsbServer_EnterDonglePair () -> Void
+  METHOD CS_UsbServer_EnterDonglePairWithCidMid (Byte cid, Byte mid) -> Void
+  METHOD CS_UsbServer_EnterDonglePairOnlyCid (Byte cid) -> Void
+  METHOD CS_UsbServer_ReadDonglePairStatus () -> Void
+  METHOD CS_UsbServer_SetVidPid (Int32 vid, Int32 pid) -> Void
+  METHOD CS_UsbServer_SetDeviceDescriptorString (StringBuilder DeviceDescriptorString) -> Void
+  METHOD CS_UsbServer_EnterUsbUpdateMode () -> Void
+  METHOD CS_UsbServer_SetCurrentConfig (Int32 configId) -> Void
+  METHOD CS_UsbServer_ReadCidMid () -> Void
+  METHOD CS_UsbServer_EnterMTKMode () -> Void
+  METHOD CS_UsbServer_GetCurrentDevice () -> String[]
+  METHOD CS_UsbServer_ReadCurrentDPI () -> Void
+  METHOD CS_UsbServer_ReadReportRate () -> Void
+  METHOD CS_UsbServer_ReadDPILed () -> Void
+  METHOD CS_UsbServer_ReadLedBar () -> Void
+  METHOD CS_UsbServer_SetBatteryOptimizeEnable (Boolean enable) -> Void
+  METHOD CS_UsbServer_SetBatteryOptimizeLastBattery (Int32 _elapsedSeconds, Byte lastBatPercent) -> Void
+  METHOD CS_UsbServer_SetBatteryOptimizeParam (Int32 _supportBatteryReplacement, Int32 _smoothChangesInterval, Int32 _smoothChangesIntervalInCharge85_100) -> Void
+  METHOD CS_UsbServer_SetBatteryOptimizeSection (Int32[] _BatVoltage) -> Void
+  METHOD CS_UsbServer_ReStartBatteryOptimize () -> Void
+  METHOD CS_ProtocolDataCompareUpdate (IntPtr writeFashDataMap, IntPtr compareFashDataMap) -> Void
+  METHOD CS_UsbServer_Set4KDongleRGB (DongleRGB& dongleRGB) -> Void
+  METHOD UsbServer_Get4KDongleRGBValue () -> Void
+  METHOD CS_UsbServer_SetLongRangeMode (Boolean enable) -> Void
+  METHOD CS_UsbServer_GetLongRangeMode () -> Void
+  METHOD UsbServer_GetSlaveVersion () -> Void
+  METHOD .ctor () -> Void
+TYPE System.Configuration.UriSectionReader
+  METHOD ReadConfiguration () -> Boolean
+TYPE System.Net.RegistryConfiguration
+  METHOD ReadConfig (String path, String valueName, RegistryValueKind kind) -> Object

@@ -1,0 +1,45 @@
+# deps / build
+node_modules/
+web/node_modules/
+web/.next/
+web/out/
+web-app/node_modules/
+web-app/dist/
+**/bin/
+**/obj/
+*.user
+*.suo
+
+# runtime data (CapRover persistent — keep seed only)
+data/umd-store.json
+data/downloads/*
+!data/downloads/.gitkeep
+!data/umd-store.seed.json
+
+# secrets
+.env
+.env.*
+!.env.example
+deploykey-caprover
+*.pem
+*.pfx
+*.p12
+
+# logs / OS
+*.log
+.umd-debug.log
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+# large RE dumps (keep docs in Decompile/*/README if needed)
+Decompile/**/extracted/*.dll
+Decompile/**/extracted/*.exe
+Decompile/**/*.zip
+Decompile/**/*.7z
+Decompile/**/captures/*.pcap*
+Decompile/**/captures/*.bin
+
+# local publish
+tray-battery/**/publish/

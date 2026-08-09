@@ -1,0 +1,14 @@
+**/node_modules
+**/dist
+**/.next
+**/bin
+**/obj
+**/.git
+Decompile
+web-app/node_modules
+web-app/dist
+deploykey-caprover
+deploykey-caprover.pub
+**/*.log
+data/runtime
+**/.umd-debug.log
