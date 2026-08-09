@@ -2,9 +2,25 @@
 
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/Button'
+import { KING_ULTRA_BUTTONS } from '@/devices/redragon-king-ultra/buttons'
 import type { ButtonPosition, LayoutId } from '@/lib/layouts'
 import { LAYOUT_META } from '@/lib/layouts'
 import page from '@/views/ButtonsPage.module.css'
+
+const BUTTON_META = KING_ULTRA_BUTTONS.map((b) => ({
+  id: b.id,
+  label: b.label,
+  action: b.action,
+}))
+
+function ensureSix(positions: ButtonPosition[]): ButtonPosition[] {
+  return BUTTON_META.map((m) => {
+    const found = positions.find((p) => p.id === m.id)
+    if (found) return found
+    const def = KING_ULTRA_BUTTONS.find((b) => b.id === m.id)!
+    return { id: m.id, uiX: def.uiX, uiY: def.uiY }
+  })
+}
 
 export function AdminButtonsEditor({
   layoutId,
@@ -14,8 +30,9 @@ export function AdminButtonsEditor({
   initial: ButtonPosition[]
 }) {
   const meta = LAYOUT_META[layoutId]
-  const [positions, setPositions] = useState(initial)
+  const [positions, setPositions] = useState(() => ensureSix(initial))
   const [dragId, setDragId] = useState<number | null>(null)
+  const [selectedId, setSelectedId] = useState<number>(1)
   const [status, setStatus] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 
@@ -24,9 +41,27 @@ export function AdminButtonsEditor({
     return m
   }, [positions])
 
+  function patchPos(id: number, patch: Partial<Pick<ButtonPosition, 'uiX' | 'uiY'>>) {
+    setPositions((prev) =>
+      prev.map((p) => {
+        if (p.id !== id) return p
+        const uiX =
+          patch.uiX != null
+            ? Math.round(Math.min(meta.width, Math.max(0, patch.uiX)))
+            : p.uiX
+        const uiY =
+          patch.uiY != null
+            ? Math.round(Math.min(meta.height, Math.max(0, patch.uiY)))
+            : p.uiY
+        return { ...p, uiX, uiY }
+      }),
+    )
+  }
+
   function onPointerDown(id: number, e: React.PointerEvent<HTMLButtonElement>) {
     e.currentTarget.setPointerCapture(e.pointerId)
     setDragId(id)
+    setSelectedId(id)
   }
 
   function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
@@ -38,11 +73,7 @@ export function AdminButtonsEditor({
     const rect = wrap.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * meta.width
     const y = ((e.clientY - rect.top) / rect.height) * meta.height
-    const uiX = Math.round(Math.min(meta.width, Math.max(0, x)))
-    const uiY = Math.round(Math.min(meta.height, Math.max(0, y)))
-    setPositions((prev) =>
-      prev.map((p) => (p.id === dragId ? { ...p, uiX, uiY } : p)),
-    )
+    patchPos(dragId, { uiX: x, uiY: y })
   }
 
   function onPointerUp() {
@@ -62,7 +93,7 @@ export function AdminButtonsEditor({
         setStatus('Zapis nieudany')
         return
       }
-      setStatus(`Zapisano ${layoutId} → umd-store.json`)
+      setStatus(`Zapisano pozycje przycisków (${layoutId})`)
     } catch {
       setStatus('Błąd sieci')
     } finally {
@@ -70,11 +101,33 @@ export function AdminButtonsEditor({
     }
   }
 
+  function resetDefaults() {
+    if (layoutId === 'king-ultra') {
+      setPositions(
+        KING_ULTRA_BUTTONS.map((b) => ({
+          id: b.id,
+          uiX: b.uiX,
+          uiY: b.uiY,
+        })),
+      )
+      return
+    }
+    setPositions([
+      { id: 1, uiX: 500, uiY: 640 },
+      { id: 2, uiX: 700, uiY: 620 },
+      { id: 3, uiX: 600, uiY: 520 },
+      { id: 4, uiX: 380, uiY: 760 },
+      { id: 5, uiX: 360, uiY: 900 },
+      { id: 6, uiX: 720, uiY: 820 },
+    ])
+  }
+
   return (
     <section className="panel" style={{ marginBottom: 16 }}>
-      <h2 className="panel-label">{meta.label} - badge 1–6</h2>
+      <h2 className="panel-label">{meta.label}</h2>
       <p className="muted" style={{ marginTop: 0 }}>
-        Przeciągnij numery. Przestrzeń {meta.width}×{meta.height} ·{' '}
+        Ustaw pozycje badge’y 1–6 na grafice myszki. Przeciągnij numer albo wpisz
+        X/Y. Canvas {meta.width}×{meta.height} ·{' '}
         <code className="mono">{meta.imageUrl}</code>
       </p>
 
@@ -92,6 +145,7 @@ export function AdminButtonsEditor({
             aspectRatio: `${meta.width} / ${meta.height}`,
           }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className={page.mouseArt}
             src={meta.imageUrl}
@@ -100,20 +154,22 @@ export function AdminButtonsEditor({
             height={meta.height}
             draggable={false}
           />
-          {[1, 2, 3, 4, 5, 6].map((id) => {
+          {BUTTON_META.map(({ id }) => {
             const p = byId.get(id)
             if (!p) return null
+            const active = dragId === id || selectedId === id
             return (
               <button
                 key={id}
                 type="button"
-                className={`${page.badge} ${dragId === id ? page.badgeActive : ''}`}
+                className={`${page.badge} ${active ? page.badgeActive : ''}`}
                 style={{
                   left: `${(p.uiX / meta.width) * 100}%`,
                   top: `${(p.uiY / meta.height) * 100}%`,
                   cursor: 'grab',
                   touchAction: 'none',
                 }}
+                title={BUTTON_META.find((b) => b.id === id)?.label}
                 onPointerDown={(e) => onPointerDown(id, e)}
               >
                 {id}
@@ -123,24 +179,89 @@ export function AdminButtonsEditor({
         </div>
       </div>
 
-      <pre
-        className="mono muted"
-        style={{
-          marginTop: 16,
-          padding: 12,
-          background: 'var(--bg-elevated)',
-          borderRadius: 8,
-          overflow: 'auto',
-          maxHeight: 160,
-        }}
-      >
-        {JSON.stringify(positions, null, 2)}
-      </pre>
+      <div style={{ marginTop: 16, display: 'grid', gap: 8 }}>
+        {BUTTON_META.map((b) => {
+          const p = byId.get(b.id)!
+          const selected = selectedId === b.id
+          return (
+            <div
+              key={b.id}
+              className="row"
+              style={{
+                gap: 10,
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                padding: '8px 10px',
+                borderRadius: 8,
+                border: selected
+                  ? '1px solid var(--accent, #e8ff4d)'
+                  : '1px solid var(--border)',
+                background: selected
+                  ? 'rgba(232, 255, 77, 0.06)'
+                  : 'transparent',
+                cursor: 'pointer',
+              }}
+              onClick={() => setSelectedId(b.id)}
+            >
+              <strong style={{ minWidth: 28 }}>{b.id}</strong>
+              <span style={{ minWidth: 120 }}>{b.label}</span>
+              <span className="muted mono" style={{ minWidth: 72 }}>
+                {b.action}
+              </span>
+              <label className="muted" style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                X
+                <input
+                  type="number"
+                  min={0}
+                  max={meta.width}
+                  value={p.uiX}
+                  onChange={(e) =>
+                    patchPos(b.id, { uiX: Number(e.target.value) || 0 })
+                  }
+                  style={{
+                    width: 72,
+                    padding: '4px 6px',
+                    borderRadius: 6,
+                    border: '1px solid var(--border)',
+                    background: 'var(--bg-elevated)',
+                    color: 'inherit',
+                  }}
+                />
+              </label>
+              <label className="muted" style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                Y
+                <input
+                  type="number"
+                  min={0}
+                  max={meta.height}
+                  value={p.uiY}
+                  onChange={(e) =>
+                    patchPos(b.id, { uiY: Number(e.target.value) || 0 })
+                  }
+                  style={{
+                    width: 72,
+                    padding: '4px 6px',
+                    borderRadius: 6,
+                    border: '1px solid var(--border)',
+                    background: 'var(--bg-elevated)',
+                    color: 'inherit',
+                  }}
+                />
+              </label>
+            </div>
+          )
+        })}
+      </div>
 
-      <div className="row" style={{ marginTop: 12 }}>
+      <div className="row" style={{ marginTop: 14, gap: 10, flexWrap: 'wrap' }}>
         <Button variant="primary" disabled={saving} onClick={() => void save()}>
-          {saving ? 'Zapisywanie…' : `Zapisz ${layoutId === 'king-ultra-hero' ? 'hero' : 'przyciski'}`}
+          {saving
+            ? 'Zapisywanie…'
+            : layoutId === 'king-ultra-hero'
+              ? 'Zapisz pozycje hero'
+              : 'Zapisz pozycje przycisków'}
         </Button>
+        <Button onClick={resetDefaults}>Reset domyślnych</Button>
         {status && <span className="muted">{status}</span>}
       </div>
     </section>

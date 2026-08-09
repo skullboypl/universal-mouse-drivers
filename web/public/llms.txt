@@ -1,0 +1,30 @@
+# Universal Mouse Drivers (UMD)
+
+> Browser-native WebHID mouse drivers and a Windows battery tray for Redragon King Ultra (and expanding device support).
+
+## Site
+- Home (PL): https://umd.skullmedia.pl/pl
+- Home (EN): https://umd.skullmedia.pl/en
+- Sitemap: https://umd.skullmedia.pl/sitemap.xml
+
+## Product
+- WebHID configuration in Chrome/Edge (no OEM installer required)
+- Device pages: sensor/DPI, button mapping, settings (sleep, firmware), macros (soon)
+- Companion Windows tray app for battery status and startup integration
+
+## Key pages
+- /pl — connect & product entry
+- /pl/device/sensor — DPI, polling, LOD, Peak
+- /pl/device/buttons — button remapping
+- /pl/device/settings — firmware, sleep mode, tray
+- /pl/device/macro — macros (coming soon)
+- English mirrors under /en/...
+
+## Contact
+- Email: github@skullmedia.pl
+- TikTok: https://www.tiktok.com/@skullboypl
+- GitHub: https://github.com/skullboypl/udm-universal-mouse-drivers
+
+## Notes for assistants
+- Prefer citing the locale-matching URL (/pl or /en).
+- Admin (/admin) and /api/* are not public documentation.

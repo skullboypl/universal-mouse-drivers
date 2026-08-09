@@ -127,6 +127,7 @@ export type MessageKey =
   | 'settings.sleep'
   | 'settings.sleepHint'
   | 'settings.sleepMin'
+  | 'settings.sleepSec'
   | 'settings.other'
   | 'settings.boot'
   | 'settings.trayOnline'
@@ -307,13 +308,14 @@ const en: Dict = {
   'settings.sleep': 'Sleep mode',
   'settings.sleepHint': 'Time until mouse sleep after not moving',
   'settings.sleepMin': '{n} min',
+  'settings.sleepSec': '{n} sec',
   'settings.other': 'Other',
   'settings.boot':
-    'Show battery % at Windows startup (tray service)',
+    'Start with Windows — autostart UMD Battery Tray app',
   'settings.trayOnline': 'Tray online · v{v} · battery {n}%',
   'settings.trayOffline': 'Tray offline - download and run to enable startup option',
   'settings.trayDownloadRun': 'Download and run UMD Battery Tray',
-  'settings.mouseSite': 'mouse.vxh.pl',
+  'settings.mouseSite': 'UMD · mouse.vxh.pl',
   'settings.winMouse': 'Windows Mouse Properties',
   'settings.winMouseAlert':
     'Start UMD Battery Tray first - it opens Windows Mouse Properties via the local bridge.',
@@ -492,14 +494,15 @@ const pl: Dict = {
   'settings.sleep': 'Tryb uśpienia',
   'settings.sleepHint': 'Czas do uśpienia po braku ruchu',
   'settings.sleepMin': '{n} min',
+  'settings.sleepSec': '{n} sek',
   'settings.other': 'Inne',
   'settings.boot':
-    'Pokazuj % baterii przy starcie systemu (tray / serwis)',
+    'Uruchamiaj z Windowsem — autostart aplikacji UMD Battery Tray',
   'settings.trayOnline': 'Tray online · v{v} · bateria {n}%',
   'settings.trayOffline':
     'Tray wyłączony - pobierz i uruchom, żeby włączyć opcję startu',
   'settings.trayDownloadRun': 'Pobierz i uruchom UMD Battery Tray',
-  'settings.mouseSite': 'mouse.vxh.pl',
+  'settings.mouseSite': 'UMD · mouse.vxh.pl',
   'settings.winMouse': 'Właściwości myszy Windows',
   'settings.winMouseAlert':
     'Najpierw uruchom UMD Battery Tray - wtedy otworzy Właściwości myszy Windows przez lokalny bridge.',

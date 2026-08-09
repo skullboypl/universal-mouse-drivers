@@ -44,8 +44,11 @@ internal sealed class TrayApplicationContext : ApplicationContext
         };
         _menu.Items.Add(_widgetMenuItem);
         _menu.Items.Add(new ToolStripSeparator());
-        _menu.Items.Add("Open mouse.vxh.pl", null, (_, _) => OpenUrl(AppConstants.MouseSiteUrl));
-        _menu.Items.Add("Open UMD site", null, (_, _) => OpenUrl(AppConstants.UmdSiteUrl));
+        // mouse.vxh.pl and UMD are the same product entry point.
+        _menu.Items.Add(
+            "Open UMD (mouse.vxh.pl)",
+            null,
+            (_, _) => OpenUrl(AppConstants.MouseSiteUrl));
         _menu.Items.Add(new ToolStripSeparator());
         _menu.Items.Add("Settings…", null, OpenSettings);
         _menu.Items.Add(new ToolStripSeparator());

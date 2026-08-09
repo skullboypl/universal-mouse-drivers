@@ -15,6 +15,26 @@ import {
   setTrayStartup,
   type TrayBridgeStatus,
 } from '../lib/trayBridge'
+import {
+  sleepCodeToMinutes,
+  sleepMinutesToCode,
+} from '../devices/redragon-king-ultra/protocol'
+
+/** OEM customComboBox_PowerSaveTime → allLedOffTime @ 0xAD (10s units). */
+const SLEEP_OPTIONS: { code: number; kind: 'sec' | 'min'; n: number }[] = [
+  { code: 1, kind: 'sec', n: 10 },
+  { code: 3, kind: 'sec', n: 30 },
+  { code: 6, kind: 'min', n: 1 },
+  { code: 18, kind: 'min', n: 3 },
+  { code: 30, kind: 'min', n: 5 },
+  { code: 60, kind: 'min', n: 10 },
+  { code: 90, kind: 'min', n: 15 },
+  { code: 120, kind: 'min', n: 20 },
+  { code: 150, kind: 'min', n: 25 },
+  { code: 180, kind: 'min', n: 30 },
+  { code: 210, kind: 'min', n: 35 },
+  { code: 240, kind: 'min', n: 40 },
+]
 
 export function SettingsPage() {
   const { connected, state, apply, syncFromDriver } = useDeviceSession()
@@ -114,16 +134,21 @@ export function SettingsPage() {
           {tr('settings.sleepHint')}
         </p>
         <Select
-          value={String(state.settings.sleepAfterMin)}
+          value={String(sleepMinutesToCode(state.settings.sleepAfterMin))}
           onChange={(e) => {
-            void apply((d) =>
-              d.patchSettings({ sleepAfterMin: Number(e.target.value) }),
-            )
+            const code = Number(e.target.value)
+            const minutes = sleepCodeToMinutes(code)
+            void apply(async (d) => {
+              await d.patchSettings({ sleepAfterMin: minutes })
+              syncFromDriver()
+            })
           }}
         >
-          {[1, 2, 5, 10, 15, 30].map((m) => (
-            <option key={m} value={String(m)}>
-              {tr('settings.sleepMin', { n: m })}
+          {SLEEP_OPTIONS.map((opt) => (
+            <option key={opt.code} value={String(opt.code)}>
+              {opt.kind === 'sec'
+                ? tr('settings.sleepSec', { n: opt.n })
+                : tr('settings.sleepMin', { n: opt.n })}
             </option>
           ))}
         </Select>

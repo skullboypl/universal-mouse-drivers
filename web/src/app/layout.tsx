@@ -1,39 +1,83 @@
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
+import { SITE, getSiteUrl } from '@/lib/site'
+import { ogImageUrl } from '@/lib/seo'
 import './globals.css'
 
+const siteUrl = getSiteUrl()
+
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || 'https://umd.skullmedia.pl',
-  ),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: 'UMD - Universal Mouse Drivers',
-    template: '%s · UMD',
+    default: `${SITE.shortName} — ${SITE.name}`,
+    template: `%s · ${SITE.shortName}`,
   },
   description:
-    'WebHID drivers and battery tray for gaming mice - Redragon King Ultra and more.',
+    'WebHID drivers and battery tray for gaming mice — Redragon King Ultra and more.',
+  applicationName: SITE.name,
+  authors: [{ name: 'SkullMedia', url: siteUrl }],
+  creator: 'SkullMedia',
+  publisher: 'SkullMedia',
+  category: 'technology',
+  keywords: [
+    'UMD',
+    'Universal Mouse Drivers',
+    'WebHID',
+    'Redragon King Ultra',
+    'M916OB-ULT',
+    'mouse firmware',
+    'DPI',
+    'gaming mouse software',
+  ],
   icons: {
-    icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/brand/umd-icon-192.png', sizes: '192x192', type: 'image/png' },
-    ],
-    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
   },
+  manifest: '/manifest.webmanifest',
   openGraph: {
-    title: 'UMD - Universal Mouse Drivers',
+    title: `${SITE.shortName} — ${SITE.name}`,
     description:
       'Browser-native HID control + Windows tray battery for supported mice.',
     type: 'website',
-    images: [{ url: '/brand/umd-logo.png', width: 1024, height: 1024, alt: 'UMD' }],
+    siteName: SITE.name,
+    url: siteUrl,
+    images: [
+      {
+        url: ogImageUrl('home', 'en'),
+        width: 1200,
+        height: 630,
+        alt: SITE.name,
+      },
+    ],
   },
-  robots: { index: true, follow: true },
+  twitter: {
+    card: 'summary_large_image',
+    creator: SITE.twitterHandle,
+    title: `${SITE.shortName} — ${SITE.name}`,
+    description:
+      'Browser-native HID control + Windows tray battery for supported mice.',
+    images: [ogImageUrl('home', 'en')],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  alternates: {
+    languages: {
+      pl: '/pl',
+      en: '/en',
+      'x-default': '/en',
+    },
+  },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const h = await headers()
+  const lang = h.get('x-umd-locale') === 'en' ? 'en' : 'pl'
   return (
-    <html lang="pl" suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <body>{children}</body>
     </html>
   )

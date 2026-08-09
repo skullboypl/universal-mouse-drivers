@@ -1,8 +1,12 @@
-import { AdminButtonsEditor } from '@/components/admin/AdminButtonsEditor'
+import { AdminDashboard } from '@/components/admin/AdminDashboard'
 import { AdminLoginForm } from '@/components/admin/AdminLoginForm'
 import { AdminLogoutButton } from '@/components/admin/AdminLogoutButton'
 import { getAdminSession } from '@/lib/auth'
-import { bundledDownloadsDir, downloadsDir, resolveDownloadFile } from '@/lib/paths'
+import {
+  bundledDownloadsDir,
+  downloadsDir,
+  resolveDownloadFile,
+} from '@/lib/paths'
 import { getButtonLayout, getDownloadMeta } from '@/lib/store'
 
 export const dynamic = 'force-dynamic'
@@ -14,7 +18,8 @@ export default async function AdminPage() {
       <>
         <h1 className="page-title">UMD Admin</h1>
         <p className="page-sub">
-          Zaloguj się, żeby ustawiać pozycje przycisków 1–6 (Buttons + Hero).
+          Zaloguj się, żeby ustawiać pozycje przycisków 1–6 na grafice myszki
+          (Buttons + Hero Connect).
         </p>
         <AdminLoginForm />
       </>
@@ -23,8 +28,9 @@ export default async function AdminPage() {
 
   const buttonsLayout = getButtonLayout('king-ultra')
   const heroLayout = getButtonLayout('king-ultra-hero')
-  const tray = getDownloadMeta('trayBattery')
-  const trayResolved = tray ? resolveDownloadFile(tray.filename) : null
+  const trayMeta = getDownloadMeta('trayBattery')
+  const filename = trayMeta?.filename ?? 'UmdBatteryTray.exe'
+  const trayResolved = resolveDownloadFile(filename)
   const trayPresent = Boolean(trayResolved)
   const traySource = trayResolved
     ? trayResolved.startsWith(bundledDownloadsDir())
@@ -34,45 +40,22 @@ export default async function AdminPage() {
 
   return (
     <>
-      <header
-        className="row"
-        style={{ justifyContent: 'space-between', alignItems: 'baseline' }}
-      >
-        <div>
-          <h1 className="page-title">UMD Admin</h1>
-          <p className="page-sub">Zalogowano jako {user}</p>
-        </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
         <AdminLogoutButton />
-      </header>
-
-      <section className="panel" style={{ marginBottom: 16 }}>
-        <h2 className="panel-label">Tray Battery (.exe)</h2>
-        <p className="muted" style={{ marginTop: 0 }}>
-          Źródło: <code className="mono">{traySource}</code>
-          <br />
-          Override (opcjonalnie):{' '}
-          <code className="mono">
-            {downloadsDir()}/{tray?.filename}
-          </code>
-        </p>
-        <p className="mono">
-          status:{' '}
-          {trayPresent
-            ? 'OK - dostępny do pobrania'
-            : 'BRAK - brak w bundled-downloads i persistent'}
-          {tray?.signed ? ' · EV signed' : ' · unsigned'}
-          {tray?.version ? ` · v${tray.version}` : ''}
-        </p>
-        <p style={{ marginBottom: 0 }}>
-          Public URL:{' '}
-          <a href={`/api/downloads/${tray?.filename ?? 'UmdBatteryTray.exe'}`}>
-            /api/downloads/{tray?.filename ?? 'UmdBatteryTray.exe'}
-          </a>
-        </p>
-      </section>
-
-      <AdminButtonsEditor layoutId="king-ultra" initial={buttonsLayout} />
-      <AdminButtonsEditor layoutId="king-ultra-hero" initial={heroLayout} />
+      </div>
+      <AdminDashboard
+        user={user}
+        buttonsLayout={buttonsLayout}
+        heroLayout={heroLayout}
+        tray={{
+          present: trayPresent,
+          source: traySource,
+          downloadsPath: downloadsDir(),
+          filename,
+          signed: Boolean(trayMeta?.signed),
+          version: trayMeta?.version ?? '',
+        }}
+      />
     </>
   )
 }

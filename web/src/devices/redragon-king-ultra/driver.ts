@@ -222,25 +222,27 @@ export class KingUltraDriver {
     await this.refreshFirmwareVersions()
   }
 
-  /** OEM ReadVersion (receiver) + GetSlaveVersion (mouse). */
+  /**
+   * Live F54F mapping (matches OEM Settings labels):
+   * - cmd 0xB3 → Receiver Firmware (UsbFinder_GetSlaveVersion wire)
+   * - cmd 0x12 → Mouse Firmware (UsbServer_ReadVersion)
+   */
   async refreshFirmwareVersions() {
     if (!this.transport || this.transport.kind === 'mock') return
 
-    // Wake RF path before version queries (slave needs mouse online).
     await this.trySend({ op: 'set_pc_driver', active: true })
     await this.trySend({ op: 'read_online' })
     await sleep(60)
 
     const receiver = await this.readVersionOnce(
-      'read_version',
-      UsbCommandId.ReadVersionID,
+      'read_dongle_version',
+      UsbCommandId.GetDongleVersion,
     )
-    // Slave version often arrives after a dongle echo - longer listen window.
     await this.trySend({ op: 'read_online' })
     await sleep(40)
     const mouse = await this.readVersionOnce(
-      'read_slave_version',
-      UsbCommandId.GetSlaveVersion,
+      'read_mouse_version',
+      UsbCommandId.ReadVersionID,
     )
     umdLog('driver', 'info', 'firmware versions', { receiver, mouse })
 
@@ -257,7 +259,7 @@ export class KingUltraDriver {
   }
 
   private async readVersionOnce(
-    op: 'read_version' | 'read_slave_version',
+    op: 'read_dongle_version' | 'read_mouse_version' | 'read_version',
     expectCmd: number,
   ): Promise<string | null> {
     for (let attempt = 0; attempt < 4; attempt++) {
@@ -269,10 +271,10 @@ export class KingUltraDriver {
       // Dongle may echo first (status=1 / wrong cmd). Keep listening for match.
       const wait = this.transport?.waitInput
       if (wait) {
-        for (let i = 0; i < 6 && !ver; i++) {
+        for (let i = 0; i < 8 && !ver; i++) {
           const next = await wait.call(this.transport, {
             commandId: expectCmd,
-            timeoutMs: op === 'read_slave_version' ? 500 : 350,
+            timeoutMs: 450,
           })
           if (!next) continue
           ver = decodeVersionReport(next, expectCmd)
@@ -871,7 +873,7 @@ export class KingUltraDriver {
     }, DPI_DEBOUNCE_MS)
   }
 
-  private enqueueWrite(job: () => Promise<void>) {
+  private enqueueWrite(job: () => Promise<void>): Promise<void> {
     this.writeChain = this.writeChain
       .then(async () => {
         this.setWritePhase('writing')
@@ -889,6 +891,7 @@ export class KingUltraDriver {
         this.setWritePhase('error')
         umdLog('driver', 'error', 'write queue failed', this.lastWriteError)
       })
+    return this.writeChain
   }
 
   private async flushDpi(pending: { stageIndex: number; value: number }) {
@@ -929,24 +932,32 @@ export class KingUltraDriver {
     this.state = { ...this.state, macros }
   }
 
-  patchSettings(patch: Partial<SettingsState>) {
+  patchSettings(patch: Partial<SettingsState>): Promise<void> {
     this.state = { ...this.state, settings: { ...this.state.settings, ...patch } }
     this.setWritePhase('queued')
-    this.enqueueWrite(async () => {
+    return this.enqueueWrite(async () => {
       if (patch.sleepAfterMin != null) {
         const code = sleepMinutesToCode(patch.sleepAfterMin)
+        // Same prelude as DPI flush — flash writes need PC-driver session + wake.
+        await this.trySend({ op: 'set_pc_driver', active: true })
+        await this.trySend({ op: 'read_online' })
+        await sleep(40)
         await this.trySend({ op: 'set_sleep', minutes: patch.sleepAfterMin })
         if (this.transport?.kind === 'webhid') {
           const ok = await this.verifyFlashByte(FlashAddr.allLedOffTime, code)
           this.lastWriteOk = ok
           this.lastVerifyNote = ok
-            ? `Sleep ${patch.sleepAfterMin} min verified in flash`
+            ? `Sleep ${patch.sleepAfterMin} min verified in flash @0xAD (${code})`
             : 'Sleep NOT in flash - wake mouse / close OEM software'
           if (!ok) this.lastWriteError = this.lastVerifyNote
           umdLog('driver', ok ? 'info' : 'error', this.lastVerifyNote, {
             code,
             minutes: patch.sleepAfterMin,
           })
+          if (ok) {
+            // Re-sync UI from flash so dropdown matches OEM units.
+            await this.refreshSleepFromDevice()
+          }
         }
       }
       if (patch.longDistance != null) {

@@ -72,7 +72,7 @@ internal sealed class SettingsForm : Form
     private readonly NumericUpDown _pollInterval = new() { Minimum = 15, Maximum = 300, Width = 90, Increment = 15 };
     private readonly CheckBox _runAtStartup = new()
     {
-        Text = "Show battery % at Windows startup",
+        Text = "Start with Windows (autostart UMD Battery Tray)",
         AutoSize = true,
     };
     private readonly CheckBox _autoUpdate = new()
