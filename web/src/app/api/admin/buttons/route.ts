@@ -3,9 +3,8 @@ import { getAdminSession } from '@/lib/auth'
 import {
   getButtonLayout,
   setButtonLayout,
-  type ButtonPosition,
-  type LayoutId,
 } from '@/lib/store'
+import type { ButtonPosition, LayoutId } from '@/lib/layouts'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'

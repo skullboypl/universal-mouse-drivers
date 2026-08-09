@@ -1,13 +1,15 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { KING_ULTRA_BUTTONS } from '@/devices/redragon-king-ultra/buttons'
+import {
+  type ButtonPosition,
+  type LayoutId,
+  LAYOUT_META,
+} from './layouts'
 import { ensureDataDirs, storePath } from './paths'
 
-export interface ButtonPosition {
-  id: number
-  uiX: number
-  uiY: number
-}
+export type { ButtonPosition, LayoutId }
+export { LAYOUT_META }
 
 export interface DownloadMeta {
   id: string
@@ -19,31 +21,10 @@ export interface DownloadMeta {
   updatedAt?: string
 }
 
-/** Buttons page OEM art + Connect hero art. */
-export type LayoutId = 'king-ultra' | 'king-ultra-hero'
-
 export interface UmdStore {
   version: number
   buttonLayouts: Record<string, ButtonPosition[]>
   downloads: Record<string, DownloadMeta>
-}
-
-export const LAYOUT_META: Record<
-  LayoutId,
-  { label: string; imageUrl: string; width: number; height: number }
-> = {
-  'king-ultra': {
-    label: 'Przyciski (OEM mouse.png)',
-    imageUrl: '/devices/king-ultra/mouse.png',
-    width: 432,
-    height: 356,
-  },
-  'king-ultra-hero': {
-    label: 'Hero connect (mouse-hero.png)',
-    imageUrl: '/brand/mouse-hero.png',
-    width: 1200,
-    height: 1521,
-  },
 }
 
 const DEFAULT_BUTTONS: ButtonPosition[] = KING_ULTRA_BUTTONS.map((b) => ({

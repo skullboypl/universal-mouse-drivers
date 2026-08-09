@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/Button'
-import type { ButtonPosition, LayoutId } from '@/lib/store'
-import { LAYOUT_META } from '@/lib/store'
+import type { ButtonPosition, LayoutId } from '@/lib/layouts'
+import { LAYOUT_META } from '@/lib/layouts'
 import page from '@/views/ButtonsPage.module.css'
 
 export function AdminButtonsEditor({
