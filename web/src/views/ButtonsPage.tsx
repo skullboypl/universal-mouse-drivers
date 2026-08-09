@@ -52,8 +52,10 @@ export function ButtonsPage() {
     return <ClientRedirect href={lp('/')} />
   }
 
-  const mouseSrc =
-    driver.identity.imageUrl ?? '/devices/king-ultra/mouse.png'
+  const isDemo = driver.identity.id === 'umd-demo'
+  const mouseSrc = isDemo
+    ? '/devices/demo/mouse.png'
+    : (driver.identity.imageUrl ?? '/devices/king-ultra/mouse.png')
   const logoSrc = driver.identity.logoUrl
   const artW = driver.identity.artWidth ?? MOUSE_ART.width
   const artH = driver.identity.artHeight ?? MOUSE_ART.height
@@ -140,8 +142,7 @@ export function ButtonsPage() {
           />
           {state.buttons.map((b) => {
             // Demo uses generated art coords; live Redragon uses OEM/API layout.
-            const useApiLayout = driver.identity.id !== 'umd-demo'
-            const pos = useApiLayout ? posById.get(b.id) : undefined
+            const pos = !isDemo ? posById.get(b.id) : undefined
             const uiX = pos?.uiX ?? b.uiX
             const uiY = pos?.uiY ?? b.uiY
             return (
