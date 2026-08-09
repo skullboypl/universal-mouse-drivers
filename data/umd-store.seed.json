@@ -2,12 +2,12 @@
   "version": 1,
   "buttonLayouts": {
     "king-ultra": [
-      { "id": 1, "uiX": 700, "uiY": 430 },
-      { "id": 2, "uiX": 980, "uiY": 400 },
-      { "id": 3, "uiX": 820, "uiY": 360 },
-      { "id": 4, "uiX": 430, "uiY": 480 },
-      { "id": 5, "uiX": 460, "uiY": 600 },
-      { "id": 6, "uiX": 860, "uiY": 280 }
+      { "id": 1, "uiX": 159, "uiY": 223 },
+      { "id": 2, "uiX": 43, "uiY": 186 },
+      { "id": 3, "uiX": 127, "uiY": 145 },
+      { "id": 4, "uiX": 286, "uiY": 169 },
+      { "id": 5, "uiX": 322, "uiY": 127 },
+      { "id": 6, "uiX": 313, "uiY": 240 }
     ]
   },
   "downloads": {

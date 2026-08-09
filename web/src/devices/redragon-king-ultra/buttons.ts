@@ -1,11 +1,11 @@
 import type { ButtonAction, ButtonBinding } from '../types'
 
-/** Product photo space (`mouse.png` = 1536×1024). */
-export const MOUSE_ART = { width: 1536, height: 1024 } as const
+/** OEM Buttons art `2Button/dev1.png` = 432×356 (real King Ultra). */
+export const MOUSE_ART = { width: 432, height: 356 } as const
 
 /**
- * Remappable keys + badge positions on the product photo (isometric).
- * flashIndex from OEM Config.ini KeyParam; uiX/uiY tuned to mouse.png.
+ * Remappable keys + badge positions from OEM Config.ini KeyParamN = x,y,…
+ * flashIndex from KeyParam; uiX/uiY match official driver overlay on dev1.png.
  */
 export const KING_ULTRA_BUTTONS: ButtonBinding[] = [
   {
@@ -13,48 +13,48 @@ export const KING_ULTRA_BUTTONS: ButtonBinding[] = [
     flashIndex: 0x00,
     label: 'Left Button',
     action: 'left',
-    uiX: 700,
-    uiY: 430,
+    uiX: 159,
+    uiY: 223,
   },
   {
     id: 2,
     flashIndex: 0x01,
     label: 'Right Button',
     action: 'right',
-    uiX: 980,
-    uiY: 400,
+    uiX: 43,
+    uiY: 186,
   },
   {
     id: 3,
     flashIndex: 0x02,
     label: 'Middle Button',
     action: 'middle',
-    uiX: 820,
-    uiY: 360,
+    uiX: 127,
+    uiY: 145,
   },
   {
     id: 4,
     flashIndex: 0x04,
     label: 'Forward',
     action: 'forward',
-    uiX: 430,
-    uiY: 480,
+    uiX: 286,
+    uiY: 169,
   },
   {
     id: 5,
     flashIndex: 0x03,
     label: 'Back',
     action: 'back',
-    uiX: 460,
-    uiY: 600,
+    uiX: 322,
+    uiY: 127,
   },
   {
     id: 6,
     flashIndex: 0x0c,
     label: 'DPI Cycle',
     action: 'dpi_cycle',
-    uiX: 860,
-    uiY: 280,
+    uiX: 313,
+    uiY: 240,
   },
 ]
 

@@ -32,10 +32,10 @@
 .mouseWrap {
   position: relative;
   z-index: 1;
-  width: min(480px, 100%);
+  width: min(432px, 100%);
   margin: 0 auto;
-  /* Product photo mouse.png = 1536×1024 */
-  aspect-ratio: 3 / 2;
+  /* OEM 2Button/dev1.png = 432×356 */
+  aspect-ratio: 432 / 356;
 }
 
 .mouseArt {
