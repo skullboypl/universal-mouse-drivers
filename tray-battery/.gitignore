@@ -9,10 +9,11 @@
 .idea/
 *.suo
 
-# Signed artifacts / certs / local signing script (keep cert details out of the repo)
+# Signed artifacts / certs (thumbprint stays in env — sign.ps1 is safe to commit)
 *.pfx
 *.snk
-sign.ps1
+*.cer
+*.p12
 
 # OS
 Thumbs.db
