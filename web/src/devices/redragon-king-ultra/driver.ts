@@ -29,6 +29,8 @@ import {
   sensorModeFromCode,
   sensorModeToCode,
   setDongleOnline,
+  sleepCodeToMinutes,
+  sleepMinutesToCode,
   UsbCommandId,
   type ProtocolCommand,
 } from './protocol'
@@ -196,6 +198,22 @@ export class KingUltraDriver {
   async refreshDeviceInfo() {
     await this.refreshBatteryQuick()
     await this.refreshFirmwareVersions()
+    await this.refreshSleepFromDevice()
+  }
+
+  /** OEM PowerSaveTime → allLedOffTime @ 0xAD. */
+  async refreshSleepFromDevice() {
+    if (!this.transport || this.transport.kind === 'mock') return
+    const got = await this.readFlashPayload(FlashAddr.allLedOffTime, 2)
+    if (!got || got.length < 1) return
+    const code = got[0] & 0xff
+    if (code === 0) return
+    const minutes = sleepCodeToMinutes(code)
+    this.state = {
+      ...this.state,
+      settings: { ...this.state.settings, sleepAfterMin: minutes },
+    }
+    umdLog('driver', 'info', 'sleep from flash', { code, minutes })
   }
 
   /** Full post-connect sync: bulk flash map + firmware versions. */
@@ -208,7 +226,18 @@ export class KingUltraDriver {
   async refreshFirmwareVersions() {
     if (!this.transport || this.transport.kind === 'mock') return
 
-    const receiver = await this.readVersionOnce('read_version', UsbCommandId.ReadVersionID)
+    // Wake RF path before version queries (slave needs mouse online).
+    await this.trySend({ op: 'set_pc_driver', active: true })
+    await this.trySend({ op: 'read_online' })
+    await sleep(60)
+
+    const receiver = await this.readVersionOnce(
+      'read_version',
+      UsbCommandId.ReadVersionID,
+    )
+    // Slave version often arrives after a dongle echo - longer listen window.
+    await this.trySend({ op: 'read_online' })
+    await sleep(40)
     const mouse = await this.readVersionOnce(
       'read_slave_version',
       UsbCommandId.GetSlaveVersion,
@@ -231,16 +260,30 @@ export class KingUltraDriver {
     op: 'read_version' | 'read_slave_version',
     expectCmd: number,
   ): Promise<string | null> {
-    for (let attempt = 0; attempt < 3; attempt++) {
+    for (let attempt = 0; attempt < 4; attempt++) {
       await this.trySend({ op })
-      await sleep(40)
-      const ack = this.readLastAck()
-      if (!ack) continue
-      const ver = decodeVersionReport(ack, expectCmd)
+      let ack = this.readLastAck()
+      let ver = ack ? decodeVersionReport(ack, expectCmd) : null
       if (ver) return ver.firmware
-      // Follow-up may have overwritten lastAck with a different cmd - try loose parse
-      const loose = decodeVersionReport(ack)
-      if (loose && loose.commandId === expectCmd) return loose.firmware
+
+      // Dongle may echo first (status=1 / wrong cmd). Keep listening for match.
+      const wait = this.transport?.waitInput
+      if (wait) {
+        for (let i = 0; i < 6 && !ver; i++) {
+          const next = await wait.call(this.transport, {
+            commandId: expectCmd,
+            timeoutMs: op === 'read_slave_version' ? 500 : 350,
+          })
+          if (!next) continue
+          ver = decodeVersionReport(next, expectCmd)
+          if (ver) return ver.firmware
+        }
+      } else {
+        await sleep(120)
+        ack = this.readLastAck()
+        ver = ack ? decodeVersionReport(ack, expectCmd) : null
+        if (ver) return ver.firmware
+      }
       await sleep(80)
     }
     return null
@@ -397,6 +440,15 @@ export class KingUltraDriver {
       debounceEnabled: debounceMs > 0,
     }
 
+    const sleepRaw =
+      this.sliceMap(map, FlashAddr.allLedOffTime, 1)[0] & 0xff
+    const settings = {
+      ...this.state.settings,
+      ...(sleepRaw > 0
+        ? { sleepAfterMin: sleepCodeToMinutes(sleepRaw) }
+        : {}),
+    }
+
     let buttons = this.state.buttons.map((b) => ({ ...b }))
     for (const b of buttons) {
       const raw = this.sliceMap(map, FlashAddr.keyFun0 + b.flashIndex * 4, 4)
@@ -408,7 +460,7 @@ export class KingUltraDriver {
       }
     }
 
-    this.state = { ...this.state, sensor, buttons }
+    this.state = { ...this.state, sensor, buttons, settings }
     this.lastVerifyNote = `Mouse flash synced (stages=${sensor.dpiStageCount}, ${sensor.reportRate}Hz)`
     this.lastWriteOk = true
     umdLog('driver', 'info', 'probeFlashAndSync done', {
@@ -882,7 +934,20 @@ export class KingUltraDriver {
     this.setWritePhase('queued')
     this.enqueueWrite(async () => {
       if (patch.sleepAfterMin != null) {
+        const code = sleepMinutesToCode(patch.sleepAfterMin)
         await this.trySend({ op: 'set_sleep', minutes: patch.sleepAfterMin })
+        if (this.transport?.kind === 'webhid') {
+          const ok = await this.verifyFlashByte(FlashAddr.allLedOffTime, code)
+          this.lastWriteOk = ok
+          this.lastVerifyNote = ok
+            ? `Sleep ${patch.sleepAfterMin} min verified in flash`
+            : 'Sleep NOT in flash - wake mouse / close OEM software'
+          if (!ok) this.lastWriteError = this.lastVerifyNote
+          umdLog('driver', ok ? 'info' : 'error', this.lastVerifyNote, {
+            code,
+            minutes: patch.sleepAfterMin,
+          })
+        }
       }
       if (patch.longDistance != null) {
         await this.trySend({

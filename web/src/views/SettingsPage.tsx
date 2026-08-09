@@ -19,6 +19,7 @@ export function SettingsPage() {
     if (!connected) return
     void apply(async (d) => {
       await d.refreshFirmwareVersions()
+      await d.refreshSleepFromDevice()
       syncFromDriver()
     })
   }, [connected, apply, syncFromDriver])
@@ -58,12 +59,16 @@ export function SettingsPage() {
           onClick={() => {
             void apply(async (d) => {
               await d.refreshFirmwareVersions()
+              await d.refreshSleepFromDevice()
               syncFromDriver()
             })
           }}
         >
           {tr('settings.refreshFw')}
         </Button>
+        <p className="muted" style={{ fontSize: '0.85rem', marginBottom: 0 }}>
+          {tr('settings.fwHint')}
+        </p>
       </div>
 
       <div className="panel">

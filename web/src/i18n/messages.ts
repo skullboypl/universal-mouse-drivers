@@ -116,6 +116,7 @@ export type MessageKey =
   | 'settings.receiverFw'
   | 'settings.mouseFw'
   | 'settings.refreshFw'
+  | 'settings.fwHint'
   | 'settings.pairing'
   | 'settings.pair'
   | 'settings.pairAlert'
@@ -284,6 +285,8 @@ const en: Dict = {
   'settings.receiverFw': 'Receiver firmware:',
   'settings.mouseFw': 'Mouse firmware:',
   'settings.refreshFw': 'Refresh firmware',
+  'settings.fwHint':
+    'Move the mouse (wake it) before refresh. Close the OEM Redragon app if versions stay blank.',
   'settings.pairing': 'Pairing tool',
   'settings.pair': 'Pair (Space)',
   'settings.pairAlert':
@@ -457,6 +460,8 @@ const pl: Dict = {
   'settings.receiverFw': 'Firmware receivera:',
   'settings.mouseFw': 'Firmware myszy:',
   'settings.refreshFw': 'Odśwież firmware',
+  'settings.fwHint':
+    'Przed odświeżeniem rusz myszą (wybudź). Zamknij oficjalny driver Redragon, jeśli wersje zostają puste.',
   'settings.pairing': 'Narzędzie parowania',
   'settings.pair': 'Paruj (Spacja)',
   'settings.pairAlert':

@@ -73,7 +73,10 @@ export function sensorModeFromCode(code: number): 'lp' | 'hp' | 'corded' {
   return 'lp'
 }
 
-/** OEM FullPerformance timeout: units of 10 seconds (30s→3, 1min→6, …). */
+/**
+ * OEM time combos (FullPerformance / PowerSaveTime): units of 10 seconds.
+ * Language XML: 30sec→3, 1min→6, 15min→90, …
+ */
 export function peakTimeoutToCode(minutes: number): number {
   return Math.max(1, Math.round(minutes * 6))
 }
@@ -81,6 +84,19 @@ export function peakTimeoutToCode(minutes: number): number {
 export function peakCodeToMinutes(code: number): number {
   const mins = code / 6
   const steps = [0.5, 1, 2, 5, 10, 15]
+  return steps.reduce((best, s) =>
+    Math.abs(s - mins) < Math.abs(best - mins) ? s : best,
+  )
+}
+
+/** Mouse sleep (allLedOffTime / PowerSaveTime) - same 10s units as Peak. */
+export function sleepMinutesToCode(minutes: number): number {
+  return peakTimeoutToCode(minutes)
+}
+
+export function sleepCodeToMinutes(code: number): number {
+  const mins = code / 6
+  const steps = [1, 2, 3, 5, 10, 15, 20, 25, 30, 35, 40]
   return steps.reduce((best, s) =>
     Math.abs(s - mins) < Math.abs(best - mins) ? s : best,
   )
@@ -343,7 +359,11 @@ export function encodeCommand(cmd: ProtocolCommand): EncodedReport | null {
         cmd.motionSync ? 1 : 0,
       )
     case 'set_sleep':
-      return encodeWriteFlashByte(FlashAddr.sensorSleepTime, cmd.minutes & 0xff)
+      // OEM Sleep mode → mouseConfig.allLedOffTime @ 0xAD (NOT sensorSleepTime/Peak).
+      return encodeWriteFlashByte(
+        FlashAddr.allLedOffTime,
+        sleepMinutesToCode(cmd.minutes),
+      )
     case 'set_long_distance':
       return buildFrame({
         commandId: UsbCommandId.SetLongRangeMode,
@@ -545,14 +565,27 @@ export function decodeInfoReport(data: Uint8Array): {
   }
 }
 
-/** OEM UI: `v{major}.{minor}` from first two payload bytes (UsbFinder CONCAT11). */
+/**
+ * OEM UI shows BCD nibbles (0x15 → "15", 0x18 → "18").
+ * Plain decimal bytes (nibbles > 9) fall back to the raw value.
+ */
+export function bcdByteToDecimal(n: number): number {
+  const v = n & 0xff
+  const hi = (v >> 4) & 0xf
+  const lo = v & 0xf
+  if (hi > 9 || lo > 9) return v
+  return hi * 10 + lo
+}
+
+/** OEM UI: `v{major}.{minor}` from UsbFinder CONCAT11 bytes (BCD). */
 export function formatFirmwareVersion(major: number, minor: number): string {
-  return `v${major & 0xff}.${minor & 0xff}`
+  return `v${bcdByteToDecimal(major)}.${bcdByteToDecimal(minor)}`
 }
 
 /**
  * Parse ReadVersion (cmd 18) / GetSlaveVersion (cmd 11) reply.
- * Wire data[0], data[1] = major, minor (UsbFinder reads packet[6],[7] with report id).
+ * UsbFinder uses CONCAT11(packet[6], packet[7]) with report id present =
+ * payload[0], payload[1] after report id is stripped.
  */
 export function decodeVersionReport(
   data: Uint8Array,
