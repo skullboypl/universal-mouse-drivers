@@ -16,6 +16,10 @@ internal sealed class BridgeServer : IDisposable
     private CancellationTokenSource? _cts;
     private Task? _loop;
 
+    /// <summary>
+    /// Public HTTPS origins allowed to call this loopback bridge from the browser
+    /// (Chrome Private Network Access / CORS).
+    /// </summary>
     private static readonly HashSet<string> AllowedOrigins = new(StringComparer.OrdinalIgnoreCase)
     {
         "https://mouse.vxh.pl",
@@ -160,13 +164,15 @@ internal sealed class BridgeServer : IDisposable
     {
         var origin = req.Headers["Origin"];
         if (!string.IsNullOrEmpty(origin) && AllowedOrigins.Contains(origin))
-            res.Headers.Add("Access-Control-Allow-Origin", origin);
+            res.AddHeader("Access-Control-Allow-Origin", origin);
         else if (string.IsNullOrEmpty(origin))
-            res.Headers.Add("Access-Control-Allow-Origin", "*");
+            res.AddHeader("Access-Control-Allow-Origin", "*");
 
-        res.Headers.Add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        res.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
-        res.Headers.Add("Vary", "Origin");
+        res.AddHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        res.AddHeader("Access-Control-Allow-Headers", "Content-Type");
+        // Chrome Private Network Access: public HTTPS (mouse.vxh.pl) → http://127.0.0.1
+        res.AddHeader("Access-Control-Allow-Private-Network", "true");
+        res.AddHeader("Vary", "Origin");
     }
 
     private static async Task WriteJson(HttpListenerResponse res, object payload)

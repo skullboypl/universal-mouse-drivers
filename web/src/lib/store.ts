@@ -12,6 +12,9 @@ import { ensureDataDirs, storePath } from './paths'
 export type { ButtonPosition, LayoutId }
 export { LAYOUT_META }
 
+/** Keep in sync with tray-battery UmdBatteryTray.csproj Version. */
+export const BUNDLED_TRAY_VERSION = '1.1.3'
+
 export interface DownloadMeta {
   id: string
   filename: string
@@ -63,13 +66,30 @@ function defaultStore(): UmdStore {
         id: 'trayBattery',
         filename: 'UmdBatteryTray.exe',
         displayName: 'UMD Battery Tray',
-        version: '1.1.2',
+        version: BUNDLED_TRAY_VERSION,
         signed: true,
         notes:
           'EV-signed; shipped in image bundled-downloads/ (override via /app/data/downloads/)',
       },
     },
   }
+}
+
+function versionNewer(a: string, b: string): boolean {
+  const parse = (v: string) =>
+    v
+      .replace(/^[vV]/, '')
+      .split('.')
+      .map((x) => Number.parseInt(x, 10) || 0)
+  const aa = parse(a)
+  const bb = parse(b)
+  const n = Math.max(aa.length, bb.length)
+  for (let i = 0; i < n; i++) {
+    const x = aa[i] ?? 0
+    const y = bb[i] ?? 0
+    if (x !== y) return x > y
+  }
+  return false
 }
 
 function seedIfMissing() {
@@ -105,11 +125,39 @@ function ensureLayouts(store: UmdStore): UmdStore {
   return store
 }
 
+/** Returns true when trayBattery.version was raised to BUNDLED_TRAY_VERSION. */
+function syncBundledTrayMeta(store: UmdStore): boolean {
+  const tray = store.downloads.trayBattery ?? {
+    id: 'trayBattery',
+    filename: 'UmdBatteryTray.exe',
+    displayName: 'UMD Battery Tray',
+    version: '0.0.0',
+    signed: false,
+  }
+  store.downloads.trayBattery = tray
+  if (!tray.version || versionNewer(BUNDLED_TRAY_VERSION, tray.version)) {
+    tray.version = BUNDLED_TRAY_VERSION
+    tray.signed = true
+    tray.filename = tray.filename || 'UmdBatteryTray.exe'
+    tray.updatedAt = new Date().toISOString()
+    return true
+  }
+  return false
+}
+
 export function readStore(): UmdStore {
   seedIfMissing()
   try {
     const raw = fs.readFileSync(storePath(), 'utf8')
-    return ensureLayouts(JSON.parse(raw) as UmdStore)
+    const store = ensureLayouts(JSON.parse(raw) as UmdStore)
+    if (syncBundledTrayMeta(store)) {
+      try {
+        writeStore(store)
+      } catch {
+        /* ignore read-only FS */
+      }
+    }
+    return store
   } catch {
     return defaultStore()
   }

@@ -47,7 +47,17 @@ internal sealed class AppSettings
                 return new AppSettings();
 
             var json = File.ReadAllText(SettingsPath);
-            return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            var settings = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            // Migrate canonical site after rebrand to mouse.vxh.pl
+            if (string.IsNullOrWhiteSpace(settings.UpdateBaseUrl)
+                || settings.UpdateBaseUrl.Contains("umd.skullmedia.pl", StringComparison.OrdinalIgnoreCase)
+                || settings.UpdateBaseUrl.Contains("umd.example.com", StringComparison.OrdinalIgnoreCase))
+            {
+                settings.UpdateBaseUrl = AppConstants.DefaultUpdateBaseUrl;
+                try { settings.Save(); } catch { /* ignore */ }
+            }
+
+            return settings;
         }
         catch
         {

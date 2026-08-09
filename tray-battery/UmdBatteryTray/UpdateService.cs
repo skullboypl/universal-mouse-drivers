@@ -35,7 +35,11 @@ internal sealed class UpdateService
             return;
 
         var baseUrl = (_settings.UpdateBaseUrl ?? AppConstants.DefaultUpdateBaseUrl).TrimEnd('/');
-        using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(25) };
+        // Old installs may still point at umd.skullmedia.pl in settings.json
+        if (baseUrl.Contains("umd.skullmedia.pl", StringComparison.OrdinalIgnoreCase))
+            baseUrl = AppConstants.DefaultUpdateBaseUrl;
+
+        using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(45) };
         http.DefaultRequestHeaders.UserAgent.ParseAdd($"UmdBatteryTray/{CurrentVersion}");
 
         LatestManifest? manifest;
@@ -77,13 +81,29 @@ internal sealed class UpdateService
         if (string.IsNullOrWhiteSpace(current) || !File.Exists(temp))
             return;
 
-        // Single-file: delay, copy over self, relaunch.
+        // Single-file EXE stays locked until process fully exits — rename aside, then replace.
         var bat = Path.Combine(Path.GetTempPath(), "umd-tray-update.cmd");
         var script = $"""
             @echo off
-            ping 127.0.0.1 -n 3 >nul
-            copy /Y "{temp}" "{current}"
-            start "" "{current}"
+            setlocal
+            set "SRC={temp}"
+            set "DST={current}"
+            ping 127.0.0.1 -n 4 >nul
+            :retry
+            if exist "%DST%.old" del /F /Q "%DST%.old" >nul 2>&1
+            move /Y "%DST%" "%DST%.old" >nul 2>&1
+            if exist "%DST%" (
+              ping 127.0.0.1 -n 2 >nul
+              goto retry
+            )
+            copy /Y "%SRC%" "%DST%" >nul
+            if not exist "%DST%" (
+              if exist "%DST%.old" move /Y "%DST%.old" "%DST%" >nul
+              exit /b 1
+            )
+            start "" "%DST%"
+            del /F /Q "%SRC%" >nul 2>&1
+            del /F /Q "%DST%.old" >nul 2>&1
             del "%~f0"
             """;
         await File.WriteAllTextAsync(bat, script, ct);

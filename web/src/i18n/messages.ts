@@ -313,7 +313,8 @@ const en: Dict = {
   'settings.boot':
     'Start with Windows — autostart UMD Battery Tray app',
   'settings.trayOnline': 'Tray online · v{v} · battery {n}%',
-  'settings.trayOffline': 'Tray offline - download and run to enable startup option',
+  'settings.trayOffline':
+    'Tray offline — run UmdBatteryTray.exe on this PC (browser talks to 127.0.0.1:17355; Next.js on the server cannot)',
   'settings.trayDownloadRun': 'Download and run UMD Battery Tray',
   'settings.mouseSite': 'UMD · mouse.vxh.pl',
   'settings.winMouse': 'Windows Mouse Properties',
@@ -500,7 +501,7 @@ const pl: Dict = {
     'Uruchamiaj z Windowsem — autostart aplikacji UMD Battery Tray',
   'settings.trayOnline': 'Tray online · v{v} · bateria {n}%',
   'settings.trayOffline':
-    'Tray wyłączony - pobierz i uruchom, żeby włączyć opcję startu',
+    'Tray wyłączony — uruchom UmdBatteryTray.exe na tym PC (przeglądarka łączy się z 127.0.0.1:17355; serwer Next.js nie widzi Twojego komputera)',
   'settings.trayDownloadRun': 'Pobierz i uruchom UMD Battery Tray',
   'settings.mouseSite': 'UMD · mouse.vxh.pl',
   'settings.winMouse': 'Właściwości myszy Windows',
