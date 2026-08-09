@@ -129,6 +129,10 @@ export type MessageKey =
   | 'settings.sleepMin'
   | 'settings.other'
   | 'settings.boot'
+  | 'settings.trayOnline'
+  | 'settings.trayOffline'
+  | 'settings.trayDownloadRun'
+  | 'settings.mouseSite'
   | 'settings.winMouse'
   | 'settings.winMouseAlert'
   | 'settings.advanced'
@@ -304,10 +308,15 @@ const en: Dict = {
   'settings.sleepHint': 'Time until mouse sleep after not moving',
   'settings.sleepMin': '{n} min',
   'settings.other': 'Other',
-  'settings.boot': 'Run on system boot (requires bridge helper)',
+  'settings.boot':
+    'Show battery % at Windows startup (tray service)',
+  'settings.trayOnline': 'Tray online · v{v} · battery {n}%',
+  'settings.trayOffline': 'Tray offline - download and run to enable startup option',
+  'settings.trayDownloadRun': 'Download and run UMD Battery Tray',
+  'settings.mouseSite': 'mouse.vxh.pl',
   'settings.winMouse': 'Windows Mouse Properties',
   'settings.winMouseAlert':
-    'Windows Mouse Properties is opened by the optional local bridge (main.cpl).',
+    'Start UMD Battery Tray first - it opens Windows Mouse Properties via the local bridge.',
   'settings.advanced': 'Advanced setting',
   'settings.longDistance': 'Long distance',
   'settings.longDistanceTip':
@@ -484,10 +493,16 @@ const pl: Dict = {
   'settings.sleepHint': 'Czas do uśpienia po braku ruchu',
   'settings.sleepMin': '{n} min',
   'settings.other': 'Inne',
-  'settings.boot': 'Uruchom przy starcie systemu (wymaga bridge)',
+  'settings.boot':
+    'Pokazuj % baterii przy starcie systemu (tray / serwis)',
+  'settings.trayOnline': 'Tray online · v{v} · bateria {n}%',
+  'settings.trayOffline':
+    'Tray wyłączony - pobierz i uruchom, żeby włączyć opcję startu',
+  'settings.trayDownloadRun': 'Pobierz i uruchom UMD Battery Tray',
+  'settings.mouseSite': 'mouse.vxh.pl',
   'settings.winMouse': 'Właściwości myszy Windows',
   'settings.winMouseAlert':
-    'Właściwości myszy Windows otwiera opcjonalny lokalny bridge (main.cpl).',
+    'Najpierw uruchom UMD Battery Tray - wtedy otworzy Właściwości myszy Windows przez lokalny bridge.',
   'settings.advanced': 'Zaawansowane',
   'settings.longDistance': 'Duży zasięg',
   'settings.longDistanceTip':

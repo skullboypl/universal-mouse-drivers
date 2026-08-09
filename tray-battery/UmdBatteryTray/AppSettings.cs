@@ -31,6 +31,14 @@ internal sealed class AppSettings
     public int TrayIconScalePercent { get; set; } = 109;
     public int PollIntervalSeconds { get; set; } = 120;
 
+    // Show % battery tray when Windows starts.
+    public bool RunAtStartup { get; set; }
+
+    // Check umd.skullmedia.pl for a newer EXE on launch.
+    public bool AutoUpdateOnStart { get; set; } = true;
+
+    public string UpdateBaseUrl { get; set; } = AppConstants.DefaultUpdateBaseUrl;
+
     public static AppSettings Load()
     {
         try

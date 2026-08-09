@@ -70,6 +70,16 @@ internal sealed class SettingsForm : Form
     };
     private readonly Label _widgetFontOpacityValue = new() { AutoSize = true };
     private readonly NumericUpDown _pollInterval = new() { Minimum = 15, Maximum = 300, Width = 90, Increment = 15 };
+    private readonly CheckBox _runAtStartup = new()
+    {
+        Text = "Show battery % at Windows startup",
+        AutoSize = true,
+    };
+    private readonly CheckBox _autoUpdate = new()
+    {
+        Text = "Check for updates on start",
+        AutoSize = true,
+    };
 
     public SettingsForm(AppSettings settings, BatteryWidgetForm widget, Action<AppSettings> onApply)
     {
@@ -82,7 +92,7 @@ internal sealed class SettingsForm : Form
         MaximizeBox = false;
         MinimizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
-        ClientSize = new Size(380, 568);
+        ClientSize = new Size(380, 668);
         Font = new Font("Segoe UI", 9f);
 
         var trayGroup = new GroupBox
@@ -211,19 +221,28 @@ internal sealed class SettingsForm : Form
             fontOpacityLabel, _widgetFontOpacity, _widgetFontOpacityValue,
         ]);
 
+        var serviceGroup = new GroupBox
+        {
+            Text = "Startup & updates",
+            Location = new Point(16, 504),
+            Size = new Size(348, 118),
+        };
+        _runAtStartup.Location = new Point(14, 24);
+        _autoUpdate.Location = new Point(14, 50);
         var pollLabel = new Label
         {
             Text = "Refresh interval (sec):",
             AutoSize = true,
-            Location = new Point(16, 508),
+            Location = new Point(14, 80),
         };
-        _pollInterval.Location = new Point(170, 504);
+        _pollInterval.Location = new Point(170, 76);
+        serviceGroup.Controls.AddRange([_runAtStartup, _autoUpdate, pollLabel, _pollInterval]);
 
         var okBtn = new Button
         {
             Text = "OK",
             DialogResult = DialogResult.OK,
-            Location = new Point(188, 532),
+            Location = new Point(188, 632),
             Size = new Size(84, 28),
         };
         okBtn.Click += (_, _) => SaveAndApply(close: true);
@@ -231,7 +250,7 @@ internal sealed class SettingsForm : Form
         var applyBtn = new Button
         {
             Text = "Apply",
-            Location = new Point(100, 532),
+            Location = new Point(100, 632),
             Size = new Size(84, 28),
         };
         applyBtn.Click += (_, _) => SaveAndApply(close: false);
@@ -240,11 +259,11 @@ internal sealed class SettingsForm : Form
         {
             Text = "Cancel",
             DialogResult = DialogResult.Cancel,
-            Location = new Point(276, 532),
+            Location = new Point(276, 632),
             Size = new Size(84, 28),
         };
 
-        Controls.AddRange([trayGroup, widgetGroup, pollLabel, _pollInterval, applyBtn, okBtn, cancelBtn]);
+        Controls.AddRange([trayGroup, widgetGroup, serviceGroup, applyBtn, okBtn, cancelBtn]);
 
         AcceptButton = okBtn;
         CancelButton = cancelBtn;
@@ -269,6 +288,8 @@ internal sealed class SettingsForm : Form
 
         _widgetVisible.Checked = _settings.WidgetVisible;
         _widgetDraggable.Checked = _settings.WidgetDraggable;
+        _runAtStartup.Checked = _settings.RunAtStartup;
+        _autoUpdate.Checked = _settings.AutoUpdateOnStart;
         _pollInterval.Value = Math.Clamp(_settings.PollIntervalSeconds, 15, 300);
 
         _widgetScale.Value = Math.Clamp(_settings.WidgetScalePercent, _widgetScale.Minimum, _widgetScale.Maximum);
@@ -311,6 +332,8 @@ internal sealed class SettingsForm : Form
         _settings.TrayFontScalePercent = _trayFont.Value;
         _settings.TrayIconScalePercent = _trayIcon.Value;
         _settings.PollIntervalSeconds = (int)_pollInterval.Value;
+        _settings.RunAtStartup = _runAtStartup.Checked;
+        _settings.AutoUpdateOnStart = _autoUpdate.Checked;
     }
 
     private void PreviewIfLoaded()

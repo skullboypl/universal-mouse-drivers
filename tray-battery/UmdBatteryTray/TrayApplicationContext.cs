@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Reflection;
 using UmdBatteryTray.Protocol;
 
 namespace UmdBatteryTray;
@@ -11,6 +13,8 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private readonly KingUltraBatteryReader _reader = new();
     private readonly BatteryWidgetForm _widget = new();
     private readonly AppSettings _settings;
+    private readonly BridgeServer _bridge;
+    private readonly Icon _appIcon;
 
     private Icon? _currentIcon;
     private BatteryReading? _lastReading;
@@ -19,8 +23,19 @@ internal sealed class TrayApplicationContext : ApplicationContext
     public TrayApplicationContext()
     {
         _settings = AppSettings.Load();
+        // Sync shortcut with saved preference (and heal missing/extra shortcuts).
+        StartupHelper.SetEnabled(_settings.RunAtStartup);
+
+        _appIcon = LoadAppIcon();
 
         _menu = new ContextMenuStrip();
+        var versionItem = new ToolStripMenuItem(
+            $"{AppConstants.ProductName} v{UpdateService.CurrentVersion}")
+        {
+            Enabled = false,
+        };
+        _menu.Items.Add(versionItem);
+        _menu.Items.Add(new ToolStripSeparator());
         _menu.Items.Add("Refresh now", null, (_, _) => _ = RefreshBatteryAsync());
 
         _widgetMenuItem = new ToolStripMenuItem("Show desktop widget", null, ToggleWidget)
@@ -28,6 +43,9 @@ internal sealed class TrayApplicationContext : ApplicationContext
             Checked = _settings.WidgetVisible,
         };
         _menu.Items.Add(_widgetMenuItem);
+        _menu.Items.Add(new ToolStripSeparator());
+        _menu.Items.Add("Open mouse.vxh.pl", null, (_, _) => OpenUrl(AppConstants.MouseSiteUrl));
+        _menu.Items.Add("Open UMD site", null, (_, _) => OpenUrl(AppConstants.UmdSiteUrl));
         _menu.Items.Add(new ToolStripSeparator());
         _menu.Items.Add("Settings…", null, OpenSettings);
         _menu.Items.Add(new ToolStripSeparator());
@@ -38,17 +56,71 @@ internal sealed class TrayApplicationContext : ApplicationContext
             Visible = true,
             Text = "UMD Battery - starting…",
             ContextMenuStrip = _menu,
+            Icon = _appIcon,
         };
         _trayIcon.DoubleClick += (_, _) => _ = RefreshBatteryAsync();
 
         _widget.SetPositionChangedHandler(OnWidgetMoved);
         ApplySettings(_settings, initial: true);
 
+        _bridge = new BridgeServer(
+            _settings,
+            () => _lastReading,
+            () => _reader.DeviceLabel,
+            s => ApplySettings(s));
+        _bridge.Start();
+
         _pollTimer = new System.Windows.Forms.Timer { Interval = _settings.PollIntervalSeconds * 1000 };
         _pollTimer.Tick += (_, _) => _ = RefreshBatteryAsync();
         _pollTimer.Start();
 
         _ = RefreshBatteryAsync();
+        _ = CheckUpdatesAsync();
+    }
+
+    private static Icon LoadAppIcon()
+    {
+        try
+        {
+            var exe = Environment.ProcessPath;
+            if (!string.IsNullOrWhiteSpace(exe) && File.Exists(exe))
+            {
+                var extracted = Icon.ExtractAssociatedIcon(exe);
+                if (extracted is not null)
+                    return extracted;
+            }
+        }
+        catch { /* fall through */ }
+
+        var asm = Assembly.GetExecutingAssembly();
+        var name = asm.GetManifestResourceNames()
+            .FirstOrDefault(n => n.EndsWith("app.ico", StringComparison.OrdinalIgnoreCase));
+        if (name is not null)
+        {
+            using var stream = asm.GetManifestResourceStream(name);
+            if (stream is not null)
+                return new Icon(stream);
+        }
+
+        return (Icon)SystemIcons.Application.Clone();
+    }
+
+    private static void OpenUrl(string url)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
+        }
+        catch { /* ignore */ }
+    }
+
+    private async Task CheckUpdatesAsync()
+    {
+        try
+        {
+            await new UpdateService(_settings).CheckAndApplyAsync();
+        }
+        catch { /* ignore update failures */ }
     }
 
     private void OpenSettings(object? sender, EventArgs e)
@@ -59,7 +131,11 @@ internal sealed class TrayApplicationContext : ApplicationContext
             return;
         }
 
-        _settingsForm = new SettingsForm(_settings, _widget, s => ApplySettings(s));
+        _settingsForm = new SettingsForm(_settings, _widget, s =>
+        {
+            ApplySettings(s);
+            StartupHelper.SetEnabled(s.RunAtStartup);
+        });
         _settingsForm.FormClosed += (_, _) => _settingsForm = null;
         _settingsForm.Show();
     }
@@ -141,7 +217,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         }
         else
         {
-            _trayIcon.Icon = SystemIcons.Application;
+            _trayIcon.Icon = _appIcon;
             _trayIcon.Text = error is null
                 ? "UMD Battery - no device"
                 : TrimTip($"UMD Battery - {error}");
@@ -153,7 +229,6 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
     private static string TrimTip(string text)
     {
-        // NotifyIcon.Text max ~63 chars on Windows
         return text.Length <= 63 ? text : text[..60] + "…";
     }
 
@@ -173,9 +248,11 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _pollTimer.Stop();
         _pollTimer.Dispose();
         _settingsForm?.Close();
+        _bridge.Dispose();
         _trayIcon.Visible = false;
         _trayIcon.Dispose();
         _currentIcon?.Dispose();
+        _appIcon.Dispose();
         _reader.Dispose();
         _widget.Dispose();
         base.ExitThreadCore();

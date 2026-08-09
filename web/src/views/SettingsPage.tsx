@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ClientRedirect } from '../components/ClientRedirect'
 import { Button } from '../components/Button'
 import { Select } from '../components/Select'
@@ -9,11 +9,19 @@ import { useLocale } from '../i18n/LocaleContext'
 import { LOCALES, type Locale } from '../i18n/locale'
 import { useT } from '../i18n/useT'
 import { useDeviceSession } from '../session/DeviceSessionContext'
+import {
+  fetchTrayStatus,
+  openWindowsMouseProps,
+  setTrayStartup,
+  type TrayBridgeStatus,
+} from '../lib/trayBridge'
 
 export function SettingsPage() {
   const { connected, state, apply, syncFromDriver } = useDeviceSession()
   const { locale, setLocale, lp } = useLocale()
   const tr = useT()
+  const [tray, setTray] = useState<TrayBridgeStatus | null>(null)
+  const [trayBusy, setTrayBusy] = useState(false)
 
   useEffect(() => {
     if (!connected) return
@@ -24,7 +32,25 @@ export function SettingsPage() {
     })
   }, [connected, apply, syncFromDriver])
 
+  useEffect(() => {
+    if (!connected) return
+    let cancelled = false
+    async function poll() {
+      const status = await fetchTrayStatus()
+      if (!cancelled) setTray(status)
+    }
+    void poll()
+    const id = window.setInterval(() => void poll(), 2000)
+    return () => {
+      cancelled = true
+      window.clearInterval(id)
+    }
+  }, [connected])
+
   if (!connected || !state) return <ClientRedirect href={lp('/')} />
+
+  const trayOnline = Boolean(tray?.running)
+  const runAtStartup = Boolean(tray?.runAtStartup)
 
   return (
     <div className="page">
@@ -105,24 +131,70 @@ export function SettingsPage() {
 
       <div className="panel">
         <h2 className="panel-label">{tr('settings.other')}</h2>
-        <label className={styles.check}>
+        <p className="mono muted" style={{ marginTop: 0 }}>
+          {trayOnline
+            ? tr('settings.trayOnline', {
+                v: tray?.version ?? '?',
+                n:
+                  tray?.batteryPercent != null
+                    ? String(tray.batteryPercent)
+                    : '—',
+              })
+            : tr('settings.trayOffline')}
+        </p>
+
+        <label
+          className={styles.check}
+          style={{ opacity: trayOnline ? 1 : 0.45 }}
+        >
           <input
             type="checkbox"
-            checked={state.settings.runOnBoot}
+            disabled={!trayOnline || trayBusy}
+            checked={trayOnline ? runAtStartup : false}
             onChange={(e) => {
-              void apply((d) =>
-                d.patchSettings({ runOnBoot: e.target.checked }),
-              )
+              const enabled = e.target.checked
+              setTrayBusy(true)
+              void setTrayStartup(enabled)
+                .then((ok) => {
+                  if (ok) {
+                    setTray((prev) =>
+                      prev ? { ...prev, runAtStartup: enabled } : prev,
+                    )
+                    void apply((d) => d.patchSettings({ runOnBoot: enabled }))
+                  }
+                })
+                .finally(() => setTrayBusy(false))
             }}
           />
           {tr('settings.boot')}
         </label>
-        <p style={{ marginTop: 14 }}>
+
+        {!trayOnline && (
+          <p style={{ marginTop: 10, marginBottom: 0 }}>
+            <a href="/api/downloads/UmdBatteryTray.exe">
+              {tr('settings.trayDownloadRun')}
+            </a>
+          </p>
+        )}
+
+        <p style={{ marginTop: 14, marginBottom: 0 }}>
+          <a href="https://mouse.vxh.pl" target="_blank" rel="noreferrer">
+            {tr('settings.mouseSite')}
+          </a>
+        </p>
+
+        <p style={{ marginTop: 10, marginBottom: 0 }}>
           <a
             href="#"
             onClick={(e) => {
               e.preventDefault()
-              window.alert(tr('settings.winMouseAlert'))
+              if (!trayOnline) {
+                window.alert(tr('settings.winMouseAlert'))
+                return
+              }
+              void openWindowsMouseProps().then((ok) => {
+                if (!ok) window.alert(tr('settings.winMouseAlert'))
+              })
             }}
           >
             {tr('settings.winMouse')}
