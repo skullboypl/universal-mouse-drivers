@@ -16,6 +16,21 @@ export function downloadsDir(): string {
   return path.join(dataDir(), 'downloads')
 }
 
+/** Ship-with-image downloads (survives empty CapRover persistent /app/data). */
+export function bundledDownloadsDir(): string {
+  if (process.env.BUNDLED_DOWNLOADS_DIR) return process.env.BUNDLED_DOWNLOADS_DIR
+  return path.resolve(process.cwd(), 'bundled-downloads')
+}
+
+export function resolveDownloadFile(filename: string): string | null {
+  ensureDataDirs()
+  const persistent = path.join(downloadsDir(), filename)
+  if (fs.existsSync(persistent)) return persistent
+  const bundled = path.join(bundledDownloadsDir(), filename)
+  if (fs.existsSync(bundled)) return bundled
+  return null
+}
+
 export function ensureDataDirs() {
   fs.mkdirSync(dataDir(), { recursive: true })
   fs.mkdirSync(downloadsDir(), { recursive: true })

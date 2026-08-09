@@ -4,7 +4,7 @@ import { AdminButtonsEditor } from '@/components/admin/AdminButtonsEditor'
 import { AdminLoginForm } from '@/components/admin/AdminLoginForm'
 import { AdminLogoutButton } from '@/components/admin/AdminLogoutButton'
 import { getAdminSession } from '@/lib/auth'
-import { downloadsDir } from '@/lib/paths'
+import { bundledDownloadsDir, downloadsDir, resolveDownloadFile } from '@/lib/paths'
 import { getButtonLayout, getDownloadMeta } from '@/lib/store'
 
 export const dynamic = 'force-dynamic'
@@ -26,8 +26,13 @@ export default async function AdminPage() {
   const buttonsLayout = getButtonLayout('king-ultra')
   const heroLayout = getButtonLayout('king-ultra-hero')
   const tray = getDownloadMeta('trayBattery')
-  const trayPath = tray ? path.join(downloadsDir(), tray.filename) : null
-  const trayPresent = trayPath ? fs.existsSync(trayPath) : false
+  const trayResolved = tray ? resolveDownloadFile(tray.filename) : null
+  const trayPresent = Boolean(trayResolved)
+  const traySource = trayResolved
+    ? trayResolved.startsWith(bundledDownloadsDir())
+      ? 'bundled (image)'
+      : 'persistent /app/data/downloads'
+    : 'missing'
 
   return (
     <>
@@ -45,16 +50,18 @@ export default async function AdminPage() {
       <section className="panel" style={{ marginBottom: 16 }}>
         <h2 className="panel-label">Tray Battery (.exe)</h2>
         <p className="muted" style={{ marginTop: 0 }}>
-          Plik w Persistent Directory:{' '}
+          Źródło: <code className="mono">{traySource}</code>
+          <br />
+          Override (opcjonalnie):{' '}
           <code className="mono">
-            /app/data/downloads/{tray?.filename}
+            {downloadsDir()}/{tray?.filename}
           </code>
         </p>
         <p className="mono">
           status:{' '}
           {trayPresent
             ? 'OK - dostępny do pobrania'
-            : 'BRAK - wgraj signed exe'}
+            : 'BRAK - brak w bundled-downloads i persistent'}
           {tray?.signed ? ' · EV signed' : ' · unsigned'}
           {tray?.version ? ` · v${tray.version}` : ''}
         </p>

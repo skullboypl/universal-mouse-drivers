@@ -24,8 +24,8 @@
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
       "version": "1.0.0",
-      "signed": false,
-      "notes": "Upload signed EV exe into Persistent Directory /app/data/downloads/"
+      "signed": true,
+      "notes": "EV-signed; shipped in image bundled-downloads/ (override via /app/data/downloads/)"
     }
   }
 }

@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { NextResponse } from 'next/server'
-import { downloadsDir, ensureDataDirs } from '@/lib/paths'
+import { resolveDownloadFile } from '@/lib/paths'
 import { getDownloadMeta, readStore } from '@/lib/store'
 
 export const runtime = 'nodejs'
@@ -24,7 +24,6 @@ export async function GET(
     return NextResponse.json({ error: 'Bad filename' }, { status: 400 })
   }
 
-  ensureDataDirs()
   const store = readStore()
   const allowed = Object.values(store.downloads).some((d) => d.filename === file)
   // Also allow direct UmdBatteryTray.exe even if meta missing
@@ -33,13 +32,13 @@ export async function GET(
     return NextResponse.json({ error: 'Unknown download' }, { status: 404 })
   }
 
-  const full = path.join(downloadsDir(), file)
-  if (!fs.existsSync(full)) {
+  const full = resolveDownloadFile(file)
+  if (!full) {
     const meta = Object.values(store.downloads).find((d) => d.filename === file)
     return NextResponse.json(
       {
         error: 'File not uploaded yet',
-        hint: `Place ${file} in CapRover Persistent Directory /app/data/downloads/`,
+        hint: `Missing ${file} in image bundled-downloads/ and /app/data/downloads/`,
         meta: meta ?? getDownloadMeta('trayBattery'),
       },
       { status: 404 },

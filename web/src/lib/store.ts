@@ -75,9 +75,9 @@ function defaultStore(): UmdStore {
         filename: 'UmdBatteryTray.exe',
         displayName: 'UMD Battery Tray',
         version: '1.0.0',
-        signed: false,
+        signed: true,
         notes:
-          'Upload EV-signed exe to Persistent Directory /app/data/downloads/',
+          'EV-signed; shipped in image bundled-downloads/ (override via /app/data/downloads/)',
       },
     },
   }

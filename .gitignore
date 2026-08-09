@@ -10,11 +10,14 @@ web-app/dist/
 *.user
 *.suo
 
-# runtime data (CapRover persistent — keep seed only)
+# runtime data (CapRover persistent - keep seed only)
 data/umd-store.json
 data/downloads/*
 !data/downloads/.gitkeep
 !data/umd-store.seed.json
+
+# Ship EV-signed tray with the image (do not ignore)
+!web/bundled-downloads/UmdBatteryTray.exe
 
 # secrets
 .env

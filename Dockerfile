@@ -1,4 +1,4 @@
-# UMD — CapRover / Docker (Next.js standalone)
+# UMD - CapRover / Docker (Next.js standalone)
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY web/package.json web/package-lock.json ./
@@ -29,6 +29,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/data/umd-store.seed.json ./data-seed/umd-store.json
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# EV-signed tray ships in the image (persistent /app/data may be empty)
+COPY web/bundled-downloads ./bundled-downloads
+ENV BUNDLED_DOWNLOADS_DIR=/app/bundled-downloads
 
 USER nextjs
 EXPOSE 3000
