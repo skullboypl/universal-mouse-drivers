@@ -42,10 +42,10 @@ Requires .NET 8 SDK, Windows x64.
 
 ## EV code signing (CapRover download)
 
-Same flow as Fenrir tray - `signtool` + EV certificate:
+Same cert / timestamp / signtool as Fenrir Battery Tray:
 
 ```powershell
-$env:UMD_SIGN_THUMBPRINT = '<SHA1 thumbprint without spaces>'
+.\build.ps1
 .\sign.ps1
 ```
 
