@@ -1,5 +1,3 @@
-import fs from 'node:fs'
-import path from 'node:path'
 import { AdminButtonsEditor } from '@/components/admin/AdminButtonsEditor'
 import { AdminLoginForm } from '@/components/admin/AdminLoginForm'
 import { AdminLogoutButton } from '@/components/admin/AdminLogoutButton'
