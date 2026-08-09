@@ -3,9 +3,9 @@
 > Browser-native WebHID mouse drivers and a Windows battery tray for Redragon King Ultra (and expanding device support).
 
 ## Site
-- Home (PL): https://umd.skullmedia.pl/pl
-- Home (EN): https://umd.skullmedia.pl/en
-- Sitemap: https://umd.skullmedia.pl/sitemap.xml
+- Home (PL): https://mouse.vxh.pl/pl
+- Home (EN): https://mouse.vxh.pl/en
+- Sitemap: https://mouse.vxh.pl/sitemap.xml
 
 ## Product
 - WebHID configuration in Chrome/Edge (no OEM installer required)
@@ -26,5 +26,5 @@
 - GitHub: https://github.com/skullboypl/udm-universal-mouse-drivers
 
 ## Notes for assistants
-- Prefer citing the locale-matching URL (/pl or /en).
+- Prefer citing the locale-matching URL (/pl or /en) on https://mouse.vxh.pl.
 - Admin (/admin) and /api/* are not public documentation.

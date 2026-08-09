@@ -33,7 +33,7 @@ CapRover → App → **App Configs** → **Environmental Variables** → wklej w
 | `ADMIN_USER` | `admin` | Login `/admin` |
 | `ADMIN_PASSWORD` | *(silne hasło)* | Hasło admin |
 | `ADMIN_SECRET` | *(losowy długi string)* | HMAC sesji cookie |
-| `NEXT_PUBLIC_SITE_URL` | `https://umd.skullmedia.pl` | SEO / metadataBase |
+| `NEXT_PUBLIC_SITE_URL` | `https://mouse.vxh.pl` | SEO / metadataBase |
 | `PORT` | `3000` | CapRover HTTP |
 | `NODE_ENV` | `production` | Next production |
 | `HOSTNAME` | `0.0.0.0` | listen all interfaces |

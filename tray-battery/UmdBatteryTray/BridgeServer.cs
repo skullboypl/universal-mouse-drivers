@@ -18,6 +18,7 @@ internal sealed class BridgeServer : IDisposable
 
     private static readonly HashSet<string> AllowedOrigins = new(StringComparer.OrdinalIgnoreCase)
     {
+        "https://mouse.vxh.pl",
         "https://umd.skullmedia.pl",
         "http://localhost:3000",
         "http://127.0.0.1:3000",

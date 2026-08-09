@@ -34,7 +34,7 @@ internal sealed class AppSettings
     // Autostart UMD Battery Tray with Windows (Startup folder shortcut).
     public bool RunAtStartup { get; set; }
 
-    // Check umd.skullmedia.pl for a newer EXE on launch.
+    // Check mouse.vxh.pl for a newer EXE on launch.
     public bool AutoUpdateOnStart { get; set; } = true;
 
     public string UpdateBaseUrl { get; set; } = AppConstants.DefaultUpdateBaseUrl;

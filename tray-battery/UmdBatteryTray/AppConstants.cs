@@ -7,6 +7,6 @@ internal static class AppConstants
     public const string MouseSiteUrl = "https://mouse.vxh.pl";
     // Alias of MouseSiteUrl — UMD and mouse.vxh.pl are the same.
     public const string UmdSiteUrl = "https://mouse.vxh.pl";
-    public const string DefaultUpdateBaseUrl = "https://umd.skullmedia.pl";
+    public const string DefaultUpdateBaseUrl = "https://mouse.vxh.pl";
     public const int BridgePort = 17355;
 }

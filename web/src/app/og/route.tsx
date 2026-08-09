@@ -126,7 +126,7 @@ export async function GET(req: NextRequest) {
           }}
         >
           <div>WebHID · King Ultra · {lang.toUpperCase()}</div>
-          <div>umd.skullmedia.pl</div>
+          <div>mouse.vxh.pl</div>
         </div>
       </div>
     ),
