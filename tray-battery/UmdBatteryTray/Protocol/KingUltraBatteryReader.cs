@@ -3,7 +3,7 @@ using HidSharp;
 namespace UmdBatteryTray.Protocol;
 
 /// <summary>
-/// Native HID battery reader for King Ultra — mirrors web-app protocol.ts + tools/king_ultra_hid_probe.py.
+/// Native HID battery reader for King Ultra - mirrors web-app protocol.ts + tools/king_ultra_hid_probe.py.
 /// OEM channel: Output report id=8, 16-byte payload (WriteFile 17 bytes with report id).
 /// Do NOT OR 0x80 into dataLen on F54F (empty dongle echoes).
 /// </summary>
@@ -59,7 +59,7 @@ internal sealed class KingUltraBatteryReader : IDisposable
         }
 
         throw new InvalidOperationException(
-            "Battery reply empty — wake the mouse / move it, then refresh.");
+            "Battery reply empty - wake the mouse / move it, then refresh.");
     }
 
     public void Disconnect()
@@ -177,7 +177,7 @@ internal sealed class KingUltraBatteryReader : IDisposable
 
     /// <summary>
     /// 17-byte OEM WriteFile: [reportId=8, cmd, status, addrHi, addrLo, flags, data×10, ck].
-    /// Checksum = (0x55 - sum(bytes[0..15])) &amp; 0xff — same as probe cksum().
+    /// Checksum = (0x55 - sum(bytes[0..15])) &amp; 0xff - same as probe cksum().
     /// </summary>
     internal static byte[] BuildWire(
         byte cmd,

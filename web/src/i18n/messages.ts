@@ -157,16 +157,16 @@ const en: Dict = {
   'nav.settings': 'Settings',
   'nav.disconnect': 'Disconnect',
   'connect.lede':
-    'WebHID drivers in the browser — connect a supported mouse, keep drafts locally, expand the list with the community.',
+    'WebHID drivers in the browser - connect a supported mouse, keep drafts locally, expand the list with the community.',
   'connect.demo': 'Try demo profile',
   'connect.webhid': 'Connect via WebHID',
   'connect.hint':
-    'Only whitelisted VID:PID pairs are requested. Prefer the vendor/dongle interface (Output reports) — not the plain “HID-compliant mouse”.',
+    'Only whitelisted VID:PID pairs are requested. Prefer the vendor/dongle interface (Output reports) - not the plain “HID-compliant mouse”.',
   'connect.noWebHid': 'WebHID needs Chrome or Edge on localhost / HTTPS.',
   'connect.savedTitle': 'Saved devices',
   'connect.savedSub':
     'Mice you already authorized in this browser. Click to reconnect.',
-  'connect.savedEmpty': 'No saved HID devices yet — connect once to pin one here.',
+  'connect.savedEmpty': 'No saved HID devices yet - connect once to pin one here.',
   'connect.supportedTitle': 'Supported devices',
   'connect.supportedSub':
     'Live means full write path. WIP means UI + protocol RE. Planned means next in queue.',
@@ -177,11 +177,11 @@ const en: Dict = {
   'connect.contactBody':
     'Send the model, Windows driver package link, and VID:PID. We will review adding it to UMD.',
   'connect.contactBarter':
-    'You can also ship your mouse for testing as a barter — DM on TikTok',
+    'You can also ship your mouse for testing as a barter - DM on TikTok',
   'connect.trayDownload': 'Download UMD Battery Tray (Windows .exe)',
   'buttons.title': 'Button mapping',
   'buttons.sub':
-    'Profiles, binds, debounce — changes auto-save after a short delay.',
+    'Profiles, binds, debounce - changes auto-save after a short delay.',
   'buttons.profile': 'Profile',
   'buttons.profileN': 'Profile {n}',
   'buttons.restore': 'Restore',
@@ -191,7 +191,7 @@ const en: Dict = {
   'buttons.debounce': 'Debounce time',
   'buttons.debounceEnable': 'Enable debounce',
   'buttons.debounceTip':
-    'Off writes 0 ms to the mouse. Lower values can cause double-clicks — OEM warns below 8 ms.',
+    'Off writes 0 ms to the mouse. Lower values can cause double-clicks - OEM warns below 8 ms.',
   'buttons.mapHint':
     'Numbers match physical buttons (OEM layout). Click a number or change the bind below.',
   'buttons.off': 'off',
@@ -212,10 +212,10 @@ const en: Dict = {
     'How many DPI levels you can cycle with the DPI button (1–7).',
   'sensor.activeStage': 'Edit stage',
   'sensor.activeStageTip':
-    'Which stage you are editing now — also becomes the active stage on the mouse.',
+    'Which stage you are editing now - also becomes the active stage on the mouse.',
   'sensor.stage': 'Stage',
   'sensor.dpiSliderTip':
-    'Drag freely — the value updates live. The mouse is written only after you pause (debounce).',
+    'Drag freely - the value updates live. The mouse is written only after you pause (debounce).',
   'sensor.reportRate': 'Report rate',
   'sensor.reportRateTip':
     'How often the mouse reports position to the PC (Hz). Higher = lower latency, more power use.',
@@ -223,13 +223,13 @@ const en: Dict = {
   'sensor.mode': 'Mode select',
   'sensor.modeTip':
     'LP: low power. HP: high performance. Corded: max mode when plugged in or at 2 kHz+ polling.',
-  'sensor.modeLp': 'LP — low power',
-  'sensor.modeHp': 'HP — high performance',
+  'sensor.modeLp': 'LP - low power',
+  'sensor.modeHp': 'HP - high performance',
   'sensor.modeCorded': 'Corded',
   'sensor.modeCordedLocked': 'needs 2 kHz+ or USB',
   'sensor.lod': 'LOD',
   'sensor.lodTip':
-    'Lift-off distance — how high you must lift the mouse before tracking stops.',
+    'Lift-off distance - how high you must lift the mouse before tracking stops.',
   'sensor.peak': 'Peak Performance',
   'sensor.peakTip':
     'Keeps the sensor LED bright and tracking at maximum performance for a limited time.',
@@ -248,7 +248,7 @@ const en: Dict = {
   'sensor.motionTip':
     'Aligns sensor samples with the USB report rate for more consistent feel.',
   'macro.title': 'Macro',
-  'macro.sub': 'Record and edit macros — assign them from Buttons.',
+  'macro.sub': 'Record and edit macros - assign them from Buttons.',
   'macro.list': 'Macros list',
   'macro.keys': 'Keys list',
   'macro.new': 'New macro',
@@ -304,16 +304,16 @@ const en: Dict = {
   'status.saving': 'Saving…',
   'status.saved': 'Saved',
   'status.saveError': 'Save error',
-  'status.mock': 'Demo profile online — local draft + auto-save',
+  'status.mock': 'Demo profile online - local draft + auto-save',
   'status.webhid':
-    'WebHID connected — local draft auto-saves; device writes use RE protocol',
+    'WebHID connected - local draft auto-saves; device writes use RE protocol',
   'status.connectingDemo': 'Connecting demo…',
   'status.selectMouse': 'Select a supported mouse…',
   'status.syncing': 'syncing…',
   'status.disconnected': 'Device disconnected',
   'status.applyFailed': 'Apply failed',
   'status.webhidFailed': 'WebHID connect failed',
-  'status.battUnknown': 'batt —',
+  'status.battUnknown': 'batt -',
   'footer.language': 'Language',
   'write.queued': 'Write queued…',
   'write.writing': 'Writing to mouse…',
@@ -328,18 +328,18 @@ const pl: Dict = {
   'nav.settings': 'Ustawienia',
   'nav.disconnect': 'Rozłącz',
   'connect.lede':
-    'Sterowniki WebHID w przeglądarce — podłącz wspieraną mysz, trzymaj draft lokalnie, rozwijaj listę ze społecznością.',
+    'Sterowniki WebHID w przeglądarce - podłącz wspieraną mysz, trzymaj draft lokalnie, rozwijaj listę ze społecznością.',
   'connect.demo': 'Profil demo',
   'connect.webhid': 'Połącz przez WebHID',
   'connect.hint':
-    'Tylko dozwolone pary VID:PID. Wybierz interfejs vendor/dongle (z Output reports) — nie zwykłą „HID-compliant mouse”.',
+    'Tylko dozwolone pary VID:PID. Wybierz interfejs vendor/dongle (z Output reports) - nie zwykłą „HID-compliant mouse”.',
   'connect.noWebHid':
     'WebHID wymaga Chrome lub Edge na localhost / HTTPS.',
   'connect.savedTitle': 'Zapisane urządzenia',
   'connect.savedSub':
     'Myszy już autoryzowane w tej przeglądarce. Kliknij, żeby połączyć ponownie.',
   'connect.savedEmpty':
-    'Brak zapisanych HID — połącz raz, żeby przypiąć urządzenie tutaj.',
+    'Brak zapisanych HID - połącz raz, żeby przypiąć urządzenie tutaj.',
   'connect.supportedTitle': 'Wspierane urządzenia',
   'connect.supportedSub':
     'Live = pełny zapis. WIP = UI + reverse engineering protokołu. Planned = w kolejce.',
@@ -350,11 +350,11 @@ const pl: Dict = {
   'connect.contactBody':
     'Napisz model, link do sterownika Windows i VID:PID. Sprawdzimy dodanie do UMD.',
   'connect.contactBarter':
-    'Możesz też wysłać myszkę na testy w ramach barteru — napisz na TikToku',
+    'Możesz też wysłać myszkę na testy w ramach barteru - napisz na TikToku',
   'connect.trayDownload': 'Pobierz UMD Battery Tray (Windows .exe)',
   'buttons.title': 'Mapowanie przycisków',
   'buttons.sub':
-    'Profile, przypisania, debounce — zmiany zapisują się automatycznie po chwili.',
+    'Profile, przypisania, debounce - zmiany zapisują się automatycznie po chwili.',
   'buttons.profile': 'Profil',
   'buttons.profileN': 'Profil {n}',
   'buttons.restore': 'Przywróć',
@@ -364,7 +364,7 @@ const pl: Dict = {
   'buttons.debounce': 'Czas debounce',
   'buttons.debounceEnable': 'Włącz debounce',
   'buttons.debounceTip':
-    'Wyłączenie zapisuje 0 ms na mysz. Za nisko = double-click — OEM ostrzega poniżej 8 ms.',
+    'Wyłączenie zapisuje 0 ms na mysz. Za nisko = double-click - OEM ostrzega poniżej 8 ms.',
   'buttons.mapHint':
     'Cyfry = fizyczne przyciski (układ OEM). Kliknij numer albo zmień przypisanie poniżej.',
   'buttons.off': 'wył.',
@@ -385,24 +385,24 @@ const pl: Dict = {
     'Ile poziomów DPI możesz przełączać przyciskiem DPI (1–7).',
   'sensor.activeStage': 'Edytowany poziom',
   'sensor.activeStageTip':
-    'Który poziom teraz edytujesz — staje się też aktywnym poziomem na myszy.',
+    'Który poziom teraz edytujesz - staje się też aktywnym poziomem na myszy.',
   'sensor.stage': 'Poziom',
   'sensor.dpiSliderTip':
-    'Przesuwaj swobodnie — wartość w UI jest natychmiastowa. Zapis na mysz dopiero gdy przestaniecie ruszać suwakiem.',
+    'Przesuwaj swobodnie - wartość w UI jest natychmiastowa. Zapis na mysz dopiero gdy przestaniecie ruszać suwakiem.',
   'sensor.reportRate': 'Częstotliwość raportowania',
   'sensor.reportRateTip':
     'Jak często mysz wysyła pozycję do PC (Hz). Wyżej = niższa latencja, większy pobór energii.',
   'sensor.sensorSetting': 'Ustawienia sensora',
   'sensor.mode': 'Tryb sensora',
   'sensor.modeTip':
-    'LP: niski pobór. HP: wysoka wydajność. Corded: tryb przewodowy / max — dostępny przy USB albo pollingu ≥ 2 kHz.',
-  'sensor.modeLp': 'LP — niski pobór',
-  'sensor.modeHp': 'HP — wysoka wydajność',
+    'LP: niski pobór. HP: wysoka wydajność. Corded: tryb przewodowy / max - dostępny przy USB albo pollingu ≥ 2 kHz.',
+  'sensor.modeLp': 'LP - niski pobór',
+  'sensor.modeHp': 'HP - wysoka wydajność',
   'sensor.modeCorded': 'Przewodowy',
   'sensor.modeCordedLocked': 'wymaga 2 kHz+ lub USB',
   'sensor.lod': 'LOD',
   'sensor.lodTip':
-    'Lift-off distance — od jakiej wysokości nad podkładką sensor przestaje śledzić ruch.',
+    'Lift-off distance - od jakiej wysokości nad podkładką sensor przestaje śledzić ruch.',
   'sensor.peak': 'Peak Performance',
   'sensor.peakTip':
     'Sensor świeci mocniej i działa w trybie maksymalnej wydajności przez ograniczony czas.',
@@ -419,9 +419,9 @@ const pl: Dict = {
     'Przyciąga prawie poziome / pionowe ruchy do prostej linii. Do FPS zwykle lepiej wyłączyć.',
   'sensor.motion': 'Motion sync',
   'sensor.motionTip':
-    'Synchronizuje próbki sensora z częstotliwością USB — bardziej równe odczucie.',
+    'Synchronizuje próbki sensora z częstotliwością USB - bardziej równe odczucie.',
   'macro.title': 'Makro',
-  'macro.sub': 'Nagrywaj i edytuj makro — przypisz je w Przyciskach.',
+  'macro.sub': 'Nagrywaj i edytuj makro - przypisz je w Przyciskach.',
   'macro.list': 'Lista makro',
   'macro.keys': 'Lista klawiszy',
   'macro.new': 'Nowe makro',
@@ -477,16 +477,16 @@ const pl: Dict = {
   'status.saving': 'Zapisywanie…',
   'status.saved': 'Zapisano',
   'status.saveError': 'Błąd zapisu',
-  'status.mock': 'Profil demo online — draft lokalny + auto-zapis',
+  'status.mock': 'Profil demo online - draft lokalny + auto-zapis',
   'status.webhid':
-    'WebHID połączony — auto-zapis lokalny; zapis do myszy przez protokół RE',
+    'WebHID połączony - auto-zapis lokalny; zapis do myszy przez protokół RE',
   'status.connectingDemo': 'Łączenie z demo…',
   'status.selectMouse': 'Wybierz wspieraną mysz…',
   'status.syncing': 'synchronizacja…',
   'status.disconnected': 'Urządzenie rozłączone',
   'status.applyFailed': 'Nie udało się zastosować',
   'status.webhidFailed': 'Połączenie WebHID nieudane',
-  'status.battUnknown': 'bat. —',
+  'status.battUnknown': 'bat. -',
   'footer.language': 'Język',
   'write.queued': 'Zapis za chwilę…',
   'write.writing': 'Zapisuję na mysz…',

@@ -1,11 +1,11 @@
 import type { DeviceIdentity } from '../types'
 
-/** Hard whitelist — never include Fenrir (33E4) or Wooting (31E3). */
+/** Hard whitelist - never include Fenrir (33E4) or Wooting (31E3). */
 export const KING_ULTRA_IDENTITY: DeviceIdentity = {
   id: 'redragon-king-ultra',
   brand: 'Redragon',
   model: 'King Ultra (M916OB-ULT)',
-  tagline: '3-mode PAW3950 — WebHID protocol in progress',
+  tagline: '3-mode PAW3950 - WebHID protocol in progress',
   vendorId: 0x3554,
   productIds: [0xf54d, 0xf54f, 0xf510],
   hidIds: ['3554:F54D', '3554:F54F', '3554:F510'],

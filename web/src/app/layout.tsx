@@ -6,13 +6,13 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || 'https://umd.skullmedia.pl',
   ),
   title: {
-    default: 'UMD — Universal Mouse Drivers',
+    default: 'UMD - Universal Mouse Drivers',
     template: '%s · UMD',
   },
   description:
-    'WebHID drivers and battery tray for gaming mice — Redragon King Ultra and more.',
+    'WebHID drivers and battery tray for gaming mice - Redragon King Ultra and more.',
   openGraph: {
-    title: 'UMD — Universal Mouse Drivers',
+    title: 'UMD - Universal Mouse Drivers',
     description:
       'Browser-native HID control + Windows tray battery for supported mice.',
     type: 'website',

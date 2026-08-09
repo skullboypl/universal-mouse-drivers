@@ -11,8 +11,8 @@ export async function generateMetadata({
   const pl = lang === 'pl'
   return {
     title: pl
-      ? 'Połącz mysz — Universal Mouse Drivers'
-      : 'Connect mouse — Universal Mouse Drivers',
+      ? 'Połącz mysz - Universal Mouse Drivers'
+      : 'Connect mouse - Universal Mouse Drivers',
     description: pl
       ? 'Sterowniki WebHID w przeglądarce i tray baterii dla King Ultra.'
       : 'Browser WebHID drivers and battery tray for King Ultra.',

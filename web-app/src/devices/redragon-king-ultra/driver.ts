@@ -95,8 +95,8 @@ export class KingUltraDriver {
         connection: transport.kind === 'mock' ? 'wireless' : 'unknown',
         charging: transport.kind === 'mock',
         batteryPercent: transport.kind === 'mock' ? 42 : null,
-        receiverFirmware: transport.kind === 'mock' ? 'v2.15' : '—',
-        mouseFirmware: transport.kind === 'mock' ? 'v2.18' : '—',
+        receiverFirmware: transport.kind === 'mock' ? 'v2.15' : '-',
+        mouseFirmware: transport.kind === 'mock' ? 'v2.18' : '-',
       },
     }
     // CLI probe (tools/king_ultra_hid_probe.py): OR 0x80 into dataLen makes the
@@ -162,7 +162,7 @@ export class KingUltraDriver {
       umdLog(
         'driver',
         'warn',
-        'battery ack empty — dongle echo only; move mouse / wake it',
+        'battery ack empty - dongle echo only; move mouse / wake it',
       )
     }
   }
@@ -212,7 +212,7 @@ export class KingUltraDriver {
       if (!ack) continue
       const ver = decodeVersionReport(ack, expectCmd)
       if (ver) return ver.firmware
-      // Follow-up may have overwritten lastAck with a different cmd — try loose parse
+      // Follow-up may have overwritten lastAck with a different cmd - try loose parse
       const loose = decodeVersionReport(ack)
       if (loose && loose.commandId === expectCmd) return loose.firmware
       await sleep(80)
@@ -573,7 +573,7 @@ export class KingUltraDriver {
         this.lastWriteOk = ok
         this.lastVerifyNote = ok
           ? `Button ${buttonId} → ${action} verified`
-          : `Button ${buttonId} NOT in flash — wake mouse`
+          : `Button ${buttonId} NOT in flash - wake mouse`
         if (!ok) this.lastWriteError = this.lastVerifyNote
       }
     })
@@ -631,7 +631,7 @@ export class KingUltraDriver {
       if (ok) notes.push(label)
       else {
         allOk = false
-        this.lastWriteError = `${label} NOT in flash — wake mouse / close OEM`
+        this.lastWriteError = `${label} NOT in flash - wake mouse / close OEM`
         umdLog('driver', 'error', this.lastWriteError, { address, value })
       }
     }
@@ -838,7 +838,7 @@ export class KingUltraDriver {
       this.lastWriteOk = ok
       this.lastVerifyNote = ok
         ? `DPI ${pending.value} verified in mouse flash`
-        : 'DPI NOT in flash — wake mouse / close OEM software'
+        : 'DPI NOT in flash - wake mouse / close OEM software'
       if (!ok) this.lastWriteError = this.lastVerifyNote
       umdLog('driver', ok ? 'info' : 'error', this.lastVerifyNote, {
         stageOk,

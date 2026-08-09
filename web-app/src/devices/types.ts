@@ -110,6 +110,6 @@ export interface DeviceIdentity {
   sensor?: string
   /** Product art for buttons/connect when this device is active. */
   imageUrl?: string
-  /** Brand / product logo — used as blurred backdrop behind device UI. */
+  /** Brand / product logo - used as blurred backdrop behind device UI. */
   logoUrl?: string
 }

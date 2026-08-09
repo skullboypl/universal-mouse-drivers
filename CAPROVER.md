@@ -1,4 +1,4 @@
-# CapRover — UMD
+# CapRover - UMD
 
 Repo: `https://github.com/skullboypl/udm-universal-mouse-drivers.git`
 
@@ -18,8 +18,8 @@ W **App Configs** → **Persistent Directories**:
 
 Tu ląduje **jeden plik DB/config**:
 
-- `/app/data/umd-store.json` — pozycje badge 1–6, meta downloadów
-- `/app/data/downloads/UmdBatteryTray.exe` — signed tray do pobrania
+- `/app/data/umd-store.json` - pozycje badge 1–6, meta downloadów
+- `/app/data/downloads/UmdBatteryTray.exe` - signed tray do pobrania
 
 ## Environment Variables
 

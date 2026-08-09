@@ -10,7 +10,7 @@ internal enum BatteryStatus
 
 internal readonly record struct BatteryReading(int Percent, BatteryStatus Status);
 
-/// <summary>Redragon King Ultra (M916OB-ULT) — same whitelist as web-app identity.ts.</summary>
+/// <summary>Redragon King Ultra (M916OB-ULT) - same whitelist as web-app identity.ts.</summary>
 internal static class KingUltraConstants
 {
     public const int VendorId = 0x3554;

@@ -129,7 +129,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       const d = driverRef.current
       if (!d) return
       try {
-        // Sensor/DPI writers are sync + debounced — do not block the slider on HID.
+        // Sensor/DPI writers are sync + debounced - do not block the slider on HID.
         const result = fn(d)
         setState(cloneState(d.getState()))
         scheduleAutoSave()
@@ -193,7 +193,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         }
         mergeDraft(d)
         d.patchSettings({ language: uiLocale() })
-        // Open UI immediately — flash map + FW sync in background.
+        // Open UI immediately - flash map + FW sync in background.
         transportKindRef.current = 'webhid'
         setTransportKind('webhid')
         publish(d)

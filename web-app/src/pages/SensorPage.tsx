@@ -84,7 +84,7 @@ export function SensorPage() {
                 .filter((s) => s.enabled)
                 .map((s) => (
                   <option key={s.index} value={String(s.index)}>
-                    {s.index + 1} — {s.value}
+                    {s.index + 1} - {s.value}
                   </option>
                 ))}
             </Select>
@@ -99,7 +99,7 @@ export function SensorPage() {
               alignSelf: 'end',
             }}
           >
-            {stage?.value ?? '—'} DPI
+            {stage?.value ?? '-'} DPI
           </div>
         </div>
         <Tip text={tr('sensor.dpiSliderTip')} />

@@ -1,7 +1,7 @@
 import type { DeviceState } from '../types'
 import { KING_ULTRA_BUTTONS } from './buttons'
 
-/** Soft stage markers — muted so the sensor UI stays calm. */
+/** Soft stage markers - muted so the sensor UI stays calm. */
 export const DPI_STAGE_COLORS = [
   '#8a6a52',
   '#6a7a62',
@@ -54,8 +54,8 @@ export function createDefaultState(): DeviceState {
     },
     info: {
       driveVersion: '0.1.0-web',
-      receiverFirmware: '—',
-      mouseFirmware: '—',
+      receiverFirmware: '-',
+      mouseFirmware: '-',
       batteryPercent: null,
       charging: true,
       connection: 'unknown',

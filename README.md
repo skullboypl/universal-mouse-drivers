@@ -1,4 +1,4 @@
-# UMD — Universal Mouse Drivers
+# UMD - Universal Mouse Drivers
 
 WebHID configurator (Next.js) + Windows battery tray for OEM gaming mice when factory tools fall short.
 

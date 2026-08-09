@@ -52,8 +52,8 @@ export default async function AdminPage() {
         <p className="mono">
           status:{' '}
           {trayPresent
-            ? 'OK — dostępny do pobrania'
-            : 'BRAK — wgraj signed exe'}
+            ? 'OK - dostępny do pobrania'
+            : 'BRAK - wgraj signed exe'}
           {tray?.signed ? ' · EV signed' : ' · unsigned'}
           {tray?.version ? ` · v${tray.version}` : ''}
         </p>

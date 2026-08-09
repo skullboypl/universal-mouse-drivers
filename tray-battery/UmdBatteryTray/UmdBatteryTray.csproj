@@ -10,7 +10,7 @@
     <AssemblyName>UmdBatteryTray</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Version>1.0.0</Version>
-    <Company>UMD — Universal Mouse Drivers</Company>
+    <Company>UMD - Universal Mouse Drivers</Company>
     <Product>UMD Battery Tray</Product>
     <Description>System tray + desktop widget battery monitor for UMD-supported mice (HID)</Description>
   </PropertyGroup>

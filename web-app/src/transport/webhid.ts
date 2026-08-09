@@ -26,7 +26,7 @@ interface HIDReportItem {
 
 function assertWebHid(): HID {
   if (!navigator.hid) {
-    throw new Error('WebHID unavailable — use Chrome/Edge on HTTPS or localhost')
+    throw new Error('WebHID unavailable - use Chrome/Edge on HTTPS or localhost')
   }
   return navigator.hid
 }
@@ -198,12 +198,12 @@ export function createWebHidTransport(): WebHidTransport {
     if (!out && !feat) {
       await selected.close().catch(() => undefined)
       throw new Error(
-        'No HID Output/Feature reports — pick the 8K receiver / vendor interface',
+        'No HID Output/Feature reports - pick the 8K receiver / vendor interface',
       )
     }
     if (out) {
       outputReportId = out.reportId
-      // Do NOT inflate past descriptor — OEM channel is exactly 16 payload bytes
+      // Do NOT inflate past descriptor - OEM channel is exactly 16 payload bytes
       outputPayloadSize = out.payloadSize
     }
     if (feat) {
@@ -241,7 +241,7 @@ export function createWebHidTransport(): WebHidTransport {
   }
 
   function ackLooksLive(ack: Uint8Array): boolean {
-    // cmd,status,addrHi,addrLo,flags — status=1 + empty data = dongle echo
+    // cmd,status,addrHi,addrLo,flags - status=1 + empty data = dongle echo
     if (ack.length < 6) return false
     const status = ack[1] & 0xff
     const len = (ack[4] & 0x7f) || 10
@@ -427,7 +427,7 @@ export function createWebHidTransport(): WebHidTransport {
           ? Uint8Array.from(outputData)
           : toOemWire17(Uint8Array.from(data))
 
-      // Serialize writes — OEM queue is strictly one-in-flight
+      // Serialize writes - OEM queue is strictly one-in-flight
       const run = writeChain.then(async () => {
         if (await tryOemOutput(wire, pace)) return
         if (await tryFeature(reportId, data)) return

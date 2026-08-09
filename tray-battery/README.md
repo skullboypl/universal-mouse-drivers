@@ -1,6 +1,6 @@
 # UMD Battery Tray
 
-Windows system tray + optional desktop widget for battery level of UMD-supported mice. Native HID (HidSharp) — same King Ultra protocol as the WebHID app / `tools/king_ultra_hid_probe.py`. No browser required.
+Windows system tray + optional desktop widget for battery level of UMD-supported mice. Native HID (HidSharp) - same King Ultra protocol as the WebHID app / `tools/king_ultra_hid_probe.py`. No browser required.
 
 Independent of the Vite WebHID app (both talk to the mouse; close Chrome WebHID / OEM software if open fails).
 
@@ -42,7 +42,7 @@ Requires .NET 8 SDK, Windows x64.
 
 ## EV code signing (CapRover download)
 
-Same flow as Fenrir tray — `signtool` + EV certificate:
+Same flow as Fenrir tray - `signtool` + EV certificate:
 
 ```powershell
 $env:UMD_SIGN_THUMBPRINT = '<SHA1 thumbprint without spaces>'

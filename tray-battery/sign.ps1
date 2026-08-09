@@ -1,4 +1,4 @@
-# EV / Authenticode sign — same idea as Fenrir Battery Tray pipeline.
+# EV / Authenticode sign - same idea as Fenrir Battery Tray pipeline.
 # Requires Windows SDK signtool + your EV code-signing certificate installed.
 #
 # Usage:
@@ -22,7 +22,7 @@ if (-not $ExePath) {
     $ExePath = Join-Path $PSScriptRoot "UmdBatteryTray\bin\Release\net8.0-windows\win-x64\publish\UmdBatteryTray.exe"
 }
 if (-not (Test-Path $ExePath)) {
-    Write-Error "EXE not found: $ExePath — run .\build.ps1 first"
+    Write-Error "EXE not found: $ExePath - run .\build.ps1 first"
 }
 
 if (-not $Thumbprint) {
@@ -46,7 +46,7 @@ $signtool = @(
 ) | Get-Item -ErrorAction SilentlyContinue | Sort-Object FullName -Descending | Select-Object -First 1
 
 if (-not $signtool) {
-    Write-Error "signtool.exe not found — install Windows SDK Signing Tools"
+    Write-Error "signtool.exe not found - install Windows SDK Signing Tools"
 }
 
 Write-Host "Signing $ExePath" -ForegroundColor Cyan

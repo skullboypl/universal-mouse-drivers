@@ -1,5 +1,5 @@
 /**
- * King Ultra wire protocol — reverse-engineered from HIDUsb-64.dll + OEM .NET.
+ * King Ultra wire protocol - reverse-engineered from HIDUsb-64.dll + OEM .NET.
  *
  * In-memory queue entry is 20 bytes. OEM UsbServer WriteFile sends 17 bytes
  * from offset +3; on the King Ultra 8K receiver that maps to:
@@ -162,7 +162,7 @@ export function getDongleOnline(): boolean {
   return dongleOnline
 }
 
-/** FUN_18000f060 — byte sum, then 0x55 - sum. */
+/** FUN_18000f060 - byte sum, then 0x55 - sum. */
 export function protocolChecksum(bytes: ArrayLike<number>, start: number, end: number): number {
   let sum = 0
   for (let i = start; i < end; i++) sum = (sum + (bytes[i] & 0xff)) & 0xff
@@ -216,11 +216,11 @@ function onlineFlags(base: number): number {
 /** Build full 20-byte frame; returns feature + OEM Output payloads. */
 export function buildFrame(opts: {
   commandId: number
-  /** Byte[2] — host-only; not on WriteFile wire */
+  /** Byte[2] - host-only; not on WriteFile wire */
   aux?: number
-  /** Flash address (lo at [7], hi at [6] — matches CompareUpdate / ReadFlash) */
+  /** Flash address (lo at [7], hi at [6] - matches CompareUpdate / ReadFlash) */
   address?: number
-  /** Low 7 bits of byte[8] — payload length */
+  /** Low 7 bits of byte[8] - payload length */
   dataLen: number
   /** Bytes starting at [9] */
   payload?: number[]
@@ -284,7 +284,7 @@ export function encodeReadFlash(address: number, length: number, allFlag = 0): E
 }
 
 /**
- * OEM UsbServer_ReadEncryption / FUN_18000f160 — first packet after Start.
+ * OEM UsbServer_ReadEncryption / FUN_18000f160 - first packet after Start.
  * Wire: cmd=1, dataLen=8 (|0x80 wireless), payload[0..3]=rand bytes, rest 0.
  */
 export function encodeReadEncryption(challenge?: number[]): EncodedReport {
@@ -357,7 +357,7 @@ export function encodeCommand(cmd: ProtocolCommand): EncodedReport | null {
         payload: [cmd.configId & 0xff],
       })
     case 'set_pc_driver':
-      // UsbCommandID.PCDriverStatus = 2 — OEM enables host session before writes
+      // UsbCommandID.PCDriverStatus = 2 - OEM enables host session before writes
       return buildFrame({
         commandId: UsbCommandId.PCDriverStatus,
         dataLen: 1,
@@ -381,13 +381,13 @@ export function encodeCommand(cmd: ProtocolCommand): EncodedReport | null {
     case 'read_report_rate':
       return encodeReadFlash(FlashAddr.reportRate, 2, 0)
     case 'read_version':
-      // CS_UsbServer_ReadVersion / UsbFinder_GetVersion — cmd 0x12
+      // CS_UsbServer_ReadVersion / UsbFinder_GetVersion - cmd 0x12
       return buildFrame({
         commandId: UsbCommandId.ReadVersionID,
         dataLen: 0,
       })
     case 'read_slave_version':
-      // CS_UsbFinder_GetSlaveVersion — cmd 0x0B, mouse FW
+      // CS_UsbFinder_GetSlaveVersion - cmd 0x0B, mouse FW
       return buildFrame({
         commandId: UsbCommandId.GetSlaveVersion,
         dataLen: 0,
@@ -459,7 +459,7 @@ export function encodeSensorFlagWrites(flags: {
  * Parse WebHID input report payload (16 bytes, reportId already stripped).
  * Wire layout: cmd, status, addrHi, addrLo, flags|len, data[10], ck
  *
- * Dongle-local echo sets status=1 and often leaves data empty — that is NOT
+ * Dongle-local echo sets status=1 and often leaves data empty - that is NOT
  * proof the mouse flash changed (see FUN_180011a40 WriteFlash compare).
  */
 export function decodeInputReport(data: Uint8Array): {
@@ -480,7 +480,7 @@ export function decodeInputReport(data: Uint8Array): {
   const address = ((data[2] & 0xff) << 8) | (data[3] & 0xff)
   const flags = data[4] & 0xff
   const payloadLen = flags & 0x7f
-  // Keep raw data window — dongle echoes often keep dataLen=0 even when
+  // Keep raw data window - dongle echoes often keep dataLen=0 even when
   // later mouse replies put bytes at [5..]. Prefer declared len, min 10.
   const take = Math.min(Math.max(payloadLen, 10), 10, Math.max(0, data.length - 5))
   const payload = data.slice(5, 5 + take)

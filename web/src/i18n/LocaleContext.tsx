@@ -100,7 +100,7 @@ export function LocaleProvider({
   )
 }
 
-/** Client gate used only if URL lang is wrong — prefer server redirect. */
+/** Client gate used only if URL lang is wrong - prefer server redirect. */
 export function useLangParam(): Locale {
   const params = useParams()
   const lang = params?.lang

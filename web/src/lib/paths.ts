@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-/** CapRover Persistent Directory — set DATA_DIR=/app/data in app env. */
+/** CapRover Persistent Directory - set DATA_DIR=/app/data in app env. */
 export function dataDir(): string {
   if (process.env.DATA_DIR) return process.env.DATA_DIR
   // Local: repo/data when running next from web/

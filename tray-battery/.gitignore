@@ -9,7 +9,7 @@
 .idea/
 *.suo
 
-# Signed artifacts / certs (thumbprint stays in env — sign.ps1 is safe to commit)
+# Signed artifacts / certs (thumbprint stays in env - sign.ps1 is safe to commit)
 *.pfx
 *.snk
 *.cer
