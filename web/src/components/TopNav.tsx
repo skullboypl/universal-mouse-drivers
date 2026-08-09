@@ -10,10 +10,10 @@ import { useDeviceSession } from '@/session/DeviceSessionContext'
 import { Button } from './Button'
 import styles from './TopNav.module.css'
 
-const tabs: { path: string; key: MessageKey }[] = [
+const tabs: { path: string; key: MessageKey; disabled?: boolean }[] = [
   { path: '/device/buttons', key: 'nav.buttons' },
   { path: '/device/sensor', key: 'nav.sensor' },
-  { path: '/device/macro', key: 'nav.macro' },
+  { path: '/device/macro', key: 'nav.macro', disabled: true },
   { path: '/device/settings', key: 'nav.settings' },
 ]
 
@@ -41,6 +41,19 @@ export function TopNav() {
           {tabs.map((tab) => {
             const href = lp(tab.path)
             const active = pathname === href || pathname.startsWith(`${href}/`)
+            if (tab.disabled) {
+              return (
+                <span
+                  key={tab.path}
+                  className={styles.tabDisabled}
+                  title={tr('nav.macroSoon')}
+                  aria-disabled="true"
+                >
+                  {tr(tab.key)}
+                  <span className={styles.soon}>{tr('nav.soon')}</span>
+                </span>
+              )
+            }
             return (
               <Link
                 key={tab.path}

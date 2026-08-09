@@ -7,6 +7,8 @@ export type MessageKey =
   | 'nav.buttons'
   | 'nav.sensor'
   | 'nav.macro'
+  | 'nav.soon'
+  | 'nav.macroSoon'
   | 'nav.settings'
   | 'nav.disconnect'
   | 'connect.lede'
@@ -80,6 +82,8 @@ export type MessageKey =
   | 'sensor.motion'
   | 'sensor.motionTip'
   | 'macro.title'
+  | 'macro.comingSoon'
+  | 'macro.comingSoonBody'
   | 'macro.sub'
   | 'macro.list'
   | 'macro.keys'
@@ -155,6 +159,8 @@ const en: Dict = {
   'nav.buttons': 'Buttons',
   'nav.sensor': 'Sensor',
   'nav.macro': 'Macro',
+  'nav.soon': 'Soon',
+  'nav.macroSoon': 'Macro editor coming soon',
   'nav.settings': 'Settings',
   'nav.disconnect': 'Disconnect',
   'connect.lede':
@@ -249,6 +255,9 @@ const en: Dict = {
   'sensor.motionTip':
     'Aligns sensor samples with the USB report rate for more consistent feel.',
   'macro.title': 'Macro',
+  'macro.comingSoon': 'Coming soon',
+  'macro.comingSoonBody':
+    'Macro recording and flash write are not enabled yet. This tab will open when the HID path is ready.',
   'macro.sub': 'Record and edit macros - assign them from Buttons.',
   'macro.list': 'Macros list',
   'macro.keys': 'Keys list',
@@ -328,6 +337,8 @@ const pl: Dict = {
   'nav.buttons': 'Przyciski',
   'nav.sensor': 'Sensor',
   'nav.macro': 'Makro',
+  'nav.soon': 'Wkrótce',
+  'nav.macroSoon': 'Edytor makr wkrótce',
   'nav.settings': 'Ustawienia',
   'nav.disconnect': 'Rozłącz',
   'connect.lede':
