@@ -435,6 +435,9 @@ const pl: Dict = {
   'sensor.motionTip':
     'Synchronizuje próbki sensora z częstotliwością USB - bardziej równe odczucie.',
   'macro.title': 'Makro',
+  'macro.comingSoon': 'Wkrótce',
+  'macro.comingSoonBody':
+    'Nagrywanie makr i zapis do flash nie są jeszcze włączone. Zakładka otworzy się, gdy będzie gotowa ścieżka HID.',
   'macro.sub': 'Nagrywaj i edytuj makro - przypisz je w Przyciskach.',
   'macro.list': 'Lista makro',
   'macro.keys': 'Lista klawiszy',
