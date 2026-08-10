@@ -6,6 +6,14 @@ import { Button } from '../components/Button'
 import { Select } from '../components/Select'
 import styles from '../components/ui.module.css'
 import { FENRIR_MAX_IDENTITY } from '../devices/gwolves-fenrir-max/identity'
+import {
+  clampFenrirSleepSec,
+  FENRIR_SLEEP_MAX_SEC,
+  FENRIR_SLEEP_MIN_SEC,
+  FENRIR_SLEEP_STEP_SEC,
+  formatFenrirSleep,
+  resolveFenrirSleepSec,
+} from '../devices/gwolves-fenrir-max/sleep'
 import { useLocale } from '../i18n/LocaleContext'
 import { LOCALES, type Locale } from '../i18n/locale'
 import { useT } from '../i18n/useT'
@@ -137,25 +145,51 @@ export function SettingsPage() {
         <p className="muted" style={{ marginTop: 0 }}>
           {tr('settings.sleepHint')}
         </p>
-        <Select
-          value={String(sleepMinutesToCode(state.settings.sleepAfterMin))}
-          onChange={(e) => {
-            const code = Number(e.target.value)
-            const minutes = sleepCodeToMinutes(code)
-            void apply(async (d) => {
-              await d.patchSettings({ sleepAfterMin: minutes })
-              syncFromDriver()
-            })
-          }}
-        >
-          {SLEEP_OPTIONS.map((opt) => (
-            <option key={opt.code} value={String(opt.code)}>
-              {opt.kind === 'sec'
-                ? tr('settings.sleepSec', { n: opt.n })
-                : tr('settings.sleepMin', { n: opt.n })}
-            </option>
-          ))}
-        </Select>
+        {isFenrir ? (
+          <label
+            className="row"
+            style={{ gap: 12, alignItems: 'center', width: '100%' }}
+          >
+            <input
+              type="range"
+              min={FENRIR_SLEEP_MIN_SEC}
+              max={FENRIR_SLEEP_MAX_SEC}
+              step={FENRIR_SLEEP_STEP_SEC}
+              value={resolveFenrirSleepSec(state.settings)}
+              style={{ flex: 1, accentColor: 'var(--accent)' }}
+              onChange={(e) => {
+                const sec = clampFenrirSleepSec(Number(e.target.value))
+                void apply(async (d) => {
+                  await d.patchSettings({ sleepAfterSec: sec })
+                  syncFromDriver()
+                })
+              }}
+            />
+            <span className="mono" style={{ minWidth: '5.5rem' }}>
+              {formatFenrirSleep(resolveFenrirSleepSec(state.settings))}
+            </span>
+          </label>
+        ) : (
+          <Select
+            value={String(sleepMinutesToCode(state.settings.sleepAfterMin))}
+            onChange={(e) => {
+              const code = Number(e.target.value)
+              const minutes = sleepCodeToMinutes(code)
+              void apply(async (d) => {
+                await d.patchSettings({ sleepAfterMin: minutes })
+                syncFromDriver()
+              })
+            }}
+          >
+            {SLEEP_OPTIONS.map((opt) => (
+              <option key={opt.code} value={String(opt.code)}>
+                {opt.kind === 'sec'
+                  ? tr('settings.sleepSec', { n: opt.n })
+                  : tr('settings.sleepMin', { n: opt.n })}
+              </option>
+            ))}
+          </Select>
+        )}
       </div>
 
       <div className="panel">

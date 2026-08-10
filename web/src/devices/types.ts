@@ -113,7 +113,13 @@ export interface DeviceInfo {
 
 export interface SettingsState {
   language: string
+  /** King Ultra sleep timeout in minutes (OEM PowerSaveTime). */
   sleepAfterMin: number
+  /**
+   * Fenrir OEM Sleep Time in seconds (30–600, step 5).
+   * When set, this is the source of truth for Fenrir HID setSleepTime.
+   */
+  sleepAfterSec?: number
   longDistance: boolean
   runOnBoot: boolean
 }

@@ -18,6 +18,7 @@ import {
 import { createFenrirDefaultState, FENRIR_DPI_MAX_STAGES } from './defaults'
 import { FENRIR_MAX_IDENTITY } from './identity'
 import { FENRIR_MAX_PROFILE, pollingRatesForPid } from './profile'
+import { clampFenrirSleepSec, FENRIR_SLEEP_DEFAULT_SEC } from './sleep'
 import {
   actionToGwSlot,
   defaultGwButtonPayload,
@@ -267,10 +268,10 @@ export class FenrirMaxDriver implements DeviceDriver {
 
     const lodMm =
       full.lod > 0 ? clampLod(full.lod) : this.state.sensor.lodMm
-    const sleepMin = Math.max(
-      1,
-      Math.round((full.sleepSeconds || 60) / 60),
+    const sleepSec = clampFenrirSleepSec(
+      full.sleepSeconds || FENRIR_SLEEP_DEFAULT_SEC,
     )
+    const sleepMin = Math.max(1, Math.round(sleepSec / 60))
     const rates = pollingRatesForPid(
       FENRIR_MAX_PROFILE,
       full.pid || FENRIR_MAX_PROFILE.pidWireless4k8k,
@@ -348,6 +349,7 @@ export class FenrirMaxDriver implements DeviceDriver {
       settings: {
         ...this.state.settings,
         sleepAfterMin: sleepMin,
+        sleepAfterSec: sleepSec,
       },
       info: {
         ...this.state.info,
@@ -470,14 +472,25 @@ export class FenrirMaxDriver implements DeviceDriver {
   }
 
   patchSettings(patch: Partial<SettingsState>) {
+    const next = { ...this.state.settings, ...patch }
+    if (patch.sleepAfterSec != null) {
+      const sec = clampFenrirSleepSec(patch.sleepAfterSec)
+      next.sleepAfterSec = sec
+      next.sleepAfterMin = Math.max(1, Math.round(sec / 60))
+    } else if (patch.sleepAfterMin != null) {
+      const sec = clampFenrirSleepSec(patch.sleepAfterMin * 60)
+      next.sleepAfterSec = sec
+      next.sleepAfterMin = Math.max(1, Math.round(sec / 60))
+    }
     this.state = {
       ...this.state,
-      settings: { ...this.state.settings, ...patch },
+      settings: next,
     }
-    if (patch.sleepAfterMin != null) {
+    if (patch.sleepAfterSec != null || patch.sleepAfterMin != null) {
+      const sec = next.sleepAfterSec ?? FENRIR_SLEEP_DEFAULT_SEC
       this.queueWrite(async () => {
         if (!this.hid || this.mock) return
-        await this.hid.setSleepTime(patch.sleepAfterMin! * 60)
+        await this.hid.setSleepTime(sec)
         this.lastWriteOk = true
       })
     }

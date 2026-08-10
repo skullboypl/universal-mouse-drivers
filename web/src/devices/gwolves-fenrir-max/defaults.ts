@@ -1,5 +1,6 @@
 import type { DeviceState } from '../types'
 import { FENRIR_MAX_BUTTONS } from './buttons'
+import { FENRIR_SLEEP_DEFAULT_SEC } from './sleep'
 import { fenrirDpiColor } from './theme'
 
 export const FENRIR_DPI_MAX_STAGES = 7
@@ -55,6 +56,7 @@ export function createFenrirDefaultState(): DeviceState {
     settings: {
       language: 'pl',
       sleepAfterMin: 1,
+      sleepAfterSec: FENRIR_SLEEP_DEFAULT_SEC,
       longDistance: false,
       runOnBoot: false,
     },

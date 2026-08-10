@@ -4,6 +4,14 @@ import { Button } from '../components/Button'
 import { Select } from '../components/Select'
 import styles from '../components/ui.module.css'
 import { FENRIR_MAX_IDENTITY } from '../devices/gwolves-fenrir-max/identity'
+import {
+  clampFenrirSleepSec,
+  FENRIR_SLEEP_MAX_SEC,
+  FENRIR_SLEEP_MIN_SEC,
+  FENRIR_SLEEP_STEP_SEC,
+  formatFenrirSleep,
+  resolveFenrirSleepSec,
+} from '../devices/gwolves-fenrir-max/sleep'
 import { useLocale } from '../i18n/LocaleContext'
 import { LOCALES, type Locale } from '../i18n/locale'
 import { useT } from '../i18n/useT'
@@ -84,20 +92,43 @@ export function SettingsPage() {
         <p className="muted" style={{ marginTop: 0 }}>
           {tr('settings.sleepHint')}
         </p>
-        <Select
-          value={String(state.settings.sleepAfterMin)}
-          onChange={(e) => {
-            void apply((d) =>
-              d.patchSettings({ sleepAfterMin: Number(e.target.value) }),
-            )
-          }}
-        >
-          {[1, 2, 5, 10, 15, 30].map((m) => (
-            <option key={m} value={String(m)}>
-              {tr('settings.sleepMin', { n: m })}
-            </option>
-          ))}
-        </Select>
+        {isFenrir ? (
+          <label
+            className="row"
+            style={{ gap: 12, alignItems: 'center', width: '100%' }}
+          >
+            <input
+              type="range"
+              min={FENRIR_SLEEP_MIN_SEC}
+              max={FENRIR_SLEEP_MAX_SEC}
+              step={FENRIR_SLEEP_STEP_SEC}
+              value={resolveFenrirSleepSec(state.settings)}
+              style={{ flex: 1, accentColor: 'var(--accent)' }}
+              onChange={(e) => {
+                const sec = clampFenrirSleepSec(Number(e.target.value))
+                void apply((d) => d.patchSettings({ sleepAfterSec: sec }))
+              }}
+            />
+            <span className="mono" style={{ minWidth: '5.5rem' }}>
+              {formatFenrirSleep(resolveFenrirSleepSec(state.settings))}
+            </span>
+          </label>
+        ) : (
+          <Select
+            value={String(state.settings.sleepAfterMin)}
+            onChange={(e) => {
+              void apply((d) =>
+                d.patchSettings({ sleepAfterMin: Number(e.target.value) }),
+              )
+            }}
+          >
+            {[1, 2, 5, 10, 15, 30].map((m) => (
+              <option key={m} value={String(m)}>
+                {tr('settings.sleepMin', { n: m })}
+              </option>
+            ))}
+          </Select>
+        )}
       </div>
 
       <div className="panel">

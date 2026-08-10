@@ -18,6 +18,14 @@ import {
   fenrirClickQuadFromLevel,
 } from '../../devices/gwolves-fenrir-max/debounce'
 import { FENRIR_OEM, fenrirDpiColor } from '../../devices/gwolves-fenrir-max/theme'
+import {
+  clampFenrirSleepSec,
+  FENRIR_SLEEP_MAX_SEC,
+  FENRIR_SLEEP_MIN_SEC,
+  FENRIR_SLEEP_STEP_SEC,
+  formatFenrirSleep,
+  resolveFenrirSleepSec,
+} from '../../devices/gwolves-fenrir-max/sleep'
 import { useLocale } from '../../i18n/LocaleContext'
 import type { MessageKey } from '../../i18n/messages'
 import { useT } from '../../i18n/useT'
@@ -547,17 +555,22 @@ export function FenrirOemWorkspace() {
               <input
                 className={css.slider}
                 type="range"
-                min={1}
-                max={30}
-                value={state.settings.sleepAfterMin}
+                min={FENRIR_SLEEP_MIN_SEC}
+                max={FENRIR_SLEEP_MAX_SEC}
+                step={FENRIR_SLEEP_STEP_SEC}
+                value={resolveFenrirSleepSec(state.settings)}
                 onChange={(e) => {
                   touch('sleep')
                   void apply((d) =>
-                    d.patchSettings({ sleepAfterMin: Number(e.target.value) }),
+                    d.patchSettings({
+                      sleepAfterSec: clampFenrirSleepSec(Number(e.target.value)),
+                    }),
                   )
                 }}
               />
-              <span className={css.unit}>{state.settings.sleepAfterMin} min</span>
+              <span className={css.unit}>
+                {formatFenrirSleep(resolveFenrirSleepSec(state.settings))}
+              </span>
             </div>
           </FieldBusy>
 
