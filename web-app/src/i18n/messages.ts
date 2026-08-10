@@ -7,6 +7,7 @@ export type MessageKey =
   | 'nav.buttons'
   | 'nav.sensor'
   | 'nav.macro'
+  | 'nav.mouse'
   | 'nav.settings'
   | 'nav.disconnect'
   | 'connect.lede'
@@ -137,6 +138,8 @@ export type MessageKey =
   | 'status.connectingDemo'
   | 'status.selectMouse'
   | 'status.syncing'
+  | 'status.reading'
+  | 'status.readOk'
   | 'status.disconnected'
   | 'status.applyFailed'
   | 'status.webhidFailed'
@@ -153,6 +156,7 @@ const en: Dict = {
   'nav.buttons': 'Buttons',
   'nav.sensor': 'Sensor',
   'nav.macro': 'Macro',
+  'nav.mouse': 'Mouse',
   'nav.settings': 'Settings',
   'nav.disconnect': 'Disconnect',
   'connect.lede':
@@ -308,6 +312,8 @@ const en: Dict = {
   'status.connectingDemo': 'Connecting demo…',
   'status.selectMouse': 'Select a supported mouse…',
   'status.syncing': 'syncing…',
+  'status.reading': 'Reading from mouse…',
+  'status.readOk': 'Read from mouse',
   'status.disconnected': 'Device disconnected',
   'status.applyFailed': 'Apply failed',
   'status.webhidFailed': 'WebHID connect failed',
@@ -323,6 +329,7 @@ const pl: Dict = {
   'nav.buttons': 'Przyciski',
   'nav.sensor': 'Sensor',
   'nav.macro': 'Makro',
+  'nav.mouse': 'Myszka',
   'nav.settings': 'Ustawienia',
   'nav.disconnect': 'Rozłącz',
   'connect.lede':
@@ -480,6 +487,8 @@ const pl: Dict = {
   'status.connectingDemo': 'Łączenie z demo…',
   'status.selectMouse': 'Wybierz wspieraną mysz…',
   'status.syncing': 'synchronizacja…',
+  'status.reading': 'Odczytuję z myszy…',
+  'status.readOk': 'Odczytano z myszy',
   'status.disconnected': 'Urządzenie rozłączone',
   'status.applyFailed': 'Nie udało się zastosować',
   'status.webhidFailed': 'Połączenie WebHID nieudane',

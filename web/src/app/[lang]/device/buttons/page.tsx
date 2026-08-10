@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ButtonsPage } from '@/views/ButtonsPage'
+import { DeviceButtonsPage } from '@/views/DevicePages'
 import { isLocale, type Locale } from '@/i18n/locale'
 import { buildPageMetadata } from '@/lib/seo'
 
@@ -14,5 +14,5 @@ export async function generateMetadata({
 }
 
 export default function Page() {
-  return <ButtonsPage />
+  return <DeviceButtonsPage />
 }

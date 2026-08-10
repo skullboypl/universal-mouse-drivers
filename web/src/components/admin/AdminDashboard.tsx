@@ -4,18 +4,20 @@ import { useState } from 'react'
 import { AdminButtonsEditor } from '@/components/admin/AdminButtonsEditor'
 import type { ButtonPosition } from '@/lib/layouts'
 
-type Tab = 'buttons' | 'demo' | 'hero' | 'tray'
+type Tab = 'buttons' | 'demo' | 'fenrir' | 'hero' | 'tray'
 
 export function AdminDashboard({
   user,
   buttonsLayout,
   demoLayout,
+  fenrirLayout,
   heroLayout,
   tray,
 }: {
   user: string
   buttonsLayout: ButtonPosition[]
   demoLayout: ButtonPosition[]
+  fenrirLayout: ButtonPosition[]
   heroLayout: ButtonPosition[]
   tray: {
     present: boolean
@@ -48,6 +50,7 @@ export function AdminDashboard({
         {(
           [
             ['buttons', 'King Ultra'],
+            ['fenrir', 'Fenrir Max'],
             ['demo', 'Demo mouse'],
             ['hero', 'Hero connect'],
             ['tray', 'Tray .exe'],
@@ -83,6 +86,17 @@ export function AdminDashboard({
             <code className="mono">/devices/king-ultra/mouse.png</code>).
           </p>
           <AdminButtonsEditor layoutId="king-ultra" initial={buttonsLayout} />
+        </>
+      )}
+
+      {tab === 'fenrir' && (
+        <>
+          <p className="muted" style={{ marginTop: 0 }}>
+            Badge’y 1–5 pod G-Wolves Fenrir Max 8K (
+            <code className="mono">/devices/fenrir-max/mouse.png</code> · 399×558).
+            Driver WebHID jeszcze niepodpięty — layout pod przyszłą stronę Buttons.
+          </p>
+          <AdminButtonsEditor layoutId="fenrir-max" initial={fenrirLayout} />
         </>
       )}
 

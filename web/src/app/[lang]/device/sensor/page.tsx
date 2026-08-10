@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { SensorPage } from '@/views/SensorPage'
+import { DeviceSensorPage } from '@/views/DevicePages'
 import { isLocale, type Locale } from '@/i18n/locale'
 import { buildPageMetadata } from '@/lib/seo'
 
@@ -14,5 +14,5 @@ export async function generateMetadata({
 }
 
 export default function Page() {
-  return <SensorPage />
+  return <DeviceSensorPage />
 }

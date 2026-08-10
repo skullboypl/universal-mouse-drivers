@@ -1,10 +1,23 @@
 namespace UmdBatteryTray;
 
+using UmdBatteryTray.Protocol;
+
 internal sealed class SettingsForm : Form
 {
     private readonly AppSettings _settings;
     private readonly BatteryWidgetForm _widget;
     private readonly Action<AppSettings> _onApply;
+
+    private readonly ComboBox _deviceCombo = new()
+    {
+        DropDownStyle = ComboBoxStyle.DropDownList,
+        Width = 318,
+    };
+    private readonly Button _refreshDevicesBtn = new()
+    {
+        Text = "Refresh list",
+        Size = new Size(100, 26),
+    };
 
     private readonly RadioButton _trayBattery = new() { Text = "Battery icon", AutoSize = true };
     private readonly RadioButton _trayPercent = new() { Text = "Percent only", AutoSize = true };
@@ -92,13 +105,31 @@ internal sealed class SettingsForm : Form
         MaximizeBox = false;
         MinimizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
-        ClientSize = new Size(380, 668);
+        ClientSize = new Size(380, 790);
         Font = new Font("Segoe UI", 9f);
+
+        var deviceGroup = new GroupBox
+        {
+            Text = "Mouse (battery source)",
+            Location = new Point(16, 12),
+            Size = new Size(348, 110),
+        };
+        var deviceHint = new Label
+        {
+            Text = "When both mice are plugged in, pick which battery to show.",
+            AutoSize = true,
+            Location = new Point(14, 22),
+            MaximumSize = new Size(318, 0),
+        };
+        _deviceCombo.Location = new Point(14, 46);
+        _refreshDevicesBtn.Location = new Point(14, 76);
+        _refreshDevicesBtn.Click += (_, _) => ReloadDevices();
+        deviceGroup.Controls.AddRange([deviceHint, _deviceCombo, _refreshDevicesBtn]);
 
         var trayGroup = new GroupBox
         {
             Text = "Tray icon",
-            Location = new Point(16, 12),
+            Location = new Point(16, 130),
             Size = new Size(348, 160),
         };
 
@@ -139,7 +170,7 @@ internal sealed class SettingsForm : Form
         var widgetGroup = new GroupBox
         {
             Text = "Desktop widget",
-            Location = new Point(16, 180),
+            Location = new Point(16, 298),
             Size = new Size(348, 316),
         };
 
@@ -224,7 +255,7 @@ internal sealed class SettingsForm : Form
         var serviceGroup = new GroupBox
         {
             Text = "Startup & updates",
-            Location = new Point(16, 504),
+            Location = new Point(16, 622),
             Size = new Size(348, 118),
         };
         _runAtStartup.Location = new Point(14, 24);
@@ -242,7 +273,7 @@ internal sealed class SettingsForm : Form
         {
             Text = "OK",
             DialogResult = DialogResult.OK,
-            Location = new Point(188, 632),
+            Location = new Point(188, 752),
             Size = new Size(84, 28),
         };
         okBtn.Click += (_, _) => SaveAndApply(close: true);
@@ -250,7 +281,7 @@ internal sealed class SettingsForm : Form
         var applyBtn = new Button
         {
             Text = "Apply",
-            Location = new Point(100, 632),
+            Location = new Point(100, 752),
             Size = new Size(84, 28),
         };
         applyBtn.Click += (_, _) => SaveAndApply(close: false);
@@ -259,11 +290,11 @@ internal sealed class SettingsForm : Form
         {
             Text = "Cancel",
             DialogResult = DialogResult.Cancel,
-            Location = new Point(276, 632),
+            Location = new Point(276, 752),
             Size = new Size(84, 28),
         };
 
-        Controls.AddRange([trayGroup, widgetGroup, serviceGroup, applyBtn, okBtn, cancelBtn]);
+        Controls.AddRange([deviceGroup, trayGroup, widgetGroup, serviceGroup, applyBtn, okBtn, cancelBtn]);
 
         AcceptButton = okBtn;
         CancelButton = cancelBtn;
@@ -271,8 +302,48 @@ internal sealed class SettingsForm : Form
         LoadFromSettings();
     }
 
+    private void ReloadDevices()
+    {
+        var preferred = _settings.PreferredDeviceKey;
+        if (_deviceCombo.SelectedItem is DeviceItem selected)
+            preferred = selected.Key;
+
+        _deviceCombo.Items.Clear();
+        _deviceCombo.Items.Add(new DeviceItem(null, "Auto (first available)"));
+
+        var list = UmdDeviceEnumerator.ListAvailable();
+        foreach (var d in list)
+            _deviceCombo.Items.Add(new DeviceItem(d.Key, d.DisplayLabel));
+
+        var idx = 0;
+        if (!string.IsNullOrWhiteSpace(preferred))
+        {
+            for (var i = 0; i < _deviceCombo.Items.Count; i++)
+            {
+                if (_deviceCombo.Items[i] is DeviceItem di
+                    && string.Equals(di.Key, preferred, StringComparison.OrdinalIgnoreCase))
+                {
+                    idx = i;
+                    break;
+                }
+            }
+
+            // Preferred not currently plugged — keep it visible as a sticky entry.
+            if (idx == 0 && list.All(d =>
+                    !string.Equals(d.Key, preferred, StringComparison.OrdinalIgnoreCase)))
+            {
+                _deviceCombo.Items.Add(new DeviceItem(preferred, $"{preferred} (not connected)"));
+                idx = _deviceCombo.Items.Count - 1;
+            }
+        }
+
+        _deviceCombo.SelectedIndex = idx;
+    }
+
     private void LoadFromSettings()
     {
+        ReloadDevices();
+
         switch (_settings.TrayDisplay)
         {
             case TrayDisplayMode.BatteryIcon:
@@ -322,6 +393,10 @@ internal sealed class SettingsForm : Form
                 ? TrayDisplayMode.Percent
                 : TrayDisplayMode.BatteryWithPercent;
 
+        _settings.PreferredDeviceKey = _deviceCombo.SelectedItem is DeviceItem di
+            ? di.Key
+            : null;
+
         _settings.WidgetVisible = _widgetVisible.Checked;
         _settings.WidgetDraggable = _widgetDraggable.Checked;
         _settings.WidgetX = (int)_posX.Value;
@@ -353,5 +428,10 @@ internal sealed class SettingsForm : Form
 
         if (close)
             Close();
+    }
+
+    private sealed record DeviceItem(string? Key, string Label)
+    {
+        public override string ToString() => Label;
     }
 }

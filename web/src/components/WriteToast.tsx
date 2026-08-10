@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import type { DeviceWritePhase } from '../devices/redragon-king-ultra/driver'
+import type { DeviceWritePhase } from '../devices/DeviceDriver'
 import { useT } from '../i18n/useT'
 import { useDeviceSession } from '../session/DeviceSessionContext'
 import styles from './WriteToast.module.css'

@@ -23,3 +23,23 @@
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   --nav-h: 64px;
 }
+
+/* OEM G-Wolves DriverCore skin (Naive green) while Fenrir Max is connected */
+.app-shell[data-device='gwolves-fenrir-max'] {
+  --bg: #18181c;
+  --bg-elevated: #232324;
+  --bg-panel: #1c1c1f;
+  --bg-hover: #2a2a2e;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --fg: #e8e8ed;
+  --fg-muted: #a3a3ad;
+  --fg-dim: #7a7a85;
+  --accent: #18a058;
+  --accent-hot: #36ad6a;
+  --accent-soft: rgba(24, 160, 88, 0.16);
+  --signal: #18a058;
+  --success: #18a058;
+  --radius: 3px;
+  --radius-sm: 3px;
+}

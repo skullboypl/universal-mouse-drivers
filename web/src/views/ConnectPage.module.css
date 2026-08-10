@@ -1,52 +1,68 @@
+/* Homepage stays on UMD amber — never inherit Fenrir OEM green vars. */
 .page {
+  --accent: #e8a23a;
+  --accent-hot: #f0b45a;
+  --accent-soft: rgba(232, 162, 58, 0.14);
+  --warning: #e8a23a;
+  --signal: #3ecf8e;
+  --success: #3ecf8e;
+  --bg-panel: #171c25;
+  --bg-hover: #1e2530;
+  --border: #2a3340;
+  --fg: #eef1f5;
+  --fg-muted: #8b95a5;
+  --fg-dim: #5c6675;
+  --radius: 8px;
+  --radius-sm: 4px;
+
   width: min(1100px, calc(100% - 40px));
   margin: 0 auto;
   padding: 0 0 72px;
 }
 
 .hero {
-  min-height: calc(100vh - var(--nav-h) - 48px);
+  min-height: calc(100vh - var(--nav-h) - 72px);
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: 28px 40px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px 48px;
   align-items: center;
-  padding: 36px 0 48px;
+  padding: 28px 0 40px;
   animation: umd-rise 0.55s ease-out both;
 }
 
 .heroCopy {
-  max-width: 34rem;
+  max-width: 32rem;
 }
 
 .brandMark {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   font-family: var(--display);
-  font-size: clamp(2.8rem, 7vw, 4.6rem);
+  font-size: clamp(2.6rem, 6.5vw, 4.2rem);
   font-weight: 800;
   letter-spacing: -0.04em;
-  line-height: 0.92;
+  line-height: 0.9;
   color: var(--fg);
 }
 
 .headline {
   margin: 0;
   font-family: var(--display);
-  font-size: clamp(1.15rem, 2.4vw, 1.55rem);
-  font-weight: 700;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  font-weight: 650;
   letter-spacing: -0.02em;
   color: var(--accent-hot);
 }
 
 .lede {
-  margin: 14px 0 0;
+  margin: 16px 0 0;
   color: var(--fg-muted);
-  font-size: 1.02rem;
-  line-height: 1.5;
-  max-width: 32ch;
+  font-size: 1rem;
+  line-height: 1.55;
+  max-width: 34ch;
 }
 
 .ctaRow {
-  margin-top: 28px;
+  margin-top: 26px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -55,10 +71,10 @@
 .hint,
 .warn {
   margin: 14px 0 0;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   line-height: 1.45;
   color: var(--fg-dim);
-  max-width: 40ch;
+  max-width: 42ch;
 }
 
 .warn {
@@ -67,60 +83,122 @@
 
 .heroVisual {
   position: relative;
-  min-height: 320px;
-  display: grid;
-  place-items: center;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   isolation: isolate;
+  outline: none;
 }
 
 .glow {
   position: absolute;
-  inset: 12% 8%;
+  inset: 8% 10% 18%;
   background: radial-gradient(
-    ellipse at 50% 55%,
-    rgba(232, 162, 58, 0.22),
-    transparent 68%
+    ellipse at 50% 48%,
+    rgba(232, 162, 58, 0.26),
+    transparent 70%
   );
-  filter: blur(8px);
+  filter: blur(10px);
   animation: umd-glow 5.5s ease-in-out infinite;
   z-index: 0;
+  pointer-events: none;
 }
 
-.heroArt {
+.slideStage {
   position: relative;
   z-index: 1;
-  width: min(460px, 100%);
-  aspect-ratio: 1200 / 1521;
-  animation: umd-rise 0.7s 0.08s ease-out both;
+  width: min(420px, 100%);
+  aspect-ratio: 1 / 1.05;
+  display: grid;
+  place-items: center;
 }
 
 .mouse {
-  display: block;
+  grid-area: 1 / 1;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 28px 40px rgba(0, 0, 0, 0.55));
+  filter: drop-shadow(0 24px 36px rgba(0, 0, 0, 0.5));
   user-select: none;
   pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px) scale(0.97);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease;
 }
 
-.heroBadge {
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  margin: -13px 0 0 -13px;
-  border-radius: 7px;
-  background: var(--accent-hot, #ff2800);
-  color: #fff;
+.mouseActive {
+  opacity: 1;
+  transform: none;
+}
+
+.slideMeta {
+  position: relative;
+  z-index: 1;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-height: 3.2rem;
+}
+
+.slideLabel {
+  margin: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.slideBrand {
   font-family: var(--mono);
-  font-weight: 700;
-  font-size: 0.8rem;
-  display: grid;
-  place-items: center;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
-  pointer-events: none;
-  z-index: 2;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.slideModel {
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+
+.slideDots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.dot,
+.dotActive {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(232, 162, 58, 0.45);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    width 0.2s,
+    border-color 0.2s;
+}
+
+.dot:hover {
+  border-color: var(--accent-hot);
+}
+
+.dotActive {
+  width: 22px;
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .section {
@@ -315,20 +393,50 @@
   line-height: 1.5;
 }
 
+.listRowBusy {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.rowBusy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--accent-hot);
+  white-space: nowrap;
+}
+
+.rowSpin {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-top-color: var(--accent);
+  animation: connectSpin 0.65s linear infinite;
+}
+
+@keyframes connectSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 860px) {
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
-    padding-top: 28px;
+    padding-top: 20px;
+    gap: 12px;
   }
 
   .heroVisual {
     order: -1;
-    min-height: 240px;
+    min-height: 260px;
   }
 
-  .mouse {
-    width: min(340px, 88%);
+  .slideStage {
+    width: min(280px, 78%);
   }
 
   .supportMeta {
@@ -338,5 +446,16 @@
   .supportRow {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mouse {
+    transition: none;
+  }
+
+  .glow {
+    animation: none;
+    opacity: 0.65;
   }
 }

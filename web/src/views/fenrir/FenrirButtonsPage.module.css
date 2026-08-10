@@ -1,0 +1,148 @@
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem 3rem;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.sub {
+  margin: 0.35rem 0 0;
+  color: var(--fg-muted);
+  font-size: 0.9rem;
+}
+
+.linkMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--fg-muted);
+  font-size: 0.85rem;
+}
+
+.linkIcon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.deviceCard {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1.25rem 1rem 1rem;
+  text-align: center;
+}
+
+.deviceImg {
+  width: min(250px, 100%);
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  user-select: none;
+  pointer-events: none;
+}
+
+.deviceName {
+  margin: 0.85rem 0 0.15rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.deviceIds {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+}
+
+.keyCard {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1rem 1rem 0.75rem;
+}
+
+.keyTitle {
+  margin: 0 0 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.keyList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keyRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+}
+
+.keyBtn {
+  flex: 0 0 138px;
+  width: 138px;
+  height: 34px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--fg);
+  cursor: pointer;
+  text-align: left;
+  padding: 0 10px;
+  font-size: 0.85rem;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.keyBtn:hover,
+.keyBtnActive {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.keySelect {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--fg);
+  padding: 0 8px;
+}
+
+.hint {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+}

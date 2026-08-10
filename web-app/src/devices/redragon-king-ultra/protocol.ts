@@ -44,6 +44,11 @@ export type ProtocolCommand =
   | { op: 'read_current_dpi' }
   | { op: 'read_report_rate' }
   | { op: 'read_version' }
+  /** Mouse firmware — UsbCommandId.ReadVersionID (0x12). */
+  | { op: 'read_mouse_version' }
+  /** Receiver/dongle firmware — UsbCommandId.GetDongleVersion (0xB3). */
+  | { op: 'read_dongle_version' }
+  /** @deprecated use read_mouse_version / read_dongle_version */
   | { op: 'read_slave_version' }
   | { op: 'clear_settings' }
 
@@ -115,8 +120,18 @@ export const UsbCommandId = {
   GetCurrentConfig: 14,
   SetCurrentConfig: 15,
   ReadCIDMID: 16,
+  /**
+   * CS_UsbServer_ReadVersion / UsbFinder_GetVersion — cmd 0x12.
+   * Live King Ultra (F54F): reply maj/min = mouse firmware (OEM "Mouse Firmware ver").
+   */
   ReadVersionID: 18,
-  /** UsbFinder_GetSlaveVersion queues cmd 0x0B (enum name SetDeviceVidPid). */
+  /**
+   * UsbFinder_GetSlaveVersion — packed as local_30=0xB308 → wire cmd 0xB3.
+   * (Enum name SetDeviceVidPid=11 is a different command; 0x0B never replies.)
+   * Live King Ultra: reply maj/min = receiver/dongle firmware (OEM "Receiver Firmware ver").
+   */
+  GetDongleVersion: 0xb3,
+  /** @deprecated dead cmd — use GetDongleVersion (0xB3). */
   GetSlaveVersion: 11,
   SetLongRangeMode: 22,
   GetLongRangeMode: 23,
@@ -381,15 +396,27 @@ export function encodeCommand(cmd: ProtocolCommand): EncodedReport | null {
     case 'read_report_rate':
       return encodeReadFlash(FlashAddr.reportRate, 2, 0)
     case 'read_version':
-      // CS_UsbServer_ReadVersion / UsbFinder_GetVersion - cmd 0x12
+      // Legacy alias → dongle/receiver (0xB3). Prefer read_dongle_version.
+      return buildFrame({
+        commandId: UsbCommandId.GetDongleVersion,
+        dataLen: 0,
+      })
+    case 'read_mouse_version':
+      // CS_UsbServer_ReadVersion / UsbFinder_GetVersion — cmd 0x12 → mouse FW
       return buildFrame({
         commandId: UsbCommandId.ReadVersionID,
         dataLen: 0,
       })
-    case 'read_slave_version':
-      // CS_UsbFinder_GetSlaveVersion - cmd 0x0B, mouse FW
+    case 'read_dongle_version':
+      // UsbFinder_GetSlaveVersion — cmd 0xB3 → receiver/dongle FW
       return buildFrame({
-        commandId: UsbCommandId.GetSlaveVersion,
+        commandId: UsbCommandId.GetDongleVersion,
+        dataLen: 0,
+      })
+    case 'read_slave_version':
+      // Deprecated alias of read_dongle_version (was wrongly 0x0B).
+      return buildFrame({
+        commandId: UsbCommandId.GetDongleVersion,
         dataLen: 0,
       })
     case 'read_info':
@@ -545,14 +572,27 @@ export function decodeInfoReport(data: Uint8Array): {
   }
 }
 
-/** OEM UI: `v{major}.{minor}` from first two payload bytes (UsbFinder CONCAT11). */
+/**
+ * OEM UI shows BCD nibbles (0x15 → "15", 0x18 → "18").
+ * Plain decimal bytes (nibbles > 9) fall back to the raw value.
+ */
+export function bcdByteToDecimal(n: number): number {
+  const v = n & 0xff
+  const hi = (v >> 4) & 0xf
+  const lo = v & 0xf
+  if (hi > 9 || lo > 9) return v
+  return hi * 10 + lo
+}
+
+/** OEM UI: `v{major}.{minor}` from UsbFinder CONCAT11 bytes (BCD). */
 export function formatFirmwareVersion(major: number, minor: number): string {
-  return `v${major & 0xff}.${minor & 0xff}`
+  return `v${bcdByteToDecimal(major)}.${bcdByteToDecimal(minor)}`
 }
 
 /**
- * Parse ReadVersion (cmd 18) / GetSlaveVersion (cmd 11) reply.
- * Wire data[0], data[1] = major, minor (UsbFinder reads packet[6],[7] with report id).
+ * Parse version reply (cmd 0x12 mouse / 0xB3 receiver).
+ * UsbFinder CONCAT11(packet[6], packet[7]) with report id present =
+ * payload[0], payload[1] after report id is stripped.
  */
 export function decodeVersionReport(
   data: Uint8Array,
@@ -562,7 +602,7 @@ export function decodeVersionReport(
   if (!parsed) return null
   if (
     parsed.commandId !== UsbCommandId.ReadVersionID &&
-    parsed.commandId !== UsbCommandId.GetSlaveVersion
+    parsed.commandId !== UsbCommandId.GetDongleVersion
   ) {
     return null
   }

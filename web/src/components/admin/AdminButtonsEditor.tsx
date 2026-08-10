@@ -3,20 +3,43 @@
 import { useMemo, useState } from 'react'
 import { Button } from '@/components/Button'
 import { DEMO_BUTTONS } from '@/devices/demo/identity'
+import { FENRIR_MAX_BUTTONS } from '@/devices/gwolves-fenrir-max/buttons'
 import { KING_ULTRA_BUTTONS } from '@/devices/redragon-king-ultra/buttons'
 import type { ButtonPosition, LayoutId } from '@/lib/layouts'
 import { LAYOUT_META } from '@/lib/layouts'
 import page from '@/views/ButtonsPage.module.css'
 
-const BUTTON_META = KING_ULTRA_BUTTONS.map((b) => ({
-  id: b.id,
-  label: b.label,
-  action: b.action,
-}))
+type ButtonMeta = { id: number; label: string; action: string }
+
+function buttonMetaFor(layoutId: LayoutId): ButtonMeta[] {
+  if (layoutId === 'umd-demo') {
+    return DEMO_BUTTONS.map((b) => ({
+      id: b.id,
+      label: b.label,
+      action: b.action,
+    }))
+  }
+  if (layoutId === 'fenrir-max') {
+    return FENRIR_MAX_BUTTONS.map((b) => ({
+      id: b.id,
+      label: b.label,
+      action: b.action,
+    }))
+  }
+  // king-ultra + hero use the same 1–6 badge set
+  return KING_ULTRA_BUTTONS.map((b) => ({
+    id: b.id,
+    label: b.label,
+    action: b.action,
+  }))
+}
 
 function defaultPositions(layoutId: LayoutId): ButtonPosition[] {
   if (layoutId === 'umd-demo') {
     return DEMO_BUTTONS.map((b) => ({ id: b.id, uiX: b.uiX, uiY: b.uiY }))
+  }
+  if (layoutId === 'fenrir-max') {
+    return FENRIR_MAX_BUTTONS.map((b) => ({ id: b.id, uiX: b.uiX, uiY: b.uiY }))
   }
   if (layoutId === 'king-ultra-hero') {
     return [
@@ -31,12 +54,13 @@ function defaultPositions(layoutId: LayoutId): ButtonPosition[] {
   return KING_ULTRA_BUTTONS.map((b) => ({ id: b.id, uiX: b.uiX, uiY: b.uiY }))
 }
 
-function ensureSix(
+function ensurePositions(
   layoutId: LayoutId,
   positions: ButtonPosition[],
 ): ButtonPosition[] {
+  const meta = buttonMetaFor(layoutId)
   const defaults = defaultPositions(layoutId)
-  return BUTTON_META.map((m) => {
+  return meta.map((m) => {
     const found = positions.find((p) => p.id === m.id)
     if (found) return found
     return defaults.find((d) => d.id === m.id) ?? { id: m.id, uiX: 0, uiY: 0 }
@@ -51,9 +75,12 @@ export function AdminButtonsEditor({
   initial: ButtonPosition[]
 }) {
   const meta = LAYOUT_META[layoutId]
-  const [positions, setPositions] = useState(() => ensureSix(layoutId, initial))
+  const buttonMeta = buttonMetaFor(layoutId)
+  const [positions, setPositions] = useState(() =>
+    ensurePositions(layoutId, initial),
+  )
   const [dragId, setDragId] = useState<number | null>(null)
-  const [selectedId, setSelectedId] = useState<number>(1)
+  const [selectedId, setSelectedId] = useState<number>(buttonMeta[0]?.id ?? 1)
   const [status, setStatus] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 
@@ -126,12 +153,21 @@ export function AdminButtonsEditor({
     setPositions(defaultPositions(layoutId))
   }
 
+  const saveLabel =
+    layoutId === 'king-ultra-hero'
+      ? 'Zapisz pozycje hero'
+      : layoutId === 'umd-demo'
+        ? 'Zapisz pozycje demo'
+        : layoutId === 'fenrir-max'
+          ? 'Zapisz pozycje Fenrir Max'
+          : 'Zapisz pozycje przycisków'
+
   return (
     <section className="panel" style={{ marginBottom: 16 }}>
       <h2 className="panel-label">{meta.label}</h2>
       <p className="muted" style={{ marginTop: 0 }}>
-        Ustaw pozycje badge’y 1–6 na grafice myszki. Przeciągnij numer albo wpisz
-        X/Y. Canvas {meta.width}×{meta.height} ·{' '}
+        Ustaw pozycje badge’y 1–{buttonMeta.length} na grafice myszki. Przeciągnij
+        numer albo wpisz X/Y. Canvas {meta.width}×{meta.height} ·{' '}
         <code className="mono">{meta.imageUrl}</code>
       </p>
 
@@ -158,7 +194,7 @@ export function AdminButtonsEditor({
             height={meta.height}
             draggable={false}
           />
-          {BUTTON_META.map(({ id }) => {
+          {buttonMeta.map(({ id }) => {
             const p = byId.get(id)
             if (!p) return null
             const active = dragId === id || selectedId === id
@@ -173,7 +209,7 @@ export function AdminButtonsEditor({
                   cursor: 'grab',
                   touchAction: 'none',
                 }}
-                title={BUTTON_META.find((b) => b.id === id)?.label}
+                title={buttonMeta.find((b) => b.id === id)?.label}
                 onPointerDown={(e) => onPointerDown(id, e)}
               >
                 {id}
@@ -184,7 +220,7 @@ export function AdminButtonsEditor({
       </div>
 
       <div style={{ marginTop: 16, display: 'grid', gap: 8 }}>
-        {BUTTON_META.map((b) => {
+        {buttonMeta.map((b) => {
           const p = byId.get(b.id)!
           const selected = selectedId === b.id
           return (
@@ -259,13 +295,7 @@ export function AdminButtonsEditor({
 
       <div className="row" style={{ marginTop: 14, gap: 10, flexWrap: 'wrap' }}>
         <Button variant="primary" disabled={saving} onClick={() => void save()}>
-          {saving
-            ? 'Zapisywanie…'
-            : layoutId === 'king-ultra-hero'
-              ? 'Zapisz pozycje hero'
-              : layoutId === 'umd-demo'
-                ? 'Zapisz pozycje demo'
-                : 'Zapisz pozycje przycisków'}
+          {saving ? 'Zapisywanie…' : saveLabel}
         </Button>
         <Button onClick={resetDefaults}>Reset domyślnych</Button>
         {status && <span className="muted">{status}</span>}

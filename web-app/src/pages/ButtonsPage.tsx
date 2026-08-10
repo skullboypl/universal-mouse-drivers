@@ -4,6 +4,7 @@ import { Button } from '../components/Button'
 import { Select } from '../components/Select'
 import styles from '../components/ui.module.css'
 import { MOUSE_ART } from '../devices/redragon-king-ultra/buttons'
+import { FENRIR_MAX_ART } from '../devices/gwolves-fenrir-max/buttons'
 import type { ButtonAction } from '../devices/types'
 import { useLocale } from '../i18n/LocaleContext'
 import type { MessageKey } from '../i18n/messages'
@@ -35,6 +36,15 @@ export function ButtonsPage() {
   const mouseSrc =
     driver.identity.imageUrl ?? '/devices/king-ultra/mouse.png'
   const logoSrc = driver.identity.logoUrl
+  const art = {
+    width: driver.identity.artWidth ?? MOUSE_ART.width,
+    height: driver.identity.artHeight ?? MOUSE_ART.height,
+  }
+  // Prefer Fenrir art constants when identity matches (fallback if artWidth missing)
+  if (driver.identity.id === 'gwolves-fenrir-max') {
+    art.width = driver.identity.artWidth ?? FENRIR_MAX_ART.width
+    art.height = driver.identity.artHeight ?? FENRIR_MAX_ART.height
+  }
 
   return (
     <div className="page">
@@ -71,7 +81,7 @@ export function ButtonsPage() {
                 })
                 const a = document.createElement('a')
                 a.href = URL.createObjectURL(blob)
-                a.download = `king-ultra-profile-${state.profileIndex + 1}.json`
+                a.download = `${driver.identity.id}-profile-${state.profileIndex + 1}.json`
                 a.click()
               }}
             >
@@ -110,8 +120,8 @@ export function ButtonsPage() {
             className={page.mouseArt}
             src={mouseSrc}
             alt={driver.identity.model}
-            width={MOUSE_ART.width}
-            height={MOUSE_ART.height}
+            width={art.width}
+            height={art.height}
           />
           {state.buttons.map((b) => (
             <button
@@ -119,8 +129,8 @@ export function ButtonsPage() {
               type="button"
               className={`${page.badge} ${focusId === b.id ? page.badgeActive : ''}`}
               style={{
-                left: `${(b.uiX / MOUSE_ART.width) * 100}%`,
-                top: `${(b.uiY / MOUSE_ART.height) * 100}%`,
+                left: `${(b.uiX / art.width) * 100}%`,
+                top: `${(b.uiY / art.height) * 100}%`,
               }}
               title={`${b.id}. ${tr(`buttons.action.${b.action}` as MessageKey)}`}
               onClick={() => setFocusId(b.id)}

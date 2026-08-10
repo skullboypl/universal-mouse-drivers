@@ -1,5 +1,12 @@
 import { umdLog } from '../debug/umdLog'
-import { hidFilters, isKingUltraDevice } from '../devices/redragon-king-ultra/identity'
+import {
+  fenrirMaxHidFilters,
+  isFenrirMaxDevice,
+} from '../devices/gwolves-fenrir-max/identity'
+import {
+  hidFilters,
+  isKingUltraDevice,
+} from '../devices/redragon-king-ultra/identity'
 import type { Transport } from './types'
 
 export interface HidDeviceInfo {
@@ -79,18 +86,137 @@ function pickOemOutput(
 function scoreDevice(device: HIDDevice): number {
   let score = 0
   if (isKingUltraDevice(device.vendorId, device.productId)) score += 100
+  if (isFenrirMaxDevice(device.vendorId, device.productId)) score += 100
   const outs = collectReports(device, 'output')
+  const feats = collectReports(device, 'feature')
   const ins = collectReports(device, 'input')
   // Exact OEM channel: Output+Input report id 8, 16 bytes (usage page ff02)
   if (outs.some((r) => r.reportId === 8 && r.payloadSize === 16)) score += 120
   else if (outs.some((r) => r.reportId === 8)) score += 60
   else if (outs.length) score += 20
   if (ins.some((r) => r.reportId === 8 && r.payloadSize === 16)) score += 40
+  // G-Wolves Fenrir: feature report 64B is the config channel
+  if (feats.some((r) => r.payloadSize >= 64)) score += 80
   for (const c of device.collections ?? []) {
     if (c.usagePage === 0xff02) score += 50
     else if (c.usagePage >= 0xff00) score += 10
   }
   return score
+}
+
+export function allSupportedHidFilters(): Array<{
+  vendorId: number
+  productId: number
+}> {
+  return [...hidFilters(), ...fenrirMaxHidFilters()]
+}
+
+export function isSupportedUmdDevice(
+  vendorId: number,
+  productId: number,
+): boolean {
+  return (
+    isKingUltraDevice(vendorId, productId) ||
+    isFenrirMaxDevice(vendorId, productId)
+  )
+}
+
+/** Target a specific saved / catalog mouse — never cross-brand fallback. */
+export type HidPickTarget = {
+  productId?: number
+  vendorId?: number
+  /** When set, only that family's VID:PIDs are offered / accepted. */
+  catalogId?: string
+}
+
+function filtersForTarget(target?: HidPickTarget): Array<{
+  vendorId: number
+  productId: number
+}> {
+  if (target?.catalogId === 'gwolves-fenrir-max') return fenrirMaxHidFilters()
+  if (target?.catalogId === 'redragon-king-ultra') return hidFilters()
+  if (target?.vendorId != null && target?.productId != null) {
+    return [{ vendorId: target.vendorId, productId: target.productId }]
+  }
+  if (target?.vendorId != null) {
+    return allSupportedHidFilters().filter((f) => f.vendorId === target.vendorId)
+  }
+  return allSupportedHidFilters()
+}
+
+function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
+  if (!target) return isSupportedUmdDevice(device.vendorId, device.productId)
+  if (target.catalogId === 'gwolves-fenrir-max') {
+    return isFenrirMaxDevice(device.vendorId, device.productId)
+  }
+  if (target.catalogId === 'redragon-king-ultra') {
+    return isKingUltraDevice(device.vendorId, device.productId)
+  }
+  if (target.vendorId != null && device.vendorId !== target.vendorId) return false
+  if (target.productId != null && device.productId !== target.productId) {
+    // Same family only when catalog not given but vendor matches King/Fenrir set
+    if (target.vendorId != null) {
+      if (isKingUltraDevice(target.vendorId, target.productId)) {
+        return isKingUltraDevice(device.vendorId, device.productId)
+      }
+      if (isFenrirMaxDevice(target.vendorId, target.productId)) {
+        return isFenrirMaxDevice(device.vendorId, device.productId)
+      }
+    }
+    return false
+  }
+  return isSupportedUmdDevice(device.vendorId, device.productId)
+}
+
+/**
+ * Pick a supported mouse (King Ultra or Fenrir Max) without opening it.
+ * With a target (saved click), never falls back to another brand.
+ */
+export async function pickSupportedHidDevice(
+  target?: number | HidPickTarget,
+): Promise<HIDDevice> {
+  const opts: HidPickTarget | undefined =
+    typeof target === 'number' ? { productId: target } : target
+  const hid = assertWebHid()
+  const filters = filtersForTarget(opts)
+  const existing = (await hid.getDevices())
+    .filter((d) => matchesTarget(d, opts))
+    .sort((a, b) => scoreDevice(b) - scoreDevice(a))
+
+  let selected: HIDDevice | undefined
+  if (opts?.productId != null) {
+    selected = existing.find((d) => d.productId === opts.productId)
+    // Same catalog/family only — never another brand
+    if (!selected && opts.catalogId) {
+      selected = existing[0]
+    } else if (!selected && opts.vendorId != null) {
+      selected = existing.find((d) => d.vendorId === opts.vendorId)
+    }
+  } else {
+    selected = existing[0]
+  }
+
+  if (!selected) {
+    const picked = await hid.requestDevice({ filters })
+    const ranked = [...picked]
+      .filter((d) => matchesTarget(d, opts))
+      .sort((a, b) => scoreDevice(b) - scoreDevice(a))
+    if (opts?.productId != null) {
+      selected =
+        ranked.find((d) => d.productId === opts.productId) ??
+        (opts.catalogId || opts.vendorId != null ? ranked[0] : undefined)
+    } else {
+      selected = ranked[0]
+    }
+  }
+  if (!selected) {
+    throw new Error(
+      opts?.catalogId || opts?.productId != null
+        ? 'Wybrana mysz nie jest podłączona / nie wybrano jej w oknie HID'
+        : 'No supported mouse selected',
+    )
+  }
+  return selected
 }
 
 function padPayload(data: Uint8Array, payloadSize: number): Uint8Array {
@@ -398,18 +524,26 @@ export function createWebHidTransport(): WebHidTransport {
 
       let selected =
         productId != null
-          ? existing.find((d) => d.productId === productId) ?? existing[0]
+          ? existing.find((d) => d.productId === productId) ??
+            // Same King Ultra family only (mouse ↔ dongle), never other brands
+            existing[0]
           : existing[0]
 
       if (!selected) {
         const picked = await hid.requestDevice({ filters: hidFilters() })
-        const ranked = [...picked].sort((a, b) => scoreDevice(b) - scoreDevice(a))
+        const ranked = [...picked]
+          .filter((d) => isKingUltraDevice(d.vendorId, d.productId))
+          .sort((a, b) => scoreDevice(b) - scoreDevice(a))
         selected =
           productId != null
             ? ranked.find((d) => d.productId === productId) ?? ranked[0]
             : ranked[0]
       }
-      if (!selected) throw new Error('No supported mouse selected')
+      if (!selected) {
+        throw new Error(
+          'Redragon King Ultra nie jest podłączona / nie wybrano jej w oknie HID',
+        )
+      }
       await openSelected(selected)
     },
     async disconnect() {

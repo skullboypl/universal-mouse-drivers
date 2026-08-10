@@ -33,8 +33,8 @@ export const SEO_PAGES: Record<SeoPageId, SeoPage> = {
       en: 'Connect mouse — Universal Mouse Drivers',
     },
     description: {
-      pl: 'Sterowniki WebHID w przeglądarce i Windows tray baterii dla Redragon King Ultra. DPI, przyciski, sleep i firmware bez instalacji OEM.',
-      en: 'Browser WebHID drivers and Windows battery tray for Redragon King Ultra. DPI, buttons, sleep and firmware — no OEM install.',
+      pl: 'Sterowniki WebHID w przeglądarce i Windows tray baterii dla Redragon King Ultra (G-Wolves Fenrir Max 8K w przygotowaniu). DPI, przyciski, sleep i firmware bez instalacji OEM.',
+      en: 'Browser WebHID drivers and Windows battery tray for Redragon King Ultra (G-Wolves Fenrir Max 8K coming next). DPI, buttons, sleep and firmware — no OEM install.',
     },
   },
   settings: {

@@ -1,4 +1,4 @@
-# Redragon King Ultra — Web Driver
+# Redragon King Ultra - Web Driver
 
 Wooting-style React configurator for **Redragon King Ultra (M916OB-ULT)**.
 
@@ -12,8 +12,8 @@ npm run dev
 
 Open http://localhost:5173
 
-- **Mock** — full UI without HID writes (safe while another mouse is your daily driver).
-- **WebHID** — Chrome/Edge only; filters `VID 0x3554` + `PID F54D | F54F | F510`.
+- **Mock** - full UI without HID writes (safe while another mouse is your daily driver).
+- **WebHID** - Chrome/Edge only; filters `VID 0x3554` + `PID F54D | F54F | F510`.
 
 ## Safety
 

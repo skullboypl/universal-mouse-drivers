@@ -1,0 +1,134 @@
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.25rem 1.25rem 3rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+.sub {
+  margin: 0.35rem 0 1.25rem;
+  color: var(--fg-muted);
+  font-size: 0.9rem;
+}
+
+.card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1rem 1.1rem 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  margin: 0 0 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.dpiValue {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--accent-hot);
+}
+
+.swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0.75rem 0 1rem;
+}
+
+.swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.swatchActive {
+  border-color: var(--fg);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.swatchDisabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slider {
+  flex: 1;
+  accent-color: var(--accent);
+}
+
+.num {
+  width: 96px;
+  height: 34px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--fg);
+  font-family: var(--mono);
+  padding: 0 8px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 140px;
+}
+
+.fieldLabel {
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+}
+
+.select {
+  height: 34px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--fg);
+  padding: 0 8px;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.toggleRow:last-child {
+  border-bottom: none;
+}
+
+.tip {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+}

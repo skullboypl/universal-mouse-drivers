@@ -5,7 +5,7 @@ import { umdLog } from './debug/umdLog'
 import './styles/global.css'
 
 /** Bump when HID transport changes - proves browser loaded fresh code. */
-const UMD_BUILD = 'i18n-pl-en-v12'
+const UMD_BUILD = 'king-fw-0xb3-bcd-v36'
 
 umdLog('boot', 'info', 'UMD build', UMD_BUILD)
 

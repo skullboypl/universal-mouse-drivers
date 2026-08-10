@@ -16,13 +16,15 @@ internal sealed class KingUltraBatteryReader : IDisposable
 
     public string? DeviceLabel => _deviceLabel;
 
-    public void Connect()
+    public void Connect(int? preferredProductId = null)
     {
         Disconnect();
 
-        var device = PickOemDevice()
+        var device = PickOemDevice(preferredProductId)
             ?? throw new InvalidOperationException(
-                "No King Ultra found (VID 3554, PID F54D/F54F/F510). Close Chrome WebHID / OEM app.");
+                preferredProductId is int pid
+                    ? $"No King Ultra found (VID 3554, PID {pid:X4}). Close Chrome WebHID / OEM app."
+                    : "No King Ultra found (VID 3554, PID F54D/F54F/F510). Close Chrome WebHID / OEM app.");
 
         if (!device.TryOpen(out var stream))
             throw new InvalidOperationException("Could not open King Ultra HID interface (exclusive open?).");
@@ -84,10 +86,14 @@ internal sealed class KingUltraBatteryReader : IDisposable
 
     public void Dispose() => Disconnect();
 
-    private static HidDevice? PickOemDevice()
+    private static HidDevice? PickOemDevice(int? preferredProductId)
     {
+        var pids = preferredProductId is int only
+            ? (int[])[only]
+            : KingUltraConstants.ProductIds;
+
         var all = new List<(HidDevice Device, int Score)>();
-        foreach (var pid in KingUltraConstants.ProductIds)
+        foreach (var pid in pids)
         {
             foreach (var d in DeviceList.Local.GetHidDevices(KingUltraConstants.VendorId, pid))
                 all.Add((d, ScoreDevice(d)));

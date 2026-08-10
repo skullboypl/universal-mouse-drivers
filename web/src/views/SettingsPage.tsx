@@ -5,6 +5,7 @@ import { ClientRedirect } from '../components/ClientRedirect'
 import { Button } from '../components/Button'
 import { Select } from '../components/Select'
 import styles from '../components/ui.module.css'
+import { FENRIR_MAX_IDENTITY } from '../devices/gwolves-fenrir-max/identity'
 import { useLocale } from '../i18n/LocaleContext'
 import { LOCALES, type Locale } from '../i18n/locale'
 import { useT } from '../i18n/useT'
@@ -37,9 +38,10 @@ const SLEEP_OPTIONS: { code: number; kind: 'sec' | 'min'; n: number }[] = [
 ]
 
 export function SettingsPage() {
-  const { connected, state, apply, syncFromDriver } = useDeviceSession()
+  const { connected, state, driver, apply, syncFromDriver } = useDeviceSession()
   const { locale, setLocale, lp } = useLocale()
   const tr = useT()
+  const isFenrir = driver?.identity.id === FENRIR_MAX_IDENTITY.id
   const [tray, setTray] = useState<TrayBridgeStatus | null>(null)
   const [trayBusy, setTrayBusy] = useState(false)
 
@@ -117,16 +119,18 @@ export function SettingsPage() {
         </p>
       </div>
 
-      <div className="panel">
-        <h2 className="panel-label">{tr('settings.pairing')}</h2>
-        <Button
-          onClick={() => {
-            window.alert(tr('settings.pairAlert'))
-          }}
-        >
-          {tr('settings.pair')}
-        </Button>
-      </div>
+      {!isFenrir ? (
+        <div className="panel">
+          <h2 className="panel-label">{tr('settings.pairing')}</h2>
+          <Button
+            onClick={() => {
+              window.alert(tr('settings.pairAlert'))
+            }}
+          >
+            {tr('settings.pair')}
+          </Button>
+        </div>
+      ) : null}
 
       <div className="panel">
         <h2 className="panel-label">{tr('settings.sleep')}</h2>
@@ -227,24 +231,26 @@ export function SettingsPage() {
         </p>
       </div>
 
-      <div className="panel">
-        <h2 className="panel-label">{tr('settings.advanced')}</h2>
-        <label className={styles.check}>
-          <input
-            type="checkbox"
-            checked={state.settings.longDistance}
-            onChange={(e) => {
-              void apply((d) =>
-                d.patchSettings({ longDistance: e.target.checked }),
-              )
-            }}
-          />
-          {tr('settings.longDistance')}
-        </label>
-        <p className="muted" style={{ fontSize: '0.85rem', marginBottom: 0 }}>
-          {tr('settings.longDistanceTip')}
-        </p>
-      </div>
+      {!isFenrir ? (
+        <div className="panel">
+          <h2 className="panel-label">{tr('settings.advanced')}</h2>
+          <label className={styles.check}>
+            <input
+              type="checkbox"
+              checked={state.settings.longDistance}
+              onChange={(e) => {
+                void apply((d) =>
+                  d.patchSettings({ longDistance: e.target.checked }),
+                )
+              }}
+            />
+            {tr('settings.longDistance')}
+          </label>
+          <p className="muted" style={{ fontSize: '0.85rem', marginBottom: 0 }}>
+            {tr('settings.longDistanceTip')}
+          </p>
+        </div>
+      ) : null}
     </div>
   )
 }

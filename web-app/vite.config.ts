@@ -55,7 +55,7 @@ function umdLogBridge(): Plugin {
 export default defineConfig({
   plugins: [
     react({
-      // Disable Fast Refresh — broken when WS/HMR cannot connect in this environment
+      // Disable Fast Refresh - broken when WS/HMR cannot connect in this environment
       fastRefresh: false,
     }),
     umdLogBridge(),

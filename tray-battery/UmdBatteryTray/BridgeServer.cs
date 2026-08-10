@@ -12,7 +12,10 @@ internal sealed class BridgeServer : IDisposable
     private readonly AppSettings _settings;
     private readonly Func<BatteryReading?> _getReading;
     private readonly Func<string?> _getDeviceLabel;
+    private readonly Func<object> _getDevicesPayload;
+    private readonly Func<string?, Task<object>> _setPreferredDevice;
     private readonly Action<AppSettings> _onSettingsChanged;
+    private readonly Action _openSettings;
     private CancellationTokenSource? _cts;
     private Task? _loop;
 
@@ -34,12 +37,18 @@ internal sealed class BridgeServer : IDisposable
         AppSettings settings,
         Func<BatteryReading?> getReading,
         Func<string?> getDeviceLabel,
-        Action<AppSettings> onSettingsChanged)
+        Func<object> getDevicesPayload,
+        Func<string?, Task<object>> setPreferredDevice,
+        Action<AppSettings> onSettingsChanged,
+        Action openSettings)
     {
         _settings = settings;
         _getReading = getReading;
         _getDeviceLabel = getDeviceLabel;
+        _getDevicesPayload = getDevicesPayload;
+        _setPreferredDevice = setPreferredDevice;
         _onSettingsChanged = onSettingsChanged;
+        _openSettings = openSettings;
         _listener.Prefixes.Add($"http://127.0.0.1:{AppConstants.BridgePort}/");
     }
 
@@ -107,6 +116,7 @@ internal sealed class BridgeServer : IDisposable
                 case "/status" when req.HttpMethod == "GET":
                 {
                     var reading = _getReading();
+                    var devices = _getDevicesPayload();
                     await WriteJson(res, new
                     {
                         running = true,
@@ -116,7 +126,28 @@ internal sealed class BridgeServer : IDisposable
                         batteryPercent = reading?.Percent,
                         charging = reading is { Status: BatteryStatus.Charging or BatteryStatus.Full },
                         device = _getDeviceLabel(),
+                        preferredDeviceKey = _settings.PreferredDeviceKey,
+                        devices,
                     });
+                    break;
+                }
+
+                case "/device" when req.HttpMethod == "POST":
+                {
+                    using var reader = new StreamReader(req.InputStream, req.ContentEncoding);
+                    var body = await reader.ReadToEndAsync();
+                    using var doc = JsonDocument.Parse(string.IsNullOrWhiteSpace(body) ? "{}" : body);
+                    string? key = null;
+                    if (doc.RootElement.TryGetProperty("key", out var k))
+                    {
+                        if (k.ValueKind == JsonValueKind.Null)
+                            key = null;
+                        else if (k.ValueKind == JsonValueKind.String)
+                            key = k.GetString();
+                    }
+
+                    var result = await _setPreferredDevice(key);
+                    await WriteJson(res, result);
                     break;
                 }
 
@@ -140,6 +171,11 @@ internal sealed class BridgeServer : IDisposable
                         FileName = "main.cpl",
                         UseShellExecute = true,
                     });
+                    await WriteJson(res, new { ok = true });
+                    break;
+
+                case "/open/settings" when req.HttpMethod == "POST":
+                    _openSettings();
                     await WriteJson(res, new { ok = true });
                     break;
 

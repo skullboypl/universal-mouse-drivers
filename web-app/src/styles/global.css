@@ -22,6 +22,16 @@ body {
     linear-gradient(180deg, #0c1016 0%, var(--bg) 40%),
     var(--bg);
   -webkit-font-smoothing: antialiased;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Flat dark body while Fenrir OEM skin is active */
+.app-shell[data-device='gwolves-fenrir-max'] {
+  background: var(--bg);
+}
+
+body:has(.app-shell[data-device='gwolves-fenrir-max']) {
+  background: var(--bg);
 }
 
 button,

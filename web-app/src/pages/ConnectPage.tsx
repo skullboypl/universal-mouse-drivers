@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UMD } from '../brand/umd'
 import { Button } from '../components/Button'
@@ -5,11 +6,17 @@ import {
   DEVICE_CATALOG,
   findCatalogDevice,
 } from '../devices/registry'
+import { FENRIR_MAX_IDENTITY } from '../devices/gwolves-fenrir-max/identity'
+import { KING_ULTRA_IDENTITY } from '../devices/redragon-king-ultra/identity'
 import type { DeviceIdentity, DeviceSupportStatus } from '../devices/types'
 import { useLocale } from '../i18n/LocaleContext'
 import { useT } from '../i18n/useT'
 import { useDeviceSession } from '../session/DeviceSessionContext'
+import type { SavedDevice } from '../session/savedDevices'
+import type { HidPickTarget } from '../transport/webhid'
 import styles from './ConnectPage.module.css'
+
+const HERO_SLIDE_MS = 4200
 
 function resolveCatalogImage(
   catalogId: string,
@@ -35,25 +42,139 @@ function DeviceThumb({
   )
 }
 
+function connectingLabel(
+  catalogId: string | undefined,
+  syncing: string,
+): string {
+  if (catalogId === FENRIR_MAX_IDENTITY.id) return 'Fenrir…'
+  if (catalogId === KING_ULTRA_IDENTITY.id) return 'King Ultra…'
+  return syncing
+}
+
+function HeroMiceSlider({ devices }: { devices: DeviceIdentity[] }) {
+  const [index, setIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const active = devices[index] ?? devices[0]
+
+  useEffect(() => {
+    if (devices.length < 2 || paused) return
+    const id = window.setInterval(() => {
+      setIndex((i) => (i + 1) % devices.length)
+    }, HERO_SLIDE_MS)
+    return () => window.clearInterval(id)
+  }, [devices.length, paused])
+
+  if (!active) return null
+
+  return (
+    <div
+      className={styles.heroVisual}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+          setPaused(false)
+        }
+      }}
+    >
+      <div className={styles.glow} aria-hidden />
+      <div className={styles.slideStage} aria-live="polite">
+        {devices.map((d, i) => (
+          <img
+            key={d.id}
+            className={`${styles.mouse} ${i === index ? styles.mouseActive : ''}`}
+            src={d.imageUrl ?? '/brand/mouse-hero.png'}
+            alt=""
+            draggable={false}
+          />
+        ))}
+      </div>
+      <div className={styles.slideMeta}>
+        <p className={styles.slideLabel}>
+          <span className={styles.slideBrand}>{active.brand}</span>
+          <span className={styles.slideModel}>{active.model}</span>
+        </p>
+        {devices.length > 1 ? (
+          <div
+            className={styles.slideDots}
+            role="tablist"
+            aria-label="Supported mice"
+          >
+            {devices.map((d, i) => (
+              <button
+                key={d.id}
+                type="button"
+                role="tab"
+                aria-selected={i === index}
+                aria-label={`${d.brand} ${d.model}`}
+                className={i === index ? styles.dotActive : styles.dot}
+                onClick={() => setIndex(i)}
+              />
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
 export function ConnectPage() {
   const nav = useNavigate()
   const { lp } = useLocale()
   const { connectMock, connectWebHid, webHidOk, savedDevices } =
     useDeviceSession()
   const tr = useT()
+  const [connectingKey, setConnectingKey] = useState<string | null>(null)
 
-  async function goHid(productId?: number) {
+  async function goHid(target?: HidPickTarget, key?: string) {
+    setConnectingKey(key ?? target?.catalogId ?? 'any')
     try {
-      await connectWebHid(productId)
-      nav(lp('/device/sensor'))
+      const catalogId = await connectWebHid(target)
+      nav(
+        lp(
+          catalogId === FENRIR_MAX_IDENTITY.id
+            ? '/device/buttons'
+            : '/device/sensor',
+        ),
+      )
     } catch {
       /* status bar already updated */
+    } finally {
+      setConnectingKey(null)
     }
   }
 
+  async function goSaved(d: SavedDevice) {
+    await goHid(
+      {
+        productId: d.productId,
+        vendorId: d.vendorId,
+        catalogId: d.catalogId,
+      },
+      `saved:${d.vendorId}:${d.productId}`,
+    )
+  }
+
+  async function goCatalog(d: DeviceIdentity) {
+    await goHid(
+      {
+        productId: d.productIds[0],
+        vendorId: d.vendorId,
+        catalogId: d.id,
+      },
+      `catalog:${d.id}`,
+    )
+  }
+
   async function goDemo() {
-    await connectMock()
-    nav(lp('/device/sensor'))
+    setConnectingKey('demo')
+    try {
+      await connectMock()
+      nav(lp('/device/sensor'))
+    } finally {
+      setConnectingKey(null)
+    }
   }
 
   function statusText(status: DeviceSupportStatus) {
@@ -62,8 +183,10 @@ export function ConnectPage() {
     return tr('connect.statusPlanned')
   }
 
+  const busyAny = connectingKey != null
+
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-brand="umd">
       <section className={styles.hero} aria-label={UMD.name}>
         <div className={styles.heroCopy}>
           <p className={styles.brandMark}>{UMD.shortName}</p>
@@ -72,27 +195,28 @@ export function ConnectPage() {
           <div className={styles.ctaRow}>
             <Button
               variant="primary"
-              disabled={!webHidOk}
-              onClick={() => void goHid()}
+              disabled={!webHidOk || busyAny}
+              onClick={() => void goHid(undefined, 'any')}
             >
-              {tr('connect.webhid')}
+              {connectingKey === 'any' ? (
+                <span className={styles.rowBusy}>
+                  <span className={styles.rowSpin} aria-hidden />
+                  {tr('status.syncing')}
+                </span>
+              ) : (
+                tr('connect.webhid')
+              )}
             </Button>
-            <Button onClick={() => void goDemo()}>{tr('connect.demo')}</Button>
+            <Button disabled={busyAny} onClick={() => void goDemo()}>
+              {tr('connect.demo')}
+            </Button>
           </div>
           {!webHidOk && (
             <p className={styles.warn}>{tr('connect.noWebHid')}</p>
           )}
           <p className={styles.hint}>{tr('connect.hint')}</p>
         </div>
-        <div className={styles.heroVisual} aria-hidden>
-          <div className={styles.glow} />
-          <img
-            className={styles.mouse}
-            src="/brand/mouse-hero.png"
-            alt=""
-            draggable={false}
-          />
-        </div>
+        <HeroMiceSlider devices={DEVICE_CATALOG} />
       </section>
 
       <section className={styles.section}>
@@ -110,13 +234,17 @@ export function ConnectPage() {
                 d.vendorId,
                 d.productId,
               )
+              const key = `saved:${d.vendorId}:${d.productId}`
+              const rowBusy = connectingKey === key
               return (
-                <li key={`${d.vendorId}:${d.productId}`}>
+                <li key={key}>
                   <button
                     type="button"
-                    className={styles.listRow}
-                    disabled={!webHidOk}
-                    onClick={() => void goHid(d.productId)}
+                    className={`${styles.listRow} ${
+                      rowBusy ? styles.listRowBusy : ''
+                    }`}
+                    disabled={!webHidOk || busyAny}
+                    onClick={() => void goSaved(d)}
                   >
                     <DeviceThumb
                       src={imageUrl}
@@ -131,9 +259,16 @@ export function ConnectPage() {
                           `${d.vendorId.toString(16)}:${d.productId.toString(16)}`}
                       </span>
                     </span>
-                    <span className={styles.meta}>
-                      {new Date(d.lastSeen).toLocaleString()}
-                    </span>
+                    {rowBusy ? (
+                      <span className={styles.rowBusy}>
+                        <span className={styles.rowSpin} aria-hidden />
+                        {connectingLabel(d.catalogId, tr('status.syncing'))}
+                      </span>
+                    ) : (
+                      <span className={styles.meta}>
+                        {new Date(d.lastSeen).toLocaleString()}
+                      </span>
+                    )}
                   </button>
                 </li>
               )
@@ -148,35 +283,65 @@ export function ConnectPage() {
           <p>{tr('connect.supportedSub')}</p>
         </header>
         <ul className={styles.list}>
-          {DEVICE_CATALOG.map((d: DeviceIdentity) => (
-            <li key={d.id} className={styles.supportRow}>
-              <DeviceThumb
-                src={d.imageUrl}
-                alt={`${d.brand} ${d.model}`}
-              />
-              <div className={styles.listMain} style={{ flex: 1 }}>
-                <strong>
-                  {d.brand} {d.model}
-                </strong>
-                <span className={styles.meta}>{d.tagline}</span>
-              </div>
-              <div className={styles.supportMeta}>
-                <span className={styles.ids}>{d.hidIds.join(' · ')}</span>
-                <span
-                  className={[
-                    styles.badge,
-                    d.status === 'live'
-                      ? styles.badgeLive
-                      : d.status === 'wip'
-                        ? styles.badgeWip
-                        : styles.badgePlanned,
-                  ].join(' ')}
+          {DEVICE_CATALOG.map((d: DeviceIdentity) => {
+            const canConnect = webHidOk && d.status !== 'planned'
+            const key = `catalog:${d.id}`
+            const rowBusy = connectingKey === key
+            return (
+              <li key={d.id} className={styles.supportRow}>
+                <button
+                  type="button"
+                  className={`${styles.listRow} ${
+                    rowBusy ? styles.listRowBusy : ''
+                  }`}
+                  disabled={!canConnect || busyAny}
+                  onClick={() => {
+                    if (!canConnect) return
+                    void goCatalog(d)
+                  }}
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    opacity: canConnect ? 1 : 0.72,
+                    cursor: canConnect && !busyAny ? 'pointer' : 'default',
+                  }}
                 >
-                  {statusText(d.status)}
-                </span>
-              </div>
-            </li>
-          ))}
+                  <DeviceThumb
+                    src={d.imageUrl}
+                    alt={`${d.brand} ${d.model}`}
+                  />
+                  <div className={styles.listMain} style={{ flex: 1 }}>
+                    <strong>
+                      {d.brand} {d.model}
+                    </strong>
+                    <span className={styles.meta}>{d.tagline}</span>
+                  </div>
+                  {rowBusy ? (
+                    <span className={styles.rowBusy}>
+                      <span className={styles.rowSpin} aria-hidden />
+                      {connectingLabel(d.id, tr('status.syncing'))}
+                    </span>
+                  ) : (
+                    <div className={styles.supportMeta}>
+                      <span className={styles.ids}>{d.hidIds.join(' · ')}</span>
+                      <span
+                        className={[
+                          styles.badge,
+                          d.status === 'live'
+                            ? styles.badgeLive
+                            : d.status === 'wip'
+                              ? styles.badgeWip
+                              : styles.badgePlanned,
+                        ].join(' ')}
+                      >
+                        {statusText(d.status)}
+                      </span>
+                    </div>
+                  )}
+                </button>
+              </li>
+            )
+          })}
         </ul>
       </section>
 

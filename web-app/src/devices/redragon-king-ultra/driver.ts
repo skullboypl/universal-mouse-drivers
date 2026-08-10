@@ -178,14 +178,28 @@ export class KingUltraDriver {
     await this.refreshFirmwareVersions()
   }
 
-  /** OEM ReadVersion (receiver) + GetSlaveVersion (mouse). */
+  /**
+   * Live F54F mapping (matches OEM Settings labels):
+   * - cmd 0xB3 → Receiver Firmware (UsbFinder_GetSlaveVersion wire)
+   * - cmd 0x12 → Mouse Firmware (UsbServer_ReadVersion)
+   * Note: cmd 0x0B never ACKs — do not use it.
+   */
   async refreshFirmwareVersions() {
     if (!this.transport || this.transport.kind === 'mock') return
 
-    const receiver = await this.readVersionOnce('read_version', UsbCommandId.ReadVersionID)
+    await this.trySend({ op: 'set_pc_driver', active: true })
+    await this.trySend({ op: 'read_online' })
+    await sleep(60)
+
+    const receiver = await this.readVersionOnce(
+      'read_dongle_version',
+      UsbCommandId.GetDongleVersion,
+    )
+    await this.trySend({ op: 'read_online' })
+    await sleep(40)
     const mouse = await this.readVersionOnce(
-      'read_slave_version',
-      UsbCommandId.GetSlaveVersion,
+      'read_mouse_version',
+      UsbCommandId.ReadVersionID,
     )
     umdLog('driver', 'info', 'firmware versions', { receiver, mouse })
 
@@ -202,19 +216,33 @@ export class KingUltraDriver {
   }
 
   private async readVersionOnce(
-    op: 'read_version' | 'read_slave_version',
+    op: 'read_dongle_version' | 'read_mouse_version' | 'read_version',
     expectCmd: number,
   ): Promise<string | null> {
-    for (let attempt = 0; attempt < 3; attempt++) {
+    for (let attempt = 0; attempt < 4; attempt++) {
       await this.trySend({ op })
-      await sleep(40)
-      const ack = this.readLastAck()
-      if (!ack) continue
-      const ver = decodeVersionReport(ack, expectCmd)
+      let ack = this.readLastAck()
+      let ver = ack ? decodeVersionReport(ack, expectCmd) : null
       if (ver) return ver.firmware
-      // Follow-up may have overwritten lastAck with a different cmd - try loose parse
-      const loose = decodeVersionReport(ack)
-      if (loose && loose.commandId === expectCmd) return loose.firmware
+
+      // Dongle may echo first (status=1 / wrong cmd). Keep listening for match.
+      const wait = this.transport?.waitInput
+      if (wait) {
+        for (let i = 0; i < 8 && !ver; i++) {
+          const next = await wait.call(this.transport, {
+            commandId: expectCmd,
+            timeoutMs: 450,
+          })
+          if (!next) continue
+          ver = decodeVersionReport(next, expectCmd)
+          if (ver) return ver.firmware
+        }
+      } else {
+        await sleep(120)
+        ack = this.readLastAck()
+        ver = ack ? decodeVersionReport(ack, expectCmd) : null
+        if (ver) return ver.firmware
+      }
       await sleep(80)
     }
     return null

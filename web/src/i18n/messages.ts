@@ -7,8 +7,7 @@ export type MessageKey =
   | 'nav.buttons'
   | 'nav.sensor'
   | 'nav.macro'
-  | 'nav.soon'
-  | 'nav.macroSoon'
+  | 'nav.mouse'
   | 'nav.settings'
   | 'nav.disconnect'
   | 'connect.lede'
@@ -27,7 +26,6 @@ export type MessageKey =
   | 'connect.contactTitle'
   | 'connect.contactBody'
   | 'connect.contactBarter'
-  | 'connect.trayDownload'
   | 'buttons.title'
   | 'buttons.sub'
   | 'buttons.profile'
@@ -82,8 +80,6 @@ export type MessageKey =
   | 'sensor.motion'
   | 'sensor.motionTip'
   | 'macro.title'
-  | 'macro.comingSoon'
-  | 'macro.comingSoonBody'
   | 'macro.sub'
   | 'macro.list'
   | 'macro.keys'
@@ -120,20 +116,14 @@ export type MessageKey =
   | 'settings.receiverFw'
   | 'settings.mouseFw'
   | 'settings.refreshFw'
-  | 'settings.fwHint'
   | 'settings.pairing'
   | 'settings.pair'
   | 'settings.pairAlert'
   | 'settings.sleep'
   | 'settings.sleepHint'
   | 'settings.sleepMin'
-  | 'settings.sleepSec'
   | 'settings.other'
   | 'settings.boot'
-  | 'settings.trayOnline'
-  | 'settings.trayOffline'
-  | 'settings.trayDownloadRun'
-  | 'settings.mouseSite'
   | 'settings.winMouse'
   | 'settings.winMouseAlert'
   | 'settings.advanced'
@@ -148,6 +138,8 @@ export type MessageKey =
   | 'status.connectingDemo'
   | 'status.selectMouse'
   | 'status.syncing'
+  | 'status.reading'
+  | 'status.readOk'
   | 'status.disconnected'
   | 'status.applyFailed'
   | 'status.webhidFailed'
@@ -164,8 +156,7 @@ const en: Dict = {
   'nav.buttons': 'Buttons',
   'nav.sensor': 'Sensor',
   'nav.macro': 'Macro',
-  'nav.soon': 'Soon',
-  'nav.macroSoon': 'Macro editor coming soon',
+  'nav.mouse': 'Mouse',
   'nav.settings': 'Settings',
   'nav.disconnect': 'Disconnect',
   'connect.lede':
@@ -190,7 +181,6 @@ const en: Dict = {
     'Send the model, Windows driver package link, and VID:PID. We will review adding it to UMD.',
   'connect.contactBarter':
     'You can also ship your mouse for testing as a barter - DM on TikTok',
-  'connect.trayDownload': 'Download UMD Battery Tray (Windows .exe)',
   'buttons.title': 'Button mapping',
   'buttons.sub':
     'Profiles, binds, debounce - changes auto-save after a short delay.',
@@ -260,9 +250,6 @@ const en: Dict = {
   'sensor.motionTip':
     'Aligns sensor samples with the USB report rate for more consistent feel.',
   'macro.title': 'Macro',
-  'macro.comingSoon': 'Coming soon',
-  'macro.comingSoonBody':
-    'Macro recording and flash write are not enabled yet. This tab will open when the HID path is ready.',
   'macro.sub': 'Record and edit macros - assign them from Buttons.',
   'macro.list': 'Macros list',
   'macro.keys': 'Keys list',
@@ -299,8 +286,6 @@ const en: Dict = {
   'settings.receiverFw': 'Receiver firmware:',
   'settings.mouseFw': 'Mouse firmware:',
   'settings.refreshFw': 'Refresh firmware',
-  'settings.fwHint':
-    'Move the mouse (wake it) before refresh. Close the OEM Redragon app if versions stay blank.',
   'settings.pairing': 'Pairing tool',
   'settings.pair': 'Pair (Space)',
   'settings.pairAlert':
@@ -308,18 +293,11 @@ const en: Dict = {
   'settings.sleep': 'Sleep mode',
   'settings.sleepHint': 'Time until mouse sleep after not moving',
   'settings.sleepMin': '{n} min',
-  'settings.sleepSec': '{n} sec',
   'settings.other': 'Other',
-  'settings.boot':
-    'Start with Windows — autostart UMD Battery Tray app',
-  'settings.trayOnline': 'Tray online · v{v} · battery {n}%',
-  'settings.trayOffline':
-    'Tray offline — run UmdBatteryTray.exe on this PC (browser talks to 127.0.0.1:17355; Next.js on the server cannot)',
-  'settings.trayDownloadRun': 'Download and run UMD Battery Tray',
-  'settings.mouseSite': 'UMD · mouse.vxh.pl',
+  'settings.boot': 'Run on system boot (requires bridge helper)',
   'settings.winMouse': 'Windows Mouse Properties',
   'settings.winMouseAlert':
-    'Start UMD Battery Tray first - it opens Windows Mouse Properties via the local bridge.',
+    'Windows Mouse Properties is opened by the optional local bridge (main.cpl).',
   'settings.advanced': 'Advanced setting',
   'settings.longDistance': 'Long distance',
   'settings.longDistanceTip':
@@ -334,6 +312,8 @@ const en: Dict = {
   'status.connectingDemo': 'Connecting demo…',
   'status.selectMouse': 'Select a supported mouse…',
   'status.syncing': 'syncing…',
+  'status.reading': 'Reading from mouse…',
+  'status.readOk': 'Read from mouse',
   'status.disconnected': 'Device disconnected',
   'status.applyFailed': 'Apply failed',
   'status.webhidFailed': 'WebHID connect failed',
@@ -349,8 +329,7 @@ const pl: Dict = {
   'nav.buttons': 'Przyciski',
   'nav.sensor': 'Sensor',
   'nav.macro': 'Makro',
-  'nav.soon': 'Wkrótce',
-  'nav.macroSoon': 'Edytor makr wkrótce',
+  'nav.mouse': 'Myszka',
   'nav.settings': 'Ustawienia',
   'nav.disconnect': 'Rozłącz',
   'connect.lede':
@@ -377,7 +356,6 @@ const pl: Dict = {
     'Napisz model, link do sterownika Windows i VID:PID. Sprawdzimy dodanie do UMD.',
   'connect.contactBarter':
     'Możesz też wysłać myszkę na testy w ramach barteru - napisz na TikToku',
-  'connect.trayDownload': 'Pobierz UMD Battery Tray (Windows .exe)',
   'buttons.title': 'Mapowanie przycisków',
   'buttons.sub':
     'Profile, przypisania, debounce - zmiany zapisują się automatycznie po chwili.',
@@ -447,9 +425,6 @@ const pl: Dict = {
   'sensor.motionTip':
     'Synchronizuje próbki sensora z częstotliwością USB - bardziej równe odczucie.',
   'macro.title': 'Makro',
-  'macro.comingSoon': 'Wkrótce',
-  'macro.comingSoonBody':
-    'Nagrywanie makr i zapis do flash nie są jeszcze włączone. Zakładka otworzy się, gdy będzie gotowa ścieżka HID.',
   'macro.sub': 'Nagrywaj i edytuj makro - przypisz je w Przyciskach.',
   'macro.list': 'Lista makro',
   'macro.keys': 'Lista klawiszy',
@@ -486,8 +461,6 @@ const pl: Dict = {
   'settings.receiverFw': 'Firmware receivera:',
   'settings.mouseFw': 'Firmware myszy:',
   'settings.refreshFw': 'Odśwież firmware',
-  'settings.fwHint':
-    'Przed odświeżeniem rusz myszą (wybudź). Zamknij oficjalny driver Redragon, jeśli wersje zostają puste.',
   'settings.pairing': 'Narzędzie parowania',
   'settings.pair': 'Paruj (Spacja)',
   'settings.pairAlert':
@@ -495,18 +468,11 @@ const pl: Dict = {
   'settings.sleep': 'Tryb uśpienia',
   'settings.sleepHint': 'Czas do uśpienia po braku ruchu',
   'settings.sleepMin': '{n} min',
-  'settings.sleepSec': '{n} sek',
   'settings.other': 'Inne',
-  'settings.boot':
-    'Uruchamiaj z Windowsem — autostart aplikacji UMD Battery Tray',
-  'settings.trayOnline': 'Tray online · v{v} · bateria {n}%',
-  'settings.trayOffline':
-    'Tray wyłączony — uruchom UmdBatteryTray.exe na tym PC (przeglądarka łączy się z 127.0.0.1:17355; serwer Next.js nie widzi Twojego komputera)',
-  'settings.trayDownloadRun': 'Pobierz i uruchom UMD Battery Tray',
-  'settings.mouseSite': 'UMD · mouse.vxh.pl',
+  'settings.boot': 'Uruchom przy starcie systemu (wymaga bridge)',
   'settings.winMouse': 'Właściwości myszy Windows',
   'settings.winMouseAlert':
-    'Najpierw uruchom UMD Battery Tray - wtedy otworzy Właściwości myszy Windows przez lokalny bridge.',
+    'Właściwości myszy Windows otwiera opcjonalny lokalny bridge (main.cpl).',
   'settings.advanced': 'Zaawansowane',
   'settings.longDistance': 'Duży zasięg',
   'settings.longDistanceTip':
@@ -521,6 +487,8 @@ const pl: Dict = {
   'status.connectingDemo': 'Łączenie z demo…',
   'status.selectMouse': 'Wybierz wspieraną mysz…',
   'status.syncing': 'synchronizacja…',
+  'status.reading': 'Odczytuję z myszy…',
+  'status.readOk': 'Odczytano z myszy',
   'status.disconnected': 'Urządzenie rozłączone',
   'status.applyFailed': 'Nie udało się zastosować',
   'status.webhidFailed': 'Połączenie WebHID nieudane',

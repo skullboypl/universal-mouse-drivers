@@ -25,7 +25,10 @@ export interface ButtonBinding {
 
 export interface DpiStage {
   index: number
+  /** DPI X (and Y when axis sync is on). */
   value: number
+  /** DPI Y when axis sync is off (Fenrir / DPIXYEnable). Defaults to value. */
+  valueY?: number
   color: string
   enabled: boolean
 }
@@ -45,6 +48,35 @@ export interface SensorState {
   motionSync: boolean
   debounceMs: number
   debounceEnabled: boolean
+  /** Fenrir: OEM click debounce preset index 0–5 when DIY is off. */
+  debounceLevel?: number
+  /** Fenrir OEM debounce1 — Before Press (ms). */
+  debounceBeforePress?: number
+  /** Fenrir OEM debounce2 — Before Release (ms). */
+  debounceBeforeRelease?: number
+  /** Fenrir OEM debounce3 — After Press (ms). */
+  debounceAfterPress?: number
+  /** Fenrir OEM debounce4 — After Release (ms). */
+  debounceAfterRelease?: number
+  /** Fenrir: OEM wheel scroll debounce (ms). */
+  wheelDebounceMs?: number
+  /** Fenrir: DIY mode for wheel debounce (non-preset). */
+  wheelDebounceDiy?: boolean
+  /** Fenrir: companion rate byte for setWheelDebounce. */
+  wheelDebounceRate?: number
+  /** Fenrir: OEM wheel debounce preset index 0–3 when DIY is off. */
+  wheelDebounceLevel?: number
+  /** Fenrir OEM Axis Sync (DPI X = DPI Y). */
+  dpiAxisSync?: boolean
+  /** Fenrir OEM LED State. */
+  ledEnabled?: boolean
+  /**
+   * Fenrir OEM LED Effect id when LED is on.
+   * Old protocol: 1=Static, 2=Breathing (OEM lightColorEffects).
+   */
+  ledEffect?: number
+  /** Fenrir OEM Sensor Angle (degrees). */
+  sensorAngle?: number
 }
 
 export interface MacroEvent {

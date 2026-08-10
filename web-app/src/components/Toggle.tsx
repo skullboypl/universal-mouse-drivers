@@ -4,13 +4,23 @@ export function Toggle({
   on,
   onChange,
   label,
+  compact,
 }: {
   on: boolean
   onChange: (next: boolean) => void
   label: string
+  /** Inline toolbar toggle (no full-width row). */
+  compact?: boolean
 }) {
   return (
-    <div className="row" style={{ justifyContent: 'space-between', width: '100%' }}>
+    <div
+      className="row"
+      style={
+        compact
+          ? { justifyContent: 'flex-start', gap: 10, width: 'auto' }
+          : { justifyContent: 'space-between', width: '100%' }
+      }
+    >
       <span>{label}</span>
       <button
         type="button"

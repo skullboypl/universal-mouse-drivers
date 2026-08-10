@@ -1,6 +1,6 @@
 # Universal Mouse Drivers (UMD)
 
-> Browser-native WebHID mouse drivers and a Windows battery tray for Redragon King Ultra (and expanding device support).
+> Browser-native WebHID mouse drivers and a Windows battery tray for Redragon King Ultra, with G-Wolves Fenrir Max 8K planned next.
 
 ## Site
 - Home (PL): https://mouse.vxh.pl/pl

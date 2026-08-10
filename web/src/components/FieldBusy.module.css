@@ -1,0 +1,26 @@
+.wrap {
+  position: relative;
+}
+
+.on {
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.spin {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-top-color: var(--accent);
+  animation: spin 0.65s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

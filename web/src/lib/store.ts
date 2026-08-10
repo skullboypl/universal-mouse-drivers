@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { DEMO_BUTTONS } from '@/devices/demo/identity'
+import { FENRIR_MAX_BUTTONS } from '@/devices/gwolves-fenrir-max/buttons'
 import { KING_ULTRA_BUTTONS } from '@/devices/redragon-king-ultra/buttons'
 import {
   type ButtonPosition,
@@ -13,7 +14,7 @@ export type { ButtonPosition, LayoutId }
 export { LAYOUT_META }
 
 /** Keep in sync with tray-battery UmdBatteryTray.csproj Version. */
-export const BUNDLED_TRAY_VERSION = '1.1.3'
+export const BUNDLED_TRAY_VERSION = '1.1.4'
 
 export interface DownloadMeta {
   id: string
@@ -53,6 +54,12 @@ const DEFAULT_DEMO: ButtonPosition[] = DEMO_BUTTONS.map((b) => ({
   uiY: b.uiY,
 }))
 
+const DEFAULT_FENRIR_MAX: ButtonPosition[] = FENRIR_MAX_BUTTONS.map((b) => ({
+  id: b.id,
+  uiX: b.uiX,
+  uiY: b.uiY,
+}))
+
 function defaultStore(): UmdStore {
   return {
     version: 1,
@@ -60,6 +67,7 @@ function defaultStore(): UmdStore {
       'king-ultra': DEFAULT_BUTTONS,
       'king-ultra-hero': DEFAULT_HERO,
       'umd-demo': DEFAULT_DEMO,
+      'fenrir-max': DEFAULT_FENRIR_MAX,
     },
     downloads: {
       trayBattery: {
@@ -121,6 +129,9 @@ function ensureLayouts(store: UmdStore): UmdStore {
   if (!store.buttonLayouts['umd-demo']) {
     store.buttonLayouts['umd-demo'] = DEFAULT_DEMO
   }
+  if (!store.buttonLayouts['fenrir-max']) {
+    store.buttonLayouts['fenrir-max'] = DEFAULT_FENRIR_MAX
+  }
   if (!store.downloads) store.downloads = defaultStore().downloads
   return store
 }
@@ -177,6 +188,9 @@ export function getButtonLayout(layoutId: LayoutId | string = 'king-ultra'): But
   }
   if (layoutId === 'umd-demo') {
     return store.buttonLayouts['umd-demo'] ?? DEFAULT_DEMO
+  }
+  if (layoutId === 'fenrir-max') {
+    return store.buttonLayouts['fenrir-max'] ?? DEFAULT_FENRIR_MAX
   }
   return store.buttonLayouts[layoutId] ?? DEFAULT_BUTTONS
 }

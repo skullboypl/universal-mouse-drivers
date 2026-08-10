@@ -1,11 +1,14 @@
 import type { DeviceState } from '../devices/types'
-import { KING_ULTRA_IDENTITY } from '../devices/redragon-king-ultra/identity'
 
-const STORAGE_KEY = `webdriver:${KING_ULTRA_IDENTITY.id}:autosave`
+export function draftStorageKey(deviceId: string): string {
+  return `webdriver:${deviceId}:autosave`
+}
 
-export function loadSavedDraft(): Partial<DeviceState> | null {
+export function loadSavedDraft(
+  deviceId: string,
+): Partial<DeviceState> | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(draftStorageKey(deviceId))
     if (!raw) return null
     return JSON.parse(raw) as Partial<DeviceState>
   } catch {
@@ -13,7 +16,7 @@ export function loadSavedDraft(): Partial<DeviceState> | null {
   }
 }
 
-export function persistDraft(state: DeviceState): void {
+export function persistDraft(deviceId: string, state: DeviceState): void {
   const payload = {
     profileIndex: state.profileIndex,
     buttons: state.buttons,
@@ -22,5 +25,5 @@ export function persistDraft(state: DeviceState): void {
     settings: state.settings,
     savedAt: new Date().toISOString(),
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
+  localStorage.setItem(draftStorageKey(deviceId), JSON.stringify(payload))
 }

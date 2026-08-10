@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { UMD } from '../brand/umd'
+import { FENRIR_MAX_IDENTITY } from '../devices/gwolves-fenrir-max/identity'
 import { useLocale } from '../i18n/LocaleContext'
 import { useT } from '../i18n/useT'
 import type { MessageKey } from '../i18n/messages'
@@ -7,18 +8,26 @@ import { useDeviceSession } from '../session/DeviceSessionContext'
 import { Button } from './Button'
 import styles from './TopNav.module.css'
 
-const tabs: { path: string; key: MessageKey }[] = [
+const KING_TABS: { path: string; key: MessageKey }[] = [
   { path: '/device/buttons', key: 'nav.buttons' },
   { path: '/device/sensor', key: 'nav.sensor' },
   { path: '/device/macro', key: 'nav.macro' },
   { path: '/device/settings', key: 'nav.settings' },
 ]
 
+/** OEM Fenrir is one mouse page + settings — no separate sensor/macro tabs. */
+const FENRIR_TABS: { path: string; key: MessageKey }[] = [
+  { path: '/device/buttons', key: 'nav.mouse' },
+  { path: '/device/settings', key: 'nav.settings' },
+]
+
 export function TopNav() {
-  const { connected, state, disconnect, transportKind, saveStatus } =
+  const { connected, state, disconnect, transportKind, saveStatus, driver } =
     useDeviceSession()
   const { lp } = useLocale()
   const tr = useT()
+  const tabs =
+    driver?.identity.id === FENRIR_MAX_IDENTITY.id ? FENRIR_TABS : KING_TABS
 
   return (
     <header className={styles.nav}>

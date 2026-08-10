@@ -8,14 +8,20 @@ import {
   type ReactNode,
 } from 'react'
 import { umdLog } from '../debug/umdLog'
-import { createDriver, findCatalogDevice } from '../devices/registry'
+import type { DeviceDriver } from '../devices/DeviceDriver'
+import { createDriver, DEVICE_CATALOG, findCatalogDevice } from '../devices/registry'
+import { FENRIR_MAX_IDENTITY } from '../devices/gwolves-fenrir-max/identity'
 import { KING_ULTRA_IDENTITY } from '../devices/redragon-king-ultra/identity'
-import type { KingUltraDriver } from '../devices/redragon-king-ultra/driver'
 import type { DeviceState } from '../devices/types'
 import { t } from '../i18n/messages'
 import { normalizeLocale, readStoredLocale, type Locale } from '../i18n/locale'
 import { createMockTransport } from '../transport/mock'
-import { createWebHidTransport, webHidSupported } from '../transport/webhid'
+import {
+  createWebHidTransport,
+  pickSupportedHidDevice,
+  webHidSupported,
+  type HidPickTarget,
+} from '../transport/webhid'
 import type { TransportKind } from '../transport/types'
 import { loadSavedDraft, persistDraft } from './autoSave'
 import {
@@ -31,16 +37,27 @@ interface SessionValue {
   transportKind: TransportKind | null
   status: string | null
   saveStatus: SaveStatus
+  /** True while HID sync/write is in progress — UI should ignore clicks. */
+  deviceBusy: boolean
+  /** Why deviceBusy is on — SyncSpinner label (connect vs refresh read). */
+  busyKind: 'connect' | 'refresh' | null
   state: DeviceState | null
-  driver: KingUltraDriver | null
+  driver: DeviceDriver | null
   webHidOk: boolean
+  /** Catalog id while connecting / syncing — drives shell skin before driver is ready. */
+  connectingCatalogId: string | null
   savedDevices: SavedDevice[]
   connectMock: () => Promise<void>
-  connectWebHid: (productId?: number) => Promise<void>
+  connectWebHid: (target?: number | HidPickTarget) => Promise<string>
   disconnect: () => Promise<void>
   refreshSavedDevices: () => void
   syncFromDriver: () => void
-  apply: (fn: (driver: KingUltraDriver) => void | Promise<void>) => Promise<void>
+  apply: (
+    fn: (driver: DeviceDriver) => void | Promise<void>,
+    opts?: { autosave?: boolean },
+  ) => Promise<void>
+  /** Read-only HID refresh (no autosave / no write toast). */
+  refreshFromDevice: () => Promise<void>
 }
 
 const DeviceSessionContext = createContext<SessionValue | null>(null)
@@ -54,13 +71,13 @@ function uiLocale(raw?: string | null): Locale {
   return normalizeLocale(raw) ?? readStoredLocale() ?? 'pl'
 }
 
-function mergeDraft(driver: KingUltraDriver) {
-  const draft = loadSavedDraft()
+function mergeDraft(driver: DeviceDriver) {
+  const draft = loadSavedDraft(driver.identity.id)
   if (!draft) return
   try {
     driver.importProfile(
       JSON.stringify({
-        device: KING_ULTRA_IDENTITY.id,
+        device: driver.identity.id,
         ...draft,
       }),
     )
@@ -72,19 +89,26 @@ function mergeDraft(driver: KingUltraDriver) {
 }
 
 export function DeviceSessionProvider({ children }: { children: ReactNode }) {
-  const [driver, setDriver] = useState<KingUltraDriver | null>(null)
+  const [driver, setDriver] = useState<DeviceDriver | null>(null)
   const [transportKind, setTransportKind] = useState<TransportKind | null>(null)
   const [state, setState] = useState<DeviceState | null>(null)
   const [status, setStatus] = useState<string | null>(null)
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
+  const [deviceBusy, setDeviceBusy] = useState(false)
+  /** 'connect' | 'refresh' while deviceBusy — picks SyncSpinner label. */
+  const [busyKind, setBusyKind] = useState<'connect' | 'refresh' | null>(null)
+  const [connectingCatalogId, setConnectingCatalogId] = useState<string | null>(
+    null,
+  )
   const [savedDevices, setSavedDevices] = useState<SavedDevice[]>(() =>
     loadSavedDevices(),
   )
-  const driverRef = useRef<KingUltraDriver | null>(null)
+  const driverRef = useRef<DeviceDriver | null>(null)
   const transportKindRef = useRef<TransportKind | null>(null)
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const busyRef = useRef(false)
 
-  const publish = useCallback((d: KingUltraDriver | null) => {
+  const publish = useCallback((d: DeviceDriver | null) => {
     driverRef.current = d
     setDriver(d)
     setState(d ? cloneState(d.getState()) : null)
@@ -105,7 +129,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       setSaveStatus('saving')
       try {
         const snap = cloneState(current.getState())
-        persistDraft(snap)
+        persistDraft(current.identity.id, snap)
         void current.flushToDevice()
         setSaveStatus('saved')
         const lang = uiLocale(snap.settings.language)
@@ -125,14 +149,20 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const apply = useCallback(
-    async (fn: (driver: KingUltraDriver) => void | Promise<void>) => {
+    async (
+      fn: (driver: DeviceDriver) => void | Promise<void>,
+      opts?: { autosave?: boolean },
+    ) => {
       const d = driverRef.current
       if (!d) return
+      if (busyRef.current) {
+        umdLog('session', 'warn', 'apply ignored — device busy (sync/write)')
+        return
+      }
       try {
-        // Sensor/DPI writers are sync + debounced - do not block the slider on HID.
         const result = fn(d)
         setState(cloneState(d.getState()))
-        scheduleAutoSave()
+        if (opts?.autosave !== false) scheduleAutoSave()
         if (result && typeof (result as Promise<void>).then === 'function') {
           await result
           setState(cloneState(d.getState()))
@@ -147,6 +177,42 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
     },
     [scheduleAutoSave],
   )
+
+  const refreshFromDevice = useCallback(async () => {
+    const d = driverRef.current
+    if (!d || busyRef.current) return
+    const lang = uiLocale(d.getState().settings.language)
+    busyRef.current = true
+    setBusyKind('refresh')
+    setDeviceBusy(true)
+    setStatus(t(lang, 'status.reading'))
+    try {
+      await d.probeFlashAndSync()
+      if (driverRef.current !== d) return
+      setState(cloneState(d.getState()))
+      setStatus(d.lastVerifyNote ?? t(lang, 'status.readOk'))
+      umdLog('session', 'info', 'refreshFromDevice done', {
+        note: d.lastVerifyNote,
+        mouseReachable: d.mouseReachable,
+      })
+    } catch (err) {
+      umdLog(
+        'session',
+        'error',
+        'refreshFromDevice failed',
+        err instanceof Error ? err.message : String(err),
+      )
+      setStatus(
+        err instanceof Error ? err.message : t(lang, 'status.applyFailed'),
+      )
+    } finally {
+      if (driverRef.current === d) {
+        busyRef.current = false
+        setDeviceBusy(false)
+        setBusyKind(null)
+      }
+    }
+  }, [])
 
   const connectMock = useCallback(async () => {
     const lang0 = uiLocale()
@@ -165,35 +231,70 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
   }, [publish])
 
   const connectWebHid = useCallback(
-    async (productId?: number) => {
+    async (target?: number | HidPickTarget) => {
       const lang0 = uiLocale()
+      const opts: HidPickTarget | undefined =
+        typeof target === 'number' ? { productId: target } : target
+      if (opts?.catalogId) setConnectingCatalogId(opts.catalogId)
       setStatus(t(lang0, 'status.selectMouse'))
-      const d = createDriver(KING_ULTRA_IDENTITY.id)
-      const transport = createWebHidTransport()
       try {
-        await d.attach({
-          ...transport,
-          connect: () => transport.connectPreferred(productId),
-        })
-        const info = transport.getDeviceInfo()
-        if (info) {
-          const catalog =
-            findCatalogDevice(info.vendorId, info.productId) ??
-            KING_ULTRA_IDENTITY
-          setSavedDevices(
-            rememberDevice({
-              catalogId: catalog.id,
-              brand: catalog.brand,
-              model: catalog.model,
-              vendorId: info.vendorId,
-              productId: info.productId,
-              productName: info.productName,
-            }),
+        const picked = await pickSupportedHidDevice(opts)
+        const catalogFromPick = findCatalogDevice(
+          picked.vendorId,
+          picked.productId,
+        )
+        if (
+          opts?.catalogId &&
+          catalogFromPick &&
+          catalogFromPick.id !== opts.catalogId
+        ) {
+          throw new Error(
+            `Podłączono inne urządzenie niż wybrane (${opts.catalogId})`,
           )
         }
+        const catalog =
+          catalogFromPick ??
+          (opts?.catalogId
+            ? DEVICE_CATALOG.find((c) => c.id === opts.catalogId)
+            : undefined) ??
+          KING_ULTRA_IDENTITY
+
+        setConnectingCatalogId(catalog.id)
+        const d = createDriver(catalog.id)
+
+        if (catalog.id === FENRIR_MAX_IDENTITY.id) {
+          if (!d.attachNative) {
+            throw new Error('Fenrir Max driver missing attachNative')
+          }
+          await d.attachNative({ preferPid: picked.productId })
+        } else {
+          const transport = createWebHidTransport()
+          await d.attach({
+            ...transport,
+            connect: () => transport.connectPreferred(picked.productId),
+          })
+          transport.onDisconnect(() => {
+            umdLog('session', 'warn', 'device disconnected')
+            publish(null)
+            setTransportKind(null)
+            setConnectingCatalogId(null)
+            setStatus(t(uiLocale(), 'status.disconnected'))
+            setSaveStatus('idle')
+          })
+        }
+
+        setSavedDevices(
+          rememberDevice({
+            catalogId: catalog.id,
+            brand: catalog.brand,
+            model: catalog.model,
+            vendorId: picked.vendorId,
+            productId: picked.productId,
+            productName: picked.productName,
+          }),
+        )
         mergeDraft(d)
         d.patchSettings({ language: uiLocale() })
-        // Open UI immediately - flash map + FW sync in background.
         transportKindRef.current = 'webhid'
         setTransportKind('webhid')
         publish(d)
@@ -205,13 +306,9 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
           } · ${t(lang, 'status.syncing')}`,
         )
         setSaveStatus('idle')
-        transport.onDisconnect(() => {
-          umdLog('session', 'warn', 'device disconnected')
-          publish(null)
-          setTransportKind(null)
-          setStatus(t(uiLocale(), 'status.disconnected'))
-          setSaveStatus('idle')
-        })
+        busyRef.current = true
+        setBusyKind('connect')
+        setDeviceBusy(true)
 
         void (async () => {
           try {
@@ -226,12 +323,13 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
                   bat != null ? ` · ${bat}%` : ''
                 }`,
             )
-            umdLog('session', 'info', 'webhid flash synced', {
-              info: transport.getDeviceInfo(),
+            umdLog('session', 'info', 'webhid synced', {
+              catalogId: catalog.id,
+              vendorId: picked.vendorId,
+              productId: picked.productId,
               batteryPercent: bat,
               mouseReachable: d.mouseReachable,
               lastVerifyNote: d.lastVerifyNote,
-              build: 'i18n-pl-en-v12',
             })
             await d.refreshFirmwareVersions()
             if (driverRef.current !== d) return
@@ -243,9 +341,21 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
               'background sync failed',
               err instanceof Error ? err.message : String(err),
             )
+          } finally {
+            if (driverRef.current === d) {
+              busyRef.current = false
+              setDeviceBusy(false)
+              setBusyKind(null)
+              setConnectingCatalogId(null)
+            }
           }
         })()
+        return catalog.id
       } catch (err) {
+        busyRef.current = false
+        setDeviceBusy(false)
+        setBusyKind(null)
+        setConnectingCatalogId(null)
         umdLog(
           'session',
           'error',
@@ -268,6 +378,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
     await driverRef.current?.detach()
     publish(null)
     setTransportKind(null)
+    setConnectingCatalogId(null)
     setStatus(t(uiLocale(), 'status.disconnected'))
     setSaveStatus('idle')
   }, [publish])
@@ -278,6 +389,9 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       transportKind,
       status,
       saveStatus,
+      deviceBusy,
+      busyKind,
+      connectingCatalogId,
       state,
       driver,
       webHidOk: webHidSupported(),
@@ -288,12 +402,16 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       refreshSavedDevices,
       syncFromDriver,
       apply,
+      refreshFromDevice,
     }),
     [
       driver,
       transportKind,
       status,
       saveStatus,
+      deviceBusy,
+      busyKind,
+      connectingCatalogId,
       state,
       savedDevices,
       connectMock,
@@ -302,6 +420,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       refreshSavedDevices,
       syncFromDriver,
       apply,
+      refreshFromDevice,
     ],
   )
 

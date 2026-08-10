@@ -39,6 +39,11 @@ internal sealed class AppSettings
 
     public string UpdateBaseUrl { get; set; } = AppConstants.DefaultUpdateBaseUrl;
 
+    /// <summary>
+    /// Preferred mouse as <c>VID:PID</c> (e.g. <c>3554:F54F</c>). When null, auto-picks first available.
+    /// </summary>
+    public string? PreferredDeviceKey { get; set; }
+
     public static AppSettings Load()
     {
         try
