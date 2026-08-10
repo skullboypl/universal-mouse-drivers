@@ -1,5 +1,4 @@
 import fs from 'node:fs'
-import path from 'node:path'
 import { NextResponse } from 'next/server'
 import { resolveDownloadFile } from '@/lib/paths'
 import { getDownloadMeta, readStore } from '@/lib/store'

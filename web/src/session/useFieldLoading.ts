@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 import type { DeviceWritePhase } from '../devices/DeviceDriver'
 import { useDeviceSession } from '../session/DeviceSessionContext'

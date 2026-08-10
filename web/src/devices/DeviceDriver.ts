@@ -44,6 +44,8 @@ export interface DeviceDriver {
   exportProfile(): string
   importProfile(json: string): void
   refreshFirmwareVersions(): Promise<void>
+  /** King Ultra: read sleep timeout from flash (optional on other devices). */
+  refreshSleepFromDevice?(): Promise<void>
   probeFlashAndSync(): Promise<void>
   flushToDevice(): Promise<{ wrote: boolean }>
 }

@@ -10,6 +10,8 @@ export type MessageKey =
   | 'nav.mouse'
   | 'nav.settings'
   | 'nav.disconnect'
+  | 'nav.soon'
+  | 'nav.macroSoon'
   | 'connect.lede'
   | 'connect.demo'
   | 'connect.webhid'
@@ -80,6 +82,8 @@ export type MessageKey =
   | 'sensor.motion'
   | 'sensor.motionTip'
   | 'macro.title'
+  | 'macro.comingSoon'
+  | 'macro.comingSoonBody'
   | 'macro.sub'
   | 'macro.list'
   | 'macro.keys'
@@ -116,14 +120,20 @@ export type MessageKey =
   | 'settings.receiverFw'
   | 'settings.mouseFw'
   | 'settings.refreshFw'
+  | 'settings.fwHint'
   | 'settings.pairing'
   | 'settings.pair'
   | 'settings.pairAlert'
   | 'settings.sleep'
   | 'settings.sleepHint'
+  | 'settings.sleepSec'
   | 'settings.sleepMin'
   | 'settings.other'
   | 'settings.boot'
+  | 'settings.trayOnline'
+  | 'settings.trayOffline'
+  | 'settings.trayDownloadRun'
+  | 'settings.mouseSite'
   | 'settings.winMouse'
   | 'settings.winMouseAlert'
   | 'settings.advanced'
@@ -159,6 +169,8 @@ const en: Dict = {
   'nav.mouse': 'Mouse',
   'nav.settings': 'Settings',
   'nav.disconnect': 'Disconnect',
+  'nav.soon': 'Soon',
+  'nav.macroSoon': 'Macro editor coming soon',
   'connect.lede':
     'WebHID drivers in the browser - connect a supported mouse, keep drafts locally, expand the list with the community.',
   'connect.demo': 'Try demo profile',
@@ -250,6 +262,9 @@ const en: Dict = {
   'sensor.motionTip':
     'Aligns sensor samples with the USB report rate for more consistent feel.',
   'macro.title': 'Macro',
+  'macro.comingSoon': 'Coming soon',
+  'macro.comingSoonBody':
+    'Macro recording and flash write are not enabled yet. This tab will open when the HID path is ready.',
   'macro.sub': 'Record and edit macros - assign them from Buttons.',
   'macro.list': 'Macros list',
   'macro.keys': 'Keys list',
@@ -286,15 +301,23 @@ const en: Dict = {
   'settings.receiverFw': 'Receiver firmware:',
   'settings.mouseFw': 'Mouse firmware:',
   'settings.refreshFw': 'Refresh firmware',
+  'settings.fwHint':
+    'Move the mouse (wake it) before refresh. Close the OEM Redragon app if versions stay blank.',
   'settings.pairing': 'Pairing tool',
   'settings.pair': 'Pair (Space)',
   'settings.pairAlert':
     'Pairing requires a confirmed HID sequence or local bridge. Not enabled until reverse engineering is done.',
   'settings.sleep': 'Sleep mode',
   'settings.sleepHint': 'Time until mouse sleep after not moving',
+  'settings.sleepSec': '{n} sec',
   'settings.sleepMin': '{n} min',
   'settings.other': 'Other',
   'settings.boot': 'Run on system boot (requires bridge helper)',
+  'settings.trayOnline': 'Tray online · v{v} · battery {n}%',
+  'settings.trayOffline':
+    'Tray offline — run UmdBatteryTray.exe on this PC (browser talks to 127.0.0.1:17355; Next.js on the server cannot)',
+  'settings.trayDownloadRun': 'Download and run UMD Battery Tray',
+  'settings.mouseSite': 'UMD · mouse.vxh.pl',
   'settings.winMouse': 'Windows Mouse Properties',
   'settings.winMouseAlert':
     'Windows Mouse Properties is opened by the optional local bridge (main.cpl).',
@@ -332,6 +355,8 @@ const pl: Dict = {
   'nav.mouse': 'Myszka',
   'nav.settings': 'Ustawienia',
   'nav.disconnect': 'Rozłącz',
+  'nav.soon': 'Wkrótce',
+  'nav.macroSoon': 'Edytor makr wkrótce',
   'connect.lede':
     'Sterowniki WebHID w przeglądarce - podłącz wspieraną mysz, trzymaj draft lokalnie, rozwijaj listę ze społecznością.',
   'connect.demo': 'Profil demo',
@@ -425,6 +450,9 @@ const pl: Dict = {
   'sensor.motionTip':
     'Synchronizuje próbki sensora z częstotliwością USB - bardziej równe odczucie.',
   'macro.title': 'Makro',
+  'macro.comingSoon': 'Wkrótce',
+  'macro.comingSoonBody':
+    'Nagrywanie makr i zapis do flash nie są jeszcze włączone. Zakładka otworzy się, gdy będzie gotowa ścieżka HID.',
   'macro.sub': 'Nagrywaj i edytuj makro - przypisz je w Przyciskach.',
   'macro.list': 'Lista makro',
   'macro.keys': 'Lista klawiszy',
@@ -461,15 +489,23 @@ const pl: Dict = {
   'settings.receiverFw': 'Firmware receivera:',
   'settings.mouseFw': 'Firmware myszy:',
   'settings.refreshFw': 'Odśwież firmware',
+  'settings.fwHint':
+    'Przed odświeżeniem rusz myszą (wybudź). Zamknij oficjalny driver Redragon, jeśli wersje zostają puste.',
   'settings.pairing': 'Narzędzie parowania',
   'settings.pair': 'Paruj (Spacja)',
   'settings.pairAlert':
     'Parowanie wymaga potwierdzonej sekwencji HID albo lokalnego bridge. Niedostępne, dopóki RE nie jest gotowe.',
   'settings.sleep': 'Tryb uśpienia',
   'settings.sleepHint': 'Czas do uśpienia po braku ruchu',
+  'settings.sleepSec': '{n} sek',
   'settings.sleepMin': '{n} min',
   'settings.other': 'Inne',
   'settings.boot': 'Uruchom przy starcie systemu (wymaga bridge)',
+  'settings.trayOnline': 'Tray online · v{v} · bateria {n}%',
+  'settings.trayOffline':
+    'Tray wyłączony — uruchom UmdBatteryTray.exe na tym PC (przeglądarka łączy się z 127.0.0.1:17355; serwer Next.js nie widzi Twojego komputera)',
+  'settings.trayDownloadRun': 'Pobierz i uruchom UMD Battery Tray',
+  'settings.mouseSite': 'UMD · mouse.vxh.pl',
   'settings.winMouse': 'Właściwości myszy Windows',
   'settings.winMouseAlert':
     'Właściwości myszy Windows otwiera opcjonalny lokalny bridge (main.cpl).',

@@ -33,7 +33,7 @@ export function Shell({ children }: { children: ReactNode }) {
           : null
 
   // Device OEM skins (e.g. Fenrir green) must not tint the UMD homepage.
-  const onDeviceUi = /\/device(?:\/|$)/.test(pathname)
+  const onDeviceUi = /\/device(?:\/|$)/.test(pathname ?? '')
   const deviceSkin = onDeviceUi
     ? (driver?.identity.id ?? connectingCatalogId ?? 'none')
     : 'none'

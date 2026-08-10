@@ -371,7 +371,7 @@ export class GWolvesDriver {
       req[5] = 129;
       await this.sendFeatureReport(req, false);
       await this.sleep(200);
-      let res = this.cloneBuffer(await this.receiveFeatureReport());
+      const res = this.cloneBuffer(await this.receiveFeatureReport());
       this.updateHidIndex(res);
       if (res[6] === 129) {
         this.hidIndex = 0;

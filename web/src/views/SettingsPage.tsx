@@ -49,7 +49,7 @@ export function SettingsPage() {
     if (!connected) return
     void apply(async (d) => {
       await d.refreshFirmwareVersions()
-      await d.refreshSleepFromDevice()
+      await d.refreshSleepFromDevice?.()
       syncFromDriver()
     })
   }, [connected, apply, syncFromDriver])
@@ -107,7 +107,7 @@ export function SettingsPage() {
           onClick={() => {
             void apply(async (d) => {
               await d.refreshFirmwareVersions()
-              await d.refreshSleepFromDevice()
+              await d.refreshSleepFromDevice?.()
               syncFromDriver()
             })
           }}
