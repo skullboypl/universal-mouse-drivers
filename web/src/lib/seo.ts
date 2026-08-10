@@ -103,6 +103,10 @@ export function absoluteUrl(path: string): string {
 }
 
 export function ogImageUrl(page: SeoPageId, lang: Locale): string {
+  // Home uses Next file-based OG (/{lang}/opengraph-image) — more reliable for Discord.
+  if (page === 'home') {
+    return absoluteUrl(`/${lang}/opengraph-image`)
+  }
   const u = new URL('/og', getSiteUrl())
   u.searchParams.set('page', page)
   u.searchParams.set('lang', lang)

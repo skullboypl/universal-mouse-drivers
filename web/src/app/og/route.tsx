@@ -4,7 +4,8 @@ import { SEO_PAGES, type SeoPageId } from '@/lib/seo'
 import { SITE } from '@/lib/site'
 import type { Locale } from '@/i18n/locale'
 
-export const runtime = 'edge'
+/** CapRover/Alpine: edge runtime for next/og often 502s — use Node. */
+export const runtime = 'nodejs'
 
 const SIZE = { width: 1200, height: 630 }
 
@@ -125,7 +126,7 @@ export async function GET(req: NextRequest) {
             fontSize: 18,
           }}
         >
-          <div>WebHID · King Ultra · {lang.toUpperCase()}</div>
+          <div>WebHID · King Ultra · Fenrir Max · {lang.toUpperCase()}</div>
           <div>mouse.vxh.pl</div>
         </div>
       </div>
