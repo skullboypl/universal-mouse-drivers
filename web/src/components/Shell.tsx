@@ -96,7 +96,7 @@ export function Shell({ children }: { children: ReactNode }) {
               </span>{' '}
               <a
                 className={styles.githubLink}
-                href={UMD.githubUrl}
+                href={UMD.githubFeedbackUrl}
                 target="_blank"
                 rel="noreferrer"
               >
