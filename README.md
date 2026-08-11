@@ -50,7 +50,7 @@ Light, EV-signed helper for **system-tray battery** + optional always-on-top **d
 | **Docs (PL)** | [mouse.vxh.pl/pl/tray](https://mouse.vxh.pl/pl/tray) |
 | **Mice** | King Ultra · Fenrir Max · PRO X SUPERLIGHT (gen1 / `046D:C547`) |
 
-**Features:** tray icon (battery / percent / both) · desktop widget · mouse picker · poll interval · Start with Windows · localhost bridge for the web Settings page (`127.0.0.1:17355`).
+**Features:** tray icon (battery / percent / both) · desktop widget · mouse picker · poll interval · Start with Windows · auto-update check on start · works with Settings on mouse.vxh.pl when the tray runs on the same PC.
 
 Close G HUB / OMM / OEM apps / Chrome WebHID if the tray cannot open the mouse (exclusive HID).
 
@@ -73,7 +73,7 @@ This repository is the **public feedback hub** for UMD (SEO + community).
 ### Before opening an issue
 
 1. Try the live app: https://mouse.vxh.pl
-2. Use **Chrome or Edge** (desktop) over HTTPS / localhost
+2. Use **Chrome or Edge** (desktop) on https://mouse.vxh.pl
 3. Close OEM software (G HUB, OMM, vendor drivers) that may lock the HID device
 4. Note mouse model + how you connect (wired / dongle)
 
