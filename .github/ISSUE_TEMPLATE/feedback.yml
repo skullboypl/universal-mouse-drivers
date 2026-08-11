@@ -1,0 +1,45 @@
+name: Feedback / bug
+description: Report a bug or share product feedback about UMD
+title: "[Feedback] "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping Universal Mouse Drivers.
+        Live app: https://mouse.vxh.pl
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Type
+      options:
+        - Bug
+        - UX / UI feedback
+        - Feature idea
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: mouse
+    attributes:
+      label: Mouse model
+      placeholder: e.g. PRO X SUPERLIGHT / King Ultra / Fenrir Max 8K
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Edge
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What happened, what you expected, steps to reproduce
+    validations:
+      required: true

@@ -1,0 +1,44 @@
+name: Device request
+description: Ask to add support for another gaming mouse
+title: "[Device] "
+labels: ["device-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell us which mouse you want in UMD.
+        Site: https://mouse.vxh.pl/pl#contact
+  - type: input
+    id: brand_model
+    attributes:
+      label: Brand + exact model
+      placeholder: e.g. Logitech G Pro X Superlight 2
+    validations:
+      required: true
+  - type: input
+    id: oem_link
+    attributes:
+      label: Official Windows software link
+      placeholder: https://...
+    validations:
+      required: true
+  - type: input
+    id: vidpid
+    attributes:
+      label: VID:PID (if known)
+      placeholder: e.g. 046D:C547
+  - type: dropdown
+    id: loan
+    attributes:
+      label: Can you loan a unit for testing?
+      options:
+        - "No"
+        - "Maybe / barter"
+        - "Yes"
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Extra notes
+      placeholder: Wired/wireless, dongle name, OEM app name…
