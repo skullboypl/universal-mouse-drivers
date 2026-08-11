@@ -12,11 +12,36 @@ export type MessageKey =
   | 'nav.disconnect'
   | 'nav.soon'
   | 'nav.macroSoon'
+  | 'nav.mice'
+  | 'nav.contact'
+  | 'nav.why'
+  | 'nav.faq'
+  | 'nav.tray'
+  | 'nav.siteNav'
+  | 'nav.deviceNav'
+  | 'connect.faqTitle'
+  | 'connect.learnMore'
+  | 'connect.trayEyebrow'
+  | 'connect.trayTitle'
+  | 'connect.trayBody'
+  | 'connect.trayFeat1'
+  | 'connect.trayFeat2'
+  | 'connect.trayFeat3'
+  | 'connect.trayFeat4'
+  | 'connect.trayFeat5'
+  | 'connect.trayLang'
+  | 'connect.trayDownload'
+  | 'connect.trayMore'
+  | 'connect.trayNote'
   | 'connect.lede'
   | 'connect.demo'
   | 'connect.webhid'
-  | 'connect.hint'
+  | 'connect.open'
+  | 'connect.soon'
   | 'connect.noWebHid'
+  | 'connect.step1'
+  | 'connect.step2'
+  | 'connect.step3'
   | 'connect.savedTitle'
   | 'connect.savedSub'
   | 'connect.savedEmpty'
@@ -28,6 +53,14 @@ export type MessageKey =
   | 'connect.contactTitle'
   | 'connect.contactBody'
   | 'connect.contactBarter'
+  | 'connect.contactEmailLabel'
+  | 'connect.contactEmailCta'
+  | 'connect.contactTiktokLabel'
+  | 'connect.contactTiktokCta'
+  | 'connect.contactNeedTitle'
+  | 'connect.contactNeed1'
+  | 'connect.contactNeed2'
+  | 'connect.contactNeed3'
   | 'buttons.title'
   | 'buttons.sub'
   | 'buttons.profile'
@@ -139,6 +172,12 @@ export type MessageKey =
   | 'settings.advanced'
   | 'settings.longDistance'
   | 'settings.longDistanceTip'
+  | 'settings.umdProfile'
+  | 'settings.umdProfileHint'
+  | 'settings.umdExport'
+  | 'settings.umdImport'
+  | 'settings.umdImportOk'
+  | 'settings.umdImportFail'
   | 'status.ready'
   | 'status.saving'
   | 'status.saved'
@@ -155,6 +194,8 @@ export type MessageKey =
   | 'status.webhidFailed'
   | 'status.battUnknown'
   | 'footer.language'
+  | 'footer.madeWith'
+  | 'footer.links'
   | 'write.queued'
   | 'write.writing'
   | 'write.ok'
@@ -171,28 +212,61 @@ const en: Dict = {
   'nav.disconnect': 'Disconnect',
   'nav.soon': 'Soon',
   'nav.macroSoon': 'Macro editor coming soon',
+  'nav.mice': 'Supported mice',
+  'nav.contact': 'Contact',
+  'nav.why': 'Why UMD',
+  'nav.faq': 'FAQ',
+  'nav.tray': 'Battery tray',
+  'nav.siteNav': 'Site',
+  'nav.deviceNav': 'Device',
+  'connect.faqTitle': 'FAQ',
+  'connect.learnMore': 'Learn more',
+  'connect.trayEyebrow': 'Windows helper',
+  'connect.trayTitle': 'UMD Battery Tray',
+  'connect.trayBody':
+    'Optional EV-signed .exe when you want battery % in the Windows tray without keeping the browser open. Works with King Ultra, Fenrir Max, and PRO X SUPERLIGHT.',
+  'connect.trayFeat1': 'System tray icon with percent and charging status',
+  'connect.trayFeat2': 'Optional always-on-top desktop widget',
+  'connect.trayFeat3': 'Pick which supported mouse to monitor',
+  'connect.trayFeat4': 'Poll interval and Start with Windows',
+  'connect.trayFeat5': 'Checks for updates on start (auto-update)',
+  'connect.trayLang':
+    'This site (and this download section) is available in English and Polish - switch in the header.',
+  'connect.trayDownload': 'Download UmdBatteryTray.exe',
+  'connect.trayMore': 'Full details',
+  'connect.trayNote':
+    'Close G HUB / OEM apps / Chrome WebHID if the tray cannot open the mouse.',
   'connect.lede':
-    'WebHID drivers in the browser - connect a supported mouse, keep drafts locally, expand the list with the community.',
-  'connect.demo': 'Try demo profile',
-  'connect.webhid': 'Connect via WebHID',
-  'connect.hint':
-    'Only whitelisted VID:PID pairs are requested. Prefer the vendor/dongle interface (Output reports) - not the plain “HID-compliant mouse”.',
-  'connect.noWebHid': 'WebHID needs Chrome or Edge on localhost / HTTPS.',
-  'connect.savedTitle': 'Saved devices',
-  'connect.savedSub':
-    'Mice you already authorized in this browser. Click to reconnect.',
-  'connect.savedEmpty': 'No saved HID devices yet - connect once to pin one here.',
-  'connect.supportedTitle': 'Supported devices',
-  'connect.supportedSub':
-    'Live means full write path. WIP means UI + protocol RE. Planned means next in queue.',
-  'connect.statusLive': 'Live',
-  'connect.statusWip': 'WIP',
-  'connect.statusPlanned': 'Planned',
+    'Open a driver for your mouse in the browser - no Windows installer.',
+  'connect.demo': 'Try without a mouse',
+  'connect.webhid': 'Open driver',
+  'connect.open': 'Open',
+  'connect.soon': 'Soon',
+  'connect.noWebHid': 'Use Chrome or Edge (desktop) to connect a mouse.',
+  'connect.step1': 'Pick your mouse',
+  'connect.step2': 'Allow it in the browser prompt',
+  'connect.step3': 'Change DPI, buttons, and profiles',
+  'connect.savedTitle': 'Your mice',
+  'connect.savedSub': 'Already connected on this computer - click to reopen.',
+  'connect.savedEmpty': 'Connect a mouse once and it will show up here.',
+  'connect.supportedTitle': 'Choose a mouse',
+  'connect.supportedSub': 'Click a model to open its driver.',
+  'connect.statusLive': 'Ready',
+  'connect.statusWip': 'Beta',
+  'connect.statusPlanned': 'Soon',
   'connect.contactTitle': 'Want your mouse here?',
   'connect.contactBody':
-    'Send the model, Windows driver package link, and VID:PID. We will review adding it to UMD.',
+    'UMD grows with community requests. Tell us what you use - we will check if we can add a browser driver.',
   'connect.contactBarter':
-    'You can also ship your mouse for testing as a barter - DM on TikTok',
+    'You can also loan your mouse for testing. Message on TikTok and we will figure out shipping.',
+  'connect.contactEmailLabel': 'Email',
+  'connect.contactEmailCta': 'Write to us',
+  'connect.contactTiktokLabel': 'TikTok',
+  'connect.contactTiktokCta': 'Send a DM',
+  'connect.contactNeedTitle': 'Helpful to include',
+  'connect.contactNeed1': 'Mouse brand and exact model name',
+  'connect.contactNeed2': 'Link to the official Windows software',
+  'connect.contactNeed3': 'Whether you have a spare unit for testing',
   'buttons.title': 'Button mapping',
   'buttons.sub':
     'Profiles, binds, debounce - changes auto-save after a short delay.',
@@ -315,7 +389,7 @@ const en: Dict = {
   'settings.boot': 'Run on system boot (requires bridge helper)',
   'settings.trayOnline': 'Tray online · v{v} · battery {n}%',
   'settings.trayOffline':
-    'Tray offline — run UmdBatteryTray.exe on this PC (browser talks to 127.0.0.1:17355; Next.js on the server cannot)',
+    'Tray offline - run UmdBatteryTray.exe on this PC (browser on mouse.vxh.pl talks to the tray on your machine; the server cannot)',
   'settings.trayDownloadRun': 'Download and run UMD Battery Tray',
   'settings.mouseSite': 'UMD · mouse.vxh.pl',
   'settings.winMouse': 'Windows Mouse Properties',
@@ -325,6 +399,13 @@ const en: Dict = {
   'settings.longDistance': 'Long distance',
   'settings.longDistanceTip':
     'Farther range and stronger anti-interference, higher current, shorter battery life.',
+  'settings.umdProfile': 'UMD profile file',
+  'settings.umdProfileHint':
+    'Export or import a JSON snapshot of buttons, DPI slots, and report rate for this mouse.',
+  'settings.umdExport': 'Export UMD JSON',
+  'settings.umdImport': 'Import UMD JSON',
+  'settings.umdImportOk': 'Profile imported.',
+  'settings.umdImportFail': 'Import failed - wrong device or invalid JSON.',
   'status.ready': 'UMD ready',
   'status.saving': 'Saving…',
   'status.saved': 'Saved',
@@ -342,6 +423,8 @@ const en: Dict = {
   'status.webhidFailed': 'WebHID connect failed',
   'status.battUnknown': 'batt -',
   'footer.language': 'Language',
+  'footer.madeWith': 'Made with',
+  'footer.links': 'Footer',
   'write.queued': 'Write queued…',
   'write.writing': 'Writing to mouse…',
   'write.ok': 'Written to mouse',
@@ -357,30 +440,64 @@ const pl: Dict = {
   'nav.disconnect': 'Rozłącz',
   'nav.soon': 'Wkrótce',
   'nav.macroSoon': 'Edytor makr wkrótce',
+  'nav.mice': 'Wspierane myszy',
+  'nav.contact': 'Kontakt',
+  'nav.why': 'Dlaczego UMD',
+  'nav.faq': 'FAQ',
+  'nav.tray': 'Tray baterii',
+  'nav.siteNav': 'Strona',
+  'nav.deviceNav': 'Urządzenie',
+  'connect.faqTitle': 'FAQ',
+  'connect.learnMore': 'Więcej info',
+  'connect.trayEyebrow': 'Helper Windows',
+  'connect.trayTitle': 'UMD Battery Tray',
+  'connect.trayBody':
+    'Opcjonalny, podpisany EV .exe, gdy chcesz poziom baterii w trayu Windows bez otwartej przeglądarki. Działa z King Ultra, Fenrir Max i PRO X SUPERLIGHT.',
+  'connect.trayFeat1': 'Ikona w trayu z procentem i statusem ładowania',
+  'connect.trayFeat2': 'Opcjonalny widget na pulpicie (zawsze na wierzchu)',
+  'connect.trayFeat3': 'Wybór, którą wspieraną mysz monitorować',
+  'connect.trayFeat4': 'Interwał odświeżania i autostart z Windows',
+  'connect.trayFeat5': 'Sprawdzanie aktualizacji przy starcie (auto-update)',
+  'connect.trayLang':
+    'Ta strona (i ta sekcja pobierania) jest po polsku i angielsku - przełącznik w nagłówku.',
+  'connect.trayDownload': 'Pobierz UmdBatteryTray.exe',
+  'connect.trayMore': 'Pełny opis',
+  'connect.trayNote':
+    'Zamknij G HUB / aplikacje OEM / Chrome WebHID, jeśli tray nie otworzy myszy.',
   'connect.lede':
-    'Sterowniki WebHID w przeglądarce - podłącz wspieraną mysz, trzymaj draft lokalnie, rozwijaj listę ze społecznością.',
-  'connect.demo': 'Profil demo',
-  'connect.webhid': 'Połącz przez WebHID',
-  'connect.hint':
-    'Tylko dozwolone pary VID:PID. Wybierz interfejs vendor/dongle (z Output reports) - nie zwykłą „HID-compliant mouse”.',
+    'Otwórz sterownik myszy w przeglądarce - bez instalacji Windows.',
+  'connect.demo': 'Wypróbuj bez myszy',
+  'connect.webhid': 'Otwórz sterownik',
+  'connect.open': 'Otwórz',
+  'connect.soon': 'Wkrótce',
   'connect.noWebHid':
-    'WebHID wymaga Chrome lub Edge na localhost / HTTPS.',
-  'connect.savedTitle': 'Zapisane urządzenia',
-  'connect.savedSub':
-    'Myszy już autoryzowane w tej przeglądarce. Kliknij, żeby połączyć ponownie.',
+    'Do podłączenia myszy użyj Chrome lub Edge (wersja desktop).',
+  'connect.step1': 'Wybierz mysz',
+  'connect.step2': 'Zezwól w oknie przeglądarki',
+  'connect.step3': 'Ustaw DPI, przyciski i profile',
+  'connect.savedTitle': 'Twoje myszy',
+  'connect.savedSub': 'Już łączone na tym komputerze - kliknij, żeby otworzyć ponownie.',
   'connect.savedEmpty':
-    'Brak zapisanych HID - połącz raz, żeby przypiąć urządzenie tutaj.',
-  'connect.supportedTitle': 'Wspierane urządzenia',
+    'Po pierwszym połączeniu mysz pojawi się tutaj.',
+  'connect.supportedTitle': 'Wybierz mysz',
   'connect.supportedSub':
-    'Live = pełny zapis. WIP = UI + reverse engineering protokołu. Planned = w kolejce.',
-  'connect.statusLive': 'Live',
-  'connect.statusWip': 'WIP',
-  'connect.statusPlanned': 'Planowane',
+    'Kliknij model, żeby otworzyć jego sterownik.',
+  'connect.statusLive': 'Gotowe',
+  'connect.statusWip': 'Beta',
+  'connect.statusPlanned': 'Wkrótce',
   'connect.contactTitle': 'Chcesz dodać swoją mysz?',
   'connect.contactBody':
-    'Napisz model, link do sterownika Windows i VID:PID. Sprawdzimy dodanie do UMD.',
+    'UMD rośnie dzięki prośbom społeczności. Napisz, czego używasz - sprawdzimy, czy da się dodać sterownik w przeglądarce.',
   'connect.contactBarter':
-    'Możesz też wysłać myszkę na testy w ramach barteru - napisz na TikToku',
+    'Możesz też wypożyczyć myszkę na testy. Napisz na TikToku, dogadamy wysyłkę.',
+  'connect.contactEmailLabel': 'E-mail',
+  'connect.contactEmailCta': 'Napisz do nas',
+  'connect.contactTiktokLabel': 'TikTok',
+  'connect.contactTiktokCta': 'Wyślij DM',
+  'connect.contactNeedTitle': 'Przydatne w wiadomości',
+  'connect.contactNeed1': 'Marka i dokładny model myszy',
+  'connect.contactNeed2': 'Link do oficjalnego oprogramowania Windows',
+  'connect.contactNeed3': 'Czy masz zapasową sztukę na testy',
   'buttons.title': 'Mapowanie przycisków',
   'buttons.sub':
     'Profile, przypisania, debounce - zmiany zapisują się automatycznie po chwili.',
@@ -503,7 +620,7 @@ const pl: Dict = {
   'settings.boot': 'Uruchom przy starcie systemu (wymaga bridge)',
   'settings.trayOnline': 'Tray online · v{v} · bateria {n}%',
   'settings.trayOffline':
-    'Tray wyłączony — uruchom UmdBatteryTray.exe na tym PC (przeglądarka łączy się z 127.0.0.1:17355; serwer Next.js nie widzi Twojego komputera)',
+    'Tray wyłączony - uruchom UmdBatteryTray.exe na tym PC (przeglądarka na mouse.vxh.pl łączy się z trayem u Ciebie; serwer tego nie widzi)',
   'settings.trayDownloadRun': 'Pobierz i uruchom UMD Battery Tray',
   'settings.mouseSite': 'UMD · mouse.vxh.pl',
   'settings.winMouse': 'Właściwości myszy Windows',
@@ -513,6 +630,13 @@ const pl: Dict = {
   'settings.longDistance': 'Duży zasięg',
   'settings.longDistanceTip':
     'Większy zasięg i odporność na zakłócenia, wyższy prąd, krótszy czas pracy.',
+  'settings.umdProfile': 'Plik profilu UMD',
+  'settings.umdProfileHint':
+    'Eksport lub import JSON ze snapshotem przycisków, gniazd DPI i Hz dla tej myszy.',
+  'settings.umdExport': 'Eksportuj UMD JSON',
+  'settings.umdImport': 'Importuj UMD JSON',
+  'settings.umdImportOk': 'Zaimportowano profil.',
+  'settings.umdImportFail': 'Import nieudany - zły device lub uszkodzony JSON.',
   'status.ready': 'UMD gotowe',
   'status.saving': 'Zapisywanie…',
   'status.saved': 'Zapisano',
@@ -530,6 +654,8 @@ const pl: Dict = {
   'status.webhidFailed': 'Połączenie WebHID nieudane',
   'status.battUnknown': 'bat. -',
   'footer.language': 'Język',
+  'footer.madeWith': 'Made with',
+  'footer.links': 'Stopka',
   'write.queued': 'Zapis za chwilę…',
   'write.writing': 'Zapisuję na mysz…',
   'write.ok': 'Zapisano na myszy',

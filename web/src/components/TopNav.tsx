@@ -4,7 +4,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UMD } from '@/brand/umd'
 import { FENRIR_MAX_IDENTITY } from '@/devices/gwolves-fenrir-max/identity'
+import { SUPERLIGHT_IDENTITY } from '@/devices/logitech-pro-x-superlight/identity'
 import { useLocale } from '@/i18n/LocaleContext'
+import { LOCALE_LABELS, LOCALES, type Locale } from '@/i18n/locale'
 import { useT } from '@/i18n/useT'
 import type { MessageKey } from '@/i18n/messages'
 import { useDeviceSession } from '@/session/DeviceSessionContext'
@@ -18,27 +20,44 @@ const KING_TABS: { path: string; key: MessageKey; disabled?: boolean }[] = [
   { path: '/device/settings', key: 'nav.settings' },
 ]
 
-/** OEM Fenrir is one mouse page + settings — no separate sensor/macro tabs. */
-const FENRIR_TABS: { path: string; key: MessageKey }[] = [
+/** OEM Fenrir / Superlight: one mouse page + settings. */
+const OEM_TABS: { path: string; key: MessageKey }[] = [
   { path: '/device/buttons', key: 'nav.mouse' },
   { path: '/device/settings', key: 'nav.settings' },
 ]
 
+function isMarketingPath(pathname: string): boolean {
+  const p = pathname.replace(/\/+$/, '') || '/'
+  if (p === '/' || /^\/[a-z]{2}$/.test(p)) return true
+  if (/^\/[a-z]{2}\/why$/.test(p)) return true
+  if (/^\/[a-z]{2}\/tray$/.test(p)) return true
+  if (/^\/[a-z]{2}\/mice(\/|$)/.test(p)) return true
+  return false
+}
+
 export function TopNav() {
   const { connected, state, disconnect, transportKind, saveStatus, driver } =
     useDeviceSession()
-  const { lp } = useLocale()
+  const { lp, locale, setLocale } = useLocale()
   const tr = useT()
   const pathname = usePathname() || ''
-  const tabs =
-    driver?.identity.id === FENRIR_MAX_IDENTITY.id ? FENRIR_TABS : KING_TABS
+  const onMarketing = !connected && isMarketingPath(pathname)
+  const oemSinglePage =
+    driver?.identity.id === FENRIR_MAX_IDENTITY.id ||
+    driver?.identity.id === SUPERLIGHT_IDENTITY.id
+  const tabs = oemSinglePage ? OEM_TABS : KING_TABS
 
   return (
     <header className={styles.nav}>
       <Link href={lp('/')} className={styles.brand} aria-label={UMD.name}>
-        <span className={styles.mark} aria-hidden>
-          {UMD.shortName}
-        </span>
+        <img
+          className={styles.logo}
+          src={UMD.logoMarkUrl}
+          alt=""
+          width={36}
+          height={36}
+          draggable={false}
+        />
         <span className={styles.brandText}>
           <span className={styles.brandMain}>{UMD.shortName}</span>
           <span className={styles.brandSub}>{UMD.name}</span>
@@ -46,7 +65,7 @@ export function TopNav() {
       </Link>
 
       {connected ? (
-        <nav className={styles.tabs}>
+        <nav className={styles.tabs} aria-label={tr('nav.deviceNav')}>
           {tabs.map((tab) => {
             const href = lp(tab.path)
             const active = pathname === href || pathname.startsWith(`${href}/`)
@@ -73,6 +92,24 @@ export function TopNav() {
               </Link>
             )
           })}
+        </nav>
+      ) : onMarketing ? (
+        <nav className={styles.homeLinks} aria-label={tr('nav.siteNav')}>
+          <Link className={styles.homeLink} href={`${lp('/')}#mice`}>
+            {tr('nav.mice')}
+          </Link>
+          <Link className={styles.homeLink} href={lp('/tray')}>
+            {tr('nav.tray')}
+          </Link>
+          <Link className={styles.homeLink} href={lp('/why')}>
+            {tr('nav.why')}
+          </Link>
+          <Link className={styles.homeLink} href={`${lp('/')}#faq`}>
+            {tr('nav.faq')}
+          </Link>
+          <Link className={styles.homeLink} href={`${lp('/')}#contact`}>
+            {tr('nav.contact')}
+          </Link>
         </nav>
       ) : (
         <div />
@@ -106,6 +143,25 @@ export function TopNav() {
             {tr('nav.disconnect')}
           </Button>
         )}
+        <div
+          className={styles.lang}
+          role="group"
+          aria-label={tr('footer.language')}
+        >
+          {LOCALES.map((code) => (
+            <button
+              key={code}
+              type="button"
+              className={
+                code === locale ? styles.langActive : styles.langBtn
+              }
+              aria-pressed={code === locale}
+              onClick={() => setLocale(code as Locale)}
+            >
+              {LOCALE_LABELS[code]}
+            </button>
+          ))}
+        </div>
       </div>
     </header>
   )

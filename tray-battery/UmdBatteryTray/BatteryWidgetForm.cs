@@ -187,6 +187,49 @@ internal sealed class BatteryWidgetForm : Form
         Render();
     }
 
+    /// <summary>Off-screen render for marketing screenshots (same look as the layered widget).</summary>
+    public Bitmap ExportBitmap()
+    {
+        var width = Math.Max(1, Width);
+        var height = Math.Max(1, Height);
+        var f = _scalePercent / 100f;
+        var bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+        using var g = Graphics.FromImage(bitmap);
+        g.SmoothingMode = SmoothingMode.AntiAlias;
+        g.TextRenderingHint = TextRenderingHint.AntiAlias;
+        g.Clear(Color.Transparent);
+
+        var bgAlpha = (int)(255 * _backgroundOpacity / 100.0);
+        if (bgAlpha > 0)
+        {
+            using var bgBrush = new SolidBrush(Color.FromArgb(bgAlpha, 28, 28, 32));
+            FillRoundedRectangle(g, bgBrush, new Rectangle(0, 0, width - 1, height - 1), (int)(10 * f));
+        }
+
+        var fontAlpha = (int)(255 * _fontOpacity / 100.0);
+        if (fontAlpha > 0)
+        {
+            using var percentFont = new Font("Segoe UI", BasePercentFont * f, FontStyle.Bold);
+            using var statusFont = new Font("Segoe UI", BaseStatusFont * f);
+            using var percentBrush = new SolidBrush(Color.FromArgb(fontAlpha, 255, 255, 255));
+            using var statusBrush = new SolidBrush(Color.FromArgb((int)(fontAlpha * 0.75), 180, 180, 190));
+            using var format = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center,
+            };
+
+            var pad = (int)(6 * f);
+            var percentRect = new RectangleF(pad, pad, width - pad * 2, height * 0.52f - pad);
+            var statusRect = new RectangleF(pad, height * 0.52f, width - pad * 2, height * 0.48f - pad);
+
+            g.DrawString(_percentText, percentFont, percentBrush, percentRect, format);
+            g.DrawString(_statusText, statusFont, statusBrush, statusRect, format);
+        }
+
+        return bitmap;
+    }
+
     protected override void OnHandleCreated(EventArgs e)
     {
         base.OnHandleCreated(e);

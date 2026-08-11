@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   padding: 0 24px;
   border-bottom: 1px solid var(--border);
   background: rgba(10, 12, 16, 0.88);
@@ -19,22 +20,17 @@
   text-decoration: none;
   color: var(--fg);
   min-width: 0;
+  flex-shrink: 0;
 }
 
-.mark {
+.logo {
   flex-shrink: 0;
-  height: 32px;
-  padding: 0 8px;
-  border-radius: 4px;
-  border: 1px solid rgba(232, 162, 58, 0.45);
-  background: linear-gradient(160deg, #2a2114, #151820);
-  display: grid;
-  place-items: center;
-  font-family: var(--display);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  color: var(--accent-hot);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: block;
+  object-fit: cover;
+  background: #0a0c10;
 }
 
 .brandText {
@@ -61,10 +57,30 @@
   text-overflow: ellipsis;
 }
 
-@media (max-width: 720px) {
-  .brandSub {
-    display: none;
-  }
+.homeLinks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 18px;
+  flex: 1;
+  min-width: 0;
+}
+
+.homeLink {
+  text-decoration: none;
+  color: var(--fg-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.35rem 0.2rem;
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.homeLink:hover {
+  color: var(--fg);
+  border-bottom-color: rgba(232, 162, 58, 0.55);
 }
 
 .tabs {
@@ -123,9 +139,11 @@
 .meta {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 10px;
   color: var(--fg-muted);
   font-size: 0.85rem;
+  flex-shrink: 0;
 }
 
 .pill {
@@ -139,4 +157,70 @@
 
 .charging {
   color: var(--warning);
+}
+
+.lang {
+  display: inline-flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.langBtn,
+.langActive {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--fg-dim);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 5px 9px;
+  border-radius: 6px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.langBtn:hover {
+  color: var(--fg);
+  border-color: var(--fg-muted);
+}
+
+.langActive {
+  color: #0a0c10;
+  background: var(--accent-hot);
+  border-color: var(--accent-hot);
+}
+
+@media (max-width: 860px) {
+  .brandSub {
+    display: none;
+  }
+
+  .homeLinks {
+    gap: 10px;
+  }
+
+  .homeLink {
+    font-size: 0.82rem;
+  }
+
+  .pill {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav {
+    padding: 0 14px;
+    gap: 10px;
+  }
+
+  .homeLinks {
+    display: none;
+  }
+
+  .brandMain {
+    font-size: 0.95rem;
+  }
 }

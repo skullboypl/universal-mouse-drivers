@@ -5,7 +5,7 @@ namespace UmdBatteryTray.Protocol;
 internal static class UmdDeviceEnumerator
 {
     /// <summary>
-    /// Lists unique VID:PID pairs currently attached for King Ultra + Fenrir Max.
+    /// Lists unique VID:PID pairs currently attached for King Ultra, Fenrir Max, Superlight.
     /// Does not open streams (safe while Chrome WebHID holds a handle).
     /// </summary>
     public static IReadOnlyList<UmdDeviceInfo> ListAvailable()
@@ -48,18 +48,46 @@ internal static class UmdDeviceEnumerator
             }
         }
 
-        // King Ultra first (historical default), then Fenrir; within family prefer wireless PIDs.
+        foreach (var pid in SuperlightConstants.ProductIds)
+        {
+            foreach (var d in DeviceList.Local.GetHidDevices(SuperlightConstants.VendorId, pid))
+            {
+                var key = $"{d.VendorID:X4}:{d.ProductID:X4}";
+                if (byKey.ContainsKey(key))
+                    continue;
+                string name;
+                try { name = d.GetProductName() ?? "PRO X SUPERLIGHT"; }
+                catch { name = "PRO X SUPERLIGHT"; }
+                byKey[key] = new UmdDeviceInfo(
+                    UmdDeviceKind.Superlight,
+                    d.VendorID,
+                    d.ProductID,
+                    name);
+            }
+        }
+
+        // King Ultra first (historical default), then Fenrir, then Superlight; prefer wireless PIDs.
         return byKey.Values
-            .OrderBy(d => d.Kind == UmdDeviceKind.KingUltra ? 0 : 1)
+            .OrderBy(d => d.Kind switch
+            {
+                UmdDeviceKind.KingUltra => 0,
+                UmdDeviceKind.FenrirMax => 1,
+                _ => 2,
+            })
             .ThenByDescending(d => IsWirelessPid(d) ? 1 : 0)
             .ThenBy(d => d.ProductId)
             .ToList();
     }
 
     private static bool IsWirelessPid(UmdDeviceInfo d) =>
-        d.Kind == UmdDeviceKind.KingUltra
-            ? d.ProductId is KingUltraConstants.PidDongle8K or KingUltraConstants.PidDongleAlt
-            : d.ProductId == GwolvesConstants.FenrirMaxWirelessPid;
+        d.Kind switch
+        {
+            UmdDeviceKind.KingUltra => d.ProductId is KingUltraConstants.PidDongle8K
+                or KingUltraConstants.PidDongleAlt,
+            UmdDeviceKind.FenrirMax => d.ProductId == GwolvesConstants.FenrirMaxWirelessPid,
+            UmdDeviceKind.Superlight => true, // C547 is always the LIGHTSPEED receiver
+            _ => false,
+        };
 
     public static UmdDeviceInfo? ResolvePreferred(
         IReadOnlyList<UmdDeviceInfo> available,

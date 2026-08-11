@@ -11,7 +11,7 @@ import type { Transport } from '../transport/types'
 export type DeviceWritePhase = 'idle' | 'queued' | 'writing' | 'ok' | 'error'
 
 /**
- * Shared surface for King Ultra + Fenrir Max so Sensor/Buttons/Settings
+ * Shared surface for King Ultra + Fenrir Max + Superlight so Sensor/Buttons/Settings
  * keep using apply(d => d.patchSensor(...)) without per-device UI trees.
  */
 export interface DeviceDriver {
@@ -24,12 +24,12 @@ export interface DeviceDriver {
 
   getState(): DeviceState
   attach(transport: Transport): Promise<void>
-  /** Fenrir opens its own multi-interface HID stack (optional). */
+  /** Fenrir / Superlight open their own HID stack (optional). */
   attachNative?(opts?: { preferPid?: number }): Promise<void>
   detach(): Promise<void>
   onWritePhase(cb: (p: DeviceWritePhase) => void): () => void
 
-  setProfile(index: number): void
+  setProfile(index: number): void | Promise<void>
   setButtonAction(buttonId: number, action: ButtonAction): void
   /** May return a Promise when the write is flushed immediately (e.g. Axis Sync). */
   patchSensor(patch: Partial<SensorState>): void | Promise<void>
@@ -40,7 +40,7 @@ export interface DeviceDriver {
   setActiveDpiColor?(color: string): void
   setMacros(macros: Macro[]): void
   patchSettings(patch: Partial<SettingsState>): void
-  restoreDefaults(): void
+  restoreDefaults(): void | Promise<void>
   exportProfile(): string
   importProfile(json: string): void
   refreshFirmwareVersions(): Promise<void>

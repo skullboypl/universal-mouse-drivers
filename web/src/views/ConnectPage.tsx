@@ -4,15 +4,19 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { UMD } from '@/brand/umd'
 import { Button } from '@/components/Button'
+import { FaqSection } from '@/components/FaqSection'
+import ui from '@/components/ui.module.css'
 import {
   DEVICE_CATALOG,
   findCatalogDevice,
 } from '@/devices/registry'
 import { FENRIR_MAX_IDENTITY } from '@/devices/gwolves-fenrir-max/identity'
+import { SUPERLIGHT_IDENTITY } from '@/devices/logitech-pro-x-superlight/identity'
 import { KING_ULTRA_IDENTITY } from '@/devices/redragon-king-ultra/identity'
 import type { DeviceIdentity, DeviceSupportStatus } from '@/devices/types'
 import { useLocale } from '@/i18n/LocaleContext'
 import { useT } from '@/i18n/useT'
+import { faqForPage } from '@/lib/seoContent'
 import { useDeviceSession } from '@/session/DeviceSessionContext'
 import type { SavedDevice } from '@/session/savedDevices'
 import type { HidPickTarget } from '@/transport/webhid'
@@ -31,25 +35,13 @@ function resolveCatalogImage(
   )
 }
 
-function DeviceThumb({
-  src,
-  alt,
-}: {
-  src?: string
-  alt: string
-}) {
-  if (!src) return <span className={styles.thumbPlaceholder} aria-hidden />
-  return (
-    <img className={styles.thumb} src={src} alt={alt} width={56} height={56} />
-  )
-}
-
 function connectingLabel(
   catalogId: string | undefined,
   syncing: string,
 ): string {
   if (catalogId === FENRIR_MAX_IDENTITY.id) return 'Fenrir…'
   if (catalogId === KING_ULTRA_IDENTITY.id) return 'King Ultra…'
+  if (catalogId === SUPERLIGHT_IDENTITY.id) return 'SUPERLIGHT…'
   return syncing
 }
 
@@ -123,11 +115,16 @@ function HeroMiceSlider({ devices }: { devices: DeviceIdentity[] }) {
 
 export function ConnectPage() {
   const nav = useRouter()
-  const { lp } = useLocale()
+  const { lp, locale } = useLocale()
   const { connectMock, connectWebHid, webHidOk, savedDevices } =
     useDeviceSession()
   const tr = useT()
   const [connectingKey, setConnectingKey] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   async function goHid(target?: HidPickTarget, key?: string) {
     setConnectingKey(key ?? target?.catalogId ?? 'any')
@@ -135,7 +132,8 @@ export function ConnectPage() {
       const catalogId = await connectWebHid(target)
       nav.push(
         lp(
-          catalogId === FENRIR_MAX_IDENTITY.id
+          catalogId === FENRIR_MAX_IDENTITY.id ||
+            catalogId === SUPERLIGHT_IDENTITY.id
             ? '/device/buttons'
             : '/device/sensor',
         ),
@@ -186,6 +184,7 @@ export function ConnectPage() {
   }
 
   const busyAny = connectingKey != null
+  const showSaved = mounted && savedDevices.length > 0
 
   return (
     <div className={styles.page} data-brand="umd">
@@ -209,27 +208,38 @@ export function ConnectPage() {
                 tr('connect.webhid')
               )}
             </Button>
-            <Button disabled={busyAny} onClick={() => void goDemo()}>
+            <Button disabled={busyAny} variant="ghost" onClick={() => void goDemo()}>
               {tr('connect.demo')}
             </Button>
           </div>
-          {!webHidOk && (
+          {mounted && !webHidOk ? (
             <p className={styles.warn}>{tr('connect.noWebHid')}</p>
-          )}
-          <p className={styles.hint}>{tr('connect.hint')}</p>
+          ) : null}
+          <ol className={styles.steps}>
+            <li>
+              <span className={styles.stepNum}>1</span>
+              {tr('connect.step1')}
+            </li>
+            <li>
+              <span className={styles.stepNum}>2</span>
+              {tr('connect.step2')}
+            </li>
+            <li>
+              <span className={styles.stepNum}>3</span>
+              {tr('connect.step3')}
+            </li>
+          </ol>
         </div>
         <HeroMiceSlider devices={DEVICE_CATALOG} />
       </section>
 
-      <section className={styles.section}>
-        <header className={styles.sectionHead}>
-          <h2>{tr('connect.savedTitle')}</h2>
-          <p>{tr('connect.savedSub')}</p>
-        </header>
-        {savedDevices.length === 0 ? (
-          <p className={styles.empty}>{tr('connect.savedEmpty')}</p>
-        ) : (
-          <ul className={styles.list}>
+      {showSaved ? (
+        <section className={styles.section}>
+          <header className={styles.sectionHead}>
+            <h2>{tr('connect.savedTitle')}</h2>
+            <p>{tr('connect.savedSub')}</p>
+          </header>
+          <ul className={styles.savedList}>
             {savedDevices.map((d) => {
               const imageUrl = resolveCatalogImage(
                 d.catalogId,
@@ -242,23 +252,29 @@ export function ConnectPage() {
                 <li key={key}>
                   <button
                     type="button"
-                    className={`${styles.listRow} ${
+                    className={`${styles.savedRow} ${
                       rowBusy ? styles.listRowBusy : ''
                     }`}
                     disabled={!webHidOk || busyAny}
                     onClick={() => void goSaved(d)}
                   >
-                    <DeviceThumb
-                      src={imageUrl}
-                      alt={`${d.brand} ${d.model}`}
-                    />
-                    <span className={styles.listMain} style={{ flex: 1 }}>
+                    {imageUrl ? (
+                      <img
+                        className={styles.savedThumb}
+                        src={imageUrl}
+                        alt=""
+                        width={48}
+                        height={48}
+                      />
+                    ) : (
+                      <span className={styles.thumbPlaceholder} aria-hidden />
+                    )}
+                    <span className={styles.listMain}>
                       <strong>
                         {d.brand} {d.model}
                       </strong>
-                      <span className={styles.meta}>
-                        {d.productName ??
-                          `${d.vendorId.toString(16)}:${d.productId.toString(16)}`}
+                      <span className={styles.metaMuted}>
+                        {tr('connect.open')}
                       </span>
                     </span>
                     {rowBusy ? (
@@ -266,66 +282,54 @@ export function ConnectPage() {
                         <span className={styles.rowSpin} aria-hidden />
                         {connectingLabel(d.catalogId, tr('status.syncing'))}
                       </span>
-                    ) : (
-                      <span className={styles.meta}>
-                        {new Date(d.lastSeen).toLocaleString()}
-                      </span>
-                    )}
+                    ) : null}
                   </button>
                 </li>
               )
             })}
           </ul>
-        )}
-      </section>
+        </section>
+      ) : null}
 
-      <section className={styles.section}>
+      <section className={styles.section} id="mice">
         <header className={styles.sectionHead}>
           <h2>{tr('connect.supportedTitle')}</h2>
           <p>{tr('connect.supportedSub')}</p>
         </header>
-        <ul className={styles.list}>
+        <ul className={styles.deviceGrid}>
           {DEVICE_CATALOG.map((d: DeviceIdentity) => {
             const canConnect = webHidOk && d.status !== 'planned'
             const key = `catalog:${d.id}`
             const rowBusy = connectingKey === key
             return (
-              <li key={d.id} className={styles.supportRow}>
+              <li key={d.id}>
                 <button
                   type="button"
-                  className={`${styles.listRow} ${
+                  className={`${styles.deviceCard} ${
                     rowBusy ? styles.listRowBusy : ''
-                  }`}
+                  } ${!canConnect ? styles.deviceCardSoon : ''}`}
                   disabled={!canConnect || busyAny}
                   onClick={() => {
                     if (!canConnect) return
                     void goCatalog(d)
                   }}
-                  style={{
-                    width: '100%',
-                    textAlign: 'left',
-                    opacity: canConnect ? 1 : 0.72,
-                    cursor: canConnect && !busyAny ? 'pointer' : 'default',
-                  }}
                 >
-                  <DeviceThumb
-                    src={d.imageUrl}
-                    alt={`${d.brand} ${d.model}`}
-                  />
-                  <div className={styles.listMain} style={{ flex: 1 }}>
-                    <strong>
-                      {d.brand} {d.model}
-                    </strong>
-                    <span className={styles.meta}>{d.tagline}</span>
+                  <div className={styles.deviceArt}>
+                    {d.imageUrl ? (
+                      <img
+                        src={d.imageUrl}
+                        alt=""
+                        className={styles.deviceImg}
+                        draggable={false}
+                      />
+                    ) : (
+                      <span className={styles.thumbPlaceholder} aria-hidden />
+                    )}
                   </div>
-                  {rowBusy ? (
-                    <span className={styles.rowBusy}>
-                      <span className={styles.rowSpin} aria-hidden />
-                      {connectingLabel(d.id, tr('status.syncing'))}
-                    </span>
-                  ) : (
-                    <div className={styles.supportMeta}>
-                      <span className={styles.ids}>{d.hidIds.join(' · ')}</span>
+                  <div className={styles.deviceBody}>
+                    <span className={styles.deviceBrand}>{d.brand}</span>
+                    <strong className={styles.deviceModel}>{d.model}</strong>
+                    <div className={styles.deviceFooter}>
                       <span
                         className={[
                           styles.badge,
@@ -338,8 +342,29 @@ export function ConnectPage() {
                       >
                         {statusText(d.status)}
                       </span>
+                      {rowBusy ? (
+                        <span className={styles.rowBusy}>
+                          <span className={styles.rowSpin} aria-hidden />
+                          {connectingLabel(d.id, tr('status.syncing'))}
+                        </span>
+                      ) : canConnect ? (
+                        <span className={styles.openCue}>
+                          {tr('connect.open')} →
+                        </span>
+                      ) : (
+                        <span className={styles.openCueMuted}>
+                          {tr('connect.soon')}
+                        </span>
+                      )}
                     </div>
-                  )}
+                    <a
+                      className={styles.deviceSeoLink}
+                      href={lp(`/mice/${d.id}`)}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {tr('connect.learnMore')}
+                    </a>
+                  </div>
                 </button>
               </li>
             )
@@ -347,33 +372,86 @@ export function ConnectPage() {
         </ul>
       </section>
 
-      <section className={styles.contact}>
-        <h2>{tr('connect.contactTitle')}</h2>
-        <p>{tr('connect.contactBody')}</p>
-        <p className={styles.barter}>
-          {tr('connect.contactBarter')}{' '}
-          <a
-            className={styles.tiktok}
-            href={UMD.tiktokUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            tiktok.com/{UMD.tiktokHandle}
-          </a>
-          .
-        </p>
-        <div className={styles.contactLinks}>
-          <a className={styles.mail} href={UMD.contactMailto}>
-            {UMD.contactEmail}
-          </a>
-          <a
-            className={styles.tiktok}
-            href={UMD.tiktokUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {UMD.tiktokHandle}
-          </a>
+      <section className={styles.tray} id="tray">
+        <div className={styles.trayPanel}>
+          <div className={styles.trayIntro}>
+            <p className={styles.trayEyebrow}>{tr('connect.trayEyebrow')}</p>
+            <h2>{tr('connect.trayTitle')}</h2>
+            <p className={styles.trayLead}>{tr('connect.trayBody')}</p>
+            <p className={styles.trayLang}>{tr('connect.trayLang')}</p>
+            <div className={styles.trayCta}>
+              <a
+                className={ui.btnPrimary}
+                href="/api/downloads/UmdBatteryTray.exe"
+                download="UmdBatteryTray.exe"
+              >
+                {tr('connect.trayDownload')}
+              </a>
+              <a className={styles.trayMore} href={lp('/tray')}>
+                {tr('connect.trayMore')} →
+              </a>
+              <p className={styles.trayNote}>{tr('connect.trayNote')}</p>
+            </div>
+          </div>
+          <ul className={styles.trayFeatures}>
+            <li>{tr('connect.trayFeat1')}</li>
+            <li>{tr('connect.trayFeat2')}</li>
+            <li>{tr('connect.trayFeat3')}</li>
+            <li>{tr('connect.trayFeat4')}</li>
+            <li>{tr('connect.trayFeat5')}</li>
+          </ul>
+        </div>
+      </section>
+
+      <FaqSection title={tr('connect.faqTitle')} items={faqForPage(locale)} />
+
+      <section className={styles.contact} id="contact">
+        <div className={styles.contactPanel}>
+          <div className={styles.contactIntro}>
+            <p className={styles.contactEyebrow}>{tr('nav.contact')}</p>
+            <h2>{tr('connect.contactTitle')}</h2>
+            <p className={styles.contactLead}>{tr('connect.contactBody')}</p>
+            <p className={styles.barter}>{tr('connect.contactBarter')}</p>
+          </div>
+
+          <div className={styles.contactChannels}>
+            <a className={styles.contactCard} href={UMD.contactMailto}>
+              <span className={styles.contactCardLabel}>
+                {tr('connect.contactEmailLabel')}
+              </span>
+              <strong className={styles.contactCardValue}>
+                {UMD.contactEmail}
+              </strong>
+              <span className={styles.contactCardCta}>
+                {tr('connect.contactEmailCta')} →
+              </span>
+            </a>
+            <a
+              className={styles.contactCard}
+              href={UMD.tiktokUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span className={styles.contactCardLabel}>
+                {tr('connect.contactTiktokLabel')}
+              </span>
+              <strong className={styles.contactCardValue}>
+                {UMD.tiktokHandle}
+              </strong>
+              <span className={styles.contactCardCta}>
+                {tr('connect.contactTiktokCta')} →
+              </span>
+            </a>
+          </div>
+
+          <div className={styles.contactNeed}>
+            <h3>{tr('connect.contactNeedTitle')}</h3>
+            <ol>
+              <li>{tr('connect.contactNeed1')}</li>
+              <li>{tr('connect.contactNeed2')}</li>
+              <li>{tr('connect.contactNeed3')}</li>
+            </ol>
+          </div>
         </div>
       </section>
     </div>

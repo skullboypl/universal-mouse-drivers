@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import type { Locale } from '@/i18n/locale'
+import { DEVICE_SEO_ARTICLES, WHY_UMD, BATTERY_TRAY } from './seoContent'
 import { getSiteUrl, SITE } from './site'
 
 export type SeoPageId =
@@ -8,6 +9,11 @@ export type SeoPageId =
   | 'sensor'
   | 'buttons'
   | 'macro'
+  | 'why'
+  | 'tray'
+  | 'mouse-redragon-king-ultra'
+  | 'mouse-gwolves-fenrir-max'
+  | 'mouse-logitech-pro-x-superlight'
 
 type Localized = Record<Locale, string>
 
@@ -23,31 +29,70 @@ export interface SeoPage {
   index?: boolean
 }
 
+function mousePageId(slug: string): SeoPageId {
+  return `mouse-${slug}` as SeoPageId
+}
+
+const mousePageEntries = DEVICE_SEO_ARTICLES.map((a) => {
+  const id = mousePageId(a.slug)
+  const page: SeoPage = {
+    id,
+    path: a.path,
+    title: a.title,
+    description: a.description,
+    eyebrow: a.eyebrow,
+  }
+  return [id, page] as const
+})
+
 export const SEO_PAGES: Record<SeoPageId, SeoPage> = {
   home: {
     id: 'home',
     path: '',
     eyebrow: { pl: 'Połącz', en: 'Connect' },
     title: {
-      pl: 'Połącz mysz — Universal Mouse Drivers',
-      en: 'Connect mouse — Universal Mouse Drivers',
+      pl: 'Połącz mysz - Universal Mouse Drivers',
+      en: 'Connect mouse - Universal Mouse Drivers',
     },
     description: {
-      pl: 'Sterowniki WebHID w przeglądarce i Windows tray baterii dla Redragon King Ultra (G-Wolves Fenrir Max 8K w przygotowaniu). DPI, przyciski, sleep i firmware bez instalacji OEM.',
-      en: 'Browser WebHID drivers and Windows battery tray for Redragon King Ultra (G-Wolves Fenrir Max 8K coming next). DPI, buttons, sleep and firmware — no OEM install.',
+      pl: 'Sterowniki WebHID w przeglądarce dla Redragon King Ultra, G-Wolves Fenrir Max 8K i Logitech PRO X SUPERLIGHT. DPI, przyciski i profile bez instalacji OEM.',
+      en: 'Browser WebHID drivers for Redragon King Ultra, G-Wolves Fenrir Max 8K and Logitech PRO X SUPERLIGHT. DPI, buttons and profiles without an OEM install.',
     },
   },
+  why: {
+    id: 'why',
+    path: WHY_UMD.path,
+    title: WHY_UMD.title,
+    description: WHY_UMD.description,
+    eyebrow: WHY_UMD.eyebrow,
+  },
+  tray: {
+    id: 'tray',
+    path: BATTERY_TRAY.path,
+    title: BATTERY_TRAY.title,
+    description: BATTERY_TRAY.description,
+    eyebrow: BATTERY_TRAY.eyebrow,
+  },
+  'mouse-redragon-king-ultra': mousePageEntries.find(
+    ([id]) => id === 'mouse-redragon-king-ultra',
+  )![1],
+  'mouse-gwolves-fenrir-max': mousePageEntries.find(
+    ([id]) => id === 'mouse-gwolves-fenrir-max',
+  )![1],
+  'mouse-logitech-pro-x-superlight': mousePageEntries.find(
+    ([id]) => id === 'mouse-logitech-pro-x-superlight',
+  )![1],
   settings: {
     id: 'settings',
     path: '/device/settings',
     eyebrow: { pl: 'Ustawienia', en: 'Settings' },
     title: {
-      pl: 'Ustawienia urządzenia — UMD',
-      en: 'Device settings — UMD',
+      pl: 'Ustawienia urządzenia - UMD',
+      en: 'Device settings - UMD',
     },
     description: {
-      pl: 'Firmware receivera i myszy, tryb uśpienia, język UI oraz tray baterii UMD dla King Ultra.',
-      en: 'Receiver and mouse firmware, sleep mode, UI language and UMD battery tray for King Ultra.',
+      pl: 'Firmware receivera i myszy, tryb uśpienia, język UI oraz link do UMD Battery Tray.',
+      en: 'Receiver and mouse firmware, sleep mode, UI language, and a link to UMD Battery Tray.',
     },
   },
   sensor: {
@@ -55,8 +100,8 @@ export const SEO_PAGES: Record<SeoPageId, SeoPage> = {
     path: '/device/sensor',
     eyebrow: { pl: 'Sensor', en: 'Sensor' },
     title: {
-      pl: 'Sensor i DPI — UMD',
-      en: 'Sensor & DPI — UMD',
+      pl: 'Sensor i DPI - UMD',
+      en: 'Sensor & DPI - UMD',
     },
     description: {
       pl: 'Konfiguracja PixArt PAW3395: DPI, polling rate, LOD, Peak i tryby zasilania King Ultra przez WebHID.',
@@ -68,8 +113,8 @@ export const SEO_PAGES: Record<SeoPageId, SeoPage> = {
     path: '/device/buttons',
     eyebrow: { pl: 'Przyciski', en: 'Buttons' },
     title: {
-      pl: 'Mapowanie przycisków — UMD',
-      en: 'Button mapping — UMD',
+      pl: 'Mapowanie przycisków - UMD',
+      en: 'Button mapping - UMD',
     },
     description: {
       pl: 'Przypisz akcje do przycisków Redragon King Ultra bezpośrednio w przeglądarce.',
@@ -81,12 +126,12 @@ export const SEO_PAGES: Record<SeoPageId, SeoPage> = {
     path: '/device/macro',
     eyebrow: { pl: 'Makra', en: 'Macros' },
     title: {
-      pl: 'Makra — UMD',
-      en: 'Macros — UMD',
+      pl: 'Makra - UMD',
+      en: 'Macros - UMD',
     },
     description: {
-      pl: 'Edytor makr dla Universal Mouse Drivers — w przygotowaniu.',
-      en: 'Macro editor for Universal Mouse Drivers — coming soon.',
+      pl: 'Edytor makr dla Universal Mouse Drivers - w przygotowaniu.',
+      en: 'Macro editor for Universal Mouse Drivers - coming soon.',
     },
   },
 }
@@ -103,7 +148,7 @@ export function absoluteUrl(path: string): string {
 }
 
 export function ogImageUrl(page: SeoPageId, lang: Locale): string {
-  // Home uses Next file-based OG (/{lang}/opengraph-image) — more reliable for Discord.
+  // Home uses Next file-based OG (/{lang}/opengraph-image) - more reliable for Discord.
   if (page === 'home') {
     return absoluteUrl(`/${lang}/opengraph-image`)
   }
@@ -207,4 +252,9 @@ export function websiteJsonLd() {
       target: absoluteUrl('/pl'),
     },
   }
+}
+
+export function seoPageIdForMouseSlug(slug: string): SeoPageId | null {
+  const id = mousePageId(slug)
+  return id in SEO_PAGES ? id : null
 }

@@ -17,9 +17,9 @@
   --danger: #e05a4a;
   --radius: 8px;
   --radius-sm: 4px;
-  --font: 'IBM Plex Sans', system-ui, sans-serif;
-  --display: 'Syne', 'IBM Plex Sans', sans-serif;
-  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font: 'Ubuntu', 'Archivo', system-ui, sans-serif;
+  --display: 'Oxanium', 'delight', 'Ubuntu', sans-serif;
+  --mono: 'Ubuntu Mono', ui-monospace, monospace;
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   --nav-h: 64px;
 }
@@ -42,4 +42,24 @@
   --success: #18a058;
   --radius: 3px;
   --radius-sm: 3px;
+}
+
+/* OMM-like Logitech G cyan while SUPERLIGHT is connected */
+.app-shell[data-device='logitech-pro-x-superlight'] {
+  --bg: #0f0f0f;
+  --bg-elevated: #1a1a1a;
+  --bg-panel: #161616;
+  --bg-hover: #222;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --fg: #f0f0f0;
+  --fg-muted: #9a9a9a;
+  --fg-dim: #6e6e6e;
+  --accent: #00a0e3;
+  --accent-hot: #33b5eb;
+  --accent-soft: rgba(0, 160, 227, 0.16);
+  --signal: #00a0e3;
+  --success: #00a0e3;
+  --radius: 10px;
+  --radius-sm: 8px;
 }

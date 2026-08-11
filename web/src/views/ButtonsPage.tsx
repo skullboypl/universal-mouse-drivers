@@ -78,8 +78,8 @@ export function ButtonsPage() {
             <Select
               value={String(state.profileIndex)}
               onChange={(e) => {
-                void apply((d) => {
-                  d.setProfile(Number(e.target.value))
+                void apply(async (d) => {
+                  await d.setProfile(Number(e.target.value))
                 })
               }}
             >

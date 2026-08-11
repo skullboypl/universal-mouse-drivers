@@ -600,7 +600,7 @@ export function FenrirOemWorkspace() {
             <span className={css.batteryVal}>
               {state.info.batteryPercent != null
                 ? `${state.info.batteryPercent}%`
-                : '—'}
+                : '-'}
               {state.info.charging ? ' · charging' : ''}
             </span>
           </div>

@@ -14,7 +14,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: absoluteUrl(path),
         lastModified: now,
         changeFrequency: page.id === 'home' ? 'weekly' : 'monthly',
-        priority: page.id === 'home' ? 1 : 0.7,
+        priority:
+          page.id === 'home'
+            ? 1
+            : page.id === 'why' || page.id === 'tray'
+              ? 0.9
+              : page.id.startsWith('mouse-')
+                ? 0.85
+                : 0.7,
         alternates: {
           languages: Object.fromEntries(
             SITE.locales.map((loc) => [

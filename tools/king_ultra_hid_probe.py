@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CLI probe for Redragon King Ultra (3554:F54F / F54D) — no browser.
+CLI probe for Redragon King Ultra (3554:F54F / F54D) - no browser.
 
 Opens OEM vendor channel (usagePage 0xFF02, report id 8, 16-byte payload),
 runs encryption / PC-driver / online / flash read-write sequences, prints
@@ -20,7 +20,7 @@ import sys
 import time
 from typing import Iterable, Optional
 
-# Windows console often cp1250 — keep ASCII in prints
+# Windows console often cp1250 - keep ASCII in prints
 os.environ.setdefault("PYTHONIOENCODING", "utf-8")
 
 try:
@@ -93,7 +93,7 @@ def pick_device(pid: Optional[int] = None) -> dict:
         for p in PIDS if pid is None else (pid,):
             cands.extend(hid.enumerate(VID, p))
     if not cands:
-        raise SystemExit("No 3554:F54F/F510/F54D device found — plug dongle/cable")
+        raise SystemExit("No 3554:F54F/F510/F54D device found - plug dongle/cable")
     # Prefer FF02
     cands.sort(
         key=lambda d: (
@@ -170,7 +170,7 @@ def main() -> None:
     ap.add_argument(
         "--online-bit",
         action="store_true",
-        help="OR 0x80 into dataLen (usually WRONG on F54F — empty echoes)",
+        help="OR 0x80 into dataLen (usually WRONG on F54F - empty echoes)",
     )
     ap.add_argument("--listen", type=int, default=0, help="extra listen ms after seq")
     args = ap.parse_args()
@@ -232,7 +232,7 @@ def main() -> None:
                         print(f"  {label} FW alt   v{body[6]}.{body[7]} (idx6/7)")
         xfer(dev, build_wire(6, online_bit=online), label="pair_state", wait_ms=600)
 
-        print("\n=== listen 3s — MOVE THE MOUSE NOW ===")
+        print("\n=== listen 3s - MOVE THE MOUSE NOW ===")
         for r in drain(dev, 3000):
             print("RX listen", hx(r[:20]))
             body = r[1:] if r and r[0] == 0x08 else r
@@ -314,7 +314,7 @@ def main() -> None:
                 print(f"  parse data[0:4]={data} expect={stage_bytes}")
                 if data[:4] == stage_bytes:
                     ok = True
-                    print("  >>> FLASH MATCH — write reached mouse")
+                    print("  >>> FLASH MATCH - write reached mouse")
             if ok:
                 break
 

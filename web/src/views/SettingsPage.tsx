@@ -6,6 +6,7 @@ import { Button } from '../components/Button'
 import { Select } from '../components/Select'
 import styles from '../components/ui.module.css'
 import { FENRIR_MAX_IDENTITY } from '../devices/gwolves-fenrir-max/identity'
+import { SUPERLIGHT_IDENTITY } from '../devices/logitech-pro-x-superlight/identity'
 import {
   clampFenrirSleepSec,
   FENRIR_SLEEP_MAX_SEC,
@@ -50,8 +51,10 @@ export function SettingsPage() {
   const { locale, setLocale, lp } = useLocale()
   const tr = useT()
   const isFenrir = driver?.identity.id === FENRIR_MAX_IDENTITY.id
+  const isSuperlight = driver?.identity.id === SUPERLIGHT_IDENTITY.id
   const [tray, setTray] = useState<TrayBridgeStatus | null>(null)
   const [trayBusy, setTrayBusy] = useState(false)
+  const [importNote, setImportNote] = useState<string | null>(null)
 
   useEffect(() => {
     if (!connected) return
@@ -127,7 +130,61 @@ export function SettingsPage() {
         </p>
       </div>
 
-      {!isFenrir ? (
+      <div className="panel">
+        <h2 className="panel-label">{tr('settings.umdProfile')}</h2>
+        <p className="muted" style={{ marginTop: 0 }}>
+          {tr('settings.umdProfileHint')}
+        </p>
+        <div className="row" style={{ gap: 10, flexWrap: 'wrap' }}>
+          <Button
+            onClick={() => {
+              if (!driver || !state) return
+              const blob = new Blob([driver.exportProfile()], {
+                type: 'application/json',
+              })
+              const a = document.createElement('a')
+              a.href = URL.createObjectURL(blob)
+              const slug = driver.identity.id.replace(/[^a-z0-9-]+/gi, '-')
+              a.download = `umd-${slug}-profile-${state.profileIndex + 1}.json`
+              a.click()
+              URL.revokeObjectURL(a.href)
+            }}
+          >
+            {tr('settings.umdExport')}
+          </Button>
+          <Button
+            onClick={() => {
+              const input = document.createElement('input')
+              input.type = 'file'
+              input.accept = 'application/json,.json'
+              input.onchange = async () => {
+                const file = input.files?.[0]
+                if (!file || !driver) return
+                try {
+                  const text = await file.text()
+                  await apply((d) => {
+                    d.importProfile(text)
+                  })
+                  syncFromDriver()
+                  setImportNote(tr('settings.umdImportOk'))
+                } catch {
+                  setImportNote(tr('settings.umdImportFail'))
+                }
+              }
+              input.click()
+            }}
+          >
+            {tr('settings.umdImport')}
+          </Button>
+        </div>
+        {importNote ? (
+          <p className="muted" style={{ marginBottom: 0, marginTop: 10 }}>
+            {importNote}
+          </p>
+        ) : null}
+      </div>
+
+      {!isFenrir && !isSuperlight ? (
         <div className="panel">
           <h2 className="panel-label">{tr('settings.pairing')}</h2>
           <Button
@@ -140,6 +197,7 @@ export function SettingsPage() {
         </div>
       ) : null}
 
+      {!isSuperlight ? (
       <div className="panel">
         <h2 className="panel-label">{tr('settings.sleep')}</h2>
         <p className="muted" style={{ marginTop: 0 }}>
@@ -191,6 +249,7 @@ export function SettingsPage() {
           </Select>
         )}
       </div>
+      ) : null}
 
       <div className="panel">
         <h2 className="panel-label">{tr('settings.other')}</h2>
@@ -201,7 +260,7 @@ export function SettingsPage() {
                 n:
                   tray?.batteryPercent != null
                     ? String(tray.batteryPercent)
-                    : '—',
+                    : '-',
               })
             : tr('settings.trayOffline')}
         </p>
@@ -265,7 +324,7 @@ export function SettingsPage() {
         </p>
       </div>
 
-      {!isFenrir ? (
+      {!isFenrir && !isSuperlight ? (
         <div className="panel">
           <h2 className="panel-label">{tr('settings.advanced')}</h2>
           <label className={styles.check}>

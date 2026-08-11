@@ -13,6 +13,8 @@ export const SITE = {
   twitterHandle: '@skullboypl',
   sameAs: [
     'https://www.tiktok.com/@skullboypl',
+    'https://github.com/skullboypl',
+    'https://github.com/skullboypl/universal-mouse-drivers',
     'https://github.com/skullboypl/udm-universal-mouse-drivers',
   ],
 } as const

@@ -14,7 +14,7 @@ WebHID configurator (Next.js) + Windows battery tray for OEM gaming mice when fa
 | Tray download | `/app/data/downloads/UmdBatteryTray.exe` |
 | Battery tray (WinForms) | [`tray-battery/`](tray-battery/) |
 
-Legacy Vite prototype remains in [`web-app/`](web-app/) (not deployed).
+Legacy Vite prototype: local only under `old/web-app/` (gitignored, not deployed).
 
 ## Dev
 

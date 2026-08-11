@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { ConnectPage } from '@/views/ConnectPage'
+import { JsonLd } from '@/components/JsonLd'
 import { isLocale, type Locale } from '@/i18n/locale'
 import { buildPageMetadata } from '@/lib/seo'
+import { faqJsonLd } from '@/lib/seoContent'
 
 export async function generateMetadata({
   params,
@@ -20,5 +22,10 @@ export default async function Page({
 }) {
   const { lang } = await params
   if (!isLocale(lang)) return null
-  return <ConnectPage />
+  return (
+    <>
+      <JsonLd data={faqJsonLd(lang as Locale)} />
+      <ConnectPage />
+    </>
+  )
 }

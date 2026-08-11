@@ -1,4 +1,4 @@
-# Redragon King Ultra Web Driver — Design Spec
+# Redragon King Ultra Web Driver - Design Spec
 
 **Date:** 2026-08-09  
 **Status:** Approved (user: proceed to completion)  
@@ -6,10 +6,10 @@
 
 ## Goals
 
-1. **Communication first** — real device control via WebHID (+ optional Windows bridge).
-2. **Better UI** — Wooting-like modern web UI, Redragon red accent (not PNG clone of OEM exe).
+1. **Communication first** - real device control via WebHID (+ optional Windows bridge).
+2. **Better UI** - Wooting-like modern web UI, Redragon red accent (not PNG clone of OEM exe).
 3. **Feature parity** with OEM PC driver screens: Home, Buttons, Sensor, Macro, Settings.
-4. **Redragon King Ultra first**; later expand the same UMD app to other mice we still have hardware for (Blitz deferred — no unit on hand).
+4. **Redragon King Ultra first**; later expand the same UMD app to other mice we still have hardware for (Blitz deferred - no unit on hand).
 5. **Ship UI + Mock now**; reverse protocol on live hardware in parallel (target only King Ultra).
 
 ## Non-goals (v1)
@@ -23,7 +23,7 @@
 
 | Role | VID | PID | Notes |
 |------|-----|-----|-------|
-| Vendor | `0x3554` | — | OEM family (Config base64 `Redragon3554`) |
+| Vendor | `0x3554` | - | OEM family (Config base64 `Redragon3554`) |
 | Mouse (wired/BT variants) | `0x3554` | `0xF54D` | From Config `M_PID` |
 | Dongle / wireless | `0x3554` | `0xF54F`, `0xF510` | Observed online: `3554:F54F` |
 
@@ -51,7 +51,7 @@ UI (React pages)
 
 - **WebHID** primary (Wooting model), HTTPS or localhost.
 - **MockTransport** for UI development without writes.
-- **BridgeTransport** — small local Windows service later if WebHID cannot cover pairing/boot/update.
+- **BridgeTransport** - small local Windows service later if WebHID cannot cover pairing/boot/update.
 
 ### Multi-device readiness
 
@@ -76,7 +76,7 @@ src/devices/
 | `/device/macro` | Macro list, key events, record, delay/cycle options, save |
 | `/device/settings` | Language, FW versions, pairing, sleep, long distance, run on boot (bridge), Windows mouse props link |
 
-Nav: Home(device) · Sensor · Macro · Settings (Buttons is home workspace after connect — same as OEM house icon → button map).
+Nav: Home(device) · Sensor · Macro · Settings (Buttons is home workspace after connect - same as OEM house icon → button map).
 
 ## Data flow
 
@@ -98,7 +98,7 @@ Import/export: JSON profiles (v1), binary OEM format later if sniffed.
 ## Reverse engineering plan
 
 1. UI + Mock complete.
-2. USBPcap/Wireshark while OEM driver changes DPI / report rate / key bind — **only** on `3554:F54F|F54D|F510`.
+2. USBPcap/Wireshark while OEM driver changes DPI / report rate / key bind - **only** on `3554:F54F|F54D|F510`.
 3. Map report IDs → `protocol.ts`.
 4. Swap Mock → WebHID for each command as verified.
 5. Bridge only for gaps (pairing tool, boot helper, FW).

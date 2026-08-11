@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -13,6 +14,7 @@ import { umdLog } from '../debug/umdLog'
 import type { DeviceDriver } from '../devices/DeviceDriver'
 import { createDriver, DEVICE_CATALOG, findCatalogDevice } from '../devices/registry'
 import { FENRIR_MAX_IDENTITY } from '../devices/gwolves-fenrir-max/identity'
+import { SUPERLIGHT_IDENTITY } from '../devices/logitech-pro-x-superlight/identity'
 import { KING_ULTRA_IDENTITY } from '../devices/redragon-king-ultra/identity'
 import type { DeviceState } from '../devices/types'
 import { t } from '../i18n/messages'
@@ -102,13 +104,18 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
   const [connectingCatalogId, setConnectingCatalogId] = useState<string | null>(
     null,
   )
-  const [savedDevices, setSavedDevices] = useState<SavedDevice[]>(() =>
-    loadSavedDevices(),
-  )
+  // SSR-safe: localStorage / navigator.hid differ on server vs client.
+  const [savedDevices, setSavedDevices] = useState<SavedDevice[]>([])
+  const [webHidOk, setWebHidOk] = useState(false)
   const driverRef = useRef<DeviceDriver | null>(null)
   const transportKindRef = useRef<TransportKind | null>(null)
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const busyRef = useRef(false)
+
+  useEffect(() => {
+    setWebHidOk(webHidSupported())
+    setSavedDevices(loadSavedDevices())
+  }, [])
 
   const publish = useCallback((d: DeviceDriver | null) => {
     driverRef.current = d
@@ -129,19 +136,25 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       const current = driverRef.current
       if (!current) return
       setSaveStatus('saving')
-      try {
-        const snap = cloneState(current.getState())
-        persistDraft(current.identity.id, snap)
-        void current.flushToDevice()
-        setSaveStatus('saved')
-        const lang = uiLocale(snap.settings.language)
-        const kind = transportKindRef.current
-        setStatus(
-          `${t(lang, kind === 'webhid' ? 'status.webhid' : 'status.mock')} · ${t(lang, 'status.saved')}`,
-        )
-      } catch {
-        setSaveStatus('error')
-      }
+      void (async () => {
+        try {
+          const snap = cloneState(current.getState())
+          persistDraft(current.identity.id, snap)
+          const flush = await current.flushToDevice()
+          if (flush.wrote === false && current.writePhase === 'error') {
+            setSaveStatus('error')
+            return
+          }
+          setSaveStatus('saved')
+          const lang = uiLocale(snap.settings.language)
+          const kind = transportKindRef.current
+          setStatus(
+            `${t(lang, kind === 'webhid' ? 'status.webhid' : 'status.mock')} · ${t(lang, 'status.saved')}`,
+          )
+        } catch {
+          setSaveStatus('error')
+        }
+      })()
     }, AUTOSAVE_MS)
   }, [])
 
@@ -264,26 +277,23 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         setConnectingCatalogId(catalog.id)
         const d = createDriver(catalog.id)
 
-        if (catalog.id === FENRIR_MAX_IDENTITY.id) {
-          if (!d.attachNative) {
-            throw new Error('Fenrir Max driver missing attachNative')
-          }
-          await d.attachNative({ preferPid: picked.productId })
-        } else {
-          const transport = createWebHidTransport()
-          await d.attach({
-            ...transport,
-            connect: () => transport.connectPreferred(picked.productId),
-          })
-          transport.onDisconnect(() => {
-            umdLog('session', 'warn', 'device disconnected')
-            publish(null)
-            setTransportKind(null)
-            setConnectingCatalogId(null)
-            setStatus(t(uiLocale(), 'status.disconnected'))
-            setSaveStatus('idle')
-          })
-        }
+        const useNative =
+          catalog.id === FENRIR_MAX_IDENTITY.id ||
+          catalog.id === SUPERLIGHT_IDENTITY.id
+
+        // Show device UI immediately (defaults) → SyncSpinner → attach + probe.
+        // Do not await HID open/read before navigation (Logitech was blocking on Connect).
+        mergeDraft(d)
+        d.patchSettings({ language: uiLocale() })
+        transportKindRef.current = 'webhid'
+        setTransportKind('webhid')
+        publish(d)
+        const lang = uiLocale(d.getState().settings.language)
+        setStatus(`${t(lang, 'status.webhid')} · ${t(lang, 'status.syncing')}`)
+        setSaveStatus('idle')
+        busyRef.current = true
+        setBusyKind('connect')
+        setDeviceBusy(true)
 
         setSavedDevices(
           rememberDevice({
@@ -295,25 +305,31 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
             productName: picked.productName,
           }),
         )
-        mergeDraft(d)
-        d.patchSettings({ language: uiLocale() })
-        transportKindRef.current = 'webhid'
-        setTransportKind('webhid')
-        publish(d)
-        const lang = uiLocale(d.getState().settings.language)
-        const bat0 = d.getState().info.batteryPercent
-        setStatus(
-          `${t(lang, 'status.webhid')}${
-            bat0 != null ? ` · ${bat0}%` : ''
-          } · ${t(lang, 'status.syncing')}`,
-        )
-        setSaveStatus('idle')
-        busyRef.current = true
-        setBusyKind('connect')
-        setDeviceBusy(true)
 
         void (async () => {
           try {
+            if (useNative) {
+              if (!d.attachNative) {
+                throw new Error(`${catalog.model} driver missing attachNative`)
+              }
+              await d.attachNative({ preferPid: picked.productId })
+            } else {
+              const transport = createWebHidTransport()
+              await d.attach({
+                ...transport,
+                connect: () => transport.connectPreferred(picked.productId),
+              })
+              transport.onDisconnect(() => {
+                umdLog('session', 'warn', 'device disconnected')
+                publish(null)
+                setTransportKind(null)
+                setConnectingCatalogId(null)
+                setStatus(t(uiLocale(), 'status.disconnected'))
+                setSaveStatus('idle')
+              })
+            }
+            if (driverRef.current !== d) return
+
             await d.probeFlashAndSync()
             if (driverRef.current !== d) return
             setState(cloneState(d.getState()))
@@ -343,6 +359,13 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
               'background sync failed',
               err instanceof Error ? err.message : String(err),
             )
+            if (driverRef.current === d) {
+              setStatus(
+                err instanceof Error
+                  ? err.message
+                  : t(uiLocale(), 'status.webhidFailed'),
+              )
+            }
           } finally {
             if (driverRef.current === d) {
               busyRef.current = false
@@ -396,7 +419,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       connectingCatalogId,
       state,
       driver,
-      webHidOk: webHidSupported(),
+      webHidOk,
       savedDevices,
       connectMock,
       connectWebHid,
@@ -415,6 +438,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       busyKind,
       connectingCatalogId,
       state,
+      webHidOk,
       savedDevices,
       connectMock,
       connectWebHid,

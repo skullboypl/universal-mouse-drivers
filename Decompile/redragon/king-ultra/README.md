@@ -1,4 +1,4 @@
-# Reverse engineering — Redragon King Ultra (M916OB-ULT)
+# Reverse engineering - Redragon King Ultra (M916OB-ULT)
 
 ## Short answer
 
@@ -8,15 +8,15 @@
 | **Decompile `.exe`** | Częściowo | Native C++ (nie .NET). API widać w stringach; pełny decompile = Ghidra |
 | **Klik w naszej React app** | Nie na protokół | Dopóki `protocol.ts` jest pusty, nic sensownego nie leci do myszy |
 
-**Rekomendacja:** sniff USB przy OEM + mapowanie na API z listy poniżej → wypełnić `web-app/src/devices/redragon-king-ultra/protocol.ts`.
+**Rekomendacja:** sniff USB przy OEM + mapowanie na API z listy poniżej → wypełnić `web/src/devices/redragon-king-ultra/protocol.ts`.
 
 ## Co już wiemy
 
 - **VID/PID:** `3554:F54D` (mouse), `3554:F54F` / `F510` (dongle)
 - **Sensor:** PAW3950 (`Config.ini` / `driver_sensor.h`)
 - Sterownik to **native PE**, nie .NET → `ilspycmd` nie zadziała
-- Logika HID jest w module **`HIDUsb`** (PDB: `...\HIDUsbTest - V11\...\HIDUsb.pdb`) — **statycznie wlinkowana** w `Mouse Drive Beta.exe` (osobnego `HIDUsb.dll` nie ma w folderze instalacji)
-- W exe są symbole/stringi `CS_UsbServer_*` / `CS_UsbFinder_*` — to powierzchnia protokołu
+- Logika HID jest w module **`HIDUsb`** (PDB: `...\HIDUsbTest - V11\...\HIDUsb.pdb`) - **statycznie wlinkowana** w `Mouse Drive Beta.exe` (osobnego `HIDUsb.dll` nie ma w folderze instalacji)
+- W exe są symbole/stringi `CS_UsbServer_*` / `CS_UsbFinder_*` - to powierzchnia protokołu
 
 ## Inventory (co jest / czego nie ma)
 
@@ -38,13 +38,13 @@ NOTES-api-to-ops.md
 
 **Nie ma jeszcze (to nie leży w installerze):**
 
-- osobnego `HIDUsb.dll` — wlinkowane w exe
+- osobnego `HIDUsb.dll` - wlinkowane w exe
 - projektu Ghidra / zdekompilowanego C (trzeba odpalić Ghidrę lokalnie)
-- capture’ów USB (`.pcapng`) — trzeba USBPcap
-- systemowych DLL z folderu OEM (`kernel32`, `user32`…) — niepotrzebne do RE
+- capture’ów USB (`.pcapng`) - trzeba USBPcap
+- systemowych DLL z folderu OEM (`kernel32`, `user32`…) - niepotrzebne do RE
 
 
-## Metoda A — USB sniff (preferowana)
+## Metoda A - USB sniff (preferowana)
 
 1. Zainstaluj [USBPcap](https://desowin.org/usbpcap/) + Wireshark.
 2. Odłącz Fenrira / zostaw tylko King Ultra (dongle `3554:F54F` albo kabel `F54D`).
@@ -65,7 +65,7 @@ NOTES-api-to-ops.md
 
 **Uwaga bezpieczeństwa:** nie ruszaj Fenrira (`33E4`) ani Wootinga (`31E3`) podczas sniffera.
 
-## Metoda B — Ghidra / IDA na exe
+## Metoda B - Ghidra / IDA na exe
 
 1. Otwórz `bin/MouseDriveBeta.exe` w Ghidra.
 2. Szukaj stringów `CS_UsbServer_SetCurrentConfig`, `ReadReportRate`, `ReadCurrentDPI`.
@@ -74,7 +74,7 @@ NOTES-api-to-ops.md
 
 To wolniejsze niż sniff, ale pomaga gdy pakiety są szyfrowane / trudne do odróżnienia.
 
-## Metoda C — nie: klik w naszym WebHID
+## Metoda C - nie: klik w naszym WebHID
 
 Nasza apka ma whitelist i stub `encodeCommand() → null`, więc **nie wyśle** komend do urządzenia. Sniff trzeba robić na **OEM**.
 
@@ -95,6 +95,6 @@ Zobacz `extracted/hidusb-api-exports.txt`. Kluczowe:
 
 Po pierwszym udanym sniffie DPI:
 
-1. Wpisz bajty do `web-app/src/devices/redragon-king-ultra/protocol.ts`
+1. Wpisz bajty do `web/src/devices/redragon-king-ultra/protocol.ts`
 2. `encodeCommand({ op: 'set_dpi', ... })` zwraca `{ reportId, data }`
 3. WebHID `sendFeatureReport` zaczyna działać end-to-end

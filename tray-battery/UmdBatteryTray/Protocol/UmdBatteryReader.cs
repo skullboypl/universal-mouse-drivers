@@ -2,18 +2,20 @@ namespace UmdBatteryTray.Protocol;
 
 /// <summary>
 /// Multi-device battery facade: connects to the preferred VID:PID when set,
-/// otherwise first available (King Ultra wireless first, then Fenrir).
+/// otherwise first available (King Ultra wireless first, then Fenrir, then Superlight).
 /// </summary>
 internal sealed class UmdBatteryReader : IDisposable
 {
     private KingUltraBatteryReader? _king;
     private GwolvesBatteryReader? _fenrir;
+    private SuperlightBatteryReader? _superlight;
     private UmdDeviceInfo? _active;
 
     public bool IsConnected => _active?.Kind switch
     {
         UmdDeviceKind.KingUltra => _king?.IsConnected == true,
         UmdDeviceKind.FenrirMax => _fenrir?.IsConnected == true,
+        UmdDeviceKind.Superlight => _superlight?.IsConnected == true,
         _ => false,
     };
 
@@ -21,6 +23,7 @@ internal sealed class UmdBatteryReader : IDisposable
     {
         UmdDeviceKind.KingUltra => _king?.DeviceLabel,
         UmdDeviceKind.FenrirMax => _fenrir?.DeviceLabel,
+        UmdDeviceKind.Superlight => _superlight?.DeviceLabel,
         _ => null,
     };
 
@@ -48,8 +51,8 @@ internal sealed class UmdBatteryReader : IDisposable
         var available = ListAvailable();
         var target = UmdDeviceEnumerator.ResolvePreferred(available, PreferredDeviceKey)
             ?? throw new InvalidOperationException(
-                "No UMD mouse found (King Ultra 3554:F54D/F54F/F510 or Fenrir Max 33E4:3717/3708). " +
-                "Close Chrome WebHID / OEM apps.");
+                "No UMD mouse found (King Ultra 3554:F54D/F54F/F510, Fenrir Max 33E4:3717/3708, " +
+                "or Superlight 046D:C547). Close Chrome WebHID / G HUB / OMM / OEM apps.");
 
         try
         {
@@ -73,7 +76,7 @@ internal sealed class UmdBatteryReader : IDisposable
             }
 
             throw new InvalidOperationException(
-                $"Could not open {target.DisplayLabel}. Close Chrome WebHID / OEM apps. {last?.Message}",
+                $"Could not open {target.DisplayLabel}. Close Chrome WebHID / G HUB / OMM / OEM apps. {last?.Message}",
                 last);
         }
     }
@@ -94,6 +97,11 @@ internal sealed class UmdBatteryReader : IDisposable
                 _fenrir.Connect(target.ProductId);
                 _active = target;
                 break;
+            case UmdDeviceKind.Superlight:
+                _superlight = new SuperlightBatteryReader();
+                _superlight.Connect(target.ProductId);
+                _active = target;
+                break;
             default:
                 throw new InvalidOperationException($"Unknown device kind: {target.Kind}");
         }
@@ -105,6 +113,7 @@ internal sealed class UmdBatteryReader : IDisposable
         {
             UmdDeviceKind.KingUltra when _king is not null => _king.ReadBattery(),
             UmdDeviceKind.FenrirMax when _fenrir is not null => _fenrir.ReadBattery(),
+            UmdDeviceKind.Superlight when _superlight is not null => _superlight.ReadBattery(),
             _ => throw new InvalidOperationException("Device not connected."),
         };
     }
@@ -115,6 +124,8 @@ internal sealed class UmdBatteryReader : IDisposable
         _king = null;
         _fenrir?.Dispose();
         _fenrir = null;
+        _superlight?.Dispose();
+        _superlight = null;
         _active = null;
     }
 

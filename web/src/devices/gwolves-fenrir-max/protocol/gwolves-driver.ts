@@ -149,7 +149,7 @@ export class GWolvesDriver {
     options: ConnectOptions = {}
   ): Promise<HIDDevice> {
     if (!('hid' in navigator) || !navigator.hid) {
-      throw new Error('WebHID niedostępny - użyj Chrome/Edge na localhost lub HTTPS.');
+      throw new Error('WebHID niedostępny - użyj Chrome/Edge na mouse.vxh.pl.');
     }
 
     if (explicitProfile) this.profile = explicitProfile;

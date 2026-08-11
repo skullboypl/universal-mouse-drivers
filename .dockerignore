@@ -5,8 +5,7 @@
 **/obj
 **/.git
 Decompile
-web-app/node_modules
-web-app/dist
+old
 deploykey-caprover
 deploykey-caprover.pub
 **/*.log

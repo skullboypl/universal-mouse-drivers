@@ -7,6 +7,15 @@ import { Select } from '../components/Select'
 import { Toggle } from '../components/Toggle'
 import styles from '../components/ui.module.css'
 import {
+  SUPERLIGHT_DPI_MAX,
+  SUPERLIGHT_DPI_MAX_STAGES,
+  SUPERLIGHT_DPI_MIN,
+  SUPERLIGHT_DPI_STEP,
+  SUPERLIGHT_REPORT_RATES,
+  superlightDpiColor,
+} from '../devices/logitech-pro-x-superlight/defaults'
+import { SUPERLIGHT_IDENTITY } from '../devices/logitech-pro-x-superlight/identity'
+import {
   DPI_MAX,
   DPI_MAX_STAGES,
   DPI_MIN,
@@ -20,6 +29,10 @@ import { useDeviceSession } from '../session/DeviceSessionContext'
 
 function Tip({ text }: { text: string }) {
   return <p className={styles.fieldTip}>{text}</p>
+}
+
+function stageSwatch(index: number, superlight: boolean): string {
+  return superlight ? superlightDpiColor(index) : dpiStageColor(index)
 }
 
 function Field({
@@ -41,10 +54,19 @@ function Field({
 }
 
 export function SensorPage() {
-  const { connected, state, apply } = useDeviceSession()
+  const { connected, state, apply, driver } = useDeviceSession()
   const { lp } = useLocale()
   const tr = useT()
   if (!connected || !state) return <ClientRedirect href={lp('/')} />
+
+  const isSuperlight = driver?.identity.id === SUPERLIGHT_IDENTITY.id
+  const dpiMin = isSuperlight ? SUPERLIGHT_DPI_MIN : DPI_MIN
+  const dpiMax = isSuperlight ? SUPERLIGHT_DPI_MAX : DPI_MAX
+  const dpiStep = isSuperlight ? SUPERLIGHT_DPI_STEP : DPI_STEP
+  const dpiMaxStages = isSuperlight ? SUPERLIGHT_DPI_MAX_STAGES : DPI_MAX_STAGES
+  const reportRates = isSuperlight
+    ? [...SUPERLIGHT_REPORT_RATES]
+    : [...REPORT_RATES]
 
   const stage = state.sensor.dpiStages[state.sensor.activeDpiIndex]
   const cordedModeOk =
@@ -60,12 +82,12 @@ export function SensorPage() {
         <div className="row" style={{ marginBottom: 14, gap: 20 }}>
           <Field label={tr('sensor.stageCount')} tip={tr('sensor.stageCountTip')}>
             <Select
-              value={String(state.sensor.dpiStageCount ?? DPI_MAX_STAGES)}
+              value={String(state.sensor.dpiStageCount ?? dpiMaxStages)}
               onChange={(e) => {
                 void apply((d) => d.setDpiStageCount(Number(e.target.value)))
               }}
             >
-              {Array.from({ length: DPI_MAX_STAGES }, (_, i) => i + 1).map(
+              {Array.from({ length: dpiMaxStages }, (_, i) => i + 1).map(
                 (n) => (
                   <option key={n} value={String(n)}>
                     {n}
@@ -78,8 +100,12 @@ export function SensorPage() {
             <Select
               value={String(state.sensor.activeDpiIndex)}
               onChange={(e) => {
-                const index = Number(e.target.value)
-                void apply((d) => d.patchSensor({ activeDpiIndex: index }))
+                const idx = Number(e.target.value)
+                void apply((d) => {
+                  d.patchSensor({ activeDpiIndex: idx })
+                  const s = d.getState().sensor.dpiStages[idx]
+                  if (s) d.setDpiStage(idx, s.value)
+                })
               }}
             >
               {state.sensor.dpiStages
@@ -114,7 +140,10 @@ export function SensorPage() {
               title={`${tr('sensor.stage')} ${s.index + 1}: ${s.value}`}
               onClick={() => {
                 if (!s.enabled) return
-                void apply((d) => d.patchSensor({ activeDpiIndex: s.index }))
+                void apply((d) => {
+                  d.patchSensor({ activeDpiIndex: s.index })
+                  d.setDpiStage(s.index, s.value)
+                })
               }}
               style={{
                 width: 28,
@@ -134,7 +163,7 @@ export function SensorPage() {
                 background:
                   s.index === state.sensor.activeDpiIndex
                     ? 'var(--accent)'
-                    : dpiStageColor(s.index),
+                    : stageSwatch(s.index, isSuperlight),
                 boxShadow:
                   s.index === state.sensor.activeDpiIndex
                     ? '0 0 0 1px rgba(10, 12, 16, 0.35)'
@@ -149,16 +178,16 @@ export function SensorPage() {
             onClick={() => {
               if (!stage) return
               void apply((d) =>
-                d.setDpiStage(stage.index, stage.value - DPI_STEP),
+                d.setDpiStage(stage.index, stage.value - dpiStep),
               )
             }}
           />
           <input
             className={styles.slider}
             type="range"
-            min={DPI_MIN}
-            max={DPI_MAX}
-            step={DPI_STEP}
+            min={dpiMin}
+            max={dpiMax}
+            step={dpiStep}
             value={stage?.value ?? 800}
             onChange={(e) => {
               if (!stage) return
@@ -171,7 +200,7 @@ export function SensorPage() {
             onClick={() => {
               if (!stage) return
               void apply((d) =>
-                d.setDpiStage(stage.index, stage.value + DPI_STEP),
+                d.setDpiStage(stage.index, stage.value + dpiStep),
               )
             }}
           />
@@ -200,7 +229,7 @@ export function SensorPage() {
             height: 4,
             background: 'var(--accent)',
             borderRadius: 2,
-            width: `${Math.min(100, ((stage?.value ?? 0) / DPI_MAX) * 100)}%`,
+            width: `${Math.min(100, ((stage?.value ?? 0) / dpiMax) * 100)}%`,
           }}
         />
       </div>
@@ -209,7 +238,7 @@ export function SensorPage() {
         <h2 className="panel-label">{tr('sensor.reportRate')}</h2>
         <Tip text={tr('sensor.reportRateTip')} />
         <div className={styles.chipRow}>
-          {REPORT_RATES.map((hz) => (
+          {reportRates.map((hz) => (
             <button
               key={hz}
               type="button"
@@ -226,6 +255,7 @@ export function SensorPage() {
         </div>
       </div>
 
+      {!isSuperlight ? (
       <div className="panel">
         <h2 className="panel-label">{tr('sensor.sensorSetting')}</h2>
         <div className="grid-2">
@@ -324,6 +354,7 @@ export function SensorPage() {
           </div>
         </div>
       </div>
+      ) : null}
     </div>
   )
 }

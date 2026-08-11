@@ -7,8 +7,15 @@ internal static class Program
     private const string MutexName = @"Local\UmdBatteryTray_SingleInstance";
 
     [STAThread]
-    private static void Main()
+    private static void Main(string[] args)
     {
+        if (args.Length >= 2
+            && string.Equals(args[0], "--capture", StringComparison.OrdinalIgnoreCase))
+        {
+            CaptureShots.Run(args[1]);
+            return;
+        }
+
         using var mutex = new Mutex(true, MutexName, out var createdNew);
         if (!createdNew)
         {

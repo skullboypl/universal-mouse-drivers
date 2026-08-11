@@ -4,6 +4,10 @@ import {
   isFenrirMaxDevice,
 } from '../devices/gwolves-fenrir-max/identity'
 import {
+  isSuperlightDevice,
+  superlightHidFilters,
+} from '../devices/logitech-pro-x-superlight/identity'
+import {
   hidFilters,
   isKingUltraDevice,
 } from '../devices/redragon-king-ultra/identity'
@@ -33,7 +37,7 @@ interface HIDReportItem {
 
 function assertWebHid(): HID {
   if (!navigator.hid) {
-    throw new Error('WebHID unavailable - use Chrome/Edge on HTTPS or localhost')
+    throw new Error('WebHID unavailable - use Chrome/Edge on mouse.vxh.pl')
   }
   return navigator.hid
 }
@@ -87,6 +91,7 @@ function scoreDevice(device: HIDDevice): number {
   let score = 0
   if (isKingUltraDevice(device.vendorId, device.productId)) score += 100
   if (isFenrirMaxDevice(device.vendorId, device.productId)) score += 100
+  if (isSuperlightDevice(device.vendorId, device.productId)) score += 100
   const outs = collectReports(device, 'output')
   const feats = collectReports(device, 'feature')
   const ins = collectReports(device, 'input')
@@ -97,8 +102,12 @@ function scoreDevice(device: HIDDevice): number {
   if (ins.some((r) => r.reportId === 8 && r.payloadSize === 16)) score += 40
   // G-Wolves Fenrir: feature report 64B is the config channel
   if (feats.some((r) => r.payloadSize >= 64)) score += 80
+  // Logitech Superlight: HID++ long report 0x11 on vendor page
+  if (outs.some((r) => r.reportId === 0x11 && r.payloadSize >= 19)) score += 100
+  else if (outs.some((r) => r.reportId === 0x11)) score += 50
   for (const c of device.collections ?? []) {
     if (c.usagePage === 0xff02) score += 50
+    else if (c.usagePage === 0xff00 && c.usage === 0x02) score += 80
     else if (c.usagePage >= 0xff00) score += 10
   }
   return score
@@ -108,7 +117,11 @@ export function allSupportedHidFilters(): Array<{
   vendorId: number
   productId: number
 }> {
-  return [...hidFilters(), ...fenrirMaxHidFilters()]
+  return [
+    ...hidFilters(),
+    ...fenrirMaxHidFilters(),
+    ...superlightHidFilters(),
+  ]
 }
 
 export function isSupportedUmdDevice(
@@ -117,7 +130,8 @@ export function isSupportedUmdDevice(
 ): boolean {
   return (
     isKingUltraDevice(vendorId, productId) ||
-    isFenrirMaxDevice(vendorId, productId)
+    isFenrirMaxDevice(vendorId, productId) ||
+    isSuperlightDevice(vendorId, productId)
   )
 }
 
@@ -135,6 +149,9 @@ function filtersForTarget(target?: HidPickTarget): Array<{
 }> {
   if (target?.catalogId === 'gwolves-fenrir-max') return fenrirMaxHidFilters()
   if (target?.catalogId === 'redragon-king-ultra') return hidFilters()
+  if (target?.catalogId === 'logitech-pro-x-superlight') {
+    return superlightHidFilters()
+  }
   if (target?.vendorId != null && target?.productId != null) {
     return [{ vendorId: target.vendorId, productId: target.productId }]
   }
@@ -152,6 +169,9 @@ function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
   if (target.catalogId === 'redragon-king-ultra') {
     return isKingUltraDevice(device.vendorId, device.productId)
   }
+  if (target.catalogId === 'logitech-pro-x-superlight') {
+    return isSuperlightDevice(device.vendorId, device.productId)
+  }
   if (target.vendorId != null && device.vendorId !== target.vendorId) return false
   if (target.productId != null && device.productId !== target.productId) {
     // Same family only when catalog not given but vendor matches King/Fenrir set
@@ -161,6 +181,9 @@ function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
       }
       if (isFenrirMaxDevice(target.vendorId, target.productId)) {
         return isFenrirMaxDevice(device.vendorId, device.productId)
+      }
+      if (isSuperlightDevice(target.vendorId, target.productId)) {
+        return isSuperlightDevice(device.vendorId, device.productId)
       }
     }
     return false

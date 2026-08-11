@@ -1,4 +1,4 @@
-/** Forward client logs to Vite terminal + `.umd-debug.log`. */
+/** Forward client logs to Next terminal + `.umd-debug.log` via `/api/umd-log`. */
 
 type Level = 'info' | 'warn' | 'error'
 
@@ -25,7 +25,7 @@ export function umdLog(tag: string, level: Level, ...args: unknown[]) {
     args: args.map(serialize),
   })
   try {
-    void fetch('/__umd_log', {
+    void fetch('/api/umd-log', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body,

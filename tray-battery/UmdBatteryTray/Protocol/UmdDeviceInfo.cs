@@ -4,6 +4,7 @@ internal enum UmdDeviceKind
 {
     KingUltra,
     FenrirMax,
+    Superlight,
 }
 
 /// <summary>One logical mouse (unique VID:PID) that UMD can read battery from.</summary>

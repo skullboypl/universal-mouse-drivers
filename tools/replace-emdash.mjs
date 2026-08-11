@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-const roots = ['web/src', 'web-app/src', 'tray-battery', 'README.md', 'CAPROVER.md']
+const roots = ['web/src', 'tray-battery', 'README.md', 'CAPROVER.md']
 const EM = '\u2014'
 
 function walk(p, out = []) {

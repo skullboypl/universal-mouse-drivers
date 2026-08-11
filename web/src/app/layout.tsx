@@ -9,11 +9,11 @@ const siteUrl = getSiteUrl()
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${SITE.shortName} — ${SITE.name}`,
+    default: `${SITE.shortName} - ${SITE.name}`,
     template: `%s · ${SITE.shortName}`,
   },
   description:
-    'WebHID drivers and battery tray for gaming mice — Redragon King Ultra and more.',
+    'WebHID drivers and battery tray for gaming mice - Redragon King Ultra and more.',
   applicationName: SITE.name,
   authors: [{ name: 'SkullMedia', url: siteUrl }],
   creator: 'SkullMedia',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.webmanifest',
   openGraph: {
-    title: `${SITE.shortName} — ${SITE.name}`,
+    title: `${SITE.shortName} - ${SITE.name}`,
     description:
       'Browser-native HID control + Windows tray battery for supported mice.',
     type: 'website',
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     creator: SITE.twitterHandle,
-    title: `${SITE.shortName} — ${SITE.name}`,
+    title: `${SITE.shortName} - ${SITE.name}`,
     description:
       'Browser-native HID control + Windows tray battery for supported mice.',
     images: [ogImageUrl('home', 'en')],

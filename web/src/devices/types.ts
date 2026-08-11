@@ -38,6 +38,20 @@ export interface SensorState {
   /** How many DPI levels are active (OEM "DPI Stages" 1–7). */
   dpiStageCount: number
   activeDpiIndex: number
+  /**
+   * Onboard profile default DPI slot (Solaar `resolution_default_index`, profile byte[1]).
+   * Power-on / “Default DPI” button target — distinct from live activeDpiIndex.
+   */
+  defaultDpiIndex?: number
+  /**
+   * Onboard DPI-shift slot (Solaar `resolution_shift_index`, profile byte[2]).
+   * Used while a button mapped to DPI Shift is held.
+   */
+  dpiShiftIndex?: number
+  /** Live 0x2201 GetSensorDpiList — min/max/step from device (Superlight: 100/25600/50). */
+  dpiListMin?: number
+  dpiListMax?: number
+  dpiListStep?: number
   reportRate: number
   lodMm: 0.7 | 1 | 2
   mode: 'lp' | 'hp' | 'corded'

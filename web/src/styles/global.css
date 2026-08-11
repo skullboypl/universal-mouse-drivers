@@ -33,6 +33,14 @@ body:has(.app-shell[data-device='gwolves-fenrir-max']) {
   background: var(--bg);
 }
 
+.app-shell[data-device='logitech-pro-x-superlight'] {
+  background: var(--bg);
+}
+
+body:has(.app-shell[data-device='logitech-pro-x-superlight']) {
+  background: var(--bg);
+}
+
 button,
 input,
 select {

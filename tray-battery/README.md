@@ -10,6 +10,7 @@ Independent of the Vite WebHID app (both talk to the mouse; close Chrome WebHID 
 |--------|---------|
 | Redragon King Ultra (M916OB-ULT) | `3554:F54D` corded · `3554:F54F` / `F510` dongle |
 | G-Wolves Fenrir Max | `33E4:3717` wireless · `33E4:3708` corded |
+| Logitech PRO X SUPERLIGHT (gen1) | `046D:C547` LIGHTSPEED receiver |
 
 ## Features
 
@@ -17,6 +18,7 @@ Independent of the Vite WebHID app (both talk to the mouse; close Chrome WebHID 
 - Optional always-on-top desktop widget (drag, opacity, size)
 - Settings window (right-click tray)
 - Poll interval 15–300 s (default 120)
+- Auto-update check on start (manifest from mouse.vxh.pl)
 - Single-file self-contained `.exe`
 - Multi-mouse picker: tray menu **Mouse**, Settings combo, or `POST /device` — persists `PreferredDeviceKey` (`VID:PID`)
 
@@ -66,6 +68,11 @@ Copies signed exe to `../data/downloads/UmdBatteryTray.exe`. Upload that file in
 1. Feature report 64B (report id 0), prefer interface with max feature length ≥ 65
 2. Old protocol: legacy `setReportOld` cmd **143** (`getOldBattery`)
 3. Fallback: feature cmd 131, then dongle output report 8
+
+### PRO X SUPERLIGHT
+1. Opens HID++ long collection (usage page `FF00` / usage `02`, report id `0x11`)
+2. Root.GetFeature(`0x1004`) → feature index, then fn1 GetStatus
+3. Params: SoC %, level flags, charging_status (≠0 → charging). Close G HUB / OMM if open fails.
 
 ## License
 

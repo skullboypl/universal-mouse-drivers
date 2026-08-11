@@ -1,10 +1,10 @@
-# Analiza `extracted/` — King Ultra
+# Analiza `extracted/` - King Ultra
 
 Przejrzane: `Config.ini`, `driver_sensor.h`, Language, API stringi, res (struktura).
 
 ---
 
-## 1. `Config.ini` — profil urządzenia (gold)
+## 1. `Config.ini` - profil urządzenia (gold)
 
 Zdekodowane Base64:
 
@@ -24,7 +24,7 @@ Zdekodowane Base64:
 DPI:
 
 - max stages: **7** (`DPIMaxGrade`)
-- default stage index: **3** (`DefaultDPI` — 1-based w OEM → stage 3 = 2400)
+- default stage index: **3** (`DefaultDPI` - 1-based w OEM → stage 3 = 2400)
 - grades: `800,1600,2400,3200,6400,26000,30000` (+ zapasowy `10000`)
 - range: **50–30000 step 50**
 
@@ -47,15 +47,15 @@ Mapowanie z `Language/0-English.xml` → KeyFunction:
 
 Typy funkcji (z XML): `01` mouse btn, `02` DPI, `03` scroll H, `04` fire, `05` combo/media, `06` macro, `07` polling switch, `0A` DPI lock, `0B` scroll V, `00` disabled.
 
-`SensorUI=7,1,0,2,3,7,0,1,0,6,0,0,1` — flagi UI sensora (max stages=7, LOD/mode/motion sync włączone w UI).  
-`DisplayLight=0` — brak osobnej zakładki Light w nav.  
-`BatteryParam` — krzywa mV → % (21 progów).
+`SensorUI=7,1,0,2,3,7,0,1,0,6,0,0,1` - flagi UI sensora (max stages=7, LOD/mode/motion sync włączone w UI).  
+`DisplayLight=0` - brak osobnej zakładki Light w nav.  
+`BatteryParam` - krzywa mV → % (21 progów).
 
 **Wniosek:** Config wystarczy na cały model danych UI. Nie zawiera bajtów USB.
 
 ---
 
-## 2. `driver_sensor.h` — tabele DPI per sensor
+## 2. `driver_sensor.h` - tabele DPI per sensor
 
 Nagłówek **wspólny dla wielu myszy** fabryki, nie tylko King Ultra.
 
@@ -96,14 +96,14 @@ Pairing: `EnterDonglePair*` / `EnterPairByFeature`
 Long distance: `SetLongRangeMode`  
 FW: `CS_UsbUpgrade_*`
 
-Czyli protokół to raczej **duży config flash**, nie 20 małych komend — sniff przy „Save”/auto-apply pokaże 1–N Feature reports.
+Czyli protokół to raczej **duży config flash**, nie 20 małych komend - sniff przy „Save”/auto-apply pokaże 1–N Feature reports.
 
 ---
 
 ## 4. `Language/0-English.xml`
 
 - Pełne etykiety UI (już częściowo w naszym i18n)
-- **KeyFunction / SubKeyFunction** — oficjalna enumeracja akcji przycisków (do rozbudowy Buttons page)
+- **KeyFunction / SubKeyFunction** - oficjalna enumeracja akcji przycisków (do rozbudowy Buttons page)
 - **DebounceTime** 0–20 ms (`value` = hex ms)
 - Dongle LED colors per report rate (125=red … 4000=green)
 - Opisy Mode/LOD/Motion sync
@@ -113,7 +113,7 @@ Czyli protokół to raczej **duży config flash**, nie 20 małych komend — sni
 ## 5. `res/`
 
 Tylko skórka PNG (Home/Button/Sensor/Macro/Light/Setting/General/Calibration).  
-Light assety są, ale `DisplayLight=0` — UI OEM ich nie pokazuje w nav.
+Light assety są, ale `DisplayLight=0` - UI OEM ich nie pokazuje w nav.
 
 ---
 
@@ -121,10 +121,10 @@ Light assety są, ale `DisplayLight=0` — UI OEM ich nie pokazuje w nav.
 
 | Źródło | Użyć teraz | Potrzeba sniffera |
 |--------|------------|-------------------|
-| Config.ini | defaults, VID, DPI, keys, debounce | — |
+| Config.ini | defaults, VID, DPI, keys, debounce | - |
 | driver_sensor.h | whitelista feature’ów dla 3950 | mapa bajtów DPI 3950 |
-| Language XML | i18n + lista akcji przycisków | — |
+| Language XML | i18n + lista akcji przycisków | - |
 | API stringi | architektura Feature report + SetCurrentConfig | layout bufora |
-| res/ | grafiki (już częściowo) | — |
+| res/ | grafiki (już częściowo) | - |
 
 **Nadal brakuje:** dokładnego layoutu Feature report (ReportId + kolejność pól w config). To tylko USB sniff albo Ghidra na `SetCurrentConfig`.

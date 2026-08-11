@@ -1,11 +1,11 @@
 # Map: OEM HIDUsb API → our `ProtocolCommand`
 
-Source: `HIDUsb-64.dll` (Costura) + ILSpy `DriverLib.*` — no USBPcap required for this layer.
+Source: `HIDUsb-64.dll` (Costura) + ILSpy `DriverLib.*` - no USBPcap required for this layer.
 
 ## Frame (20 bytes in OEM queue; **17 bytes on the wire**)
 
 Stock `UsbServer` sends config with **`WriteFile` (HID Output)**, length `0x11`,
-pointer `queue + 3` — **not** `HidD_SetFeature` (Feature is used in FW update).
+pointer `queue + 3` - **not** `HidD_SetFeature` (Feature is used in FW update).
 
 | Offset | Meaning | On wire? |
 |--------|---------|----------|
@@ -21,7 +21,7 @@ pointer `queue + 3` — **not** `HidD_SetFeature` (Feature is used in FW update)
 | 19 | `checksum = (0x55 - sum[3..18]) & 0xff` | wire[16] |
 
 WebHID (King Ultra 8K receiver `F54F`): Output report **id=8, 16 bytes**
-(`usagePage ff02`). `sendReport(8, wire17.slice(1))` — do **not** use
+(`usagePage ff02`). `sendReport(8, wire17.slice(1))` - do **not** use
 report id 9 / 48-byte `ff06` channel. Feature is fallback only.
 
 ## UsbCommandID (DriverLib)
@@ -72,4 +72,4 @@ round-trip matches (`tools/king_ultra_hid_probe.py`). App default:
 
 Encryption (`FUN_18000f160`): cmd=1, dataLen=8, payload[0..3]=random.
 
-Implemented in `web-app/src/devices/redragon-king-ultra/protocol.ts` + `driver.ts`.
+Implemented in `web/src/devices/redragon-king-ultra/protocol.ts` + `driver.ts`.

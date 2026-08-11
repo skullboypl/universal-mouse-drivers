@@ -3,8 +3,6 @@ node_modules/
 web/node_modules/
 web/.next/
 web/out/
-web-app/node_modules/
-web-app/dist/
 **/bin/
 **/obj/
 *.user
@@ -44,6 +42,8 @@ Decompile/**/*.zip
 Decompile/**/*.7z
 Decompile/**/captures/*.pcap*
 Decompile/**/captures/*.bin
+# full ilspycmd tree (regenerate); keep extracted/cs-key/*.cs
+Decompile/logitech/omm-2.6.1749/netdecompile/
 
 # local publish
 tray-battery/**/publish/

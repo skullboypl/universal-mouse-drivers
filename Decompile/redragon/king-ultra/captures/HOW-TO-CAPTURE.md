@@ -8,7 +8,7 @@
 ## Kroki
 
 1. Zrestartuj Windows (jeśli capture devices nie widać).
-2. Odłącz Fenrira / inne myszy — zostaw King Ultra (`3554:F54F` lub `F54D`).
+2. Odłącz Fenrira / inne myszy - zostaw King Ultra (`3554:F54F` lub `F54D`).
 3. Odpal **Wireshark** → Capture → interfejsy `USBPcap1`, `USBPcap2`, …
 4. Filtr wyświetlania po starcie:
    ```
