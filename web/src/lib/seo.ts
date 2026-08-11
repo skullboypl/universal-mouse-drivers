@@ -148,14 +148,13 @@ export function absoluteUrl(path: string): string {
 }
 
 export function ogImageUrl(page: SeoPageId, lang: Locale): string {
-  // Home uses Next file-based OG (/{lang}/opengraph-image) - more reliable for Discord.
-  if (page === 'home') {
-    return absoluteUrl(`/${lang}/opengraph-image`)
-  }
-  const u = new URL('/og', getSiteUrl())
-  u.searchParams.set('page', page)
-  u.searchParams.set('lang', lang)
-  return u.toString()
+  // Static PNGs in /public/og — CapRover next/og ImageResponse 502s; Discord needs a real .png.
+  // ?v= busts Discord/CDN cache after regenerating assets.
+  const v = '2'
+  if (page === 'home') return absoluteUrl(`/og/home-${lang}.png?v=${v}`)
+  if (page === 'why') return absoluteUrl(`/og/why-${lang}.png?v=${v}`)
+  if (page === 'tray') return absoluteUrl(`/og/tray-${lang}.png?v=${v}`)
+  return absoluteUrl(`/og/default.png?v=${v}`)
 }
 
 export function buildPageMetadata(
