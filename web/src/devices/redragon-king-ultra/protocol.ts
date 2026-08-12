@@ -33,6 +33,8 @@ export type ProtocolCommand =
   | { op: 'set_sensor_flags'; ripple: boolean; angle: boolean; motionSync: boolean }
   | { op: 'set_sleep'; minutes: number }
   | { op: 'set_long_distance'; enabled: boolean }
+  /** CS_UsbServer_GetLongRangeMode / UsbCommandID = 23. */
+  | { op: 'get_long_distance' }
   | { op: 'set_profile'; configId: number }
   | { op: 'set_pc_driver'; active: boolean }
   | { op: 'read_encryption' }
@@ -383,10 +385,17 @@ export function encodeCommand(cmd: ProtocolCommand): EncodedReport | null {
         sleepMinutesToCode(cmd.minutes),
       )
     case 'set_long_distance':
+      // OEM CS_UsbServer_SetLongRangeMode: cmd=0x16, dataLen=0x0A, payload[0]=enable
       return buildFrame({
         commandId: UsbCommandId.SetLongRangeMode,
         dataLen: 0x0a,
         payload: [cmd.enabled ? 1 : 0],
+      })
+    case 'get_long_distance':
+      // OEM CS_UsbFinder_GetLongRangeMode: cmd=0x17, dataLen=0; reply payload[0]
+      return buildFrame({
+        commandId: UsbCommandId.GetLongRangeMode,
+        dataLen: 0,
       })
     case 'set_profile':
       return buildFrame({
@@ -588,6 +597,17 @@ export function decodeInfoReport(data: Uint8Array): {
     batteryPercent: parsed.batteryPercent,
     charging: parsed.charging,
   }
+}
+
+/**
+ * CS_UsbFinder_GetLongRangeMode: reply byte at wire offset 6 (payload[0]
+ * after report-id strip) is the enable flag.
+ */
+export function decodeLongRangeReport(data: Uint8Array): boolean | null {
+  const parsed = decodeInputReport(data)
+  if (!parsed || parsed.commandId !== UsbCommandId.GetLongRangeMode) return null
+  if (parsed.payload.length < 1) return null
+  return (parsed.payload[0] & 0xff) !== 0
 }
 
 /**

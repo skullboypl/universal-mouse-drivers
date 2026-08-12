@@ -11,6 +11,7 @@ import { createDefaultState, DPI_MAX_STAGES } from './defaults'
 import {
   decodeDpi3950,
   decodeInputReport,
+  decodeLongRangeReport,
   decodeVersionReport,
   dpiStageFlashBytes,
   encodeCommand,
@@ -199,6 +200,7 @@ export class KingUltraDriver {
     await this.refreshBatteryQuick()
     await this.refreshFirmwareVersions()
     await this.refreshSleepFromDevice()
+    await this.refreshLongDistanceFromDevice()
   }
 
   /** OEM PowerSaveTime → allLedOffTime @ 0xAD. */
@@ -214,6 +216,49 @@ export class KingUltraDriver {
       settings: { ...this.state.settings, sleepAfterMin: minutes },
     }
     umdLog('driver', 'info', 'sleep from flash', { code, minutes })
+  }
+
+  /**
+   * OEM GetLongRangeMode (cmd 23) — not in MouseConfig flash; must poll USB.
+   * Without this, UI resets to default false after reconnect.
+   */
+  async refreshLongDistanceFromDevice(): Promise<boolean | null> {
+    if (!this.transport || this.transport.kind === 'mock') return null
+    await this.trySend({ op: 'set_pc_driver', active: true })
+    await this.trySend({ op: 'read_online' })
+    await sleep(40)
+    const enabled = await this.readLongDistanceOnce()
+    if (enabled == null) return null
+    this.state = {
+      ...this.state,
+      settings: { ...this.state.settings, longDistance: enabled },
+    }
+    umdLog('driver', 'info', 'long distance from device', { enabled })
+    return enabled
+  }
+
+  private async readLongDistanceOnce(): Promise<boolean | null> {
+    for (let attempt = 0; attempt < 4; attempt++) {
+      await this.trySend({ op: 'get_long_distance' })
+      let ack = this.readLastAck()
+      let parsed = ack ? decodeLongRangeReport(ack) : null
+      if (parsed != null) return parsed
+
+      const wait = this.transport?.waitInput
+      if (wait) {
+        for (let i = 0; i < 8 && parsed == null; i++) {
+          const next = await wait.call(this.transport, {
+            commandId: UsbCommandId.GetLongRangeMode,
+            timeoutMs: 450,
+          })
+          if (!next) continue
+          parsed = decodeLongRangeReport(next)
+        }
+      }
+      if (parsed != null) return parsed
+      await sleep(40)
+    }
+    return null
   }
 
   /** Full post-connect sync: bulk flash map + firmware versions. */
@@ -475,6 +520,9 @@ export class KingUltraDriver {
       debounceEnabled: sensor.debounceEnabled,
       buttons: buttons.map((b) => ({ id: b.id, action: b.action })),
     })
+
+    // Long range is a live USB flag (cmd 22/23), not a flash cell.
+    await this.refreshLongDistanceFromDevice()
   }
 
   private readLastAck(): Uint8Array | null {
@@ -961,10 +1009,34 @@ export class KingUltraDriver {
         }
       }
       if (patch.longDistance != null) {
+        // Same prelude as sleep — long-range needs PC-driver + online wake.
+        await this.trySend({ op: 'set_pc_driver', active: true })
+        await this.trySend({ op: 'read_online' })
+        await sleep(40)
         await this.trySend({
           op: 'set_long_distance',
           enabled: patch.longDistance,
         })
+        if (this.transport?.kind === 'webhid') {
+          await sleep(60)
+          const got = await this.readLongDistanceOnce()
+          const ok = got === patch.longDistance
+          this.lastWriteOk = ok
+          this.lastVerifyNote = ok
+            ? `Long distance ${patch.longDistance ? 'ON' : 'OFF'} verified (GetLongRangeMode)`
+            : `Long distance NOT applied (readback=${got}) - wake mouse / close OEM`
+          if (!ok) this.lastWriteError = this.lastVerifyNote
+          umdLog('driver', ok ? 'info' : 'error', this.lastVerifyNote, {
+            want: patch.longDistance,
+            got,
+          })
+          if (got != null) {
+            this.state = {
+              ...this.state,
+              settings: { ...this.state.settings, longDistance: got },
+            }
+          }
+        }
       }
     })
   }

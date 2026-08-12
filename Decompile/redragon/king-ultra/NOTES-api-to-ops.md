@@ -35,6 +35,7 @@ report id 9 / 48-byte `ff06` channel. Feature is fallback only.
 | 14 | GetCurrentConfig | `read_config` |
 | 15 | SetCurrentConfig | `set_profile` |
 | 22 | SetLongRangeMode | `set_long_distance` |
+| 23 | GetLongRangeMode | `get_long_distance` (reply payload[0]) |
 
 ## MouseConfig flash addresses
 
