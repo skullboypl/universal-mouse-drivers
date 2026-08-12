@@ -185,7 +185,6 @@ export function AdminButtonsEditor({
             aspectRatio: `${meta.width} / ${meta.height}`,
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className={page.mouseArt}
             src={meta.imageUrl}

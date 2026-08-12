@@ -240,7 +240,7 @@ export class KingUltraDriver {
   private async readLongDistanceOnce(): Promise<boolean | null> {
     for (let attempt = 0; attempt < 4; attempt++) {
       await this.trySend({ op: 'get_long_distance' })
-      let ack = this.readLastAck()
+      const ack = this.readLastAck()
       let parsed = ack ? decodeLongRangeReport(ack) : null
       if (parsed != null) return parsed
 
