@@ -38,6 +38,8 @@ export type MessageKey =
   | 'connect.webhid'
   | 'connect.open'
   | 'connect.soon'
+  | 'connect.pcOnly'
+  | 'connect.pcOnlyTip'
   | 'connect.noWebHid'
   | 'connect.step1'
   | 'connect.step2'
@@ -80,6 +82,7 @@ export type MessageKey =
   | 'buttons.action.forward'
   | 'buttons.action.back'
   | 'buttons.action.dpi_cycle'
+  | 'buttons.action.fire'
   | 'buttons.action.disabled'
   | 'buttons.action.macro'
   | 'sensor.title'
@@ -242,6 +245,8 @@ const en: Dict = {
   'connect.webhid': 'Open driver',
   'connect.open': 'Open',
   'connect.soon': 'Soon',
+  'connect.pcOnly': 'PC only',
+  'connect.pcOnlyTip': 'WebHID works in desktop Chrome or Edge — not on phone / tablet.',
   'connect.noWebHid': 'Use Chrome or Edge (desktop) to connect a mouse.',
   'connect.step1': 'Pick your mouse',
   'connect.step2': 'Allow it in the browser prompt',
@@ -289,6 +294,7 @@ const en: Dict = {
   'buttons.action.forward': 'Forward',
   'buttons.action.back': 'Back',
   'buttons.action.dpi_cycle': 'DPI cycle',
+  'buttons.action.fire': 'Fire key',
   'buttons.action.disabled': 'Disabled',
   'buttons.action.macro': 'Macro',
   'sensor.title': 'Sensor',
@@ -470,6 +476,9 @@ const pl: Dict = {
   'connect.webhid': 'Otwórz sterownik',
   'connect.open': 'Otwórz',
   'connect.soon': 'Wkrótce',
+  'connect.pcOnly': 'Tylko PC',
+  'connect.pcOnlyTip':
+    'WebHID działa w Chrome lub Edge na komputerze — nie na telefonie / tablecie.',
   'connect.noWebHid':
     'Do podłączenia myszy użyj Chrome lub Edge (wersja desktop).',
   'connect.step1': 'Wybierz mysz',
@@ -520,6 +529,7 @@ const pl: Dict = {
   'buttons.action.forward': 'Do przodu',
   'buttons.action.back': 'Do tyłu',
   'buttons.action.dpi_cycle': 'Cykl DPI',
+  'buttons.action.fire': 'Fire key',
   'buttons.action.disabled': 'Wyłączony',
   'buttons.action.macro': 'Makro',
   'sensor.title': 'Sensor',

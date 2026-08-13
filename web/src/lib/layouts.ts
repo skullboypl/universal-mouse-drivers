@@ -1,4 +1,5 @@
 import { FENRIR_MAX_ART } from '@/devices/gwolves-fenrir-max/buttons'
+import { BLITZ_MOUSE_ART } from '@/devices/rampage-blitz-ultimate/buttons'
 
 /** Client-safe layout metadata (no node:fs). */
 
@@ -12,12 +13,14 @@ export interface ButtonPosition {
 export type LayoutId =
   | 'king-ultra'
   | 'king-ultra-hero'
+  | 'blitz-ultimate'
   | 'umd-demo'
   | 'fenrir-max'
 
 export const LAYOUT_IDS: LayoutId[] = [
   'king-ultra',
   'king-ultra-hero',
+  'blitz-ultimate',
   'umd-demo',
   'fenrir-max',
 ]
@@ -38,6 +41,12 @@ export const LAYOUT_META: Record<
     width: 1200,
     height: 1521,
   },
+  'blitz-ultimate': {
+    label: 'Przyciski Blitz Ultimate (OEM mouse.png)',
+    imageUrl: '/devices/blitz-ultimate/mouse.png',
+    width: BLITZ_MOUSE_ART.width,
+    height: BLITZ_MOUSE_ART.height,
+  },
   'umd-demo': {
     label: 'Demo mouse (devices/demo/mouse.png)',
     imageUrl: '/devices/demo/mouse.png',
@@ -54,6 +63,7 @@ export const LAYOUT_META: Record<
 
 export function parseLayoutId(raw: unknown): LayoutId {
   if (raw === 'king-ultra-hero') return 'king-ultra-hero'
+  if (raw === 'blitz-ultimate') return 'blitz-ultimate'
   if (raw === 'umd-demo') return 'umd-demo'
   if (raw === 'fenrir-max') return 'fenrir-max'
   return 'king-ultra'

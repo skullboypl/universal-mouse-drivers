@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TÜRKÇE>
+  <FontSize>9.5</FontSize>
+  <Control>
+    <label_KeyDebounce>Debounce Süresi</label_KeyDebounce>
+    <label_DPIGrade>DPI Aşamaları</label_DPIGrade>
+    <label_DPISetting>DPI Ayarı</label_DPISetting>
+    <label_MotionSync>Hareket senkronizasyonu</label_MotionSync>
+    <label_FixLine>Açı sıçraması</label_FixLine>
+    <label_Ripple>Dalgalanma kontrolü</label_Ripple>
+    <label_LOD>LOD</label_LOD>
+    <label_ModeSelect>Mod Seçimi</label_ModeSelect>
+    <label_FullPerformance>Tepe Performans</label_FullPerformance>
+    <label_SensorSetting>Sensör Ayarı</label_SensorSetting>
+    <label_Report>Rapor Oranı</label_Report>
+    <label_DPIBrightness>Parlaklık</label_DPIBrightness>
+    <label_DPISpeed>Hız</label_DPISpeed>
+    <label_DPIEffect>DPI Işık Efektleri</label_DPIEffect>
+    <label_CycleTimes>Döngülerin Sayısı</label_CycleTimes>
+    <label_UntilThisKeyPressed>Bu Tuşa Kadar Döngü</label_UntilThisKeyPressed>
+    <label_UntilKeyPressed>Tuşa Basıldığında Döngü</label_UntilKeyPressed>
+    <label_UntilKeyReleased>Tuş Serbest Bırakıldığında Döngü</label_UntilKeyReleased>
+    <label_InsertEvent>Ekleme Eylemi</label_InsertEvent>
+    <label_AutoDelay>Otomatik Ekleme Gecikmesi</label_AutoDelay>
+    <label_DefaultDelay>Varsayılan Zaman Gecikmesi</label_DefaultDelay>
+    <label_KeyList>Tuşlar Listesi</label_KeyList>
+    <label_MacroList>Makrolar Listesi</label_MacroList>
+    <label_MovingCloseLight>Hareket halindeyken ışıklar kapalı</label_MovingCloseLight>
+    <label_PowerSaveTime>Hareketsizlikten sonra ışıkların kapanma süresi</label_PowerSaveTime>
+    <label_LEDB>B:</label_LEDB>
+    <label_LEDG>G:</label_LEDG>
+    <label_LEDR>R:</label_LEDR>
+    <label_LEDPreset>Varsayılan Renkler</label_LEDPreset>
+    <label_LEDPreview>Renk Önizleme</label_LEDPreview>
+    <label_LEDColor>Işık Rengi</label_LEDColor>
+    <label_LightSpeed>Hız</label_LightSpeed>
+    <label_LightBrightness>Parlaklık</label_LightBrightness>
+    <label_LightMode>Işıklandırma Modu</label_LightMode>
+    <customRecordMacro1_start>Kayıt Başlat</customRecordMacro1_start>
+    <customRecordMacro1_stop>Kayıt Durdur</customRecordMacro1_stop>
+    <customButton_Export>Dışa Aktar</customButton_Export>
+    <customButton_Import>İçe Aktar</customButton_Import>
+    <customButton_Reset>Geri Yükle</customButton_Reset>
+    <customButton_Save>Kaydet</customButton_Save>
+    <customButton_DeleteButton>Sil</customButton_DeleteButton>
+    <customButton_ModifyButton>Düzenle</customButton_ModifyButton>
+    <customButton_DeleteMacro>Sil</customButton_DeleteMacro>
+    <customButton_NewMacro>Yeni Makro</customButton_NewMacro>
+  </Control>
+  <ComboBox>
+    <ComboBoxName>customComboBox_Config</ComboBoxName>
+    <Item value="0000">Profil 1</Item>
+    <Item value="0001">Profil 2</Item>
+    <Item value="0002">Profil 3</Item>
+    <Item value="0003">Profil 4</Item>
+    <ComboBoxName>customComboBox_LOD</ComboBoxName>
+    <Item value="0003">0.7mm</Item>
+    <Item value="0001">1mm</Item>
+    <Item value="0002">2mm</Item>
+    <ComboBoxName>customComboBox_ModeSelect</ComboBoxName>
+    <Item value="0000">LP</Item>
+    <Item value="0001">HP</Item>
+    <Item value="0010">Corded</Item>
+    <ComboBoxName>customComboBox_FullPerformance</ComboBoxName>
+    <Item value="0003">30sn</Item>
+    <Item value="0006">1dk</Item>
+    <Item value="0012">2dk</Item>
+    <Item value="0030">5dk</Item>
+    <Item value="0060">10dk</Item>
+    <Item value="0090">15dk</Item>
+    <ComboBoxName>customComboBox_DPIEffect</ComboBoxName>
+    <Item value="0000">Kapalı</Item>
+    <Item value="0001">Sabit ışık</Item>
+    <Item value="0002">Titreme</Item>
+    <ComboBoxName>customComboBox_InsertEvent</ComboBoxName>
+    <Item value="0x800000">Tuşa Basma</Item>
+    <Item value="0x400000">Tuş Serbest Bırakma</Item>
+    <Item value="0xFF0000">Gecikme</Item>
+    <Item value="0x040100">Sol Tuş</Item>
+    <Item value="0x040200">Sağ Tuş</Item>
+    <Item value="0x040400">Orta Tuş</Item>
+    <Item value="0x041000">İleri Tuş</Item>
+    <Item value="0x040800">Geri Tuş</Item>
+    <ComboBoxName>customComboBox_PowerSaveTime</ComboBoxName>
+    <Item value="0001">10sn</Item>
+    <Item value="0003">30sn</Item>
+    <Item value="0006">1dk</Item>
+    <Item value="0030">5dk</Item>
+    <Item value="0060">10dk</Item>
+    <Item value="0090">15dk</Item>
+    <Item value="0120">20dk</Item>
+    <Item value="0150">25dk</Item>
+    <Item value="0180">30dk</Item>
+    <Item value="0210">35dk</Item>
+    <Item value="0240">40dk</Item>
+    <ComboBoxName>customComboBox_LEDMode</ComboBoxName>
+    <Item value="0000">KAPALI</Item>
+    <Item value="0001">Gökkuşağı Hareketli</Item>
+    <Item value="0002">Tek Renk</Item>
+    <Item value="0003">Gökkuşağı Sabit</Item>
+    <Item value="0004">Neon</Item>
+    <Item value="0005">Gökkuşağı Titreme</Item>
+    <Item value="0006">Renkli Sabit</Item>
+  </ComboBox>
+  <ToolStripMenuItem>
+    <ToolStripMenuItem_OpenMenu>Açık Menü</ToolStripMenuItem_OpenMenu>
+    <ToolStripMenuItem_Exit>Çıkış</ToolStripMenuItem_Exit>
+    <ToolStripMenuItem_Modify>Değiştir</ToolStripMenuItem_Modify>
+    <ToolStripMenuItem_DeleteKeys>Sil</ToolStripMenuItem_DeleteKeys>
+    <ToolStripMenuItem_ExportMacro>Dışa Aktar</ToolStripMenuItem_ExportMacro>
+    <ToolStripMenuItem_Rename>Yeniden Adlandır</ToolStripMenuItem_Rename>
+    <ToolStripMenuItem_DeleteMacro>Sil</ToolStripMenuItem_DeleteMacro>
+    <ToolStripMenuItem_NewMacro>Yeni Makro Oluştur</ToolStripMenuItem_NewMacro>
+    <ToolStripMenuItem_ImportMacro>İçe Aktar</ToolStripMenuItem_ImportMacro>
+  </ToolStripMenuItem>
+  <Setting>
+    <DriveVersion>Sürücü sürümü:</DriveVersion>
+    <DongleVersion>Sürücü sürümü:</DongleVersion>
+    <MouseVersion>Alıcı Firmware sürümü:</MouseVersion>
+  </Setting>
+  <Dialog>
+    <Macro>Makro</Macro>
+    <NoResources>Kaynak Dosyalar Yok</NoResources>
+    <ErrorDriveConfig>Sürücü Yapılandırma Hatası veya Var Olmama</ErrorDriveConfig>
+    <ProgramRuning>Program çalışıyor</ProgramRuning>
+    <DeviceConnecting>Lütfen bekleyin, Güncelleme yapılıyor</DeviceConnecting>
+    <ConnectTimeout>Zaman aşımı, lütfen fareyi hareket ettirin</ConnectTimeout>
+    <NoDevice>Kullanılabilir bir cihaz bulunamadı</NoDevice>
+    <MaxComboKey>Bir tuş kombinasyonu en fazla üç tuşa sahip olabilir</MaxComboKey>
+    <ErrorMacroFile>İçe Aktarma Dosyası Hatası</ErrorMacroFile>
+    <CreateMacro>Lütfen önce yeni makro oluşturun</CreateMacro>
+    <SameMacro>Bu makro adı zaten kullanılıyor</SameMacro>
+    <EditMacroName>Lütfen makro adını girin</EditMacroName>
+    <SelectMacro>Lütfen bir makro seçin</SelectMacro>
+    <StopMacro>Lütfen önce kayıt durdurma makro</StopMacro>
+    <InsertKey>Lütfen bir tuş girin</InsertKey>
+    <Delete>Silmek istediğinizden emin misiniz?</Delete>
+    <MaxMacroKey>Makro Tuşu Maksimum sınırına ulaştı</MaxMacroKey>
+    <InsertDelay>Gecikme süresi girin (ms)</InsertDelay>
+    <FireKeyTimes>Süreler (0-3)</FireKeyTimes>
+    <FireKeyInterval>Aralık (10-255)</FireKeyInterval>
+    <InputComboKey>Lütfen bir tuş girin</InputComboKey>
+    <FireKeyTips>Tekrarlama süresini 0 olarak ayarlayın, tuş basılıyken tekrarlayın, tuş bırakıldığında durun.</FireKeyTips>
+    <ReserveLeftKey>Sol tuşu tutmalısınız</ReserveLeftKey>
+    <DebounceTips>Uyarı: Gecikme azaltılırsa, çift tıklama oluşabilir. Çift tıklama olursa, gecikmeyi çift tıklama olmayacak şekilde ayarlayın.</DebounceTips>
+    <ConfigSelect>Anahtar yapılandırması desteklenmiyor</ConfigSelect>
+    <ResetConfig>Yapılandırmayı geri yüklemek istediğinizden emin misiniz?</ResetConfig>
+    <ImportConfig>Lütfen biraz bekleyin, Yapılandırma içe aktarılıyor</ImportConfig>
+    <ErrorConfig>Yapılandırma İçe Aktarma Hatası</ErrorConfig>
+    <ErrorDevice>İçe Aktarılan yapılandırma cihaza uymuyor</ErrorDevice>
+    <MultiOnline>Eğer birden fazla cihaz aynı ise, İşletilmesi gereken cihazları rezerve edin</MultiOnline>
+    <EnterPair>Tamir yapmanız gerekip gerekmediği</EnterPair>
+    <Offline>Cihaz Çevrimdışı, Lütfen fareyi hareket ettirin</Offline>
+    <NewDeviceOnline>Yeni cihaz çevrimiçi</NewDeviceOnline>
+    <LeftShift>Sol Shift</LeftShift>
+    <RightShift>Sağ Shift</RightShift>
+    <MoveUp>Yukarı Taşı</MoveUp>
+    <MoveDown>Aşağı Taşı</MoveDown>
+    <OK>Tamam (Enter)</OK>
+    <Cancel>İptal (Esc)</Cancel>
+    <SelectDeviceFirst>Lütfen bir cihaz seçin</SelectDeviceFirst>
+    <SelectDevice>Bir cihaz seçin</SelectDevice>
+    <StartPair>Eşleştirmeyi Başlat (Boşluk)</StartPair>
+    <PairTips>Faredeki sol, sağ ve orta tuşları birlikte basın, ardından eşleştirme işleminin başladığını belirten sarı yanıp sönen ışık olacaktır. Tekrar boşluk çubuğuna basın veya "Eşleştirmeyi Başlat" ı tıklayın, sürücü eşleştirme moduna geçer.</PairTips>
+    <MultiPairDevice>Birden fazla alıcı algılandı, Lütfen eşleştirmek istediğiniz alıcıyı saklayın</MultiPairDevice>
+    <NoPairDevice>Hiçbir alıcı algılanmadı, Lütfen alıcının takılı olduğunu doğrulayın</NoPairDevice>
+    <CantPair>Eşleştirme kablosuz modda olmalıdır</CantPair>
+    <OnlyWired>Fare yalnızca kablolu modda yükseltilebilir</OnlyWired>
+    <DevicePairing>Eşleştirme</DevicePairing>
+    <PairSuccess>Eşleşme Başarılı</PairSuccess>
+    <PairFail>Eşleşme Başarısız</PairFail>
+    <PairRetry>Yeniden Deneyin</PairRetry>
+    <PairingTool>Eşleştirme Aracı</PairingTool>
+    <CheckUpdate>Güncelleme Kontrolü</CheckUpdate>
+    <CheckingUpdate>Kontrol Ediliyor</CheckingUpdate>
+    <LatestVersion>Güncel</LatestVersion>
+    <Updating>Güncelleniyor</Updating>
+    <UpdateSuccess>Güncelleme Başarılı</UpdateSuccess>
+    <UpdateFail>Güncelleme Başarısız</UpdateFail>
+    <UpdatingDontMove>Cihaz Güncelleniyor, Lütfen çıkarmayın</UpdatingDontMove>
+    <ConnectDevice>Lütfen Oyun Cihazınızı Bağlayın</ConnectDevice>
+    <RepairDevice>Lütfen önce başarısız olan cihazı güncelleyin (klavye enter veya ünlem işaretine tıklayın)</RepairDevice>
+    <AdvancedSetting>Gelişmiş Ayarlar</AdvancedSetting>
+    <PowerBetterMode>Uzak Mesafe</PowerBetterMode>
+    <CantSet>Ayar yapmak için kablosuz modda olmalıdır</CantSet>
+    <PowerModeSelectTips>Uzun mesafe modunda, mesafe daha uzak olacak ve anti-parazit yeteneği daha güçlü olacak, karşılık gelen çalışma akımı artacak ve kullanım süresi azalacaktır</PowerModeSelectTips>
+    <MousepadSurfaceCal>Mousepad Yüzey Kalibrasyonu</MousepadSurfaceCal>
+    <ManualCal>Manuel</ManualCal>
+    <NonsupCal>Bu sensör manuel kalibrasyonu desteklememektedir.</NonsupCal>
+    <MousepadSurfaceCalTips>Fareniz ve fare pediniz için en uygun eşleşen parametreleri bulun ve daha yüksek bir izleme doğruluğu yaşayın.</MousepadSurfaceCalTips>
+    <WinSystemMouse>Windows Fare Özellikleri</WinSystemMouse>
+    <StartCal>Lütfen "Başlat" düğmesine tıklayın ve fareyi ok yönünde hareket ettirin.</StartCal>
+    <BeingCal>Kalibrasyon yapılıyor! Kalibrasyon tamamlanana kadar fareyi hareket ettirmeye devam edin.</BeingCal>
+    <CalPass>Kalibrasyon Başarılı</CalPass>
+    <CalFail>Kalibrasyon Başarısız</CalFail>
+    <Start>Başlat</Start>
+    <Back>Geri</Back>
+    <Retry>Yeniden Dene</Retry>
+    <DongleLED>Dongle'daki LED göstergesi tarafından iletilen bilgileri ayarlayın:</DongleLED>
+    <ConnectionState>Bağlantı Durumu ve Rapor Oranı (Fare bağlı olduğunda gereklidir. Kırmızı (125Hz), Mavi (250Hz), Sarı (500Hz), Turuncu (1000Hz), Mor (2000Hz), Yeşil (4000Hz))</ConnectionState>
+    <BatteryState>Batarya Durumu (Farenin mevcut batarya seviyesine dayalı olarak, Yeşil (100%), Sarı (66%), Turuncu (33%) ve Kırmızı (0%))</BatteryState>
+    <OnlyBattery>Sadece batarya uyarısı (her zaman ışığı kapalı tutun, kırmızı ışık sadece fare düşük bataryada olduğunda yanıp söner).</OnlyBattery>
+    <Language>Dil</Language>
+    <DeviceInfo>Cihaz Bilgisi</DeviceInfo>
+    <Other>Diğer</Other>
+    <SleepMode>Uyku Modu</SleepMode>
+    <MouseSleepTime>Fare uykusu süresi</MouseSleepTime>
+    <Pair>Eşle (Boşluk)</Pair>
+    <RunOnBoot>Sistem Başlangıcında Çalıştır</RunOnBoot>
+    <OfflineTips1>Eğer fare çevrimdışıysa, önce fareyi hareket ettirin</OfflineTips1>
+    <OfflineTips2>Eşleşmediyse, eşleşmeye girmek için desene tıklayın</OfflineTips2>
+    <OfflineTips3>Eşleşmediyse, eşleşmeye girmek için boşluk çubuğuna tıklayın</OfflineTips3>
+    <DefaultDelayMin>Varsayılan gecikme 10'dan az olmamalıdır</DefaultDelayMin>
+    <DevNewVerTips>Lütfen fareyi ve alıcıyı aynı anda en son firmware sürümüne güncelleyin, tüm güncellemeler başarılı olduktan sonra kullanmadan önce eşleştirin!</DevNewVerTips>
+    <DongleIsNewTips>Yeni fare firmware'i bulundu, lütfen kablolu olarak güncelleyin!</DongleIsNewTips>
+    <MouseIsNewTips>Yeni alıcı firmware'i bulundu, şimdi güncelleme yapılacak mı?</MouseIsNewTips>
+    <FirmwareNewTips>Yeni firmware bulundu, lütfen güncelleyin!</FirmwareNewTips>
+    <DontShowAgain>Bir daha gösterme</DontShowAgain>
+    <EnterUse>Kullanmaya başlamak için desene tıklayın</EnterUse>
+    <ReturnHomePage>Ana sayfaya dön</ReturnHomePage>
+    <MotionSyncDes>Hareket senkronizasyonu</MotionSyncDes>
+    <FixLineDes>Açı yakalama</FixLineDes>
+    <RippleDes>Dalgalanma kontrolü</RippleDes>
+    <LODDes>Kaldırma algılama seçenekleri</LODDes>
+    <ModeSelectDes>LP: Düşük güç modu; HP: yüksek performans modu; kablolu: kablolu oyun modu</ModeSelectDes>
+    <FullPerformanceDes>Sensör LED'i vurgulanmış ve sensör maksimum performans modunda.</FullPerformanceDes>
+    <Update>güncelleme（Enter）</Update>
+    <SyncUpdateTips>Lütfen önce alıcıyı ve kablolu faresi takılı olduğundan emin olun. Güncelleme sırasında programı kapatmayın veya cihazları çıkarmayın.</SyncUpdateTips>
+    <ReadyUpdate>Güncelle' düğmesine tıklayarak güncellemeyi başlatın.</ReadyUpdate>
+    <EmptyDongle>Lütfen alıcının takılıp takılmadığını doğrulayın.</EmptyDongle>
+    <MultiDongle>Birden fazla alıcı bulundu, lütfen güncellemek istediğinizi koruyun.</MultiDongle>
+    <EmptyMouse>Lütfen fare'nin kablolu modda olup olmadığını onaylayın.</EmptyMouse>
+    <MultiMouse>Birden fazla fare bulundu, lütfen güncellenmesi gereken farenin saklanması gerekir.</MultiMouse>
+  </Dialog>
+  <KeyFunction>
+    <name type="01" value="0001" pull="00">Sol Düğme</name>
+    <name type="01" value="0002" pull="00">Sağ Düğme</name>
+    <name type="01" value="0004" pull="00">Orta Düğme</name>
+    <name type="01" value="0008" pull="00">Geri</name>
+    <name type="01" value="0010" pull="00">İleri</name>
+    <name type="07" value="0000" pull="00">Anket Oranı Anahtarı</name>
+    <name type="04" value="0000" pull="00">Ateş Tuşu</name>
+    <name type="05" value="0000" pull="00">Kombo Tuşu</name>
+    <name type="00" value="0000" pull="00">Devre Dışı</name>
+    <name type="0B" value="0000" pull="01">Yukarı/Aşağı Kaydır</name>
+    <name type="03" value="0000" pull="01">Sol/Sağ Kaydır</name>
+    <name type="02" value="0000" pull="01">DPI Anahtarı</name>
+    <name type="05" value="0000" pull="01">Medya Tuşu</name>
+    <name type="0A" value="0000" pull="01">DPI Kilidi</name>
+    <name type="06" value="0000" pull="01">Makro</name>
+  </KeyFunction>
+  <SubKeyFunction>
+    <name type="02" value="0001">DPI Döngüsü</name>
+    <name type="02" value="0002">DPI Artı</name>
+    <name type="02" value="0003">DPI Eksi</name>
+    <name type="03" value="0001">Sola Kaydır</name>
+    <name type="03" value="0002">Sağa Kaydır</name>
+    <name type="0B" value="0001">Yukarı Kaydır</name>
+    <name type="0B" value="0002">Aşağı Kaydır</name>
+    <name type="05" value="0183">Medya Oynatıcı</name>
+    <name type="05" value="00CD">Oynat/Duraklat</name>
+    <name type="05" value="00B5">Sonraki</name>
+    <name type="05" value="00B6">Önceki</name>
+    <name type="05" value="00B7">Dur</name>
+    <name type="05" value="00E2">Sessiz</name>
+    <name type="05" value="00E9">Ses Yükselt</name>
+    <name type="05" value="00EA">Ses Azalt</name>
+    <name type="05" value="018A">E-posta</name>
+    <name type="05" value="0192">Hesap Makinesi</name>
+    <name type="05" value="0194">Bilgisayarım</name>
+    <name type="05" value="0223">Ana Sayfa</name>
+    <name type="05" value="0221">Arama</name>
+    <name type="05" value="0225">Web İleri</name>
+    <name type="05" value="0224">Web Geri</name>
+    <name type="05" value="0226">Dur</name>
+    <name type="05" value="0227">Yenile</name>
+    <name type="05" value="022A">Sık Kullanılanlar</name>
+    <name type="08" value="0000">Tüm Işıklar Açık/Kapalı</name>
+    <name type="08" value="0003">Işık Şeridi Açık/Kapalı</name>
+    <name type="08" value="0004">Döngü anahtar ışık efektleri</name>
+    <name type="0A" value="0001">100</name>
+    <name type="0A" value="0002">200</name>
+    <name type="0A" value="0003">300</name>
+    <name type="0A" value="0004">400</name>
+    <name type="0A" value="0005">500</name>
+    <name type="0A" value="0006">600</name>
+    <name type="0A" value="0007">700</name>
+    <name type="0A" value="0008">800</name>
+    <name type="0A" value="0009">900</name>
+    <name type="0A" value="000A">1000</name>
+    <name type="0A" value="000B">1100</name>
+    <name type="0A" value="000C">1200</name>
+  </SubKeyFunction>
+  <DebounceTime>
+    <name value="0000">0ms</name>
+    <name value="0001">1ms</name>
+    <name value="0002">2ms</name>
+    <name value="0003">3ms</name>
+    <name value="0004">4ms</name>
+    <name value="0005">5ms</name>
+    <name value="0006">6ms</name>
+    <name value="0007">7ms</name>
+    <name value="0008">8ms</name>
+    <name value="0009">9ms</name>
+    <name value="000A">10ms</name>
+    <name value="000B">11ms</name>
+    <name value="000C">12ms</name>
+    <name value="000D">13ms</name>
+    <name value="000E">14ms</name>
+    <name value="000F">15ms</name>
+    <name value="0010">16ms</name>
+    <name value="0011">17ms</name>
+    <name value="0012">18ms</name>
+    <name value="0013">19ms</name>
+    <name value="0014">20ms</name>
+  </DebounceTime>
+</TÜRKÇE>

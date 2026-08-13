@@ -12,6 +12,7 @@ export type SeoPageId =
   | 'why'
   | 'tray'
   | 'mouse-redragon-king-ultra'
+  | 'mouse-rampage-blitz-ultimate'
   | 'mouse-gwolves-fenrir-max'
   | 'mouse-logitech-pro-x-superlight'
 
@@ -55,8 +56,8 @@ export const SEO_PAGES: Record<SeoPageId, SeoPage> = {
       en: 'Connect mouse - Universal Mouse Drivers',
     },
     description: {
-      pl: 'Sterowniki WebHID w przeglądarce dla Redragon King Ultra, G-Wolves Fenrir Max 8K i Logitech PRO X SUPERLIGHT. DPI, przyciski i profile bez instalacji OEM.',
-      en: 'Browser WebHID drivers for Redragon King Ultra, G-Wolves Fenrir Max 8K and Logitech PRO X SUPERLIGHT. DPI, buttons and profiles without an OEM install.',
+      pl: 'Sterowniki WebHID w przeglądarce dla Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max 8K i Logitech PRO X SUPERLIGHT. DPI, przyciski i profile bez instalacji OEM.',
+      en: 'Browser WebHID drivers for Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max 8K and Logitech PRO X SUPERLIGHT. DPI, buttons and profiles without an OEM install.',
     },
   },
   why: {
@@ -75,6 +76,9 @@ export const SEO_PAGES: Record<SeoPageId, SeoPage> = {
   },
   'mouse-redragon-king-ultra': mousePageEntries.find(
     ([id]) => id === 'mouse-redragon-king-ultra',
+  )![1],
+  'mouse-rampage-blitz-ultimate': mousePageEntries.find(
+    ([id]) => id === 'mouse-rampage-blitz-ultimate',
   )![1],
   'mouse-gwolves-fenrir-max': mousePageEntries.find(
     ([id]) => id === 'mouse-gwolves-fenrir-max',

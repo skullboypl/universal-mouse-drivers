@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getAdminSession } from '@/lib/auth'
+import { getAdminSession, isAdminEnabled } from '@/lib/auth'
 import { LAYOUT_IDS, parseLayoutId, type ButtonPosition } from '@/lib/layouts'
 import { getButtonLayout, setButtonLayout } from '@/lib/store'
 
@@ -7,6 +7,9 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 export async function GET(req: Request) {
+  if (!isAdminEnabled()) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
   const user = await getAdminSession()
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -21,6 +24,9 @@ export async function GET(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  if (!isAdminEnabled()) {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
   const user = await getAdminSession()
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

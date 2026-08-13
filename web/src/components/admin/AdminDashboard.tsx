@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { AdminButtonsEditor } from '@/components/admin/AdminButtonsEditor'
 import type { ButtonPosition } from '@/lib/layouts'
 
-type Tab = 'buttons' | 'demo' | 'fenrir' | 'hero' | 'tray'
+type Tab = 'buttons' | 'blitz' | 'demo' | 'fenrir' | 'hero' | 'tray'
 
 export function AdminDashboard({
   user,
   buttonsLayout,
+  blitzLayout,
   demoLayout,
   fenrirLayout,
   heroLayout,
@@ -16,6 +17,7 @@ export function AdminDashboard({
 }: {
   user: string
   buttonsLayout: ButtonPosition[]
+  blitzLayout: ButtonPosition[]
   demoLayout: ButtonPosition[]
   fenrirLayout: ButtonPosition[]
   heroLayout: ButtonPosition[]
@@ -50,6 +52,7 @@ export function AdminDashboard({
         {(
           [
             ['buttons', 'King Ultra'],
+            ['blitz', 'Blitz Ultimate'],
             ['fenrir', 'Fenrir Max'],
             ['demo', 'Demo mouse'],
             ['hero', 'Hero connect'],
@@ -86,6 +89,16 @@ export function AdminDashboard({
             <code className="mono">/devices/king-ultra/mouse.png</code>).
           </p>
           <AdminButtonsEditor layoutId="king-ultra" initial={buttonsLayout} />
+        </>
+      )}
+
+      {tab === 'blitz' && (
+        <>
+          <p className="muted" style={{ marginTop: 0 }}>
+            Badge’y Rampage Blitz Ultimate (
+            <code className="mono">/devices/blitz-ultimate/mouse.png</code>).
+          </p>
+          <AdminButtonsEditor layoutId="blitz-ultimate" initial={blitzLayout} />
         </>
       )}
 

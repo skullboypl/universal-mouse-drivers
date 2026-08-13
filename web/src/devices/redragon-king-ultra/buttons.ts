@@ -77,6 +77,8 @@ export function actionToKeyFun(action: ButtonAction): {
       return { type: 0x01, param1: 0x10, param2: 0x00 }
     case 'dpi_cycle':
       return { type: 0x02, param1: 0x01, param2: 0x00 }
+    case 'fire':
+      return { type: 0x04, param1: 0x00, param2: 0x00 }
     case 'macro':
       return { type: 0x06, param1: 0x00, param2: 0x00 }
     case 'disabled':
@@ -92,6 +94,7 @@ export function keyFunToAction(
 ): ButtonAction {
   if (type === 0) return 'disabled'
   if (type === 2 && param1 === 1) return 'dpi_cycle'
+  if (type === 4) return 'fire'
   if (type === 6) return 'macro'
   if (type === 1) {
     if (param1 === 0x01) return 'left'

@@ -7,6 +7,8 @@ export type ButtonAction =
   | 'forward'
   | 'back'
   | 'dpi_cycle'
+  /** OEM KeyFunction type 0x04 (Blitz Ultimate Fire key). */
+  | 'fire'
   | 'disabled'
   | 'macro'
 

@@ -22,6 +22,7 @@ const ACTIONS: { value: ButtonAction; key: MessageKey }[] = [
   { value: 'forward', key: 'buttons.action.forward' },
   { value: 'back', key: 'buttons.action.back' },
   { value: 'dpi_cycle', key: 'buttons.action.dpi_cycle' },
+  { value: 'fire', key: 'buttons.action.fire' },
   { value: 'disabled', key: 'buttons.action.disabled' },
   { value: 'macro', key: 'buttons.action.macro' },
 ]
@@ -33,8 +34,16 @@ export function ButtonsPage() {
   const [focusId, setFocusId] = useState<number | null>(null)
   const [layout, setLayout] = useState<Pos[] | null>(null)
 
-  const isDemo = driver?.identity.id === 'umd-demo'
-  const layoutId = isDemo ? 'umd-demo' : 'king-ultra'
+  const catalogId = driver?.identity.id
+  const isDemo = catalogId === 'umd-demo'
+  const layoutId =
+    catalogId === 'rampage-blitz-ultimate'
+      ? 'blitz-ultimate'
+      : catalogId === 'gwolves-fenrir-max'
+        ? 'fenrir-max'
+        : isDemo
+          ? 'umd-demo'
+          : 'king-ultra'
 
   useEffect(() => {
     if (!connected || !driver) return
@@ -101,7 +110,7 @@ export function ButtonsPage() {
                 })
                 const a = document.createElement('a')
                 a.href = URL.createObjectURL(blob)
-                a.download = `king-ultra-profile-${state.profileIndex + 1}.json`
+                a.download = `${driver.identity.id}-profile-${state.profileIndex + 1}.json`
                 a.click()
               }}
             >

@@ -175,6 +175,83 @@ export const DEVICE_SEO_ARTICLES: DeviceSeoArticle[] = [
     ],
   },
   {
+    slug: 'rampage-blitz-ultimate',
+    catalogId: 'rampage-blitz-ultimate',
+    path: '/mice/rampage-blitz-ultimate',
+    eyebrow: { pl: 'Rampage', en: 'Rampage' },
+    title: {
+      pl: 'Rampage Blitz Ultimate - sterownik WebHID | UMD',
+      en: 'Rampage Blitz Ultimate - WebHID driver | UMD',
+    },
+    description: {
+      pl: 'Konfiguruj Rampage Blitz Ultimate w przeglądarce: DPI PAW3950, polling, przyciski (Fire key), sleep i long distance - ten sam stos HIDUsb co King Ultra, osobne PID.',
+      en: 'Configure Rampage Blitz Ultimate in the browser: PAW3950 DPI, polling, buttons (Fire key), sleep and long distance - same HIDUsb stack as King Ultra, separate PIDs.',
+    },
+    h1: {
+      pl: 'Sterownik WebHID dla Rampage Blitz Ultimate',
+      en: 'WebHID driver for Rampage Blitz Ultimate',
+    },
+    intro: {
+      pl: 'Blitz Ultimate to osobna mysz Rampage w UMD. Protokół HIDUsb V11 jest wspólny z Redragon King Ultra (to samo OEM Mouse Drive Beta), ale VID/PID, art, DPI grades i mapa przycisków są własne.',
+      en: 'Blitz Ultimate is a distinct Rampage mouse in UMD. The HIDUsb V11 protocol is shared with Redragon King Ultra (same OEM Mouse Drive Beta), but VID/PID, art, DPI grades and button map are its own.',
+    },
+    blocks: [
+      {
+        heading: {
+          pl: 'Co możesz ustawić',
+          en: 'What you can configure',
+        },
+        paragraphs: {
+          pl: [
+            'Te same ekrany co King Ultra: przyciski, sensor, ustawienia - z domyślnymi stopniami DPI i Fire key z OEM Config.ini.',
+          ],
+          en: [
+            'Same screens as King Ultra: buttons, sensor, settings - with Blitz DPI grades and Fire key from OEM Config.ini.',
+          ],
+        },
+        bullets: {
+          pl: [
+            'DPI (400–30000, 6 stopni)',
+            'Polling do 8K',
+            'LOD, Peak, ripple / angle / motion sync',
+            'Debounce, sleep, long distance',
+            'Fire key (OEM type 0x04)',
+          ],
+          en: [
+            'DPI (400–30000, 6 stages)',
+            'Polling up to 8K',
+            'LOD, Peak, ripple / angle / motion sync',
+            'Debounce, sleep, long distance',
+            'Fire key (OEM type 0x04)',
+          ],
+        },
+      },
+      {
+        heading: { pl: 'Jak połączyć', en: 'How to connect' },
+        paragraphs: {
+          pl: [
+            'Otwórz UMD, kliknij kartę Blitz Ultimate. W WebHID wybierz interfejs vendor/dongle 3554:F563 albo kabel F562 (nie zwykłą HID-compliant mouse).',
+          ],
+          en: [
+            'Open UMD and click the Blitz Ultimate card. In WebHID pick the vendor/dongle interface 3554:F563 or wired F562 (not the plain HID-compliant mouse).',
+          ],
+        },
+      },
+    ],
+    faqExtra: [
+      {
+        question: {
+          pl: 'Jakie VID:PID ma Blitz Ultimate?',
+          en: 'What VID:PID does Blitz Ultimate use?',
+        },
+        answer: {
+          pl: 'Whitelist UMD: 3554:F562 (wired), 3554:F563 (dongle). Nie mylić z King Ultra F54D/F54F.',
+          en: 'UMD whitelist: 3554:F562 (wired), 3554:F563 (dongle). Do not confuse with King Ultra F54D/F54F.',
+        },
+      },
+    ],
+  },
+  {
     slug: 'gwolves-fenrir-max',
     catalogId: 'gwolves-fenrir-max',
     path: '/mice/gwolves-fenrir-max',

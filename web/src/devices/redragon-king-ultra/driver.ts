@@ -36,9 +36,25 @@ import {
   type ProtocolCommand,
 } from './protocol'
 import { DEMO_BUTTONS, DEMO_IDENTITY } from '../demo/identity'
+import type { HidUsbDriverSkin } from '../hidusb-skin'
 import type { DeviceIdentity } from '../types'
-import { actionToKeyFun, keyFunToAction, KING_ULTRA_BUTTONS } from './buttons'
+import {
+  actionToKeyFun as kingActionToKeyFun,
+  keyFunToAction as kingKeyFunToAction,
+  KING_ULTRA_BUTTONS,
+} from './buttons'
 import { KING_ULTRA_IDENTITY } from './identity'
+
+export const KING_ULTRA_SKIN: HidUsbDriverSkin = {
+  identity: KING_ULTRA_IDENTITY,
+  buttons: KING_ULTRA_BUTTONS,
+  createDefaultState,
+  dpiMaxStages: DPI_MAX_STAGES,
+  dongleProductIds: [0xf54f, 0xf510],
+  allowDemo: true,
+  actionToKeyFun: kingActionToKeyFun,
+  keyFunToAction: kingKeyFunToAction,
+}
 
 function sleep(ms: number) {
   return new Promise<void>((r) => setTimeout(r, ms))
@@ -50,7 +66,8 @@ const DPI_DEBOUNCE_MS = 220
 const SENSOR_DEBOUNCE_MS = 220
 
 export class KingUltraDriver {
-  private _identity: DeviceIdentity = KING_ULTRA_IDENTITY
+  private readonly skin: HidUsbDriverSkin
+  private _identity: DeviceIdentity
   private state: DeviceState
   private transport: Transport | null = null
 
@@ -70,8 +87,10 @@ export class KingUltraDriver {
   private pendingSensorPatch: Partial<SensorState> | null = null
   private writeChain: Promise<void> = Promise.resolve()
 
-  constructor() {
-    this.state = createDefaultState()
+  constructor(skin: HidUsbDriverSkin = KING_ULTRA_SKIN) {
+    this.skin = skin
+    this._identity = skin.identity
+    this.state = skin.createDefaultState()
   }
 
   getState(): DeviceState {
@@ -97,10 +116,11 @@ export class KingUltraDriver {
   async attach(transport: Transport) {
     this.transport = transport
     await transport.connect()
+    const base = this.skin.createDefaultState()
     this.state = {
-      ...createDefaultState(),
+      ...base,
       info: {
-        ...createDefaultState().info,
+        ...base.info,
         connection: transport.kind === 'mock' ? 'wireless' : 'unknown',
         charging: transport.kind === 'mock',
         batteryPercent: transport.kind === 'mock' ? 42 : null,
@@ -120,8 +140,7 @@ export class KingUltraDriver {
         }
       ).getDeviceInfo?.()
       if (info?.productId != null) {
-        const dongle =
-          info.productId === 0xf54f || info.productId === 0xf510
+        const dongle = this.skin.dongleProductIds.includes(info.productId)
         this.state = {
           ...this.state,
           info: {
@@ -134,23 +153,22 @@ export class KingUltraDriver {
       this.mouseReachable = true
     }
 
-    // Demo transport → fictional UMD mouse art. WebHID → real Redragon King Ultra.
-    if (transport.kind === 'mock') {
+    // Demo transport → fictional UMD mouse art (King host only).
+    if (transport.kind === 'mock' && this.skin.allowDemo) {
       this._identity = DEMO_IDENTITY
       this.state = {
         ...this.state,
         buttons: DEMO_BUTTONS.map((b) => ({ ...b })),
         info: {
           ...this.state.info,
-          // Keep demo labels friendly in Settings
           driveVersion: '0.1.0-demo',
         },
       }
     } else {
-      this._identity = KING_ULTRA_IDENTITY
+      this._identity = this.skin.identity
       this.state = {
         ...this.state,
-        buttons: KING_ULTRA_BUTTONS.map((b) => ({ ...b })),
+        buttons: this.skin.buttons.map((b) => ({ ...b })),
       }
     }
 
@@ -426,7 +444,7 @@ export class KingUltraDriver {
     if (hz != null) sensor = { ...sensor, reportRate: hz }
 
     const count = Math.min(
-      DPI_MAX_STAGES,
+      this.skin.dpiMaxStages,
       Math.max(1, maxDpiPayload[0] & 0xff),
     )
     let dpiStages = sensor.dpiStages.map((s) => ({
@@ -500,7 +518,7 @@ export class KingUltraDriver {
     for (const b of buttons) {
       const raw = this.sliceMap(map, FlashAddr.keyFun0 + b.flashIndex * 4, 4)
       if (raw.length >= 3 && !raw.every((x) => x === 0)) {
-        const action = keyFunToAction(raw[0], raw[1], raw[2])
+        const action = this.skin.keyFunToAction(raw[0], raw[1], raw[2])
         buttons = buttons.map((x) =>
           x.id === b.id ? { ...x, action } : x,
         )
@@ -674,7 +692,7 @@ export class KingUltraDriver {
         b.id === buttonId ? { ...b, action } : b,
       ),
     }
-    const fun = actionToKeyFun(action)
+    const fun = this.skin.actionToKeyFun(action)
     this.setWritePhase('queued')
     this.enqueueWrite(async () => {
       umdLog('driver', 'info', 'flush button', {
@@ -1063,7 +1081,7 @@ export class KingUltraDriver {
     const info = this.state.info
     const demo = this._identity.id === DEMO_IDENTITY.id
     this.state = {
-      ...createDefaultState(),
+      ...this.skin.createDefaultState(),
       info,
       profileIndex: this.state.profileIndex,
       ...(demo ? { buttons: DEMO_BUTTONS.map((b) => ({ ...b })) } : {}),
@@ -1088,11 +1106,13 @@ export class KingUltraDriver {
   importProfile(json: string) {
     const data = JSON.parse(json) as Partial<DeviceState> & { device?: string }
     const templates =
-      this._identity.id === DEMO_IDENTITY.id ? DEMO_BUTTONS : KING_ULTRA_BUTTONS
+      this._identity.id === DEMO_IDENTITY.id
+        ? DEMO_BUTTONS
+        : this.skin.buttons
     if (
       data.device &&
       data.device !== this.identity.id &&
-      data.device !== KING_ULTRA_IDENTITY.id &&
+      data.device !== this.skin.identity.id &&
       data.device !== DEMO_IDENTITY.id
     ) {
       throw new Error('Profile does not match this device')

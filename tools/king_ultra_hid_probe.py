@@ -30,7 +30,9 @@ except ImportError:
     raise
 
 VID = 0x3554
-PIDS = (0xF54F, 0xF510, 0xF54D)  # 8K dongle, alt dongle, corded
+PIDS_KING = (0xF54F, 0xF510, 0xF54D)  # 8K dongle, alt dongle, corded
+PIDS_BLITZ = (0xF563, 0xF562)  # Rampage Blitz Ultimate dongle, wired
+PIDS = PIDS_KING
 USAGE_PAGE_OEM = 0xFF02
 
 
@@ -93,7 +95,9 @@ def pick_device(pid: Optional[int] = None) -> dict:
         for p in PIDS if pid is None else (pid,):
             cands.extend(hid.enumerate(VID, p))
     if not cands:
-        raise SystemExit("No 3554:F54F/F510/F54D device found - plug dongle/cable")
+        raise SystemExit(
+            f"No 3554 device in {[hex(p) for p in PIDS]} - plug dongle/cable"
+        )
     # Prefer FF02
     cands.sort(
         key=lambda d: (
@@ -163,7 +167,16 @@ def payload_nonzero(r: bytes) -> bool:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="King Ultra HID DPI probe (no browser)")
+    global PIDS
+    ap = argparse.ArgumentParser(
+        description="HIDUsb V11 DPI probe (King Ultra / Blitz Ultimate)"
+    )
+    ap.add_argument(
+        "--sku",
+        choices=("king", "blitz"),
+        default="king",
+        help="king=F54F/F510/F54D, blitz=F563/F562",
+    )
     ap.add_argument("--dpi", type=int, default=3200)
     ap.add_argument("--stage", type=int, default=0)
     ap.add_argument("--pid", type=lambda s: int(s, 0), default=None)
@@ -174,6 +187,7 @@ def main() -> None:
     )
     ap.add_argument("--listen", type=int, default=0, help="extra listen ms after seq")
     args = ap.parse_args()
+    PIDS = PIDS_BLITZ if args.sku == "blitz" else PIDS_KING
     online = bool(args.online_bit)
 
     info = pick_device(args.pid)

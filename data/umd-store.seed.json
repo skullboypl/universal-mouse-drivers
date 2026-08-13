@@ -16,6 +16,14 @@
       { "id": 4, "uiX": 380, "uiY": 760 },
       { "id": 5, "uiX": 360, "uiY": 900 },
       { "id": 6, "uiX": 720, "uiY": 820 }
+    ],
+    "blitz-ultimate": [
+      { "id": 1, "uiX": 167, "uiY": 235 },
+      { "id": 2, "uiX": 65, "uiY": 201 },
+      { "id": 3, "uiX": 135, "uiY": 146 },
+      { "id": 4, "uiX": 281, "uiY": 161 },
+      { "id": 5, "uiX": 324, "uiY": 110 },
+      { "id": 6, "uiX": 376, "uiY": 230 }
     ]
   },
   "downloads": {
@@ -23,7 +31,7 @@
       "id": "trayBattery",
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
-      "version": "1.1.0",
+      "version": "1.4.0",
       "signed": true,
       "notes": "EV-signed; shipped in image bundled-downloads/ (override via /app/data/downloads/)"
     }

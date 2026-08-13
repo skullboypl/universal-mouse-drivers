@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { Button } from '@/components/Button'
 import { DEMO_BUTTONS } from '@/devices/demo/identity'
 import { FENRIR_MAX_BUTTONS } from '@/devices/gwolves-fenrir-max/buttons'
+import { BLITZ_ULTIMATE_BUTTONS } from '@/devices/rampage-blitz-ultimate/buttons'
 import { KING_ULTRA_BUTTONS } from '@/devices/redragon-king-ultra/buttons'
 import type { ButtonPosition, LayoutId } from '@/lib/layouts'
 import { LAYOUT_META } from '@/lib/layouts'
@@ -26,6 +27,13 @@ function buttonMetaFor(layoutId: LayoutId): ButtonMeta[] {
       action: b.action,
     }))
   }
+  if (layoutId === 'blitz-ultimate') {
+    return BLITZ_ULTIMATE_BUTTONS.map((b) => ({
+      id: b.id,
+      label: b.label,
+      action: b.action,
+    }))
+  }
   // king-ultra + hero use the same 1–6 badge set
   return KING_ULTRA_BUTTONS.map((b) => ({
     id: b.id,
@@ -40,6 +48,13 @@ function defaultPositions(layoutId: LayoutId): ButtonPosition[] {
   }
   if (layoutId === 'fenrir-max') {
     return FENRIR_MAX_BUTTONS.map((b) => ({ id: b.id, uiX: b.uiX, uiY: b.uiY }))
+  }
+  if (layoutId === 'blitz-ultimate') {
+    return BLITZ_ULTIMATE_BUTTONS.map((b) => ({
+      id: b.id,
+      uiX: b.uiX,
+      uiY: b.uiY,
+    }))
   }
   if (layoutId === 'king-ultra-hero') {
     return [

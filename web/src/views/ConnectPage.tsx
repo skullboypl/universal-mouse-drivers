@@ -12,6 +12,7 @@ import {
 } from '@/devices/registry'
 import { FENRIR_MAX_IDENTITY } from '@/devices/gwolves-fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/logitech-pro-x-superlight/identity'
+import { BLITZ_ULTIMATE_IDENTITY } from '@/devices/rampage-blitz-ultimate/identity'
 import { KING_ULTRA_IDENTITY } from '@/devices/redragon-king-ultra/identity'
 import type { DeviceIdentity, DeviceSupportStatus } from '@/devices/types'
 import { useLocale } from '@/i18n/LocaleContext'
@@ -41,6 +42,7 @@ function connectingLabel(
 ): string {
   if (catalogId === FENRIR_MAX_IDENTITY.id) return 'Fenrir…'
   if (catalogId === KING_ULTRA_IDENTITY.id) return 'King Ultra…'
+  if (catalogId === BLITZ_ULTIMATE_IDENTITY.id) return 'Blitz Ultimate…'
   if (catalogId === SUPERLIGHT_IDENTITY.id) return 'SUPERLIGHT…'
   return syncing
 }
@@ -298,7 +300,9 @@ export function ConnectPage() {
         </header>
         <ul className={styles.deviceGrid}>
           {DEVICE_CATALOG.map((d: DeviceIdentity) => {
-            const canConnect = webHidOk && d.status !== 'planned'
+            const hidReady = webHidOk
+            const planned = d.status === 'planned'
+            const canConnect = hidReady && !planned
             const key = `catalog:${d.id}`
             const rowBusy = connectingKey === key
             return (
@@ -307,7 +311,7 @@ export function ConnectPage() {
                   type="button"
                   className={`${styles.deviceCard} ${
                     rowBusy ? styles.listRowBusy : ''
-                  } ${!canConnect ? styles.deviceCardSoon : ''}`}
+                  } ${!canConnect ? styles.deviceCardMuted : ''}`}
                   disabled={!canConnect || busyAny}
                   onClick={() => {
                     if (!canConnect) return
@@ -350,6 +354,13 @@ export function ConnectPage() {
                       ) : canConnect ? (
                         <span className={styles.openCue}>
                           {tr('connect.open')} →
+                        </span>
+                      ) : !hidReady ? (
+                        <span
+                          className={`${styles.badge} ${styles.badgePcOnly}`}
+                          title={tr('connect.pcOnlyTip')}
+                        >
+                          {tr('connect.pcOnly')}
                         </span>
                       ) : (
                         <span className={styles.openCueMuted}>

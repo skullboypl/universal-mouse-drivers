@@ -2,6 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { DEMO_BUTTONS } from '@/devices/demo/identity'
 import { FENRIR_MAX_BUTTONS } from '@/devices/gwolves-fenrir-max/buttons'
+import { BLITZ_ULTIMATE_BUTTONS } from '@/devices/rampage-blitz-ultimate/buttons'
 import { KING_ULTRA_BUTTONS } from '@/devices/redragon-king-ultra/buttons'
 import {
   type ButtonPosition,
@@ -60,12 +61,19 @@ const DEFAULT_FENRIR_MAX: ButtonPosition[] = FENRIR_MAX_BUTTONS.map((b) => ({
   uiY: b.uiY,
 }))
 
+const DEFAULT_BLITZ: ButtonPosition[] = BLITZ_ULTIMATE_BUTTONS.map((b) => ({
+  id: b.id,
+  uiX: b.uiX,
+  uiY: b.uiY,
+}))
+
 function defaultStore(): UmdStore {
   return {
     version: 1,
     buttonLayouts: {
       'king-ultra': DEFAULT_BUTTONS,
       'king-ultra-hero': DEFAULT_HERO,
+      'blitz-ultimate': DEFAULT_BLITZ,
       'umd-demo': DEFAULT_DEMO,
       'fenrir-max': DEFAULT_FENRIR_MAX,
     },
@@ -125,6 +133,9 @@ function ensureLayouts(store: UmdStore): UmdStore {
   }
   if (!store.buttonLayouts['king-ultra-hero']) {
     store.buttonLayouts['king-ultra-hero'] = DEFAULT_HERO
+  }
+  if (!store.buttonLayouts['blitz-ultimate']) {
+    store.buttonLayouts['blitz-ultimate'] = DEFAULT_BLITZ
   }
   if (!store.buttonLayouts['umd-demo']) {
     store.buttonLayouts['umd-demo'] = DEFAULT_DEMO
@@ -191,6 +202,9 @@ export function getButtonLayout(layoutId: LayoutId | string = 'king-ultra'): But
   }
   if (layoutId === 'fenrir-max') {
     return store.buttonLayouts['fenrir-max'] ?? DEFAULT_FENRIR_MAX
+  }
+  if (layoutId === 'blitz-ultimate') {
+    return store.buttonLayouts['blitz-ultimate'] ?? DEFAULT_BLITZ
   }
   return store.buttonLayouts[layoutId] ?? DEFAULT_BUTTONS
 }

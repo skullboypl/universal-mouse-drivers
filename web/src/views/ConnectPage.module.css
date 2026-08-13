@@ -364,8 +364,16 @@
   cursor: default;
 }
 
-.deviceCardSoon {
+.deviceCardSoon,
+.deviceCardMuted {
   opacity: 0.72;
+}
+
+.badgePcOnly {
+  color: var(--fg-muted);
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: help;
 }
 
 .deviceArt {

@@ -12,6 +12,11 @@ function secret(): string {
   )
 }
 
+/** Admin UI + APIs only on local `next dev` — never on CapRover/production. */
+export function isAdminEnabled(): boolean {
+  return process.env.NODE_ENV !== 'production'
+}
+
 export function adminUser(): string {
   return process.env.ADMIN_USER || 'admin'
 }
@@ -51,6 +56,7 @@ export function verifySessionToken(token: string | undefined): string | null {
 }
 
 export function checkCredentials(user: string, password: string): boolean {
+  if (!isAdminEnabled()) return false
   const uOk = user === adminUser()
   const p = Buffer.from(password)
   const expected = Buffer.from(adminPassword())
@@ -59,6 +65,7 @@ export function checkCredentials(user: string, password: string): boolean {
 }
 
 export async function getAdminSession(): Promise<string | null> {
+  if (!isAdminEnabled()) return null
   const jar = await cookies()
   return verifySessionToken(jar.get(COOKIE)?.value)
 }

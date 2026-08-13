@@ -8,6 +8,10 @@ import {
   superlightHidFilters,
 } from '../devices/logitech-pro-x-superlight/identity'
 import {
+  blitzUltimateHidFilters,
+  isBlitzUltimateDevice,
+} from '../devices/rampage-blitz-ultimate/identity'
+import {
   hidFilters,
   isKingUltraDevice,
 } from '../devices/redragon-king-ultra/identity'
@@ -87,9 +91,21 @@ function pickOemOutput(
   return outs[0] ?? null
 }
 
+/** King Ultra + Blitz Ultimate share HIDUsb V11 transport (report id 8). */
+function isOemHidUsbDevice(vendorId: number, productId: number): boolean {
+  return (
+    isKingUltraDevice(vendorId, productId) ||
+    isBlitzUltimateDevice(vendorId, productId)
+  )
+}
+
+function oemHidUsbFilters(): Array<{ vendorId: number; productId: number }> {
+  return [...hidFilters(), ...blitzUltimateHidFilters()]
+}
+
 function scoreDevice(device: HIDDevice): number {
   let score = 0
-  if (isKingUltraDevice(device.vendorId, device.productId)) score += 100
+  if (isOemHidUsbDevice(device.vendorId, device.productId)) score += 100
   if (isFenrirMaxDevice(device.vendorId, device.productId)) score += 100
   if (isSuperlightDevice(device.vendorId, device.productId)) score += 100
   const outs = collectReports(device, 'output')
@@ -118,7 +134,7 @@ export function allSupportedHidFilters(): Array<{
   productId: number
 }> {
   return [
-    ...hidFilters(),
+    ...oemHidUsbFilters(),
     ...fenrirMaxHidFilters(),
     ...superlightHidFilters(),
   ]
@@ -129,7 +145,7 @@ export function isSupportedUmdDevice(
   productId: number,
 ): boolean {
   return (
-    isKingUltraDevice(vendorId, productId) ||
+    isOemHidUsbDevice(vendorId, productId) ||
     isFenrirMaxDevice(vendorId, productId) ||
     isSuperlightDevice(vendorId, productId)
   )
@@ -149,6 +165,9 @@ function filtersForTarget(target?: HidPickTarget): Array<{
 }> {
   if (target?.catalogId === 'gwolves-fenrir-max') return fenrirMaxHidFilters()
   if (target?.catalogId === 'redragon-king-ultra') return hidFilters()
+  if (target?.catalogId === 'rampage-blitz-ultimate') {
+    return blitzUltimateHidFilters()
+  }
   if (target?.catalogId === 'logitech-pro-x-superlight') {
     return superlightHidFilters()
   }
@@ -169,6 +188,9 @@ function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
   if (target.catalogId === 'redragon-king-ultra') {
     return isKingUltraDevice(device.vendorId, device.productId)
   }
+  if (target.catalogId === 'rampage-blitz-ultimate') {
+    return isBlitzUltimateDevice(device.vendorId, device.productId)
+  }
   if (target.catalogId === 'logitech-pro-x-superlight') {
     return isSuperlightDevice(device.vendorId, device.productId)
   }
@@ -178,6 +200,9 @@ function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
     if (target.vendorId != null) {
       if (isKingUltraDevice(target.vendorId, target.productId)) {
         return isKingUltraDevice(device.vendorId, device.productId)
+      }
+      if (isBlitzUltimateDevice(target.vendorId, target.productId)) {
+        return isBlitzUltimateDevice(device.vendorId, device.productId)
       }
       if (isFenrirMaxDevice(target.vendorId, target.productId)) {
         return isFenrirMaxDevice(device.vendorId, device.productId)
@@ -330,7 +355,7 @@ export function createWebHidTransport(): WebHidTransport {
   }
 
   async function openSelected(selected: HIDDevice) {
-    if (!isKingUltraDevice(selected.vendorId, selected.productId)) {
+    if (!isOemHidUsbDevice(selected.vendorId, selected.productId)) {
       throw new Error(
         `Refused device ${selected.vendorId.toString(16)}:${selected.productId.toString(16)}`,
       )
@@ -542,20 +567,31 @@ export function createWebHidTransport(): WebHidTransport {
     async connectPreferred(productId?: number) {
       const hid = assertWebHid()
       const existing = (await hid.getDevices())
-        .filter((d) => isKingUltraDevice(d.vendorId, d.productId))
+        .filter((d) => isOemHidUsbDevice(d.vendorId, d.productId))
         .sort((a, b) => scoreDevice(b) - scoreDevice(a))
 
       let selected =
         productId != null
           ? existing.find((d) => d.productId === productId) ??
-            // Same King Ultra family only (mouse ↔ dongle), never other brands
+            // Prefer same OEM family (King vs Blitz) when productId is known
+            existing.find((d) =>
+              productId != null && isBlitzUltimateDevice(0x3554, productId)
+                ? isBlitzUltimateDevice(d.vendorId, d.productId)
+                : isKingUltraDevice(d.vendorId, d.productId),
+            ) ??
             existing[0]
           : existing[0]
 
       if (!selected) {
-        const picked = await hid.requestDevice({ filters: hidFilters() })
+        const filters =
+          productId != null && isBlitzUltimateDevice(0x3554, productId)
+            ? blitzUltimateHidFilters()
+            : productId != null && isKingUltraDevice(0x3554, productId)
+              ? hidFilters()
+              : oemHidUsbFilters()
+        const picked = await hid.requestDevice({ filters })
         const ranked = [...picked]
-          .filter((d) => isKingUltraDevice(d.vendorId, d.productId))
+          .filter((d) => isOemHidUsbDevice(d.vendorId, d.productId))
           .sort((a, b) => scoreDevice(b) - scoreDevice(a))
         selected =
           productId != null
@@ -564,7 +600,7 @@ export function createWebHidTransport(): WebHidTransport {
       }
       if (!selected) {
         throw new Error(
-          'Redragon King Ultra nie jest podłączona / nie wybrano jej w oknie HID',
+          'OEM HIDUsb mouse (King Ultra / Blitz Ultimate) nie jest podłączona / nie wybrano jej w oknie HID',
         )
       }
       await openSelected(selected)

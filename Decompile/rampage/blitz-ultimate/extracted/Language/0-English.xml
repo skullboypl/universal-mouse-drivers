@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<English>
+  <FontSize>9.5</FontSize>
+  <Control>
+    <label_KeyDebounce>Debounce Time</label_KeyDebounce>
+    <label_DPIGrade>DPI Stages</label_DPIGrade>
+    <label_DPISetting>DPI Setting</label_DPISetting>
+    <label_MotionSync>Motion sync</label_MotionSync>
+    <label_FixLine>Angle snapping</label_FixLine>
+    <label_Ripple>Ripple control</label_Ripple>
+    <label_LOD>LOD</label_LOD>
+    <label_ModeSelect>Mode Select</label_ModeSelect>
+    <label_FullPerformance>Peak Performance</label_FullPerformance>
+    <label_SensorSetting>Sensor Setting</label_SensorSetting>
+    <label_Report>Report Rate</label_Report>
+    <label_DPIBrightness>Brightness</label_DPIBrightness>
+    <label_DPISpeed>Speed</label_DPISpeed>
+    <label_DPIEffect>DPI Light Effects</label_DPIEffect>
+    <label_CycleTimes>Times of cycles</label_CycleTimes>
+    <label_UntilThisKeyPressed>Cycle Until This Key Pressed</label_UntilThisKeyPressed>
+    <label_UntilKeyPressed>Cycle Until Key Pressed</label_UntilKeyPressed>
+    <label_UntilKeyReleased>Cycle Until Key Released</label_UntilKeyReleased>
+    <label_InsertEvent>Insert Action</label_InsertEvent>
+    <label_AutoDelay>Automatic Insertion Delay</label_AutoDelay>
+    <label_DefaultDelay>Default Time Delay</label_DefaultDelay>
+    <label_KeyList>Keys List</label_KeyList>
+    <label_MacroList>Macros List</label_MacroList>
+    <label_MovingCloseLight>Lights off when moving </label_MovingCloseLight>
+    <label_PowerSaveTime>Time until lights off after not moving</label_PowerSaveTime>
+    <label_LEDB>B:</label_LEDB>
+    <label_LEDG>G:</label_LEDG>
+    <label_LEDR>R:</label_LEDR>
+    <label_LEDPreset>Default Colors</label_LEDPreset>
+    <label_LEDPreview>Color Preview</label_LEDPreview>
+    <label_LEDColor>Light Color</label_LEDColor>
+    <label_LightSpeed>Speed</label_LightSpeed>
+    <label_LightBrightness>Brightness</label_LightBrightness>
+    <label_LightMode>Lighting Mode</label_LightMode>
+    <customRecordMacro1_start>Start Recording</customRecordMacro1_start>
+    <customRecordMacro1_stop>Stop Recording</customRecordMacro1_stop>
+    <customButton_Export>Export</customButton_Export>
+    <customButton_Import>Import</customButton_Import>
+    <customButton_Reset>Restore</customButton_Reset>
+    <customButton_Save>Save</customButton_Save>
+    <customButton_DeleteButton>Delete</customButton_DeleteButton>
+    <customButton_ModifyButton>Modify</customButton_ModifyButton>
+    <customButton_DeleteMacro>Delete</customButton_DeleteMacro>
+    <customButton_NewMacro>New Macro</customButton_NewMacro>
+  </Control>
+  <ComboBox>
+    <ComboBoxName>customComboBox_Config</ComboBoxName>
+    <Item value="0000">Profile 1</Item>
+    <Item value="0001">Profile 2</Item>
+    <Item value="0002">Profile 3</Item>
+    <Item value="0003">Profile 4</Item>
+    <ComboBoxName>customComboBox_LOD</ComboBoxName>
+    <Item value="0003">0.7mm</Item>
+    <Item value="0001">1mm</Item>
+    <Item value="0002">2mm</Item>
+    <ComboBoxName>customComboBox_ModeSelect</ComboBoxName>
+    <Item value="0000">LP</Item>
+    <Item value="0001">HP</Item>
+    <Item value="0010">Corded</Item>
+    <ComboBoxName>customComboBox_FullPerformance</ComboBoxName>
+    <Item value="0003">30sec</Item>
+    <Item value="0006">1min</Item>
+    <Item value="0012">2min</Item>
+    <Item value="0030">5min</Item>
+    <Item value="0060">10min</Item>
+    <Item value="0090">15min</Item>
+    <ComboBoxName>customComboBox_DPIEffect</ComboBoxName>
+    <Item value="0000">Off</Item>
+    <Item value="0001">Fixed light</Item>
+    <Item value="0002">Flicker</Item>
+    <ComboBoxName>customComboBox_InsertEvent</ComboBoxName>
+    <Item value="0x800000">Key Press</Item>
+    <Item value="0x400000">Key Release</Item>
+    <Item value="0xFF0000">Delay</Item>
+    <Item value="0x040100">Left Key</Item>
+    <Item value="0x040200">Right Key</Item>
+    <Item value="0x040400">Middle Key</Item>
+    <Item value="0x041000">Forward Key</Item>
+    <Item value="0x040800">Back Key</Item>
+    <ComboBoxName>customComboBox_PowerSaveTime</ComboBoxName>
+    <Item value="0001">10sec</Item>
+    <Item value="0003">30sec</Item>
+    <Item value="0006">1min</Item>
+    <Item value="0030">5min</Item>
+    <Item value="0060">10min</Item>
+    <Item value="0090">15min</Item>
+    <Item value="0120">20min</Item>
+    <Item value="0150">25min</Item>
+    <Item value="0180">30min</Item>
+    <Item value="0210">35min</Item>
+    <Item value="0240">40min</Item>
+    <ComboBoxName>customComboBox_LEDMode</ComboBoxName>
+    <Item value="0000">OFF</Item>
+    <Item value="0001">Rainbow Moving</Item>
+    <Item value="0002">Single color</Item>
+    <Item value="0003">Rainbow Fixed</Item>
+    <Item value="0004">Neon</Item>
+    <Item value="0005">Rainbow Flicker</Item>
+    <Item value="0006">Colorful Fixed</Item>
+  </ComboBox>
+  <ToolStripMenuItem>
+    <ToolStripMenuItem_OpenMenu>Open Menu</ToolStripMenuItem_OpenMenu>
+    <ToolStripMenuItem_Exit>Exit</ToolStripMenuItem_Exit>
+    <ToolStripMenuItem_Modify>Modify</ToolStripMenuItem_Modify>
+    <ToolStripMenuItem_DeleteKeys>Delete</ToolStripMenuItem_DeleteKeys>
+    <ToolStripMenuItem_ExportMacro>Export</ToolStripMenuItem_ExportMacro>
+    <ToolStripMenuItem_Rename>Rename</ToolStripMenuItem_Rename>
+    <ToolStripMenuItem_DeleteMacro>Delete</ToolStripMenuItem_DeleteMacro>
+    <ToolStripMenuItem_NewMacro>Create New Macro</ToolStripMenuItem_NewMacro>
+    <ToolStripMenuItem_ImportMacro>Import</ToolStripMenuItem_ImportMacro>
+  </ToolStripMenuItem>
+  <Setting>
+    <DriveVersion>Drive ver：</DriveVersion>
+    <DongleVersion>Receiver Firmware ver：</DongleVersion>
+    <MouseVersion>Mouse Firmware ver：</MouseVersion>
+     </Setting>
+  <Dialog>
+    <Macro>Macro</Macro>
+    <NoResources>No Resources Files</NoResources>
+    <ErrorDriveConfig>Drive Config Error or No Exist</ErrorDriveConfig>
+    <ProgramRuning>The program is running</ProgramRuning>
+    <DeviceConnecting>Please wait，Update happening</DeviceConnecting>
+    <ConnectTimeout>Timeout，Please move mouse</ConnectTimeout>
+    <NoDevice>No operable device is detected</NoDevice>
+    <MaxComboKey>A key combination can have a maximum of three keys</MaxComboKey>
+    <ErrorMacroFile>Import File Is Error</ErrorMacroFile>
+    <CreateMacro>Please first create new macro</CreateMacro>
+    <SameMacro>This macro name is already used </SameMacro>
+    <EditMacroName>Please enter the macro name</EditMacroName>
+    <SelectMacro>Please select a macro</SelectMacro>
+    <StopMacro>Please first stop recording macro</StopMacro>
+    <InsertKey>Please enter a key</InsertKey>
+    <Delete>Are you sure you want to delete？</Delete>
+    <MaxMacroKey>Macro Key reached the Max limit</MaxMacroKey>
+    <InsertDelay>Please enter delay time（ms）</InsertDelay>
+    <FireKeyTimes>Times（0-3）</FireKeyTimes>
+    <FireKeyInterval>Interval（10-255）</FireKeyInterval>
+    <InputComboKey>Please enter keystroke</InputComboKey>
+    <FireKeyTips>Set repeat times to 0, repeat while key is pressed, stop when key is released.</FireKeyTips>
+    <ReserveLeftKey>Must keep Left key</ReserveLeftKey>
+    <DebounceTips>Warning: If the delay is reduced, double click may occur. If double click occurs, please adjust delay until there is no double click</DebounceTips>
+    <ConfigSelect>Switch config is not supported</ConfigSelect>
+    <ResetConfig>Are you sure you want to restore config?</ResetConfig>
+    <ImportConfig>Please wait a moment，Importing config</ImportConfig>
+    <ErrorConfig>Importing config Error</ErrorConfig>
+    <ErrorDevice>Importing config does not match the device</ErrorDevice>
+    <MultiOnline>If multiple devices are the same，Reserve devices that need to be operated</MultiOnline>
+    <EnterPair>Whether you need to repair</EnterPair>
+    <Offline>Device Offline，Please move mouse</Offline>
+    <NewDeviceOnline>New device online</NewDeviceOnline>
+    <LeftShift>Left Shift</LeftShift>
+    <RightShift>Right Shift</RightShift>
+    <MoveUp>Move Up</MoveUp>
+    <MoveDown>Move Down</MoveDown>
+    <OK>OK(Enter)</OK>
+    <Cancel>Cancel(Esc)</Cancel>
+    <SelectDeviceFirst>Please select device</SelectDeviceFirst>
+    <SelectDevice>Select a device</SelectDevice>
+    <StartPair>Start Pair(Space)</StartPair>
+    <PairTips>Press left, right and middle button on mouse together, then there's yellow flashing light to indicate the start of pairing. Press space bar again,,or click“Start Pair”driver will run into pairing mode.</PairTips>
+    <MultiPairDevice>More than one receiver detected, Please Keep the  receiver that you want to pair</MultiPairDevice>
+    <NoPairDevice>No receiver is detected, Please confirm the  receiver is plugged in </NoPairDevice>
+    <CantPair>Must be in wireless mode to pair</CantPair>
+    <OnlyWired>The mouse can only be upgraded in wired mode</OnlyWired>
+    <DevicePairing>Pairing</DevicePairing>
+    <PairSuccess>Pair Success</PairSuccess>
+    <PairFail>Pair Fail</PairFail>
+    <PairRetry>Retry</PairRetry>
+    <PairingTool>Pairing Tool</PairingTool>
+    <CheckUpdate>Check Update</CheckUpdate>
+    <CheckingUpdate>Checking</CheckingUpdate>
+    <LatestVersion>up-to-date</LatestVersion>
+    <Updating>Updating</Updating>
+    <UpdateSuccess>Update Success</UpdateSuccess>
+    <UpdateFail>Update Fail</UpdateFail>
+    <UpdatingDontMove>Device Updating，Please don't unplug</UpdatingDontMove>
+    <ConnectDevice>Please Connect Your Gaming Device</ConnectDevice>
+    <RepairDevice>Please update the failed device first (keyboard enter or click the exclamation mark)</RepairDevice>
+    <AdvancedSetting>Advanced Setting</AdvancedSetting>
+    <PowerBetterMode>Long distance</PowerBetterMode>
+    <CantSet>Must be in wireless mode to set</CantSet>
+    <PowerModeSelectTips>In long-distance mode, the distance will be farther and the anti-interference ability will be stronger, the corresponding working current will be increased, and the use time will be reduced</PowerModeSelectTips>
+    <MousepadSurfaceCal>Mousepad Surface Calibration</MousepadSurfaceCal>
+    <ManualCal>Manual</ManualCal>
+    <NonsupCal>This Sensor nonsupport manual calibration</NonsupCal>
+    <MousepadSurfaceCalTips>Find the best matching parameters for your mouse and mouse pad and experience a higher level of tracking accuracy</MousepadSurfaceCalTips>
+    <WinSystemMouse>Windows Mouse Properties</WinSystemMouse>
+    <StartCal>Please click the "Start" button and move the mouse in the direction of the arrow.</StartCal>
+    <BeingCal>Calibrating! Keep moving the mouse until the calibration is complete</BeingCal>
+    <CalPass>Cal Pass</CalPass>
+    <CalFail>Cal Fail</CalFail>
+    <Start>Start</Start>
+    <Back>Back</Back>
+    <Retry>Retry</Retry>
+    <DongleLED>Set the information conveyed by the LED indicator on the dongle：</DongleLED>
+    <ConnectionState>Connection State and ReportRate（Must when mouse connect。Red（125Hz），Blue（250Hz），Yellow（500Hz），Cyan（1000Hz），Purple（2000Hz），Green（4000Hz）。</ConnectionState>
+    <BatteryState>Battery State（Base on the current battery level of the mouse，Green（100%），Blue（66%），Cyan（33%）and Red（0%））</BatteryState>
+    <OnlyBattery>Only battery warning（always keep light off，red light blinks only when the mouse is low battery。）</OnlyBattery>
+    <Language>Language</Language>
+    <DeviceInfo>Device Information</DeviceInfo>
+    <Other>Other</Other>
+    <SleepMode>Sleep mode</SleepMode>
+    <MouseSleepTime>Time until mouse sleep after not moving</MouseSleepTime>
+    <Pair>Pair(Space)</Pair>
+    <RunOnBoot>Run On System Boot</RunOnBoot>
+    <OfflineTips1>If the mouse is offline, move the mouse first</OfflineTips1>
+    <OfflineTips2>If it is not paired, click the pattern to enter the pairing</OfflineTips2>
+    <OfflineTips3>If it is not paired, click the space bar to enter the pairing</OfflineTips3>
+    <DefaultDelayMin>The default delay is no less than 10</DefaultDelayMin>
+    <DevNewVerTips>Be sure to plug your mouse and receiver into your computer at the same time for a firmware upgrade! If it cannot be used after the upgrade, pair it and use it again!</DevNewVerTips>
+    <DongleIsNewTips>Found mouse new firmware, please update in wired!</DongleIsNewTips>
+    <MouseIsNewTips>Found recevier new firmware, update now？</MouseIsNewTips>
+    <FirmwareNewTips>Found new firmware，please update！</FirmwareNewTips>
+    <DontShowAgain>Don't show next time</DontShowAgain>
+    <EnterUse>Click on the pattern to start using it</EnterUse>
+    <ReturnHomePage>Back to Home page</ReturnHomePage>
+    <MotionSyncDes>motion sync</MotionSyncDes>
+    <FixLineDes>angle snapping</FixLineDes>
+    <RippleDes>ripple control</RippleDes>
+    <LODDes>Lift detection options</LODDes>
+    <ModeSelectDes> LP：Low power mode；HP：high performance mode；corded：corded gaming mode</ModeSelectDes>
+    <FullPerformanceDes>The sensor LED is highlighted and sensor is in maximum performance mode</FullPerformanceDes>
+    <Update>Update（Enter）</Update>
+    <SyncUpdateTips>Please ensure that the receiver and the cable mouse are plugged in first, and do not close the program or unplug the device during the upgrade.</SyncUpdateTips>
+    <ReadyUpdate>Click the "Update" button to start the update</ReadyUpdate>
+    <EmptyDongle>Make sure the receiver is plugged in</EmptyDongle>
+    <MultiDongle>Multiple receivers have been found. Reserve the receivers that need to be update</MultiDongle>
+    <EmptyMouse>Make sure the mouse is in wired mode</EmptyMouse>
+    <MultiMouse>Multiple mouse have been found. Reserve the mouse that need to be update</MultiMouse>
+  </Dialog>
+  <KeyFunction>
+    <name type="01" value="0001" pull="00">Left Button</name>
+    <name type="01" value="0002" pull="00">Right Button</name>
+    <name type="01" value="0004" pull="00">Middle Button</name>
+    <name type="01" value="0008" pull="00">Back</name>
+    <name type="01" value="0010" pull="00">Forward</name>
+    <name type="07" value="0000" pull="00">Polling Rate Switch</name>
+    <name type="04" value="0000" pull="00">Fire key</name>
+    <name type="05" value="0000" pull="00">Combo Key</name>
+    <name type="00" value="0000" pull="00">Disabled</name>
+    <name type="0B" value="0000" pull="01">Scroll Up/Down</name>
+    <name type="03" value="0000" pull="01">Scroll Left/Right</name>
+    <name type="02" value="0000" pull="01">DPI Switch</name>
+    <name type="05" value="0000" pull="01">Media Key</name>
+    <name type="0A" value="0000" pull="01">DPI Lock</name>
+    <name type="06" value="0000" pull="01">Macro</name>
+  </KeyFunction>
+  <SubKeyFunction>
+    <name type="02" value="0001">DPI Loop</name>
+    <name type="02" value="0002">DPI+</name>
+    <name type="02" value="0003">DPI-</name>
+    <name type="03" value="0001">Scroll Left</name>
+    <name type="03" value="0002">Scroll Right</name>
+    <name type="0B" value="0001">Scroll Up</name>
+    <name type="0B" value="0002">Scroll Down</name>
+    <name type="05" value="0183">Media Player</name>
+    <name type="05" value="00CD">Play/Pause</name>
+    <name type="05" value="00B5">Next</name>
+    <name type="05" value="00B6">Previous</name>
+    <name type="05" value="00B7">Stop</name>
+    <name type="05" value="00E2">Mute</name>
+    <name type="05" value="00E9">Volume Up</name>
+    <name type="05" value="00EA">Volume Down</name>
+    <name type="05" value="018A">Email</name>
+    <name type="05" value="0192">Calculator</name>
+    <name type="05" value="0194">My Computer</name>
+    <name type="05" value="0223">Home Page</name>
+    <name type="05" value="0221">Search</name>
+    <name type="05" value="0225">Web Forward</name>
+    <name type="05" value="0224">Web Back</name>
+    <name type="05" value="0226">Stop</name>
+    <name type="05" value="0227">Refresh</name>
+    <name type="05" value="022A">Favorites</name>
+    <name type="08" value="0000">All Lights On/Off</name>
+    <name type="08" value="0003">Light Strip On/Off</name>
+    <name type="08" value="0004">Loop switch light effects</name>
+    <name type="0A" value="0001">100</name>
+    <name type="0A" value="0003">200</name>
+    <name type="0A" value="0005">300</name>
+    <name type="0A" value="0007">400</name>
+    <name type="0A" value="0009">500</name>
+    <name type="0A" value="000B">600</name>
+    <name type="0A" value="000D">700</name>
+    <name type="0A" value="000F">800</name>
+    <name type="0A" value="0011">900</name>
+    <name type="0A" value="0013">1000</name>
+    <name type="0A" value="0015">1100</name>
+    <name type="0A" value="0017">1200</name>
+  </SubKeyFunction>
+  <DebounceTime>
+    <name value="0000">0ms</name>
+    <name value="0001">1ms</name>
+    <name value="0002">2ms</name>
+    <name value="0003">3ms</name>
+    <name value="0004">4ms</name>
+    <name value="0005">5ms</name>
+    <name value="0006">6ms</name>
+    <name value="0007">7ms</name>
+    <name value="0008">8ms</name>
+    <name value="0009">9ms</name>
+    <name value="000A">10ms</name>
+    <name value="000B">11ms</name>
+    <name value="000C">12ms</name>
+    <name value="000D">13ms</name>
+    <name value="000E">14ms</name>
+    <name value="000F">15ms</name>
+    <name value="0010">16ms</name>
+    <name value="0011">17ms</name>
+    <name value="0012">18ms</name>
+    <name value="0013">19ms</name>
+    <name value="0014">20ms</name>
+  </DebounceTime>
+</English>
