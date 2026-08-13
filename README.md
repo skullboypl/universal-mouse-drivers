@@ -31,9 +31,12 @@ Optional **Windows battery tray** (.exe) when you want battery % without keeping
 
 | Mouse | SEO page | Status |
 |-------|----------|--------|
-| **Redragon King Ultra** (M916OB-ULT) | [PL](https://mouse.vxh.pl/pl/mice/redragon-king-ultra) · [EN](https://mouse.vxh.pl/en/mice/redragon-king-ultra) | Beta |
-| **G-Wolves Fenrir Max 8K** | [PL](https://mouse.vxh.pl/pl/mice/gwolves-fenrir-max) · [EN](https://mouse.vxh.pl/en/mice/gwolves-fenrir-max) | Beta |
-| **Logitech PRO X SUPERLIGHT** (gen1) | [PL](https://mouse.vxh.pl/pl/mice/logitech-pro-x-superlight) · [EN](https://mouse.vxh.pl/en/mice/logitech-pro-x-superlight) | Beta |
+| **Redragon King Ultra** (M916OB-ULT) | [PL](https://mouse.vxh.pl/pl/mice/redragon-king-ultra) · [EN](https://mouse.vxh.pl/en/mice/redragon-king-ultra) | **Live** |
+| **Rampage Blitz Ultimate** | [PL](https://mouse.vxh.pl/pl/mice/rampage-blitz-ultimate) · [EN](https://mouse.vxh.pl/en/mice/rampage-blitz-ultimate) | **Live** |
+| **G-Wolves Fenrir Max 8K** | [PL](https://mouse.vxh.pl/pl/mice/gwolves-fenrir-max) · [EN](https://mouse.vxh.pl/en/mice/gwolves-fenrir-max) | WIP |
+| **Logitech PRO X SUPERLIGHT** (gen1) | [PL](https://mouse.vxh.pl/pl/mice/logitech-pro-x-superlight) · [EN](https://mouse.vxh.pl/en/mice/logitech-pro-x-superlight) | WIP |
+
+**Live** = full WebHID configurator + battery tray on hardware. **WIP** = in progress / partial support.
 
 Want your mouse on the list? Open a **[Device request](https://github.com/skullboypl/universal-mouse-drivers/issues/new?template=device_request.yml)** issue.
 
@@ -48,7 +51,7 @@ Light, EV-signed helper for **system-tray battery** + optional always-on-top **d
 | **Download** | [UmdBatteryTray.exe](https://mouse.vxh.pl/api/downloads/UmdBatteryTray.exe) |
 | **Docs (EN)** | [mouse.vxh.pl/en/tray](https://mouse.vxh.pl/en/tray) |
 | **Docs (PL)** | [mouse.vxh.pl/pl/tray](https://mouse.vxh.pl/pl/tray) |
-| **Mice** | King Ultra · Fenrir Max · PRO X SUPERLIGHT (gen1 / `046D:C547`) |
+| **Mice** | King Ultra · Blitz Ultimate · Fenrir Max · PRO X SUPERLIGHT (gen1 / `046D:C547`) |
 
 **Features:** tray icon (battery / percent / both) · desktop widget · mouse picker · poll interval · Start with Windows · auto-update check on start · works with Settings on mouse.vxh.pl when the tray runs on the same PC.
 
