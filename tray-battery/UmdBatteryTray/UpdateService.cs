@@ -34,26 +34,35 @@ internal sealed class UpdateService
         if (!_settings.AutoUpdateOnStart)
             return;
 
-        var baseUrl = (_settings.UpdateBaseUrl ?? AppConstants.DefaultUpdateBaseUrl).TrimEnd('/');
-        // Old installs may still point at umd.skullmedia.pl in settings.json
-        if (baseUrl.Contains("umd.skullmedia.pl", StringComparison.OrdinalIgnoreCase))
-            baseUrl = AppConstants.DefaultUpdateBaseUrl;
-
         using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(45) };
         http.DefaultRequestHeaders.UserAgent.ParseAdd($"UmdBatteryTray/{CurrentVersion}");
 
-        LatestManifest? manifest;
-        try
+        LatestManifest? manifest = null;
+        foreach (var baseUrl in CandidateBaseUrls(_settings.UpdateBaseUrl))
         {
-            var json = await http.GetStringAsync($"{baseUrl}/api/tray/latest", ct);
-            manifest = JsonSerializer.Deserialize<LatestManifest>(json, new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true,
-            });
-        }
-        catch
-        {
-            return;
+                var json = await http.GetStringAsync($"{baseUrl}/api/tray/latest", ct);
+                manifest = JsonSerializer.Deserialize<LatestManifest>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                });
+                if (manifest?.Version is not null && !string.IsNullOrWhiteSpace(manifest.Url))
+                {
+                    // Persist canonical host so next launch skips legacy domains.
+                    if (!string.Equals(_settings.UpdateBaseUrl, AppConstants.DefaultUpdateBaseUrl, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _settings.UpdateBaseUrl = AppConstants.DefaultUpdateBaseUrl;
+                        try { _settings.Save(); } catch { /* ignore */ }
+                    }
+                    break;
+                }
+            }
+            catch
+            {
+                /* try next base URL */
+            }
+            manifest = null;
         }
 
         if (manifest?.Version is null || string.IsNullOrWhiteSpace(manifest.Url))
@@ -115,6 +124,42 @@ internal sealed class UpdateService
             CreateNoWindow = true,
         });
         Application.Exit();
+    }
+
+    /// <summary>
+    /// Prefer configured URL, then canonical umdrivers.com.
+    /// Remaps known legacy hosts so we never depend on CapRover HTTP redirects
+    /// (HttpClient refuses HTTPS→HTTP downgrade 302s).
+    /// </summary>
+    internal static IEnumerable<string> CandidateBaseUrls(string? configured)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var raw in new[]
+                 {
+                     configured,
+                     AppConstants.DefaultUpdateBaseUrl,
+                     "https://umdrivers.com",
+                 })
+        {
+            var n = NormalizeUpdateBase(raw);
+            if (n is null || !seen.Add(n))
+                continue;
+            yield return n;
+        }
+    }
+
+    internal static string? NormalizeUpdateBase(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return null;
+        var s = raw.Trim().TrimEnd('/');
+        if (s.Contains("umd.skullmedia.pl", StringComparison.OrdinalIgnoreCase)
+            || s.Contains("umd.example.com", StringComparison.OrdinalIgnoreCase)
+            || s.Contains("mouse.vxh.pl", StringComparison.OrdinalIgnoreCase))
+            return AppConstants.DefaultUpdateBaseUrl;
+        if (s.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
+            s = "https://" + s["http://".Length..];
+        return s.TrimEnd('/');
     }
 
     private static bool IsNewer(string remote, string local)

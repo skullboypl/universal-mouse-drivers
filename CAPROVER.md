@@ -68,9 +68,47 @@ docker cp UmdBatteryTray.exe <container>:/app/data/downloads/UmdBatteryTray.exe
 
 ## SEO / i18n
 
-- `/` → redirect `/pl` lub `/en` (cookie → CF country → IP → Accept-Language)
-- Strony: `/pl/...`, `/en/...`
-- Stopka: przełącznik PL | EN
+- `/` → redirect `/{locale}` (cookie → CF country → IP → Accept-Language)
+- Locales: `/pl` `/en` `/de` `/fr` `/es` `/pt` `/it` `/zh` `/ja` `/ko` `/ru`
+- Canonical: `NEXT_PUBLIC_SITE_URL=https://umdrivers.com`
+
+## Legacy domain `mouse.vxh.pl` (old tray auto-update)
+
+Old UmdBatteryTray builds hardcode / save `https://mouse.vxh.pl` and **cannot** be patched in the field. They must keep reaching this Next app.
+
+### CapRover (required)
+
+1. **Remove** any separate “redirect app” that sends `mouse.vxh.pl` → `http://umdrivers.com` (HTTPS→HTTP 302 breaks .NET `HttpClient`).
+2. On the **same UMD app** as umdrivers.com: **HTTP Settings** → **Add Domain** → `mouse.vxh.pl` (+ Enable HTTPS / Let’s Encrypt).
+3. Deploy this repo so middleware is live.
+
+Then:
+
+| Request | Behavior |
+|---------|----------|
+| `https://mouse.vxh.pl/api/tray/latest` | **200 JSON** (legacy tray) |
+| `https://mouse.vxh.pl/api/downloads/UmdBatteryTray.exe` | **200 file** |
+| `https://mouse.vxh.pl/…` (pages) | **301** → `https://umdrivers.com/…` (SEO) |
+
+Manifest `url` always points at **`https://umdrivers.com/api/downloads/...`** (canonical).
+
+Verify:
+
+```bash
+curl -sS https://mouse.vxh.pl/api/tray/latest
+curl -sSIL https://mouse.vxh.pl/pl | head
+# API → 200 JSON; HTML → 301 to umdrivers.com
+```
+
+### Alternative (worse)
+
+Nginx-only redirect app with **HTTPS + path**:
+
+```nginx
+return 301 https://umdrivers.com$request_uri;
+```
+
+Never `http://umdrivers.com`.
 
 ## Git deploy key (opcjonalnie)
 

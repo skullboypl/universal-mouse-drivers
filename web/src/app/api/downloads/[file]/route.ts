@@ -51,6 +51,7 @@ export async function GET(
       'Content-Disposition': `attachment; filename="${file}"`,
       'Content-Length': String(buf.length),
       'Cache-Control': 'public, max-age=300',
+      'Access-Control-Allow-Origin': '*',
     },
   })
 }

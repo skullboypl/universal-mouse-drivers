@@ -38,9 +38,9 @@
       "id": "trayBattery",
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
-      "version": "1.7.0",
+      "version": "1.7.1",
       "signed": true,
-      "notes": "EV-signed; multi-language UI; umdrivers.com updates; shipped in image bundled-downloads/ (override via /app/data/downloads/)"
+      "notes": "EV-signed; update URL fallback to umdrivers.com; multi-language UI; shipped in bundled-downloads/"
     }
   }
 }

@@ -5,6 +5,33 @@ export function getSiteUrl(): string {
   return raw.replace(/\/$/, '')
 }
 
+/** Hostnames that old tray builds / bookmarks still use. */
+export const LEGACY_HOSTS = [
+  'mouse.vxh.pl',
+  'www.mouse.vxh.pl',
+  'umd.skullmedia.pl',
+  'www.umd.skullmedia.pl',
+] as const
+
+export function hostnameOf(hostHeader: string | null | undefined): string {
+  if (!hostHeader) return ''
+  return hostHeader.split(':')[0]?.trim().toLowerCase() ?? ''
+}
+
+export function isLegacyHost(hostHeader: string | null | undefined): boolean {
+  const host = hostnameOf(hostHeader)
+  return (LEGACY_HOSTS as readonly string[]).includes(host)
+}
+
+/**
+ * Absolute URL for tray auto-update downloads.
+ * Always canonical HTTPS site — never inherit a legacy Host — so old
+ * HttpClient clients never get http:// or a dying hostname in `url`.
+ */
+export function getTrayDownloadBaseUrl(): string {
+  return getSiteUrl()
+}
+
 export const SITE = {
   shortName: 'UMD',
   name: 'Universal Mouse Drivers',
