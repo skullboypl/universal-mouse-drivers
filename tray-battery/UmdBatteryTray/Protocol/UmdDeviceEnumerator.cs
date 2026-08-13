@@ -1,91 +1,91 @@
 using HidSharp;
+using UmdBatteryTray.Protocol.Mice.Gwolves.FenrirMax;
+using UmdBatteryTray.Protocol.Mice.Logitech.ProXSuperlight;
+using UmdBatteryTray.Protocol.Mice.Rampage.BlitzUltimate;
+using UmdBatteryTray.Protocol.Mice.Redragon.KingUltra;
 
 namespace UmdBatteryTray.Protocol;
 
 internal static class UmdDeviceEnumerator
 {
     /// <summary>
-    /// Lists unique VID:PID pairs currently attached for King Ultra, Fenrir Max, Superlight.
+    /// Lists unique VID:PID pairs currently attached for each SKU tree.
     /// Does not open streams (safe while Chrome WebHID holds a handle).
     /// </summary>
     public static IReadOnlyList<UmdDeviceInfo> ListAvailable()
     {
         var byKey = new Dictionary<string, UmdDeviceInfo>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var pid in KingUltraConstants.ProductIds)
-        {
-            foreach (var d in DeviceList.Local.GetHidDevices(KingUltraConstants.VendorId, pid))
-            {
-                var key = $"{d.VendorID:X4}:{d.ProductID:X4}";
-                if (byKey.ContainsKey(key))
-                    continue;
-                string name;
-                try { name = d.GetProductName() ?? "King Ultra"; }
-                catch { name = "King Ultra"; }
-                byKey[key] = new UmdDeviceInfo(
-                    UmdDeviceKind.KingUltra,
-                    d.VendorID,
-                    d.ProductID,
-                    name);
-            }
-        }
+        AddSku(
+            byKey,
+            KingUltraConstants.VendorId,
+            KingUltraConstants.ProductIds,
+            UmdDeviceKind.KingUltra,
+            KingUltraConstants.DefaultLabel);
 
-        foreach (var pid in GwolvesConstants.ProductIds)
-        {
-            foreach (var d in DeviceList.Local.GetHidDevices(GwolvesConstants.VendorId, pid))
-            {
-                var key = $"{d.VendorID:X4}:{d.ProductID:X4}";
-                if (byKey.ContainsKey(key))
-                    continue;
-                string name;
-                try { name = d.GetProductName() ?? "Fenrir Max"; }
-                catch { name = "Fenrir Max"; }
-                byKey[key] = new UmdDeviceInfo(
-                    UmdDeviceKind.FenrirMax,
-                    d.VendorID,
-                    d.ProductID,
-                    name);
-            }
-        }
+        AddSku(
+            byKey,
+            BlitzUltimateConstants.VendorId,
+            BlitzUltimateConstants.ProductIds,
+            UmdDeviceKind.BlitzUltimate,
+            BlitzUltimateConstants.DefaultLabel);
 
-        foreach (var pid in SuperlightConstants.ProductIds)
-        {
-            foreach (var d in DeviceList.Local.GetHidDevices(SuperlightConstants.VendorId, pid))
-            {
-                var key = $"{d.VendorID:X4}:{d.ProductID:X4}";
-                if (byKey.ContainsKey(key))
-                    continue;
-                string name;
-                try { name = d.GetProductName() ?? "PRO X SUPERLIGHT"; }
-                catch { name = "PRO X SUPERLIGHT"; }
-                byKey[key] = new UmdDeviceInfo(
-                    UmdDeviceKind.Superlight,
-                    d.VendorID,
-                    d.ProductID,
-                    name);
-            }
-        }
+        AddSku(
+            byKey,
+            GwolvesConstants.VendorId,
+            GwolvesConstants.ProductIds,
+            UmdDeviceKind.FenrirMax,
+            "Fenrir Max");
 
-        // King Ultra first (historical default), then Fenrir, then Superlight; prefer wireless PIDs.
+        AddSku(
+            byKey,
+            SuperlightConstants.VendorId,
+            SuperlightConstants.ProductIds,
+            UmdDeviceKind.Superlight,
+            "PRO X SUPERLIGHT");
+
         return byKey.Values
             .OrderBy(d => d.Kind switch
             {
                 UmdDeviceKind.KingUltra => 0,
-                UmdDeviceKind.FenrirMax => 1,
-                _ => 2,
+                UmdDeviceKind.BlitzUltimate => 1,
+                UmdDeviceKind.FenrirMax => 2,
+                _ => 3,
             })
             .ThenByDescending(d => IsWirelessPid(d) ? 1 : 0)
             .ThenBy(d => d.ProductId)
             .ToList();
     }
 
+    private static void AddSku(
+        Dictionary<string, UmdDeviceInfo> byKey,
+        int vendorId,
+        IReadOnlyList<int> productIds,
+        UmdDeviceKind kind,
+        string fallbackName)
+    {
+        foreach (var pid in productIds)
+        {
+            foreach (var d in DeviceList.Local.GetHidDevices(vendorId, pid))
+            {
+                var key = $"{d.VendorID:X4}:{d.ProductID:X4}";
+                if (byKey.ContainsKey(key))
+                    continue;
+                string name;
+                try { name = d.GetProductName() ?? fallbackName; }
+                catch { name = fallbackName; }
+                byKey[key] = new UmdDeviceInfo(kind, d.VendorID, d.ProductID, name);
+            }
+        }
+    }
+
     private static bool IsWirelessPid(UmdDeviceInfo d) =>
         d.Kind switch
         {
-            UmdDeviceKind.KingUltra => d.ProductId is KingUltraConstants.PidDongle8K
-                or KingUltraConstants.PidDongleAlt,
+            UmdDeviceKind.KingUltra => KingUltraConstants.IsWirelessDongle(d.ProductId),
+            UmdDeviceKind.BlitzUltimate => BlitzUltimateConstants.IsWirelessDongle(d.ProductId),
             UmdDeviceKind.FenrirMax => d.ProductId == GwolvesConstants.FenrirMaxWirelessPid,
-            UmdDeviceKind.Superlight => true, // C547 is always the LIGHTSPEED receiver
+            UmdDeviceKind.Superlight => true,
             _ => false,
         };
 

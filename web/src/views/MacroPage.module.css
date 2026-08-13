@@ -1,0 +1,85 @@
+.recordPad {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px dashed var(--border);
+  outline: none;
+  background: var(--bg-elevated);
+}
+
+.recordPadActive {
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.insertPad {
+  margin-top: 8px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px dashed var(--border);
+  outline: none;
+  cursor: pointer;
+  background: transparent;
+  color: var(--fg-muted);
+  font: inherit;
+  text-align: left;
+  width: 100%;
+}
+
+.insertPad:hover {
+  border-color: var(--fg-muted);
+  color: var(--fg);
+}
+
+.insertPadActive {
+  border-style: solid;
+  border-color: var(--accent);
+  color: var(--fg);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.eventList {
+  min-height: 220px;
+  max-height: 360px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  overflow: auto;
+}
+
+.eventRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.eventKind {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  min-width: 3.5rem;
+}
+
+.eventKindDown {
+  color: #7ddea8;
+}
+
+.eventKindUp {
+  color: #ff8a7a;
+}
+
+.eventKindDelay {
+  color: var(--accent-hot);
+}
+
+.warn {
+  margin: 10px 0 0;
+  color: #ff8a7a;
+  font-size: 0.85rem;
+}

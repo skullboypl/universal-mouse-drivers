@@ -9,9 +9,9 @@ import {
   SUPERLIGHT_DPI_MIN,
   SUPERLIGHT_DPI_STEP,
   SUPERLIGHT_REPORT_RATES,
-} from '../../devices/logitech-pro-x-superlight/defaults'
-import { SUPERLIGHT_OEM } from '../../devices/logitech-pro-x-superlight/theme'
-import type { SuperlightDriver } from '../../devices/logitech-pro-x-superlight/driver'
+} from '../../devices/mice/logitech/pro-x-superlight/defaults'
+import { SUPERLIGHT_OEM } from '../../devices/mice/logitech/pro-x-superlight/theme'
+import type { SuperlightDriver } from '../../devices/mice/logitech/pro-x-superlight/driver'
 import { useLocale } from '../../i18n/LocaleContext'
 import type { MessageKey } from '../../i18n/messages'
 import { useT } from '../../i18n/useT'

@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UMD } from '@/brand/umd'
-import { FENRIR_MAX_IDENTITY } from '@/devices/gwolves-fenrir-max/identity'
-import { SUPERLIGHT_IDENTITY } from '@/devices/logitech-pro-x-superlight/identity'
+import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
+import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
 import { useLocale } from '@/i18n/LocaleContext'
 import { LOCALE_LABELS, LOCALES, type Locale } from '@/i18n/locale'
 import { useT } from '@/i18n/useT'
@@ -16,7 +16,6 @@ import styles from './TopNav.module.css'
 const KING_TABS: { path: string; key: MessageKey; disabled?: boolean }[] = [
   { path: '/device/buttons', key: 'nav.buttons' },
   { path: '/device/sensor', key: 'nav.sensor' },
-  { path: '/device/macro', key: 'nav.macro', disabled: true },
   { path: '/device/settings', key: 'nav.settings' },
 ]
 
@@ -35,9 +34,30 @@ function isMarketingPath(pathname: string): boolean {
   return false
 }
 
+function batteryFillWidth(percent: number | null): number {
+  if (percent == null) return 0
+  return Math.max(0, Math.min(100, percent))
+}
+
+function batteryTone(percent: number | null): string {
+  if (percent == null) return styles.batteryUnknown
+  if (percent <= 15) return styles.batteryLow
+  if (percent <= 35) return styles.batteryMid
+  return styles.batteryOk
+}
+
 export function TopNav() {
-  const { connected, state, disconnect, transportKind, saveStatus, driver } =
-    useDeviceSession()
+  const {
+    connected,
+    state,
+    disconnect,
+    transportKind,
+    saveStatus,
+    driver,
+    refreshFromDevice,
+    deviceBusy,
+    busyKind,
+  } = useDeviceSession()
   const { lp, locale, setLocale } = useLocale()
   const tr = useT()
   const pathname = usePathname() || ''
@@ -46,6 +66,7 @@ export function TopNav() {
     driver?.identity.id === FENRIR_MAX_IDENTITY.id ||
     driver?.identity.id === SUPERLIGHT_IDENTITY.id
   const tabs = oemSinglePage ? OEM_TABS : KING_TABS
+  const refreshing = deviceBusy && busyKind === 'refresh'
 
   return (
     <header className={styles.nav}>
@@ -124,20 +145,76 @@ export function TopNav() {
             {saveStatus === 'error' && tr('status.saveError')}
           </span>
         )}
+        {connected && (
+          <button
+            type="button"
+            className={styles.refreshBtn}
+            disabled={deviceBusy}
+            aria-busy={refreshing}
+            title={tr('nav.refreshData')}
+            onClick={() => void refreshFromDevice()}
+          >
+            <svg
+              className={[
+                styles.refreshIcon,
+                refreshing ? styles.refreshSpin : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+            >
+              <path d="M21 12a9 9 0 1 1-2.6-6.3" />
+              <polyline points="21 3 21 9 15 9" />
+            </svg>
+            <span className={styles.refreshLabel}>{tr('nav.refreshData')}</span>
+          </button>
+        )}
         {connected && state && (
           <span
             className={[
-              styles.pill,
-              state.info.charging ? styles.charging : '',
-            ].join(' ')}
+              styles.battery,
+              state.info.charging ? styles.batteryCharging : '',
+              batteryTone(state.info.batteryPercent),
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            title={
+              state.info.batteryPercent != null
+                ? `${state.info.batteryPercent}%${state.info.charging ? ' · charging' : ''}${transportKind ? ` · ${transportKind}` : ''}`
+                : tr('status.battUnknown')
+            }
           >
-            {state.info.batteryPercent != null
-              ? `${state.info.batteryPercent}%`
-              : tr('status.battUnknown')}
-            {state.info.charging ? ' ⚡' : ''}
-            {transportKind ? ` · ${transportKind}` : ''}
+            <span className={styles.batteryIcon} aria-hidden>
+              <span
+                className={styles.batteryFill}
+                style={{
+                  width: `${batteryFillWidth(state.info.batteryPercent)}%`,
+                }}
+              />
+            </span>
+            <span className={styles.batteryPct}>
+              {state.info.batteryPercent != null
+                ? `${state.info.batteryPercent}%`
+                : '—'}
+            </span>
+            {state.info.charging ? (
+              <span className={styles.batteryBolt} aria-hidden>
+                ⚡
+              </span>
+            ) : null}
           </span>
         )}
+        {connected && transportKind ? (
+          <span className={styles.pillMuted}>{transportKind}</span>
+        ) : null}
         {connected && (
           <Button variant="ghost" onClick={() => void disconnect()}>
             {tr('nav.disconnect')}

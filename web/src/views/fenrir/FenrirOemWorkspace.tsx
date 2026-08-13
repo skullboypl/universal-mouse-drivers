@@ -1,23 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ClientRedirect } from '../../components/ClientRedirect'
 import { FieldBusy } from '../../components/FieldBusy'
 import { Toggle } from '../../components/Toggle'
 import type { ButtonAction } from '../../devices/types'
+import { FENRIR_MAX_ART } from '../../devices/mice/gwolves/fenrir-max/buttons'
 import {
   FENRIR_DPI_MAX,
   FENRIR_DPI_MAX_STAGES,
   FENRIR_DPI_MIN,
   FENRIR_DPI_STEP,
   FENRIR_REPORT_RATES,
-} from '../../devices/gwolves-fenrir-max/defaults'
+} from '../../devices/mice/gwolves/fenrir-max/defaults'
 import {
   FENRIR_CLICK_DEBOUNCE_LEVELS,
   FENRIR_CLICK_DEBOUNCE_MAX,
   FENRIR_WHEEL_DEBOUNCE_MAX,
   FENRIR_WHEEL_DEBOUNCE_PRESETS,
   fenrirClickQuadFromLevel,
-} from '../../devices/gwolves-fenrir-max/debounce'
-import { FENRIR_OEM, fenrirDpiColor } from '../../devices/gwolves-fenrir-max/theme'
+} from '../../devices/mice/gwolves/fenrir-max/debounce'
+import { FENRIR_OEM, fenrirDpiColor } from '../../devices/mice/gwolves/fenrir-max/theme'
 import {
   clampFenrirSleepSec,
   FENRIR_SLEEP_MAX_SEC,
@@ -25,7 +26,7 @@ import {
   FENRIR_SLEEP_STEP_SEC,
   formatFenrirSleep,
   resolveFenrirSleepSec,
-} from '../../devices/gwolves-fenrir-max/sleep'
+} from '../../devices/mice/gwolves/fenrir-max/sleep'
 import { useLocale } from '../../i18n/LocaleContext'
 import type { MessageKey } from '../../i18n/messages'
 import { useT } from '../../i18n/useT'
@@ -50,6 +51,8 @@ const LOD_OPTS = [
   { mm: 2 as const, label: 'High' },
 ]
 
+type BadgePos = { id: number; uiX: number; uiY: number }
+
 /**
  * Single-page OEM DriverCore layout (mouse.xyz Fenir):
  * Key Set | Device + Competitive | Para Set
@@ -62,10 +65,31 @@ export function FenrirOemWorkspace() {
   const tr = useT()
   const { touch, busy } = useFieldLoading()
   const [focusId, setFocusId] = useState<number | null>(1)
+  const [layout, setLayout] = useState<BadgePos[] | null>(null)
   /** OEM click level slider: preview while dragging, commit on pointerup. */
   const [clickLevelDrag, setClickLevelDrag] = useState<number | null>(null)
   /** OEM wheel level slider: same drag/commit pattern. */
   const [wheelLevelDrag, setWheelLevelDrag] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (!connected || !driver) return
+    let cancelled = false
+    void fetch('/api/buttons?layoutId=fenrir-max')
+      .then((r) => r.json())
+      .then((data: { positions?: BadgePos[] }) => {
+        if (!cancelled && Array.isArray(data.positions)) setLayout(data.positions)
+      })
+      .catch(() => undefined)
+    return () => {
+      cancelled = true
+    }
+  }, [connected, driver])
+
+  const posById = useMemo(() => {
+    const m = new Map<number, BadgePos>()
+    for (const p of layout ?? []) m.set(p.id, p)
+    return m
+  }, [layout])
 
   if (!connected || !state || !driver) {
     return <ClientRedirect href={lp('/')} />
@@ -242,13 +266,43 @@ export function FenrirOemWorkspace() {
                 : ''}
             </span>
           </div>
-          <img
-            className={css.deviceImg}
-            src={FENRIR_OEM.assets.device}
-            alt={driver.identity.model}
-            width={FENRIR_OEM.deviceDisplayWidth}
-            draggable={false}
-          />
+          <div
+            className={css.deviceWrap}
+            style={{
+              aspectRatio: `${FENRIR_MAX_ART.width} / ${FENRIR_MAX_ART.height}`,
+            }}
+          >
+            <img
+              className={css.deviceImg}
+              src={FENRIR_OEM.assets.device}
+              alt={driver.identity.model}
+              width={FENRIR_MAX_ART.width}
+              height={FENRIR_MAX_ART.height}
+              draggable={false}
+            />
+            {state.buttons.map((b) => {
+              const pos = posById.get(b.id)
+              const uiX = pos?.uiX ?? b.uiX
+              const uiY = pos?.uiY ?? b.uiY
+              return (
+                <button
+                  key={b.id}
+                  type="button"
+                  className={`${css.badge} ${
+                    focusId === b.id ? css.badgeActive : ''
+                  }`}
+                  style={{
+                    left: `${(uiX / FENRIR_MAX_ART.width) * 100}%`,
+                    top: `${(uiY / FENRIR_MAX_ART.height) * 100}%`,
+                  }}
+                  title={`${b.id}. ${b.label}`}
+                  onClick={() => setFocusId(b.id)}
+                >
+                  {b.id}
+                </button>
+              )
+            })}
+          </div>
           <p className={css.deviceName}>
             {driver.identity.brand} {driver.identity.model}
           </p>

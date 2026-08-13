@@ -1,12 +1,18 @@
+using UmdBatteryTray.Protocol.Mice.Gwolves.FenrirMax;
+using UmdBatteryTray.Protocol.Mice.Logitech.ProXSuperlight;
+using UmdBatteryTray.Protocol.Mice.Rampage.BlitzUltimate;
+using UmdBatteryTray.Protocol.Mice.Redragon.KingUltra;
+
 namespace UmdBatteryTray.Protocol;
 
 /// <summary>
-/// Multi-device battery facade: connects to the preferred VID:PID when set,
-/// otherwise first available (King Ultra wireless first, then Fenrir, then Superlight).
+/// Multi-device battery facade: preferred VID:PID, else first available
+/// (King → Blitz → Fenrir → Superlight; wireless preferred within SKU).
 /// </summary>
 internal sealed class UmdBatteryReader : IDisposable
 {
     private KingUltraBatteryReader? _king;
+    private BlitzUltimateBatteryReader? _blitz;
     private GwolvesBatteryReader? _fenrir;
     private SuperlightBatteryReader? _superlight;
     private UmdDeviceInfo? _active;
@@ -14,6 +20,7 @@ internal sealed class UmdBatteryReader : IDisposable
     public bool IsConnected => _active?.Kind switch
     {
         UmdDeviceKind.KingUltra => _king?.IsConnected == true,
+        UmdDeviceKind.BlitzUltimate => _blitz?.IsConnected == true,
         UmdDeviceKind.FenrirMax => _fenrir?.IsConnected == true,
         UmdDeviceKind.Superlight => _superlight?.IsConnected == true,
         _ => false,
@@ -22,6 +29,7 @@ internal sealed class UmdBatteryReader : IDisposable
     public string? DeviceLabel => _active?.Kind switch
     {
         UmdDeviceKind.KingUltra => _king?.DeviceLabel,
+        UmdDeviceKind.BlitzUltimate => _blitz?.DeviceLabel,
         UmdDeviceKind.FenrirMax => _fenrir?.DeviceLabel,
         UmdDeviceKind.Superlight => _superlight?.DeviceLabel,
         _ => null,
@@ -51,8 +59,8 @@ internal sealed class UmdBatteryReader : IDisposable
         var available = ListAvailable();
         var target = UmdDeviceEnumerator.ResolvePreferred(available, PreferredDeviceKey)
             ?? throw new InvalidOperationException(
-                "No UMD mouse found (King Ultra 3554:F54D/F54F/F510, Fenrir Max 33E4:3717/3708, " +
-                "or Superlight 046D:C547). Close Chrome WebHID / G HUB / OMM / OEM apps.");
+                "No UMD mouse found (King Ultra 3554:F54D/F54F/F510, Blitz Ultimate 3554:F562/F563, " +
+                "Fenrir Max 33E4:3717/3708, or Superlight 046D:C547). Close Chrome WebHID / G HUB / OMM / OEM apps.");
 
         try
         {
@@ -60,7 +68,6 @@ internal sealed class UmdBatteryReader : IDisposable
         }
         catch (Exception firstErr)
         {
-            // Preferred plugged but exclusive-open failed — try other available mice.
             Exception? last = firstErr;
             foreach (var alt in available.Where(d => d.Key != target.Key))
             {
@@ -92,6 +99,11 @@ internal sealed class UmdBatteryReader : IDisposable
                 _king.Connect(target.ProductId);
                 _active = target;
                 break;
+            case UmdDeviceKind.BlitzUltimate:
+                _blitz = new BlitzUltimateBatteryReader();
+                _blitz.Connect(target.ProductId);
+                _active = target;
+                break;
             case UmdDeviceKind.FenrirMax:
                 _fenrir = new GwolvesBatteryReader();
                 _fenrir.Connect(target.ProductId);
@@ -112,6 +124,7 @@ internal sealed class UmdBatteryReader : IDisposable
         return _active?.Kind switch
         {
             UmdDeviceKind.KingUltra when _king is not null => _king.ReadBattery(),
+            UmdDeviceKind.BlitzUltimate when _blitz is not null => _blitz.ReadBattery(),
             UmdDeviceKind.FenrirMax when _fenrir is not null => _fenrir.ReadBattery(),
             UmdDeviceKind.Superlight when _superlight is not null => _superlight.ReadBattery(),
             _ => throw new InvalidOperationException("Device not connected."),
@@ -122,6 +135,8 @@ internal sealed class UmdBatteryReader : IDisposable
     {
         _king?.Dispose();
         _king = null;
+        _blitz?.Dispose();
+        _blitz = null;
         _fenrir?.Dispose();
         _fenrir = null;
         _superlight?.Dispose();

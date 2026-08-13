@@ -1,6 +1,6 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { ClientRedirect } from '../components/ClientRedirect'
 import { useLocale } from '../i18n/LocaleContext'
 import { Select } from '../components/Select'
@@ -13,16 +13,25 @@ import {
   SUPERLIGHT_DPI_STEP,
   SUPERLIGHT_REPORT_RATES,
   superlightDpiColor,
-} from '../devices/logitech-pro-x-superlight/defaults'
-import { SUPERLIGHT_IDENTITY } from '../devices/logitech-pro-x-superlight/identity'
+} from '../devices/mice/logitech/pro-x-superlight/defaults'
+import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/identity'
 import {
-  DPI_MAX,
-  DPI_MAX_STAGES,
-  DPI_MIN,
-  DPI_STEP,
-  REPORT_RATES,
-  dpiStageColor,
-} from '../devices/redragon-king-ultra/defaults'
+  DPI_MAX as BLITZ_DPI_MAX,
+  DPI_MAX_STAGES as BLITZ_DPI_MAX_STAGES,
+  DPI_MIN as BLITZ_DPI_MIN,
+  DPI_STEP as BLITZ_DPI_STEP,
+  REPORT_RATES as BLITZ_REPORT_RATES,
+  dpiStageColor as blitzDpiStageColor,
+} from '../devices/mice/rampage/blitz-ultimate/defaults'
+import { BLITZ_ULTIMATE_IDENTITY } from '../devices/mice/rampage/blitz-ultimate/identity'
+import {
+  DPI_MAX as KING_DPI_MAX,
+  DPI_MAX_STAGES as KING_DPI_MAX_STAGES,
+  DPI_MIN as KING_DPI_MIN,
+  DPI_STEP as KING_DPI_STEP,
+  REPORT_RATES as KING_REPORT_RATES,
+  dpiStageColor as kingDpiStageColor,
+} from '../devices/mice/redragon/king-ultra/defaults'
 import type { MessageKey } from '../i18n/messages'
 import { useT } from '../i18n/useT'
 import { useDeviceSession } from '../session/DeviceSessionContext'
@@ -31,8 +40,10 @@ function Tip({ text }: { text: string }) {
   return <p className={styles.fieldTip}>{text}</p>
 }
 
-function stageSwatch(index: number, superlight: boolean): string {
-  return superlight ? superlightDpiColor(index) : dpiStageColor(index)
+function stageSwatch(index: number, mode: 'superlight' | 'blitz' | 'king'): string {
+  if (mode === 'superlight') return superlightDpiColor(index)
+  if (mode === 'blitz') return blitzDpiStageColor(index)
+  return kingDpiStageColor(index)
 }
 
 function Field({
@@ -54,19 +65,72 @@ function Field({
 }
 
 export function SensorPage() {
-  const { connected, state, apply, driver } = useDeviceSession()
+  const { connected, state, apply, driver, syncFromDriver, deviceBusy } =
+    useDeviceSession()
   const { lp } = useLocale()
   const tr = useT()
+
+  // DPI Loop / Polling Rate Switch on the mouse update flash — poll while this page is open.
+  useEffect(() => {
+    if (!connected || !driver?.refreshLiveSensorFromDevice) return
+    let cancelled = false
+    let inFlight = false
+
+    const tick = async () => {
+      if (cancelled || inFlight || deviceBusy) return
+      inFlight = true
+      try {
+        const changed = await driver.refreshLiveSensorFromDevice?.()
+        if (changed && !cancelled) syncFromDriver()
+      } catch {
+        /* ignore transient HID errors while polling */
+      } finally {
+        inFlight = false
+      }
+    }
+
+    void tick()
+    const id = window.setInterval(() => void tick(), 900)
+    return () => {
+      cancelled = true
+      window.clearInterval(id)
+    }
+  }, [connected, driver, deviceBusy, syncFromDriver])
+
   if (!connected || !state) return <ClientRedirect href={lp('/')} />
 
   const isSuperlight = driver?.identity.id === SUPERLIGHT_IDENTITY.id
-  const dpiMin = isSuperlight ? SUPERLIGHT_DPI_MIN : DPI_MIN
-  const dpiMax = isSuperlight ? SUPERLIGHT_DPI_MAX : DPI_MAX
-  const dpiStep = isSuperlight ? SUPERLIGHT_DPI_STEP : DPI_STEP
-  const dpiMaxStages = isSuperlight ? SUPERLIGHT_DPI_MAX_STAGES : DPI_MAX_STAGES
+  const isBlitz = driver?.identity.id === BLITZ_ULTIMATE_IDENTITY.id
+  const swatchMode: 'superlight' | 'blitz' | 'king' = isSuperlight
+    ? 'superlight'
+    : isBlitz
+      ? 'blitz'
+      : 'king'
+  const dpiMin = isSuperlight
+    ? SUPERLIGHT_DPI_MIN
+    : isBlitz
+      ? BLITZ_DPI_MIN
+      : KING_DPI_MIN
+  const dpiMax = isSuperlight
+    ? SUPERLIGHT_DPI_MAX
+    : isBlitz
+      ? BLITZ_DPI_MAX
+      : KING_DPI_MAX
+  const dpiStep = isSuperlight
+    ? SUPERLIGHT_DPI_STEP
+    : isBlitz
+      ? BLITZ_DPI_STEP
+      : KING_DPI_STEP
+  const dpiMaxStages = isSuperlight
+    ? SUPERLIGHT_DPI_MAX_STAGES
+    : isBlitz
+      ? BLITZ_DPI_MAX_STAGES
+      : KING_DPI_MAX_STAGES
   const reportRates = isSuperlight
     ? [...SUPERLIGHT_REPORT_RATES]
-    : [...REPORT_RATES]
+    : isBlitz
+      ? [...BLITZ_REPORT_RATES]
+      : [...KING_REPORT_RATES]
 
   const stage = state.sensor.dpiStages[state.sensor.activeDpiIndex]
   const cordedModeOk =
@@ -163,7 +227,7 @@ export function SensorPage() {
                 background:
                   s.index === state.sensor.activeDpiIndex
                     ? 'var(--accent)'
-                    : stageSwatch(s.index, isSuperlight),
+                    : stageSwatch(s.index, swatchMode),
                 boxShadow:
                   s.index === state.sensor.activeDpiIndex
                     ? '0 0 0 1px rgba(10, 12, 16, 0.35)'

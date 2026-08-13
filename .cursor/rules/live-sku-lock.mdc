@@ -1,0 +1,33 @@
+---
+description: Live SKU lock — do not touch King Ultra or Blitz Ultimate protocol/addresses/HID
+globs: web/src/devices/mice/redragon/king-ultra/**,web/src/devices/mice/rampage/blitz-ultimate/**,tray-battery/UmdBatteryTray/Protocol/Mice/Redragon/KingUltra/**,tray-battery/UmdBatteryTray/Protocol/Mice/Rampage/BlitzUltimate/**
+alwaysApply: true
+---
+
+# Live device LOCK
+
+Before editing any device under `web/src/devices/` or tray `Protocol/Mice/`, read `web/src/devices/LOCK.md`.
+
+**Currently LOCKED (live):**
+
+1. **`redragon-king-ultra`**
+   - Web: `web/src/devices/mice/redragon/king-ultra/`
+   - Tray: `tray-battery/UmdBatteryTray/Protocol/Mice/Redragon/KingUltra/`
+
+2. **`rampage-blitz-ultimate`**
+   - Web: `web/src/devices/mice/rampage/blitz-ultimate/`
+   - Tray: `tray-battery/UmdBatteryTray/Protocol/Mice/Rampage/BlitzUltimate/`
+
+Do **not** change (either locked SKU):
+- flash addresses / protocol encode-decode
+- KeyFun / ShortCut / media usage maps
+- button `flashIndex` or default bindings that affect the wire
+  (King btn6: keep mirrors `0x0C` + `0x05` + `0x0B`)
+- VID/PID, dongle IDs, HID filters
+- tray battery command bytes / report layout
+- driver write paths that alter the above
+
+Do **not** merge King Ultra and Blitz Ultimate protocol folders.
+
+Work on other mice (Fenrir, Superlight) without modifying King or Blitz.
+Unlock only if the user explicitly requests it for that SKU for this task.

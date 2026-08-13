@@ -19,6 +19,7 @@ export type MessageKey =
   | 'nav.tray'
   | 'nav.siteNav'
   | 'nav.deviceNav'
+  | 'nav.refreshData'
   | 'connect.faqTitle'
   | 'connect.learnMore'
   | 'connect.trayEyebrow'
@@ -76,15 +77,63 @@ export type MessageKey =
   | 'buttons.debounceTip'
   | 'buttons.mapHint'
   | 'buttons.off'
+  | 'buttons.group.mouse'
+  | 'buttons.group.system'
+  | 'buttons.group.scroll'
+  | 'buttons.group.dpi'
+  | 'buttons.group.media'
+  | 'buttons.group.lighting'
+  | 'buttons.group.macro'
   | 'buttons.action.left'
   | 'buttons.action.right'
   | 'buttons.action.middle'
   | 'buttons.action.forward'
   | 'buttons.action.back'
   | 'buttons.action.dpi_cycle'
+  | 'buttons.action.dpi_up'
+  | 'buttons.action.dpi_down'
+  | 'buttons.action.dpi_lock_100'
+  | 'buttons.action.dpi_lock_200'
+  | 'buttons.action.dpi_lock_300'
+  | 'buttons.action.dpi_lock_400'
+  | 'buttons.action.dpi_lock_500'
+  | 'buttons.action.dpi_lock_600'
+  | 'buttons.action.dpi_lock_700'
+  | 'buttons.action.dpi_lock_800'
+  | 'buttons.action.dpi_lock_900'
+  | 'buttons.action.dpi_lock_1000'
+  | 'buttons.action.dpi_lock_1100'
+  | 'buttons.action.dpi_lock_1200'
+  | 'buttons.action.scroll_up'
+  | 'buttons.action.scroll_down'
+  | 'buttons.action.scroll_left'
+  | 'buttons.action.scroll_right'
+  | 'buttons.action.polling_rate_switch'
   | 'buttons.action.fire'
+  | 'buttons.action.combo'
   | 'buttons.action.disabled'
   | 'buttons.action.macro'
+  | 'buttons.action.media_player'
+  | 'buttons.action.media_play_pause'
+  | 'buttons.action.media_next'
+  | 'buttons.action.media_prev'
+  | 'buttons.action.media_stop'
+  | 'buttons.action.media_mute'
+  | 'buttons.action.media_vol_up'
+  | 'buttons.action.media_vol_down'
+  | 'buttons.action.media_email'
+  | 'buttons.action.media_calc'
+  | 'buttons.action.media_computer'
+  | 'buttons.action.media_home'
+  | 'buttons.action.media_search'
+  | 'buttons.action.media_web_forward'
+  | 'buttons.action.media_web_back'
+  | 'buttons.action.media_web_stop'
+  | 'buttons.action.media_refresh'
+  | 'buttons.action.media_favorites'
+  | 'buttons.action.led_all_toggle'
+  | 'buttons.action.led_strip_toggle'
+  | 'buttons.action.led_effect_loop'
   | 'sensor.title'
   | 'sensor.sub'
   | 'sensor.dpiStages'
@@ -142,9 +191,12 @@ export type MessageKey =
   | 'macro.insertAction'
   | 'macro.select'
   | 'macro.delay'
-  | 'macro.keyA'
-  | 'macro.space'
-  | 'macro.ctrl'
+  | 'macro.insertAnyKey'
+  | 'macro.insertKeyHint'
+  | 'macro.insertKeyActive'
+  | 'macro.addDelay'
+  | 'macro.unsupportedKey'
+  | 'macro.clearEvents'
   | 'macro.namePrefix'
   | 'macro.delayMs'
   | 'settings.title'
@@ -222,12 +274,13 @@ const en: Dict = {
   'nav.tray': 'Battery tray',
   'nav.siteNav': 'Site',
   'nav.deviceNav': 'Device',
+  'nav.refreshData': 'Refresh data',
   'connect.faqTitle': 'FAQ',
   'connect.learnMore': 'Learn more',
   'connect.trayEyebrow': 'Windows helper',
   'connect.trayTitle': 'UMD Battery Tray',
   'connect.trayBody':
-    'Optional EV-signed .exe when you want battery % in the Windows tray without keeping the browser open. Works with King Ultra, Fenrir Max, and PRO X SUPERLIGHT.',
+    'Optional EV-signed .exe when you want battery % in the Windows tray without keeping the browser open. Works with King Ultra, Blitz Ultimate, Fenrir Max, and PRO X SUPERLIGHT.',
   'connect.trayFeat1': 'System tray icon with percent and charging status',
   'connect.trayFeat2': 'Optional always-on-top desktop widget',
   'connect.trayFeat3': 'Pick which supported mouse to monitor',
@@ -293,10 +346,58 @@ const en: Dict = {
   'buttons.action.middle': 'Middle button',
   'buttons.action.forward': 'Forward',
   'buttons.action.back': 'Back',
-  'buttons.action.dpi_cycle': 'DPI cycle',
+  'buttons.group.mouse': 'Mouse',
+  'buttons.group.system': 'System',
+  'buttons.group.scroll': 'Scroll',
+  'buttons.group.dpi': 'DPI',
+  'buttons.group.media': 'Media',
+  'buttons.group.lighting': 'Lighting',
+  'buttons.group.macro': 'Macro',
+  'buttons.action.dpi_cycle': 'DPI Loop',
+  'buttons.action.dpi_up': 'DPI+',
+  'buttons.action.dpi_down': 'DPI-',
+  'buttons.action.dpi_lock_100': 'DPI Lock 100',
+  'buttons.action.dpi_lock_200': 'DPI Lock 200',
+  'buttons.action.dpi_lock_300': 'DPI Lock 300',
+  'buttons.action.dpi_lock_400': 'DPI Lock 400',
+  'buttons.action.dpi_lock_500': 'DPI Lock 500',
+  'buttons.action.dpi_lock_600': 'DPI Lock 600',
+  'buttons.action.dpi_lock_700': 'DPI Lock 700',
+  'buttons.action.dpi_lock_800': 'DPI Lock 800',
+  'buttons.action.dpi_lock_900': 'DPI Lock 900',
+  'buttons.action.dpi_lock_1000': 'DPI Lock 1000',
+  'buttons.action.dpi_lock_1100': 'DPI Lock 1100',
+  'buttons.action.dpi_lock_1200': 'DPI Lock 1200',
+  'buttons.action.scroll_up': 'Scroll Up',
+  'buttons.action.scroll_down': 'Scroll Down',
+  'buttons.action.scroll_left': 'Scroll Left',
+  'buttons.action.scroll_right': 'Scroll Right',
+  'buttons.action.polling_rate_switch': 'Polling Rate Switch',
   'buttons.action.fire': 'Fire key',
+  'buttons.action.combo': 'Combo Key',
   'buttons.action.disabled': 'Disabled',
   'buttons.action.macro': 'Macro',
+  'buttons.action.media_player': 'Media Player',
+  'buttons.action.media_play_pause': 'Play/Pause',
+  'buttons.action.media_next': 'Next',
+  'buttons.action.media_prev': 'Previous',
+  'buttons.action.media_stop': 'Stop',
+  'buttons.action.media_mute': 'Mute',
+  'buttons.action.media_vol_up': 'Volume Up',
+  'buttons.action.media_vol_down': 'Volume Down',
+  'buttons.action.media_email': 'Email',
+  'buttons.action.media_calc': 'Calculator',
+  'buttons.action.media_computer': 'My Computer',
+  'buttons.action.media_home': 'Home Page',
+  'buttons.action.media_search': 'Search',
+  'buttons.action.media_web_forward': 'Web Forward',
+  'buttons.action.media_web_back': 'Web Back',
+  'buttons.action.media_web_stop': 'Web Stop',
+  'buttons.action.media_refresh': 'Refresh',
+  'buttons.action.media_favorites': 'Favorites',
+  'buttons.action.led_all_toggle': 'All Lights On/Off',
+  'buttons.action.led_strip_toggle': 'Light Strip On/Off',
+  'buttons.action.led_effect_loop': 'Loop switch light effects',
   'sensor.title': 'Sensor',
   'sensor.sub':
     'DPI and flags update in the UI instantly; the mouse is written after a short debounce.',
@@ -356,10 +457,12 @@ const en: Dict = {
   'macro.empty': 'No macros yet.',
   'macro.selectOrCreate': 'Select or create a macro.',
   'macro.deleteLast': 'Delete last',
-  'macro.recordingHint': 'Focus here and press keys to record.',
-  'macro.recordingIdle': 'Enable recording, then focus this panel.',
-  'macro.autoDelay': 'Automatic insertion delay',
-  'macro.defaultDelay': 'Default time delay',
+  'macro.recordingHint':
+    'Recording — type on the keyboard. Real delays between keys are measured automatically.',
+  'macro.recordingIdle':
+    'Click Start recording, then type. Down / up / delays are captured live.',
+  'macro.autoDelay': 'Measure real delays while recording',
+  'macro.defaultDelay': 'Use fixed delay (ms)',
   'macro.playUntilReleased': 'Cycle until key released',
   'macro.playUntilPressed': 'Cycle until key pressed',
   'macro.playUntilThisKey': 'Cycle until this key pressed',
@@ -367,9 +470,12 @@ const en: Dict = {
   'macro.insertAction': 'Insert action',
   'macro.select': 'Select…',
   'macro.delay': 'Delay',
-  'macro.keyA': 'Key A',
-  'macro.space': 'Space',
-  'macro.ctrl': 'Ctrl',
+  'macro.insertAnyKey': 'Press any key to insert',
+  'macro.insertKeyHint': 'Click here, then press a key (down + up).',
+  'macro.insertKeyActive': 'Press a key now…',
+  'macro.addDelay': 'Add delay',
+  'macro.unsupportedKey': 'Key not supported by mouse firmware: {key}',
+  'macro.clearEvents': 'Clear all',
   'macro.namePrefix': 'Macro {n}',
   'macro.delayMs': 'Delay {n}ms',
   'settings.title': 'Settings',
@@ -453,12 +559,13 @@ const pl: Dict = {
   'nav.tray': 'Tray baterii',
   'nav.siteNav': 'Strona',
   'nav.deviceNav': 'Urządzenie',
+  'nav.refreshData': 'Odśwież dane',
   'connect.faqTitle': 'FAQ',
   'connect.learnMore': 'Więcej info',
   'connect.trayEyebrow': 'Helper Windows',
   'connect.trayTitle': 'UMD Battery Tray',
   'connect.trayBody':
-    'Opcjonalny, podpisany EV .exe, gdy chcesz poziom baterii w trayu Windows bez otwartej przeglądarki. Działa z King Ultra, Fenrir Max i PRO X SUPERLIGHT.',
+    'Opcjonalny, podpisany EV .exe, gdy chcesz poziom baterii w trayu Windows bez otwartej przeglądarki. Działa z King Ultra, Blitz Ultimate, Fenrir Max i PRO X SUPERLIGHT.',
   'connect.trayFeat1': 'Ikona w trayu z procentem i statusem ładowania',
   'connect.trayFeat2': 'Opcjonalny widget na pulpicie (zawsze na wierzchu)',
   'connect.trayFeat3': 'Wybór, którą wspieraną mysz monitorować',
@@ -528,10 +635,58 @@ const pl: Dict = {
   'buttons.action.middle': 'Środkowy przycisk',
   'buttons.action.forward': 'Do przodu',
   'buttons.action.back': 'Do tyłu',
-  'buttons.action.dpi_cycle': 'Cykl DPI',
+  'buttons.group.mouse': 'Mysz',
+  'buttons.group.system': 'System',
+  'buttons.group.scroll': 'Scroll',
+  'buttons.group.dpi': 'DPI',
+  'buttons.group.media': 'Multimedia',
+  'buttons.group.lighting': 'Podświetlenie',
+  'buttons.group.macro': 'Makro',
+  'buttons.action.dpi_cycle': 'DPI Loop',
+  'buttons.action.dpi_up': 'DPI+',
+  'buttons.action.dpi_down': 'DPI-',
+  'buttons.action.dpi_lock_100': 'DPI Lock 100',
+  'buttons.action.dpi_lock_200': 'DPI Lock 200',
+  'buttons.action.dpi_lock_300': 'DPI Lock 300',
+  'buttons.action.dpi_lock_400': 'DPI Lock 400',
+  'buttons.action.dpi_lock_500': 'DPI Lock 500',
+  'buttons.action.dpi_lock_600': 'DPI Lock 600',
+  'buttons.action.dpi_lock_700': 'DPI Lock 700',
+  'buttons.action.dpi_lock_800': 'DPI Lock 800',
+  'buttons.action.dpi_lock_900': 'DPI Lock 900',
+  'buttons.action.dpi_lock_1000': 'DPI Lock 1000',
+  'buttons.action.dpi_lock_1100': 'DPI Lock 1100',
+  'buttons.action.dpi_lock_1200': 'DPI Lock 1200',
+  'buttons.action.scroll_up': 'Scroll w górę',
+  'buttons.action.scroll_down': 'Scroll w dół',
+  'buttons.action.scroll_left': 'Scroll w lewo',
+  'buttons.action.scroll_right': 'Scroll w prawo',
+  'buttons.action.polling_rate_switch': 'Przełączanie polling rate',
   'buttons.action.fire': 'Fire key',
+  'buttons.action.combo': 'Combo Key',
   'buttons.action.disabled': 'Wyłączony',
   'buttons.action.macro': 'Makro',
+  'buttons.action.media_player': 'Odtwarzacz multimediów',
+  'buttons.action.media_play_pause': 'Play/Pause',
+  'buttons.action.media_next': 'Następny',
+  'buttons.action.media_prev': 'Poprzedni',
+  'buttons.action.media_stop': 'Stop',
+  'buttons.action.media_mute': 'Wycisz',
+  'buttons.action.media_vol_up': 'Głośniej',
+  'buttons.action.media_vol_down': 'Ciszej',
+  'buttons.action.media_email': 'E-mail',
+  'buttons.action.media_calc': 'Kalkulator',
+  'buttons.action.media_computer': 'Mój komputer',
+  'buttons.action.media_home': 'Strona główna',
+  'buttons.action.media_search': 'Szukaj',
+  'buttons.action.media_web_forward': 'Web do przodu',
+  'buttons.action.media_web_back': 'Web do tyłu',
+  'buttons.action.media_web_stop': 'Web stop',
+  'buttons.action.media_refresh': 'Odśwież',
+  'buttons.action.media_favorites': 'Ulubione',
+  'buttons.action.led_all_toggle': 'Wszystkie światła On/Off',
+  'buttons.action.led_strip_toggle': 'Light strip On/Off',
+  'buttons.action.led_effect_loop': 'Pętla efektów światła',
   'sensor.title': 'Sensor',
   'sensor.sub':
     'DPI i flagi od razu w UI; zapis na mysz dopiero po krótkim debounce.',
@@ -591,10 +746,12 @@ const pl: Dict = {
   'macro.empty': 'Brak makro.',
   'macro.selectOrCreate': 'Wybierz lub utwórz makro.',
   'macro.deleteLast': 'Usuń ostatnie',
-  'macro.recordingHint': 'Kliknij tutaj i naciskaj klawisze, żeby nagrywać.',
-  'macro.recordingIdle': 'Włącz nagrywanie, potem kliknij ten panel.',
-  'macro.autoDelay': 'Automatyczne wstawianie opóźnienia',
-  'macro.defaultDelay': 'Domyślne opóźnienie',
+  'macro.recordingHint':
+    'Nagrywanie — pisz na klawiaturze. Opóźnienia między klawiszami są mierzone automatycznie.',
+  'macro.recordingIdle':
+    'Kliknij Start nagrywania, potem pisz. Zapisywane są down / up i czasy między nimi.',
+  'macro.autoDelay': 'Mierz prawdziwe opóźnienia przy nagrywaniu',
+  'macro.defaultDelay': 'Stałe opóźnienie (ms)',
   'macro.playUntilReleased': 'Pętla do zwolnienia klawisza',
   'macro.playUntilPressed': 'Pętla do naciśnięcia klawisza',
   'macro.playUntilThisKey': 'Pętla do naciśnięcia tego klawisza',
@@ -602,9 +759,12 @@ const pl: Dict = {
   'macro.insertAction': 'Wstaw akcję',
   'macro.select': 'Wybierz…',
   'macro.delay': 'Opóźnienie',
-  'macro.keyA': 'Klawisz A',
-  'macro.space': 'Spacja',
-  'macro.ctrl': 'Ctrl',
+  'macro.insertAnyKey': 'Wciśnij dowolny klawisz',
+  'macro.insertKeyHint': 'Kliknij tutaj, potem wciśnij klawisz (down + up).',
+  'macro.insertKeyActive': 'Wciśnij klawisz…',
+  'macro.addDelay': 'Dodaj opóźnienie',
+  'macro.unsupportedKey': 'Klawisz nieobsługiwany przez firmware myszy: {key}',
+  'macro.clearEvents': 'Wyczyść listę',
   'macro.namePrefix': 'Makro {n}',
   'macro.delayMs': 'Opóźnienie {n} ms',
   'settings.title': 'Ustawienia',

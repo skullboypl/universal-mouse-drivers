@@ -2,19 +2,19 @@ import { umdLog } from '../debug/umdLog'
 import {
   fenrirMaxHidFilters,
   isFenrirMaxDevice,
-} from '../devices/gwolves-fenrir-max/identity'
+} from '../devices/mice/gwolves/fenrir-max/identity'
 import {
   isSuperlightDevice,
   superlightHidFilters,
-} from '../devices/logitech-pro-x-superlight/identity'
+} from '../devices/mice/logitech/pro-x-superlight/identity'
 import {
   blitzUltimateHidFilters,
   isBlitzUltimateDevice,
-} from '../devices/rampage-blitz-ultimate/identity'
+} from '../devices/mice/rampage/blitz-ultimate/identity'
 import {
   hidFilters,
   isKingUltraDevice,
-} from '../devices/redragon-king-ultra/identity'
+} from '../devices/mice/redragon/king-ultra/identity'
 import type { Transport } from './types'
 
 export interface HidDeviceInfo {

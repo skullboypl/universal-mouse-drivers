@@ -5,7 +5,7 @@ import { ClientRedirect } from '../components/ClientRedirect'
 import { Button } from '../components/Button'
 import { Select } from '../components/Select'
 import styles from '../components/ui.module.css'
-import { MOUSE_ART } from '../devices/redragon-king-ultra/buttons'
+import { MOUSE_ART } from '../devices/mice/redragon/king-ultra/buttons'
 import type { ButtonAction } from '../devices/types'
 import { useLocale } from '../i18n/LocaleContext'
 import type { MessageKey } from '../i18n/messages'
@@ -15,17 +15,37 @@ import page from './ButtonsPage.module.css'
 
 type Pos = { id: number; uiX: number; uiY: number }
 
-const ACTIONS: { value: ButtonAction; key: MessageKey }[] = [
-  { value: 'left', key: 'buttons.action.left' },
-  { value: 'right', key: 'buttons.action.right' },
-  { value: 'middle', key: 'buttons.action.middle' },
-  { value: 'forward', key: 'buttons.action.forward' },
-  { value: 'back', key: 'buttons.action.back' },
-  { value: 'dpi_cycle', key: 'buttons.action.dpi_cycle' },
-  { value: 'fire', key: 'buttons.action.fire' },
-  { value: 'disabled', key: 'buttons.action.disabled' },
-  { value: 'macro', key: 'buttons.action.macro' },
+type ButtonActionGroup =
+  | 'mouse'
+  | 'system'
+  | 'scroll'
+  | 'dpi'
+  | 'media'
+  | 'lighting'
+  | 'macro'
+
+const GROUP_ORDER: ButtonActionGroup[] = [
+  'mouse',
+  'system',
+  'scroll',
+  'dpi',
+  'media',
+  'lighting',
 ]
+
+const GROUP_LABEL: Record<ButtonActionGroup, MessageKey> = {
+  mouse: 'buttons.group.mouse',
+  system: 'buttons.group.system',
+  scroll: 'buttons.group.scroll',
+  dpi: 'buttons.group.dpi',
+  media: 'buttons.group.media',
+  lighting: 'buttons.group.lighting',
+  macro: 'buttons.group.macro',
+}
+
+function actionMsg(id: ButtonAction): MessageKey {
+  return `buttons.action.${id}` as MessageKey
+}
 
 export function ButtonsPage() {
   const { connected, state, driver, apply } = useDeviceSession()
@@ -36,8 +56,11 @@ export function ButtonsPage() {
 
   const catalogId = driver?.identity.id
   const isDemo = catalogId === 'umd-demo'
+  const isBlitz = catalogId === 'rampage-blitz-ultimate'
+  /** Always from the active driver — never a shared cross-SKU catalog. */
+  const buttonActions = driver?.buttonActions ?? []
   const layoutId =
-    catalogId === 'rampage-blitz-ultimate'
+    isBlitz
       ? 'blitz-ultimate'
       : catalogId === 'gwolves-fenrir-max'
         ? 'fenrir-max'
@@ -169,7 +192,7 @@ export function ButtonsPage() {
                   left: `${(uiX / artW) * 100}%`,
                   top: `${(uiY / artH) * 100}%`,
                 }}
-                title={`${b.id}. ${tr(`buttons.action.${b.action}` as MessageKey)}`}
+                title={`${b.id}. ${tr(actionMsg(b.action))}`}
                 onClick={() => setFocusId(b.id)}
               >
                 {b.id}
@@ -196,17 +219,54 @@ export function ButtonsPage() {
                   value={b.action}
                   onChange={(e) => {
                     setFocusId(b.id)
-                    void apply((d) =>
-                      d.setButtonAction(b.id, e.target.value as ButtonAction),
-                    )
+                    const action = e.target.value as ButtonAction
+                    void apply((d) => {
+                      if (action === 'macro') {
+                        const mid =
+                          b.macroId ?? state.macros[0]?.id
+                        d.setButtonAction(b.id, action, mid)
+                      } else {
+                        d.setButtonAction(b.id, action)
+                      }
+                    })
                   }}
                 >
-                  {ACTIONS.map((a) => (
-                    <option key={a.value} value={a.value}>
-                      {tr(a.key)}
-                    </option>
-                  ))}
+                  {GROUP_ORDER.map((group) => {
+                    const items = buttonActions.filter(
+                      (a) => a.group === group,
+                    )
+                    if (items.length === 0) return null
+                    return (
+                      <optgroup key={group} label={tr(GROUP_LABEL[group])}>
+                        {items.map((a) => (
+                          <option key={a.id} value={a.id}>
+                            {tr(actionMsg(a.id))}
+                          </option>
+                        ))}
+                      </optgroup>
+                    )
+                  })}
                 </Select>
+                {b.action === 'macro' && (
+                  <Select
+                    style={{ flex: 1.2 }}
+                    value={b.macroId ?? ''}
+                    onChange={(e) => {
+                      const mid = e.target.value || undefined
+                      setFocusId(b.id)
+                      void apply((d) =>
+                        d.setButtonAction(b.id, 'macro', mid),
+                      )
+                    }}
+                  >
+                    <option value="">{tr('macro.select')}</option>
+                    {state.macros.map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.name}
+                      </option>
+                    ))}
+                  </Select>
+                )}
               </div>
             ))}
           </div>

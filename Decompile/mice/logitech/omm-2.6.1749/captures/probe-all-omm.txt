@@ -1,0 +1,165 @@
+=== Logitech HID devices (046D) ===
+  PID=0xC547 iface=2 up=0xFF00 u=0x0001 in/out=None/None 'USB Receiver'
+  PID=0x0B1C iface=8 up=0xFF32 u=0x0074 in/out=None/None 'A50'
+  PID=0xC547 iface=1 up=0x0001 u=0x0006 in/out=None/None 'USB Receiver'
+  PID=0xC547 iface=2 up=0xFF00 u=0x0002 in/out=None/None 'USB Receiver'
+  PID=0xC547 iface=0 up=0x0001 u=0x0002 in/out=None/None 'USB Receiver'
+  PID=0xC547 iface=1 up=0x000C u=0x0001 in/out=None/None 'USB Receiver'
+  PID=0xC547 iface=1 up=0x0001 u=0x0080 in/out=None/None 'USB Receiver'
+
+Opening short=b'\\\\?\\HID#VID_046D&PID_C547&MI_02&Col01#c&8b1ac3&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}'
+        long =b'\\\\?\\HID#VID_046D&PID_C547&MI_02&Col02#c&8b1ac3&0&0001#{4d1e55b2-f16f-11cf-88cb-001111000030}'
+deviceIndex=0x01
+
+=== Root / protocol ===
+
+-- GetProtocolVersion long=True
+TX (20): 11 01 00 18 00 00 88 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 18 04 02 88 00 00 00 00 00 00 00 00 00 00 00 00 00
+  protocol major=4 minor=2 ping=0x88
+
+=== Feature discovery ===
+
+-- GetFeature(0x0003) long=True
+TX (20): 11 01 00 0D 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 02 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00
+  -> index=2 type=0x00 version=3
+
+-- GetFeature(0x0005) long=True
+TX (20): 11 01 00 0D 00 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  -> index=3 type=0x00 version=0
+
+-- GetFeature(0x0101) long=True
+TX (20): 11 01 00 0D 01 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x0101 NOT PRESENT
+
+-- GetFeature(0x0104) long=True
+TX (20): 11 01 00 0D 01 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x0104 NOT PRESENT
+
+-- GetFeature(0x0600) long=True
+TX (20): 11 01 00 0D 06 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x0600 NOT PRESENT
+
+-- GetFeature(0x0620) long=True
+TX (20): 11 01 00 0D 06 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x0620 NOT PRESENT
+
+-- GetFeature(0x0635) long=True
+TX (20): 11 01 00 0D 06 35 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x0635 NOT PRESENT
+
+-- GetFeature(0x1000) long=True
+TX (20): 11 01 00 0D 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x1000 NOT PRESENT
+
+-- GetFeature(0x1001) long=True
+TX (20): 11 01 00 0D 10 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x1001 NOT PRESENT
+
+-- GetFeature(0x1004) long=True
+TX (20): 11 01 00 0D 10 04 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 06 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+  -> index=6 type=0x00 version=1
+
+-- GetFeature(0x1895) long=True
+TX (20): 11 01 00 0D 18 95 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x1895 NOT PRESENT
+
+-- GetFeature(0x1B0C) long=True
+TX (20): 11 01 00 0D 1B 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x1B0C NOT PRESENT
+
+-- GetFeature(0x2110) long=True
+TX (20): 11 01 00 0D 21 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x2110 NOT PRESENT
+
+-- GetFeature(0x2121) long=True
+TX (20): 11 01 00 0D 21 21 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x2121 NOT PRESENT
+
+-- GetFeature(0x2201) long=True
+TX (20): 11 01 00 0D 22 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 0B 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00
+  -> index=11 type=0x00 version=2
+
+-- GetFeature(0x2202) long=True
+TX (20): 11 01 00 0D 22 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x2202 NOT PRESENT
+
+-- GetFeature(0x4540) long=True
+TX (20): 11 01 00 0D 45 40 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x4540 NOT PRESENT
+
+-- GetFeature(0x8061) long=True
+TX (20): 11 01 00 0D 80 61 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x8061 NOT PRESENT
+
+-- GetFeature(0x8070) long=True
+TX (20): 11 01 00 0D 80 70 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 07 60 04 00 00 00 00 00 00 00 00 00 00 00 00 00
+  -> index=7 type=0x60 version=4
+
+-- GetFeature(0x8071) long=True
+TX (20): 11 01 00 0D 80 71 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x8071 NOT PRESENT
+
+-- GetFeature(0x8081) long=True
+TX (20): 11 01 00 0D 80 81 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x8081 NOT PRESENT
+
+-- GetFeature(0x80E0) long=True
+TX (20): 11 01 00 0D 80 E0 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  feature 0x80E0 NOT PRESENT
+
+-- GetFeature(0x8100) long=True
+TX (20): 11 01 00 0D 81 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 08 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  -> index=8 type=0x00 version=0
+
+-- GetFeature(0x8110) long=True
+TX (20): 11 01 00 0D 81 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 00 0D 09 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  -> index=9 type=0x00 version=0
+
+=== Present features ===
+  0x0003 -> index 2
+  0x0005 -> index 3
+  0x1004 -> index 6
+  0x2201 -> index 11
+  0x8070 -> index 7
+  0x8100 -> index 8
+  0x8110 -> index 9
+
+-- Call feature 0x2201 idx=11 fn=2
+TX (20): 11 01 0B 2D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 0B 2D 00 03 20 03 20 00 00 00 00 00 00 00 00 00 00 00
+  sensor=0 dpi=800 default=800
+
+-- Call feature 0x2201 idx=11 fn=1
+TX (20): 11 01 0B 1D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 0B 1D 00 00 64 E0 32 64 00 00 00 00 00 00 00 00 00 00
+  dpi list raw: 00 00 64 E0 32 64 00 00 00 00 00 00 00 00 00 00
+
+-- Call feature 0x8100 idx=8 fn=0
+TX (20): 11 01 08 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RX (20): 11 01 08 0D 01 04 01 05 01 05 10 00 FF 0A 04 00 00 00 00 00
+  onboard profiles raw: 01 04 01 05 01 05 10 00 FF 0A 04 00 00 00 00 00

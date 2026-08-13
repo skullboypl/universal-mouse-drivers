@@ -3,6 +3,7 @@ namespace UmdBatteryTray.Protocol;
 internal enum UmdDeviceKind
 {
     KingUltra,
+    BlitzUltimate,
     FenrirMax,
     Superlight,
 }

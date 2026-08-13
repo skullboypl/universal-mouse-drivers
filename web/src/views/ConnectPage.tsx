@@ -10,10 +10,10 @@ import {
   DEVICE_CATALOG,
   findCatalogDevice,
 } from '@/devices/registry'
-import { FENRIR_MAX_IDENTITY } from '@/devices/gwolves-fenrir-max/identity'
-import { SUPERLIGHT_IDENTITY } from '@/devices/logitech-pro-x-superlight/identity'
-import { BLITZ_ULTIMATE_IDENTITY } from '@/devices/rampage-blitz-ultimate/identity'
-import { KING_ULTRA_IDENTITY } from '@/devices/redragon-king-ultra/identity'
+import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
+import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
+import { BLITZ_ULTIMATE_IDENTITY } from '@/devices/mice/rampage/blitz-ultimate/identity'
+import { KING_ULTRA_IDENTITY } from '@/devices/mice/redragon/king-ultra/identity'
 import type { DeviceIdentity, DeviceSupportStatus } from '@/devices/types'
 import { useLocale } from '@/i18n/LocaleContext'
 import { useT } from '@/i18n/useT'

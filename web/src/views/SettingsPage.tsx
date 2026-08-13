@@ -5,8 +5,8 @@ import { ClientRedirect } from '../components/ClientRedirect'
 import { Button } from '../components/Button'
 import { Select } from '../components/Select'
 import styles from '../components/ui.module.css'
-import { FENRIR_MAX_IDENTITY } from '../devices/gwolves-fenrir-max/identity'
-import { SUPERLIGHT_IDENTITY } from '../devices/logitech-pro-x-superlight/identity'
+import { FENRIR_MAX_IDENTITY } from '../devices/mice/gwolves/fenrir-max/identity'
+import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/identity'
 import {
   clampFenrirSleepSec,
   FENRIR_SLEEP_MAX_SEC,
@@ -14,7 +14,7 @@ import {
   FENRIR_SLEEP_STEP_SEC,
   formatFenrirSleep,
   resolveFenrirSleepSec,
-} from '../devices/gwolves-fenrir-max/sleep'
+} from '../devices/mice/gwolves/fenrir-max/sleep'
 import { useLocale } from '../i18n/LocaleContext'
 import { LOCALES, type Locale } from '../i18n/locale'
 import { useT } from '../i18n/useT'
@@ -26,9 +26,13 @@ import {
   type TrayBridgeStatus,
 } from '../lib/trayBridge'
 import {
-  sleepCodeToMinutes,
-  sleepMinutesToCode,
-} from '../devices/redragon-king-ultra/protocol'
+  sleepCodeToMinutes as blitzSleepCodeToMinutes,
+  sleepMinutesToCode as blitzSleepMinutesToCode,
+} from '../devices/mice/rampage/blitz-ultimate/protocol'
+import {
+  sleepCodeToMinutes as kingSleepCodeToMinutes,
+  sleepMinutesToCode as kingSleepMinutesToCode,
+} from '../devices/mice/redragon/king-ultra/protocol'
 
 /** OEM customComboBox_PowerSaveTime → allLedOffTime @ 0xAD (10s units). */
 const SLEEP_OPTIONS: { code: number; kind: 'sec' | 'min'; n: number }[] = [
@@ -52,6 +56,13 @@ export function SettingsPage() {
   const tr = useT()
   const isFenrir = driver?.identity.id === FENRIR_MAX_IDENTITY.id
   const isSuperlight = driver?.identity.id === SUPERLIGHT_IDENTITY.id
+  const isBlitz = driver?.identity.id === 'rampage-blitz-ultimate'
+  const sleepMinutesToCode = isBlitz
+    ? blitzSleepMinutesToCode
+    : kingSleepMinutesToCode
+  const sleepCodeToMinutes = isBlitz
+    ? blitzSleepCodeToMinutes
+    : kingSleepCodeToMinutes
   const [tray, setTray] = useState<TrayBridgeStatus | null>(null)
   const [trayBusy, setTrayBusy] = useState(false)
   const [importNote, setImportNote] = useState<string | null>(null)

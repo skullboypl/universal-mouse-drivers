@@ -25,8 +25,8 @@ export const UMD_FAQ: FaqItem[] = [
       en: 'Which mice are supported?',
     },
     answer: {
-      pl: 'Aktualnie: Redragon King Ultra, G-Wolves Fenrir Max 8K oraz Logitech PRO X SUPERLIGHT (gen1). Lista rośnie wraz z reverse engineeringiem kolejnych protokołów.',
-      en: 'Currently: Redragon King Ultra, G-Wolves Fenrir Max 8K, and Logitech PRO X SUPERLIGHT (gen1). The list grows as more protocols are reverse-engineered.',
+      pl: 'Aktualnie: Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max 8K oraz Logitech PRO X SUPERLIGHT (gen1). Lista rośnie wraz z reverse engineeringiem kolejnych protokołów.',
+      en: 'Currently: Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max 8K, and Logitech PRO X SUPERLIGHT (gen1). The list grows as more protocols are reverse-engineered.',
     },
   },
   {
@@ -129,7 +129,7 @@ export const DEVICE_SEO_ARTICLES: DeviceSeoArticle[] = [
             'UMD odwzorowuje kluczowe ekrany OEM: przyciski, sensor, ustawienia i (wkrótce) makra.',
           ],
           en: [
-            'UMD mirrors the key OEM screens: buttons, sensor, settings, and (soon) macros.',
+            'UMD mirrors the key OEM screens: buttons, sensor, settings, and macros.',
           ],
         },
         bullets: {
@@ -184,16 +184,16 @@ export const DEVICE_SEO_ARTICLES: DeviceSeoArticle[] = [
       en: 'Rampage Blitz Ultimate - WebHID driver | UMD',
     },
     description: {
-      pl: 'Konfiguruj Rampage Blitz Ultimate w przeglądarce: DPI PAW3950, polling, przyciski (Fire key), sleep i long distance - ten sam stos HIDUsb co King Ultra, osobne PID.',
-      en: 'Configure Rampage Blitz Ultimate in the browser: PAW3950 DPI, polling, buttons (Fire key), sleep and long distance - same HIDUsb stack as King Ultra, separate PIDs.',
+      pl: 'Konfiguruj Rampage Blitz Ultimate w przeglądarce: DPI PAW3950, polling, przyciski (Fire key), sleep i long distance — osobny sterownik UMD (nie przez King Ultra).',
+      en: 'Configure Rampage Blitz Ultimate in the browser: PAW3950 DPI, polling, buttons (Fire key), sleep and long distance — isolated UMD driver tree (not via King Ultra).',
     },
     h1: {
       pl: 'Sterownik WebHID dla Rampage Blitz Ultimate',
       en: 'WebHID driver for Rampage Blitz Ultimate',
     },
     intro: {
-      pl: 'Blitz Ultimate to osobna mysz Rampage w UMD. Protokół HIDUsb V11 jest wspólny z Redragon King Ultra (to samo OEM Mouse Drive Beta), ale VID/PID, art, DPI grades i mapa przycisków są własne.',
-      en: 'Blitz Ultimate is a distinct Rampage mouse in UMD. The HIDUsb V11 protocol is shared with Redragon King Ultra (same OEM Mouse Drive Beta), but VID/PID, art, DPI grades and button map are its own.',
+      pl: 'Blitz Ultimate to osobna mysz Rampage w UMD z własnym drzewem sterownika (protokół, katalog przycisków, DPI). Nie jest podpięta przez King Ultra — zmiana jednej SKU nie rusza drugiej.',
+      en: 'Blitz Ultimate is a distinct Rampage mouse in UMD with its own driver tree (protocol, button catalog, DPI defaults). It is not wired through King Ultra — changes to one SKU stay isolated.',
     },
     blocks: [
       {
@@ -482,8 +482,8 @@ export const BATTERY_TRAY = {
     en: 'UMD Battery Tray - Windows tray battery | Universal Mouse Drivers',
   },
   description: {
-    pl: 'Pobierz UMD Battery Tray: lekki, podpisany EV .exe z poziomem baterii w trayu Windows i opcjonalnym widgetem. King Ultra, Fenrir Max, PRO X SUPERLIGHT.',
-    en: 'Download UMD Battery Tray: a light EV-signed Windows .exe for system-tray battery and an optional desktop widget. King Ultra, Fenrir Max, PRO X SUPERLIGHT.',
+    pl: 'Pobierz UMD Battery Tray: lekki, podpisany EV .exe z poziomem baterii w trayu Windows i opcjonalnym widgetem. King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT.',
+    en: 'Download UMD Battery Tray: a light EV-signed Windows .exe for system-tray battery and an optional desktop widget. King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT.',
   },
   eyebrow: { pl: 'Windows .exe', en: 'Windows .exe' },
   h1: {
@@ -529,7 +529,7 @@ export const BATTERY_TRAY = {
         pl: [
           'Ikona w trayu: bateria / procent / oba + tooltip',
           'Opcjonalny widget na pulpicie (zawsze na wierzchu, przezroczystość, rozmiar)',
-          'Wybór myszy: King Ultra, Fenrir Max, PRO X SUPERLIGHT',
+          'Wybór myszy: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT',
           'Interwał odświeżania 15–300 s i autostart z Windows',
           'Auto-update: sprawdzanie aktualizacji przy starcie',
           'Współpraca z ustawieniami na mouse.vxh.pl, gdy tray działa na tym samym PC',
@@ -537,7 +537,7 @@ export const BATTERY_TRAY = {
         en: [
           'Tray icon: battery / percent / both + tooltip',
           'Optional desktop widget (always on top, opacity, size)',
-          'Mouse picker: King Ultra, Fenrir Max, PRO X SUPERLIGHT',
+          'Mouse picker: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT',
           'Poll interval 15–300 s and Start with Windows',
           'Auto-update: checks for a new build on start',
           'Works with Settings on mouse.vxh.pl when the tray runs on the same PC',

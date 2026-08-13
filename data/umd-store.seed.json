@@ -24,6 +24,13 @@
       { "id": 4, "uiX": 281, "uiY": 161 },
       { "id": 5, "uiX": 324, "uiY": 110 },
       { "id": 6, "uiX": 376, "uiY": 230 }
+    ],
+    "fenrir-max": [
+      { "id": 1, "uiX": 150, "uiY": 210 },
+      { "id": 2, "uiX": 250, "uiY": 210 },
+      { "id": 3, "uiX": 200, "uiY": 155 },
+      { "id": 4, "uiX": 72, "uiY": 270 },
+      { "id": 5, "uiX": 62, "uiY": 330 }
     ]
   },
   "downloads": {
@@ -31,7 +38,7 @@
       "id": "trayBattery",
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
-      "version": "1.4.0",
+      "version": "1.6.0",
       "signed": true,
       "notes": "EV-signed; shipped in image bundled-downloads/ (override via /app/data/downloads/)"
     }

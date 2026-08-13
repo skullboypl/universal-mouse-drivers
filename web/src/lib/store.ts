@@ -1,9 +1,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { DEMO_BUTTONS } from '@/devices/demo/identity'
-import { FENRIR_MAX_BUTTONS } from '@/devices/gwolves-fenrir-max/buttons'
-import { BLITZ_ULTIMATE_BUTTONS } from '@/devices/rampage-blitz-ultimate/buttons'
-import { KING_ULTRA_BUTTONS } from '@/devices/redragon-king-ultra/buttons'
+import { DEMO_BUTTONS } from '@/devices/mice/demo/identity'
+import { FENRIR_MAX_BUTTONS } from '@/devices/mice/gwolves/fenrir-max/buttons'
+import { BLITZ_ULTIMATE_BUTTONS } from '@/devices/mice/rampage/blitz-ultimate/buttons'
+import { KING_ULTRA_BUTTONS } from '@/devices/mice/redragon/king-ultra/buttons'
 import {
   type ButtonPosition,
   type LayoutId,
@@ -15,7 +15,7 @@ export type { ButtonPosition, LayoutId }
 export { LAYOUT_META }
 
 /** Keep in sync with tray-battery UmdBatteryTray.csproj Version. */
-export const BUNDLED_TRAY_VERSION = '1.4.0'
+export const BUNDLED_TRAY_VERSION = '1.6.0'
 
 export interface DownloadMeta {
   id: string

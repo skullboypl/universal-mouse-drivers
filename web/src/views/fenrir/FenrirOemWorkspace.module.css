@@ -101,13 +101,49 @@
   object-fit: contain;
 }
 
-.deviceImg {
+.deviceWrap {
+  position: relative;
   width: min(250px, 100%);
+  margin: 0 auto;
+}
+
+.deviceImg {
+  width: 100%;
   height: auto;
   display: block;
   user-select: none;
   pointer-events: none;
   filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.45));
+}
+
+.badge {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border-radius: 6px;
+  background: var(--fenrir-accent, #18a058);
+  color: #fff;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  z-index: 1;
+  padding: 0;
+  line-height: 1;
+}
+
+.badge:hover,
+.badgeActive {
+  transform: scale(1.12);
+  box-shadow:
+    0 0 0 3px rgba(24, 160, 88, 0.4),
+    0 6px 16px rgba(0, 0, 0, 0.5);
 }
 
 .deviceName {

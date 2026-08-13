@@ -1,0 +1,29 @@
+# Superlight v1 live FeatureSet (046D:C547, deviceIndex 01, 2026-08-12)
+# count=27
+1  0001 FeatureSet
+2  0003 DeviceInfo (FW BL1%)
+3  0005 DeviceName = "PRO X Wireless"
+4  1D4B WirelessDeviceStatus
+5  0020 ConfigChange
+6  1004 UnifiedBattery
+7  8070 Effects
+8  8100 OnboardProfiles
+9  8110 OnboardButtons
+10 8060 AdjustableReportRate
+11 2201 AdjustableDpi
+12 1500 
+13 1802 
+14 1803 
+15 1806 
+16 1811 
+17 1805 
+18 1830 
+19 1890 
+20 1891 
+21 18A1 
+22 1801 
+23 18B1 
+24 1E00 
+25 1EB0 
+26 1863 
+27 1E22 

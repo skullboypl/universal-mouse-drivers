@@ -1,7 +1,7 @@
 'use client'
 
-import { FENRIR_MAX_IDENTITY } from '@/devices/gwolves-fenrir-max/identity'
-import { SUPERLIGHT_IDENTITY } from '@/devices/logitech-pro-x-superlight/identity'
+import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
+import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
 import { useDeviceSession } from '@/session/DeviceSessionContext'
 import { ButtonsPage } from './ButtonsPage'
 import { FenrirButtonsPage } from './fenrir/FenrirButtonsPage'

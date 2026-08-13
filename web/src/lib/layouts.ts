@@ -1,5 +1,5 @@
-import { FENRIR_MAX_ART } from '@/devices/gwolves-fenrir-max/buttons'
-import { BLITZ_MOUSE_ART } from '@/devices/rampage-blitz-ultimate/buttons'
+import { FENRIR_MAX_ART } from '@/devices/mice/gwolves/fenrir-max/buttons'
+import { BLITZ_MOUSE_ART } from '@/devices/mice/rampage/blitz-ultimate/buttons'
 
 /** Client-safe layout metadata (no node:fs). */
 
@@ -48,7 +48,7 @@ export const LAYOUT_META: Record<
     height: BLITZ_MOUSE_ART.height,
   },
   'umd-demo': {
-    label: 'Demo mouse (devices/demo/mouse.png)',
+    label: 'Demo mouse (devices/mice/demo/mouse.png)',
     imageUrl: '/devices/demo/mouse.png',
     width: 1536,
     height: 1024,

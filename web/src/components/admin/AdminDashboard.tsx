@@ -107,7 +107,7 @@ export function AdminDashboard({
           <p className="muted" style={{ marginTop: 0 }}>
             Badge’y 1–5 pod G-Wolves Fenrir Max 8K (
             <code className="mono">/devices/fenrir-max/mouse.png</code> · 399×558).
-            Driver WebHID jeszcze niepodpięty — layout pod przyszłą stronę Buttons.
+            Pozycje z local admin trafiają do seed/defaults na produkcję.
           </p>
           <AdminButtonsEditor layoutId="fenrir-max" initial={fenrirLayout} />
         </>

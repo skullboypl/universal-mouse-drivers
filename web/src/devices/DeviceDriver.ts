@@ -30,7 +30,12 @@ export interface DeviceDriver {
   onWritePhase(cb: (p: DeviceWritePhase) => void): () => void
 
   setProfile(index: number): void | Promise<void>
-  setButtonAction(buttonId: number, action: ButtonAction): void
+  setButtonAction(
+    buttonId: number,
+    action: ButtonAction,
+    /** When action is macro — library id copied into this button’s flash slot. */
+    macroId?: string,
+  ): void | Promise<void>
   /** May return a Promise when the write is flushed immediately (e.g. Axis Sync). */
   patchSensor(patch: Partial<SensorState>): void | Promise<void>
   setDpiStageCount(count: number): void
@@ -39,13 +44,39 @@ export interface DeviceDriver {
   /** Fenrir: OEM SetDPIStageColors for active DPI LED color. */
   setActiveDpiColor?(color: string): void
   setMacros(macros: Macro[]): void
+  /**
+   * Write assigned macros to device flash (HIDUsb @ 0x300+i×0x180) + KeyFun type=6.
+   * Local library edits stay in setMacros until this is called (Macro Save).
+   */
+  saveMacrosToDevice?(): Promise<void>
   patchSettings(patch: Partial<SettingsState>): void
   restoreDefaults(): void | Promise<void>
   exportProfile(): string
   importProfile(json: string): void
+  /**
+   * Per-SKU button action catalog for Buttons UI.
+   * Each mouse owns its list — never share catalogs across devices.
+   */
+  readonly buttonActions?: ReadonlyArray<{
+    id: ButtonAction
+    labelKey: string
+    group:
+      | 'mouse'
+      | 'system'
+      | 'scroll'
+      | 'dpi'
+      | 'media'
+      | 'lighting'
+      | 'macro'
+  }>
   refreshFirmwareVersions(): Promise<void>
   /** King Ultra: read sleep timeout from flash (optional on other devices). */
   refreshSleepFromDevice?(): Promise<void>
+  /**
+   * Lightweight poll of live DPI stage index + report rate from flash
+   * (DPI Loop / Polling Rate Switch on the mouse). Returns true if UI state changed.
+   */
+  refreshLiveSensorFromDevice?(): Promise<boolean>
   probeFlashAndSync(): Promise<void>
   flushToDevice(): Promise<{ wrote: boolean }>
 }

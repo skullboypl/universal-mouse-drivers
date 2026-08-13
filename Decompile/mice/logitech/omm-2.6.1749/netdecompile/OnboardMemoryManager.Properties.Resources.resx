@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+<resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>1.3</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><data name="Find_Button_Position" xml:space="preserve"><value>Identify Button</value></data>
+  <data name="LiftOffDistance_Low" xml:space="preserve"><value>Low</value></data>
+  <data name="Click_Haptics_Tooltip" xml:space="preserve"><value>Select the mouse button and move the slider in order to change the click haptics feedback.</value></data>
+  <data name="Action_Modifier_Alt" xml:space="preserve"><value>Alt</value></data>
+  <data name="Action_Modifier_Gui" xml:space="preserve"><value>Win</value></data>
+  <data name="Custom_Macro" xml:space="preserve"><value>Record Key Command</value></data>
+  <data name="Action_Scroll_Up" xml:space="preserve"><value>Scroll Up</value></data>
+  <data name="Unpair_Succeeded" xml:space="preserve"><value>Unpair Succeeded!</value></data>
+  <data name="Settings_Update_Check" xml:space="preserve"><value>Check for update</value></data>
+  <data name="Device_Pairing" xml:space="preserve"><value>Device Pairing</value></data>
+  <data name="Validity_Failed_No_DPI_Value" xml:space="preserve"><value>At least one DPI value is required to save a profile</value></data>
+  <data name="OMM_Name_Long" xml:space="preserve"><value>Onboard Memory Manager</value></data>
+  <data name="Lighting" xml:space="preserve"><value>Lighting</value></data>
+  <data name="Action_Modifier_Shift" xml:space="preserve"><value>Shift</value></data>
+  <data name="Configuration" xml:space="preserve"><value>Configuration</value></data>
+  <data name="Click_Generic" xml:space="preserve"><value>Click Mouse Button {0}</value></data>
+  <data name="DPI_Context_GShift" xml:space="preserve"><value>Assign DPI Shift</value></data>
+  <data name="Import_With_HITS_Code_Description" xml:space="preserve"><value>Certain profile configurations may not align perfectly with other mice models.</value></data>
+  <data name="Import_With_HITS_Code_Title" xml:space="preserve"><value>Import with HITS Code</value></data>
+  <data name="Import_With_HITS_Code_Helper_Text" xml:space="preserve"><value>*Code to import</value></data>
+  <data name="DPILod" xml:space="preserve"><value>Lift Off Distance</value></data>
+  <data name="DPI_Context_Active" xml:space="preserve"><value>Set As Current DPI</value></data>
+  <data name="Action_Consumer_Key_Volume_Down" xml:space="preserve"><value>Volume Down</value></data>
+  <data name="GShift" xml:space="preserve"><value>G-Shift</value></data>
+  <data name="Logicool_Settings_Privacy_URL" xml:space="preserve"><value>https://www.logicool.co.jp/assets/65029/logicoolpresentationeula.pdf</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Click_Primary" xml:space="preserve"><value>Primary Click (Mouse 1)</value></data>
+  <data name="Click_Back" xml:space="preserve"><value>Back Button Click (Mouse 4)</value></data>
+  <data name="Click_Forwards" xml:space="preserve"><value>Forward Button Click (Mouse 5)</value></data>
+  <data name="Tooltip_BunnyHopping" xml:space="preserve"><value>BHOP mode helps prevent unintended jumping if the scroll wheel is accidentally bumped. When enabled, the mouse will ignore the first scroll event unless a second scroll event occurs within the time window of 100-1000ms, ensuring better control.</value></data>
+  <data name="LiftOffDistance_High" xml:space="preserve"><value>High</value></data>
+  <data name="Action_Consumer_Key_Page_Up" xml:space="preserve"><value>Page Up</value></data>
+  <data name="Settings_Privacy_LinkText" xml:space="preserve"><value>End User License Agreement (network connection required)</value></data>
+  <data name="Action_Consumer_Key_Page_Down" xml:space="preserve"><value>Page Down</value></data>
+  <data name="Paired_Device" xml:space="preserve"><value>Paired Device</value></data>
+  <data name="Tooltip_Lighting" xml:space="preserve"><value>Assigning an effect from OMM will overwrite any custom values from G HUB.</value></data>
+  <data name="Audio_Mute" xml:space="preserve"><value>Mute audio</value></data>
+  <data name="GShift_Tooltip" xml:space="preserve"><value>Assign a secondary function accessed when in G-Shift mode.</value></data>
+  <data name="Tooltip_Report_Rate_Wireless" xml:space="preserve"><value>Your mouse is currently connected to a receiver that limits its wireless report rate to a maximum of 1000 Hz.</value></data>
+  <data name="Click_Haptics_Label" xml:space="preserve"><value>Click Haptics</value></data>
+  <data name="Powerplay_Receiver" xml:space="preserve"><value>POWERPLAY</value></data>
+  <data name="Slot_Count_Singular" xml:space="preserve"><value>1 Slot</value></data>
+  <data name="Report_Rate_Wired" xml:space="preserve"><value>Wired</value></data>
+  <data name="Logitech_Host_Mode_URL" xml:space="preserve"><value>https://support.logi.com/hc/articles/360057433714</value></data>
+  <data name="Assignments_New_Keystroke" xml:space="preserve"><value>Keystroke + Modifier</value></data>
+  <data name="Action_Consumer_Key_Unknown" xml:space="preserve"><value>Media Key</value></data>
+  <data name="Rapid_Trigger_Label" xml:space="preserve"><value>Rapid Trigger</value></data>
+  <data name="HITS_Configuration_Helper_Text" xml:space="preserve"><value>Select a HITS сonfiguration to edit.</value></data>
+  <data name="Share_HITS_Code_Helper_Text" xml:space="preserve"><value>*Code to share</value></data>
+  <data name="Action_Consumer_Key_Print_Screen" xml:space="preserve"><value>Print Screen</value></data>
+  <data name="Revert" xml:space="preserve"><value>Revert</value></data>
+  <data name="Advanced_DPI" xml:space="preserve"><value>Advanced</value></data>
+  <data name="Action_Enable_Profile" xml:space="preserve"><value>Enable Profile {0}</value></data>
+  <data name="Action_Cycle_DPIs" xml:space="preserve"><value>Cycle DPIs</value></data>
+  <data name="USB_Receiver" xml:space="preserve"><value>USB Receiver</value></data>
+  <data name="Action_Macro_Unsupported" xml:space="preserve"><value>Macro not supported</value></data>
+  <data name="Share_HITS_Code_Button_Text" xml:space="preserve"><value>Copy</value></data>
+  <data name="Enter_Your_HITS_Code" xml:space="preserve"><value>Enter your HITS Code</value></data>
+  <data name="Action_Consumer_Key_Volume_Up" xml:space="preserve"><value>Volume Up</value></data>
+  <data name="Action_No_Key_Set" xml:space="preserve"><value>Empty</value></data>
+  <data name="Logitech_Update_URL" xml:space="preserve"><value>https://support.logi.com/hc/articles/360059641133</value></data>
+  <data name="Pair_Success" xml:space="preserve"><value>Your {0} is paired</value></data>
+  <data name="Action_Next_Profile" xml:space="preserve"><value>Next Profile</value></data>
+  <data name="Restore_Defaults_Warning" xml:space="preserve"><value>Are you sure?</value></data>
+  <data name="Action_Consumer_Key_Sleep" xml:space="preserve"><value>Sleep</value></data>
+  <data name="Action_Consumer_Key_Power" xml:space="preserve"><value>Power</value></data>
+  <data name="Action_Consumer_Key_Pause" xml:space="preserve"><value>Pause</value></data>
+  <data name="Tooltip_ReportRate" xml:space="preserve"><value>Adjust how often the mouse reports information to your computer.</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>{0} OMM</value></data>
+  <data name="Import_HITS_Code" xml:space="preserve"><value>Import HITS Code</value></data>
+  <data name="Button_Label" xml:space="preserve"><value>Button {0}</value></data>
+  <data name="Battery_Discharging" xml:space="preserve"><value>discharging</value></data>
+  <data name="Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Action_G_Shift" xml:space="preserve"><value>G-Shift</value></data>
+  <data name="Import_With_HITS_Code_Button_Text" xml:space="preserve"><value>Import</value></data>
+  <data name="Action_Scroll_Down" xml:space="preserve"><value>Scroll Down</value></data>
+  <data name="Tooltip_Identify_Button" xml:space="preserve"><value>Use to identify a hardware button on your mouse.</value></data>
+  <data name="Default" xml:space="preserve"><value>Default</value></data>
+  <data name="Code_Not_Found" xml:space="preserve"><value>*Code not found</value></data>
+  <data name="Begin_Pairing" xml:space="preserve"><value>Begin Pairing</value></data>
+  <data name="Battery_Powered_Powerplay_Text" xml:space="preserve"><value>Powered by POWERPLAY</value></data>
+  <data name="Cycle_Profile_Warning_Action" xml:space="preserve"><value>Click to fix</value></data>
+  <data name="Tooltip_ReportRate_Disabled_Bluetooth" xml:space="preserve"><value>Report rate is unavailable while in Bluetooth mode. To use this feature, connect via an alternate connection.</value></data>
+  <data name="Click_Haptics_Maximum_Label" xml:space="preserve"><value>Strong</value></data>
+  <data name="Lighting_Effect_Neural_Wave_Cyan_Pink" xml:space="preserve"><value>Neutron Null</value></data>
+  <data name="Dismiss" xml:space="preserve"><value>Dismiss</value></data>
+  <data name="Rapid_Trigger_Maximum_Label" xml:space="preserve"><value>Slow</value></data>
+  <data name="Unpair_Intro_Connected" xml:space="preserve"><value>Your mouse is currently paired to this receiver.</value></data>
+  <data name="Logitech_Settings_Privacy_URL" xml:space="preserve"><value>https://www.logitech.com/legal/eula.html</value></data>
+  <data name="Action_Toggle_Performance_Mode" xml:space="preserve"><value>Toggle Performance Mode</value></data>
+  <data name="Action_Modifier_Ctrl" xml:space="preserve"><value>Control</value></data>
+  <data name="Enabled" xml:space="preserve"><value>ENABLED</value></data>
+  <data name="Rapid_Trigger_Minimum_Label" xml:space="preserve"><value>Fast</value></data>
+  <data name="Lighting_Effect_Fixed" xml:space="preserve"><value>Fixed</value></data>
+  <data name="Action_Stop_Macro" xml:space="preserve"><value>Stop Macro</value></data>
+  <data name="Unpair_Timeout" xml:space="preserve"><value>Unpairing timeout! Please try again.</value></data>
+  <data name="Action_Stop_All_Macros" xml:space="preserve"><value>Stop All Macros</value></data>
+  <data name="Tooltip_DPI" xml:space="preserve"><value>DPI is the speed of your mouse on the screen.</value></data>
+  <data name="Media_Play" xml:space="preserve"><value>Play</value></data>
+  <data name="Media_Back" xml:space="preserve"><value>Track back</value></data>
+  <data name="DPI" xml:space="preserve"><value>DPI</value></data>
+  <data name="Action_Tilt_Left" xml:space="preserve"><value>Tilt Left</value></data>
+  <data name="Host_Mode_Warning" xml:space="preserve"><value>Settings will not take effect until the device is switched to onboard mode within G HUB.</value></data>
+  <data name="Empty" xml:space="preserve"><value>Empty</value></data>
+  <data name="Reset" xml:space="preserve"><value>Reset</value></data>
+  <data name="Action_Consumer_Key_Play_Pause" xml:space="preserve"><value>Play / Pause</value></data>
+  <data name="Action_Previous_Profile" xml:space="preserve"><value>Previous Profile</value></data>
+  <data name="Profile_Invalid" xml:space="preserve"><value>Profile Invalid</value></data>
+  <data name="Unpair_Device" xml:space="preserve"><value>Pair New Device</value></data>
+  <data name="Battery_Charging" xml:space="preserve"><value>charging</value></data>
+  <data name="Button_With_Id" xml:space="preserve"><value>Button {0}</value></data>
+  <data name="Unpair_Failed" xml:space="preserve"><value>Unpairing failed! Please try again.</value></data>
+  <data name="Battery_Status_Text" xml:space="preserve"><value>Battery is at {0}%, {1}.</value></data>
+  <data name="Button_1" xml:space="preserve"><value>Button 1</value></data>
+  <data name="Button_2" xml:space="preserve"><value>Button 2</value></data>
+  <data name="Action_Consumer_Key_Previous_Track" xml:space="preserve"><value>Previous Track</value></data>
+  <data name="Click_Middle" xml:space="preserve"><value>Middle Click (Mouse 3)</value></data>
+  <data name="Pair_Failed" xml:space="preserve"><value>Pairing failed! Please try again.</value></data>
+  <data name="Action_Default_DPI" xml:space="preserve"><value>Default DPI</value></data>
+  <data name="Pair_Device" xml:space="preserve"><value>Pair Device</value></data>
+  <data name="Action_Host_Button" xml:space="preserve"><value>Host Button</value></data>
+  <data name="Rapid_Trigger_Tooltip" xml:space="preserve"><value>Select the mouse button and move the slider in order to change the rapid trigger sensitivity.</value></data>
+  <data name="Lighting_Effect_Snipe_Pulse_Cyan_Pink" xml:space="preserve"><value>Pulsar Point</value></data>
+  <data name="Unpair_Intro" xml:space="preserve"><value>A device is already paired to this receiver. Either turn that device on to view settings or pair to a new device.</value></data>
+  <data name="Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Unpair_Retry" xml:space="preserve"><value>Retry Unpairing</value></data>
+  <data name="Unpair_Title" xml:space="preserve"><value>Paired to {0}</value></data>
+  <data name="Herz_Value" xml:space="preserve"><value>{0} Hz</value></data>
+  <data name="Version" xml:space="preserve"><value>Version {0}</value></data>
+  <data name="Device_Loading" xml:space="preserve"><value>LOADING INFORMATION</value></data>
+  <data name="Logicool_Host_Mode_URL" xml:space="preserve"><value>https://support.logi.com/hc/articles/360057433714</value></data>
+  <data name="Actuation_Point_Label" xml:space="preserve"><value>Actuation Point</value></data>
+  <data name="Report_Rate" xml:space="preserve"><value>Report Rate</value></data>
+  <data name="Media_Forwards" xml:space="preserve"><value>Track forwards</value></data>
+  <data name="Action_DPI_Shift" xml:space="preserve"><value>DPI Shift</value></data>
+  <data name="Lighting_Effect_Cycling" xml:space="preserve"><value>Cycling</value></data>
+  <data name="Action_Consumer_Key_System_Pause" xml:space="preserve"><value>Pause</value></data>
+  <data name="Action_Consumer_Key_System_Break" xml:space="preserve"><value>Break</value></data>
+  <data name="Restore_Defaults_Full_Warning" xml:space="preserve"><value>All of your saved settings will be lost. This action cannot be undone.</value></data>
+  <data name="Connect_Gear" xml:space="preserve"><value>Connect Your {0} G Gear</value></data>
+  <data name="Logicool_Update_URL" xml:space="preserve"><value>https://support.logi.com/hc/articles/360059641133</value></data>
+  <data name="Action_Previous_DPI" xml:space="preserve"><value>Previous DPI</value></data>
+  <data name="Action_Consumer_Key_Mute" xml:space="preserve"><value>Mute</value></data>
+  <data name="Action_Consumer_Key_Play" xml:space="preserve"><value>Play</value></data>
+  <data name="Save_n_profiles" xml:space="preserve"><value>Save {0} Profiles</value></data>
+  <data name="Media_Pause" xml:space="preserve"><value>Pause</value></data>
+  <data name="Actuation_Point_Tooltip" xml:space="preserve"><value>Select the mouse button and change the slider in order to change the actuation point.</value></data>
+  <data name="Cycle_Profile_Warning" xml:space="preserve"><value>Cycle Profiles not enabled across all profiles</value></data>
+  <data name="Slot_Count_Plural" xml:space="preserve"><value>{0} Slots</value></data>
+  <data name="Device_Format_Not_Recognized" xml:space="preserve"><value>UNSUPPORTED DEVICE</value></data>
+  <data name="Assignments" xml:space="preserve"><value>Assignments</value></data>
+  <data name="Pair_Success_Text" xml:space="preserve"><value>You may now configure its Onboard Memory</value></data>
+  <data name="HITS_Code" xml:space="preserve"><value>HITS Code</value></data>
+  <data name="Restore_Defaults" xml:space="preserve"><value>Restore Defaults</value></data>
+  <data name="Pair_Succeeded" xml:space="preserve"><value>Pairing Succeeded! Device is now connected.</value></data>
+  <data name="Settings_SubTitle" xml:space="preserve"><value>Copyright © 2004-2026 {0}. All rights reserved.</value></data>
+  <data name="DPI_Shift_Tooltip" xml:space="preserve"><value>DPI Shift assignment. Right click to change.</value></data>
+  <data name="Action_Cycle_Profiles" xml:space="preserve"><value>Cycle Profiles</value></data>
+  <data name="Pair_Continuation_Prompt" xml:space="preserve"><value>To continue pairing, ensure that you unplug any other receivers currently connected to the device.
+
+
+
+Then, turn the mouse OFF then ON or press and hold the Connectivity button for 3 seconds.</value></data>
+  <data name="DPI_Context_Default" xml:space="preserve"><value>Set As Profile Default</value></data>
+  <data name="Click_Secondary" xml:space="preserve"><value>Secondary Click (Mouse 2)</value></data>
+  <data name="Lighting_Effect_Smooth_Star_Breathing" xml:space="preserve"><value>Immerse</value></data>
+  <data name="Lighting_Effect_Breathing" xml:space="preserve"><value>Breathing</value></data>
+  <data name="Click_Haptics_Minimum_Label" xml:space="preserve"><value>Off</value></data>
+  <data name="Share_HITS_Code_Title" xml:space="preserve"><value>Share HITS Code</value></data>
+  <data name="Action_Consumer_Key_Next_Track" xml:space="preserve"><value>Next Track</value></data>
+  <data name="Action_Is_Recording" xml:space="preserve"><value>⬤ Recording Keystroke...</value></data>
+  <data name="Share_HITS_Code_Description" xml:space="preserve"><value>Select the onboard presets you want to share with a profile code.</value></data>
+  <data name="DPI_Context_Clear" xml:space="preserve"><value>Clear Value</value></data>
+  <data name="DPI_Context_Reset" xml:space="preserve"><value>Reset</value></data>
+  <data name="Pair_Retry" xml:space="preserve"><value>Retry Pairing</value></data>
+  <data name="Pair_Title" xml:space="preserve"><value>Pair your mouse</value></data>
+  <data name="Find_Button_Position_Active" xml:space="preserve"><value>Press Button Now</value></data>
+  <data name="Pair_Intro" xml:space="preserve"><value>This will pair a compatible mouse to the selected receiver.</value></data>
+  <data name="LiftOffDistance_Medium" xml:space="preserve"><value>Medium</value></data>
+  <data name="DPIXAxis" xml:space="preserve"><value>x-Axis</value></data>
+  <data name="DPIYAxis" xml:space="preserve"><value>y-Axis</value></data>
+  <data name="OMM_Name_Short" xml:space="preserve"><value>OMM</value></data>
+  <data name="DPIShift" xml:space="preserve"><value>DPI Shift</value></data>
+  <data name="DPISpeed" xml:space="preserve"><value>Speed</value></data>
+  <data name="Actuation_Point_Maximum_Label" xml:space="preserve"><value>Long Click</value></data>
+  <data name="Profile_Label" xml:space="preserve"><value>Profile {0}</value></data>
+  <data name="Unpair_Activity" xml:space="preserve"><value>Unpairing...</value></data>
+  <data name="Lighting_Effect_Color_Wave" xml:space="preserve"><value>Color Wave</value></data>
+  <data name="Actuation_Point_Minimum_Label" xml:space="preserve"><value>Short Click</value></data>
+  <data name="Pair_Timeout" xml:space="preserve"><value>Pairing timeout! Ensure you are using a compatible receiver and try again.</value></data>
+  <data name="Share_HITS_Code" xml:space="preserve"><value>Share HITS Code</value></data>
+  <data name="Host_Mode_LinkText" xml:space="preserve"><value>Learn More</value></data>
+  <data name="DPI_Default_Tooltip" xml:space="preserve"><value>Default DPI for profile. Right click to change.</value></data>
+  <data name="Navigation_Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Action_Next_DPI" xml:space="preserve"><value>Next DPI</value></data>
+  <data name="Action_Invalid" xml:space="preserve"><value>No Action</value></data>
+  <data name="Bhop_Mode" xml:space="preserve"><value>BHOP Mode</value></data>
+  <data name="Action_Tilt_Right" xml:space="preserve"><value>Tilt Right</value></data>
+  <data name="Back" xml:space="preserve"><value>Back</value></data>
+  <data name="HITS" xml:space="preserve"><value>HITS</value></data>
+  <data name="Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Report_Rate_Wireless" xml:space="preserve"><value>Wireless</value></data>
+  <data name="Lighting_Effect_Off" xml:space="preserve"><value>Off</value></data>
+  </root>

@@ -1,0 +1,468 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <AssemblyName>OnboardMemoryManager</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>True</UseWPF>
+    <TargetFramework>net46</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>12.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="resources\dpi.png" />
+    <None Remove="resources\brownpro-light.otf" />
+    <None Remove="src\components\hitsdialog.baml" />
+    <None Remove="src\themes\graphics.baml" />
+    <None Remove="resources\icon.ico" />
+    <None Remove="src\components\assignments.baml" />
+    <None Remove="resources\tooltip.png" />
+    <None Remove="src\themes\generic.baml" />
+    <None Remove="src\themes\switch_alt.baml" />
+    <None Remove="src\themes\hits.baml" />
+    <None Remove="src\components\profile.baml" />
+    <None Remove="resources\transparent.png" />
+    <None Remove="resources\dpi_shift.png" />
+    <None Remove="resources\brownpro-regular.otf" />
+    <None Remove="src\themes\advancedtickslider.baml" />
+    <None Remove="src\themes\simplerectangularslider.baml" />
+    <None Remove="resources\gear.png" />
+    <None Remove="resources\brownpro-thin.otf" />
+    <None Remove="src\app.baml" />
+    <None Remove="src\components\maskedbutton.baml" />
+    <None Remove="src\themes\slider.baml" />
+    <None Remove="resources\success.png" />
+    <None Remove="resources\error.png" />
+    <None Remove="resources\battery-charging.png" />
+    <None Remove="src\themes\menuitem.baml" />
+    <None Remove="src\themes\switch.baml" />
+    <None Remove="resources\spinner.png" />
+    <None Remove="src\components\assignment.baml" />
+    <None Remove="src\themes\dpilist.baml" />
+    <None Remove="src\pages\mainpage.baml" />
+    <None Remove="src\components\dpitable.baml" />
+    <None Remove="src\themes\comboselect.baml" />
+    <None Remove="resources\visible.png" />
+    <None Remove="src\themes\colors.baml" />
+    <None Remove="resources\battery.png" />
+    <None Remove="resources\battery-charging-mask.png" />
+    <None Remove="src\components\notification.baml" />
+    <None Remove="src\mainwindow.baml" />
+    <None Remove="resources\arrow.png" />
+    <None Remove="src\pages\restoredefaultsconfirmationpage.baml" />
+    <None Remove="src\themes\advancedslider.baml" />
+    <None Remove="src\pages\settingspage.baml" />
+    <None Remove="src\components\colorpicker.baml" />
+    <None Remove="resources\brownpro-bold.otf" />
+    <None Remove="resources\info.png" />
+    <None Remove="src\components\pairing.baml" />
+    <None Remove="resources\invisible.png" />
+    <None Remove="src\components\dpicontrol.baml" />
+    <None Remove="resources\battery-empty-mask.png" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.ControlzEx.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.logi_nethidppio.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.MahApps.Metro.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-console-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-console-l1-2-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-datetime-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-debug-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-errorhandling-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-file-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-file-l1-2-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-file-l2-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-handle-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-heap-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-interlocked-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-libraryloader-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-localization-l1-2-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-memory-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-namedpipe-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-processenvironment-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-processthreads-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-processthreads-l1-1-1.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-profile-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-rtlsupport-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-string-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-synch-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-synch-l1-2-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-sysinfo-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-timezone-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-core-util-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.API-MS-Win-core-xstate-l2-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-conio-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-convert-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-environment-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-filesystem-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-heap-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-locale-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-math-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-multibyte-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-private-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-process-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-runtime-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-stdio-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-string-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-time-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-utility-l1-1-0.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.concrt140.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Microsoft.Win32.Primitives.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.msvcp140.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.msvcp140_1.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.msvcp140_2.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.msvcp140_codecvt_ids.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.netstandard.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.AppContext.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Collections.Concurrent.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Collections.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Collections.Immutable.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Collections.NonGeneric.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Collections.Specialized.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.ComponentModel.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.ComponentModel.EventBasedAsync.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.ComponentModel.Primitives.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.ComponentModel.TypeConverter.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Console.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Data.Common.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Contracts.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Debug.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Diagnostics.FileVersionInfo.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Process.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Diagnostics.StackTrace.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Diagnostics.TextWriterTraceListener.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Tools.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Diagnostics.TraceSource.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Tracing.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Drawing.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Drawing.Primitives.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Dynamic.Runtime.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Globalization.Calendars.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Globalization.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Globalization.Extensions.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.IO.Compression.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.IO.Compression.ZipFile.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.IO.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.DriveInfo.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.Primitives.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.Watcher.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.IO.IsolatedStorage.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.IO.MemoryMappedFiles.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.IO.Pipes.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.IO.UnmanagedMemoryStream.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Linq.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Linq.Expressions.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Linq.Parallel.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Linq.Queryable.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Net.Http.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Net.NameResolution.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Net.NetworkInformation.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Net.Ping.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Net.Primitives.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Net.Requests.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Net.Security.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Net.Sockets.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Net.WebHeaderCollection.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Net.WebSockets.Client.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Net.WebSockets.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.ObjectModel.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Reflection.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Reflection.Extensions.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Reflection.Primitives.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Resources.Reader.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Resources.ResourceManager.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Resources.Writer.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Runtime.CompilerServices.VisualC.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Runtime.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Runtime.Extensions.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Runtime.Handles.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Runtime.InteropServices.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Runtime.Numerics.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Formatters.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Json.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Primitives.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Xml.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Security.Claims.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Algorithms.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Csp.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Encoding.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Primitives.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.X509Certificates.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Security.Principal.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Security.SecureString.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Text.Encoding.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Text.Encoding.Extensions.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Text.RegularExpressions.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Threading.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Threading.Overlapped.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Threading.Tasks.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Threading.Tasks.Parallel.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Threading.Thread.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Threading.ThreadPool.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Threading.Timer.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.ValueTuple.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Windows.Interactivity.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Xml.ReaderWriter.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Xml.XDocument.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Xml.XmlDocument.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Xml.XmlSerializer.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Xml.XPath.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.System.Xml.XPath.XDocument.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.ucrtbase.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.vcruntime140.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_cs.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_da.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_de.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_en.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_es.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_fi.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_fr.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_hu.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_it.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_ja.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_ko.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_nl.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_no.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_pl.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_pt-BR.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_ru.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_sv.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_tr.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_zh-CN.dll" />
+    <None Remove="OnboardMemoryManager.embeddeddlls.Resources_zh-TW.dll" />
+    <EmbeddedResource Include="resources\dpi.png" LogicalName="resources/dpi.png" />
+    <EmbeddedResource Include="resources\brownpro-light.otf" LogicalName="resources/brownpro-light.otf" />
+    <EmbeddedResource Include="src\components\hitsdialog.baml" LogicalName="src/components/hitsdialog.baml" />
+    <EmbeddedResource Include="src\themes\graphics.baml" LogicalName="src/themes/graphics.baml" />
+    <EmbeddedResource Include="resources\icon.ico" LogicalName="resources/icon.ico" />
+    <EmbeddedResource Include="src\components\assignments.baml" LogicalName="src/components/assignments.baml" />
+    <EmbeddedResource Include="resources\tooltip.png" LogicalName="resources/tooltip.png" />
+    <EmbeddedResource Include="src\themes\generic.baml" LogicalName="src/themes/generic.baml" />
+    <EmbeddedResource Include="src\themes\switch_alt.baml" LogicalName="src/themes/switch_alt.baml" />
+    <EmbeddedResource Include="src\themes\hits.baml" LogicalName="src/themes/hits.baml" />
+    <EmbeddedResource Include="src\components\profile.baml" LogicalName="src/components/profile.baml" />
+    <EmbeddedResource Include="resources\transparent.png" LogicalName="resources/transparent.png" />
+    <EmbeddedResource Include="resources\dpi_shift.png" LogicalName="resources/dpi_shift.png" />
+    <EmbeddedResource Include="resources\brownpro-regular.otf" LogicalName="resources/brownpro-regular.otf" />
+    <EmbeddedResource Include="src\themes\advancedtickslider.baml" LogicalName="src/themes/advancedtickslider.baml" />
+    <EmbeddedResource Include="src\themes\simplerectangularslider.baml" LogicalName="src/themes/simplerectangularslider.baml" />
+    <EmbeddedResource Include="resources\gear.png" LogicalName="resources/gear.png" />
+    <EmbeddedResource Include="resources\brownpro-thin.otf" LogicalName="resources/brownpro-thin.otf" />
+    <EmbeddedResource Include="src\app.baml" LogicalName="src/app.baml" />
+    <EmbeddedResource Include="src\components\maskedbutton.baml" LogicalName="src/components/maskedbutton.baml" />
+    <EmbeddedResource Include="src\themes\slider.baml" LogicalName="src/themes/slider.baml" />
+    <EmbeddedResource Include="resources\success.png" LogicalName="resources/success.png" />
+    <EmbeddedResource Include="resources\error.png" LogicalName="resources/error.png" />
+    <EmbeddedResource Include="resources\battery-charging.png" LogicalName="resources/battery-charging.png" />
+    <EmbeddedResource Include="src\themes\menuitem.baml" LogicalName="src/themes/menuitem.baml" />
+    <EmbeddedResource Include="src\themes\switch.baml" LogicalName="src/themes/switch.baml" />
+    <EmbeddedResource Include="resources\spinner.png" LogicalName="resources/spinner.png" />
+    <EmbeddedResource Include="src\components\assignment.baml" LogicalName="src/components/assignment.baml" />
+    <EmbeddedResource Include="src\themes\dpilist.baml" LogicalName="src/themes/dpilist.baml" />
+    <EmbeddedResource Include="src\pages\mainpage.baml" LogicalName="src/pages/mainpage.baml" />
+    <EmbeddedResource Include="src\components\dpitable.baml" LogicalName="src/components/dpitable.baml" />
+    <EmbeddedResource Include="src\themes\comboselect.baml" LogicalName="src/themes/comboselect.baml" />
+    <EmbeddedResource Include="resources\visible.png" LogicalName="resources/visible.png" />
+    <EmbeddedResource Include="src\themes\colors.baml" LogicalName="src/themes/colors.baml" />
+    <EmbeddedResource Include="resources\battery.png" LogicalName="resources/battery.png" />
+    <EmbeddedResource Include="resources\battery-charging-mask.png" LogicalName="resources/battery-charging-mask.png" />
+    <EmbeddedResource Include="src\components\notification.baml" LogicalName="src/components/notification.baml" />
+    <EmbeddedResource Include="src\mainwindow.baml" LogicalName="src/mainwindow.baml" />
+    <EmbeddedResource Include="resources\arrow.png" LogicalName="resources/arrow.png" />
+    <EmbeddedResource Include="src\pages\restoredefaultsconfirmationpage.baml" LogicalName="src/pages/restoredefaultsconfirmationpage.baml" />
+    <EmbeddedResource Include="src\themes\advancedslider.baml" LogicalName="src/themes/advancedslider.baml" />
+    <EmbeddedResource Include="src\pages\settingspage.baml" LogicalName="src/pages/settingspage.baml" />
+    <EmbeddedResource Include="src\components\colorpicker.baml" LogicalName="src/components/colorpicker.baml" />
+    <EmbeddedResource Include="resources\brownpro-bold.otf" LogicalName="resources/brownpro-bold.otf" />
+    <EmbeddedResource Include="resources\info.png" LogicalName="resources/info.png" />
+    <EmbeddedResource Include="src\components\pairing.baml" LogicalName="src/components/pairing.baml" />
+    <EmbeddedResource Include="resources\invisible.png" LogicalName="resources/invisible.png" />
+    <EmbeddedResource Include="src\components\dpicontrol.baml" LogicalName="src/components/dpicontrol.baml" />
+    <EmbeddedResource Include="resources\battery-empty-mask.png" LogicalName="resources/battery-empty-mask.png" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.ControlzEx.dll" LogicalName="OnboardMemoryManager.embeddeddlls.ControlzEx.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.logi_nethidppio.dll" LogicalName="OnboardMemoryManager.embeddeddlls.logi_nethidppio.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.MahApps.Metro.dll" LogicalName="OnboardMemoryManager.embeddeddlls.MahApps.Metro.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-console-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-console-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-console-l1-2-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-console-l1-2-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-datetime-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-datetime-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-debug-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-debug-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-errorhandling-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-errorhandling-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-file-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-file-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-file-l1-2-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-file-l1-2-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-file-l2-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-file-l2-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-handle-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-handle-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-heap-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-heap-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-interlocked-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-interlocked-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-libraryloader-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-libraryloader-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-localization-l1-2-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-localization-l1-2-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-memory-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-memory-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-namedpipe-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-namedpipe-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-processenvironment-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-processenvironment-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-processthreads-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-processthreads-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-processthreads-l1-1-1.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-processthreads-l1-1-1.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-profile-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-profile-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-rtlsupport-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-rtlsupport-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-string-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-string-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-synch-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-synch-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-synch-l1-2-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-synch-l1-2-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-sysinfo-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-sysinfo-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-timezone-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-timezone-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-core-util-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-core-util-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.API-MS-Win-core-xstate-l2-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.API-MS-Win-core-xstate-l2-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-conio-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-conio-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-convert-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-convert-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-environment-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-environment-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-filesystem-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-filesystem-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-heap-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-heap-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-locale-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-locale-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-math-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-math-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-multibyte-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-multibyte-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-private-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-private-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-process-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-process-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-runtime-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-runtime-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-stdio-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-stdio-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-string-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-string-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-time-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-time-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-utility-l1-1-0.dll" LogicalName="OnboardMemoryManager.embeddeddlls.api-ms-win-crt-utility-l1-1-0.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.concrt140.dll" LogicalName="OnboardMemoryManager.embeddeddlls.concrt140.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Microsoft.Win32.Primitives.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Microsoft.Win32.Primitives.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.msvcp140.dll" LogicalName="OnboardMemoryManager.embeddeddlls.msvcp140.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.msvcp140_1.dll" LogicalName="OnboardMemoryManager.embeddeddlls.msvcp140_1.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.msvcp140_2.dll" LogicalName="OnboardMemoryManager.embeddeddlls.msvcp140_2.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.msvcp140_codecvt_ids.dll" LogicalName="OnboardMemoryManager.embeddeddlls.msvcp140_codecvt_ids.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.netstandard.dll" LogicalName="OnboardMemoryManager.embeddeddlls.netstandard.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.AppContext.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.AppContext.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Collections.Concurrent.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Collections.Concurrent.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Collections.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Collections.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Collections.Immutable.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Collections.Immutable.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Collections.NonGeneric.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Collections.NonGeneric.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Collections.Specialized.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Collections.Specialized.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.ComponentModel.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.ComponentModel.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.ComponentModel.EventBasedAsync.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.ComponentModel.EventBasedAsync.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.ComponentModel.Primitives.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.ComponentModel.Primitives.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.ComponentModel.TypeConverter.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.ComponentModel.TypeConverter.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Console.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Console.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Data.Common.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Data.Common.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Contracts.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Contracts.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Debug.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Debug.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Diagnostics.FileVersionInfo.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Diagnostics.FileVersionInfo.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Process.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Process.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Diagnostics.StackTrace.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Diagnostics.StackTrace.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Diagnostics.TextWriterTraceListener.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Diagnostics.TextWriterTraceListener.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Tools.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Tools.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Diagnostics.TraceSource.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Diagnostics.TraceSource.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Tracing.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Diagnostics.Tracing.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Drawing.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Drawing.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Drawing.Primitives.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Drawing.Primitives.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Dynamic.Runtime.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Dynamic.Runtime.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Globalization.Calendars.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Globalization.Calendars.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Globalization.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Globalization.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Globalization.Extensions.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Globalization.Extensions.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.IO.Compression.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.IO.Compression.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.IO.Compression.ZipFile.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.IO.Compression.ZipFile.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.IO.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.IO.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.DriveInfo.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.DriveInfo.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.Primitives.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.Primitives.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.Watcher.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.IO.FileSystem.Watcher.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.IO.IsolatedStorage.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.IO.IsolatedStorage.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.IO.MemoryMappedFiles.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.IO.MemoryMappedFiles.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.IO.Pipes.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.IO.Pipes.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.IO.UnmanagedMemoryStream.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.IO.UnmanagedMemoryStream.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Linq.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Linq.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Linq.Expressions.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Linq.Expressions.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Linq.Parallel.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Linq.Parallel.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Linq.Queryable.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Linq.Queryable.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Net.Http.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Net.Http.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Net.NameResolution.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Net.NameResolution.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Net.NetworkInformation.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Net.NetworkInformation.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Net.Ping.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Net.Ping.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Net.Primitives.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Net.Primitives.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Net.Requests.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Net.Requests.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Net.Security.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Net.Security.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Net.Sockets.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Net.Sockets.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Net.WebHeaderCollection.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Net.WebHeaderCollection.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Net.WebSockets.Client.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Net.WebSockets.Client.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Net.WebSockets.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Net.WebSockets.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.ObjectModel.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.ObjectModel.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Reflection.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Reflection.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Reflection.Extensions.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Reflection.Extensions.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Reflection.Primitives.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Reflection.Primitives.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Resources.Reader.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Resources.Reader.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Resources.ResourceManager.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Resources.ResourceManager.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Resources.Writer.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Resources.Writer.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Runtime.CompilerServices.VisualC.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Runtime.CompilerServices.VisualC.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Runtime.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Runtime.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Runtime.Extensions.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Runtime.Extensions.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Runtime.Handles.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Runtime.Handles.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Runtime.InteropServices.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Runtime.InteropServices.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Runtime.InteropServices.RuntimeInformation.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Runtime.Numerics.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Runtime.Numerics.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Formatters.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Formatters.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Json.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Json.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Primitives.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Primitives.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Xml.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Runtime.Serialization.Xml.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Security.Claims.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Security.Claims.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Algorithms.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Algorithms.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Csp.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Csp.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Encoding.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Encoding.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Primitives.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.Primitives.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.X509Certificates.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Security.Cryptography.X509Certificates.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Security.Principal.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Security.Principal.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Security.SecureString.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Security.SecureString.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Text.Encoding.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Text.Encoding.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Text.Encoding.Extensions.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Text.Encoding.Extensions.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Text.RegularExpressions.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Text.RegularExpressions.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Threading.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Threading.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Threading.Overlapped.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Threading.Overlapped.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Threading.Tasks.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Threading.Tasks.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Threading.Tasks.Parallel.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Threading.Tasks.Parallel.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Threading.Thread.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Threading.Thread.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Threading.ThreadPool.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Threading.ThreadPool.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Threading.Timer.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Threading.Timer.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.ValueTuple.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.ValueTuple.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Windows.Interactivity.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Windows.Interactivity.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Xml.ReaderWriter.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Xml.ReaderWriter.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Xml.XDocument.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Xml.XDocument.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Xml.XmlDocument.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Xml.XmlDocument.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Xml.XmlSerializer.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Xml.XmlSerializer.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Xml.XPath.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Xml.XPath.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.System.Xml.XPath.XDocument.dll" LogicalName="OnboardMemoryManager.embeddeddlls.System.Xml.XPath.XDocument.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.ucrtbase.dll" LogicalName="OnboardMemoryManager.embeddeddlls.ucrtbase.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.vcruntime140.dll" LogicalName="OnboardMemoryManager.embeddeddlls.vcruntime140.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_cs.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_cs.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_da.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_da.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_de.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_de.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_en.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_en.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_es.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_es.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_fi.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_fi.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_fr.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_fr.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_hu.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_hu.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_it.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_it.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_ja.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_ja.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_ko.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_ko.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_nl.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_nl.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_no.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_no.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_pl.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_pl.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_pt-BR.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_pt-BR.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_ru.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_ru.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_sv.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_sv.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_tr.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_tr.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_zh-CN.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_zh-CN.dll" />
+    <EmbeddedResource Include="OnboardMemoryManager.embeddeddlls.Resources_zh-TW.dll" LogicalName="OnboardMemoryManager.embeddeddlls.Resources_zh-TW.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="MahApps.Metro" />
+    <Reference Include="logi_nethidppio" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+</Project>
