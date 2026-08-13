@@ -12,6 +12,10 @@ body,
   min-height: 100%;
 }
 
+html {
+  overflow-x: clip;
+}
+
 body {
   margin: 0;
   font-family: var(--font);
@@ -23,6 +27,7 @@ body {
     var(--bg);
   -webkit-font-smoothing: antialiased;
   transition: background 0.2s ease, color 0.2s ease;
+  overflow-x: clip;
 }
 
 .app-shell[data-device='gwolves-fenrir-max'] {
@@ -121,6 +126,21 @@ a {
   }
   .page {
     width: min(1120px, calc(100% - 28px));
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    width: calc(100% - 20px);
+    padding: 18px 0 48px;
+  }
+
+  .page-title {
+    font-size: 1.3rem;
+  }
+
+  .panel {
+    padding: 16px;
   }
 }
 

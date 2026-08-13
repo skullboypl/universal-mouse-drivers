@@ -749,22 +749,6 @@
   font-weight: 700;
 }
 
-@media (max-width: 860px) {
-  .trayPanel {
-    grid-template-columns: 1fr;
-    padding: 22px 18px 24px;
-  }
-
-  .contactPanel {
-    grid-template-columns: 1fr;
-    padding: 22px 18px 24px;
-  }
-
-  .contactChannels {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .contactCard:hover {
     transform: none;
@@ -807,30 +791,89 @@
 }
 
 @media (max-width: 860px) {
+  .page {
+    width: min(1100px, calc(100% - 28px));
+  }
+
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
-    padding-top: 20px;
-    gap: 12px;
+    padding-top: 16px;
+    gap: 8px;
   }
 
   .heroVisual {
     order: -1;
-    min-height: 260px;
+    min-height: 220px;
   }
 
   .slideStage {
-    width: min(280px, 78%);
+    width: min(260px, 72%);
   }
 
-  .deviceGrid {
+  .brandMark {
+    font-size: clamp(2.2rem, 12vw, 3.4rem);
+  }
+
+  .ctaRow {
+    margin-top: 22px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ctaRow > * {
+    width: 100%;
+  }
+
+  .trayPanel,
+  .contactPanel {
     grid-template-columns: 1fr;
+    padding: 20px 16px 22px;
+  }
+
+  .contactChannels {
+    grid-template-columns: 1fr;
+  }
+
+  .savedRow {
+    flex-wrap: wrap;
   }
 }
 
 @media (min-width: 601px) and (max-width: 900px) {
   .deviceGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    width: calc(100% - 20px);
+    padding-bottom: 56px;
+  }
+
+  .heroVisual {
+    min-height: 200px;
+  }
+
+  .slideStage {
+    width: min(220px, 78%);
+  }
+
+  .lede {
+    font-size: 0.98rem;
+  }
+
+  .section {
+    padding-top: 28px;
+  }
+
+  .deviceArt {
+    min-height: 140px;
+  }
+
+  .deviceImg {
+    height: 100px;
   }
 }
 
@@ -848,3 +891,4 @@
     transform: none;
   }
 }
+

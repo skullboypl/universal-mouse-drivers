@@ -93,6 +93,12 @@ internal sealed class SettingsForm : Form
         Text = "Check for updates on start",
         AutoSize = true,
     };
+    private readonly ComboBox _languageCombo = new()
+    {
+        DropDownStyle = ComboBoxStyle.DropDownList,
+        Width = 220,
+    };
+    private readonly Label _languageLabel = new() { AutoSize = true };
 
     public SettingsForm(AppSettings settings, BatteryWidgetForm widget, Action<AppSettings> onApply)
     {
@@ -105,7 +111,7 @@ internal sealed class SettingsForm : Form
         MaximizeBox = false;
         MinimizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
-        ClientSize = new Size(380, 790);
+        ClientSize = new Size(380, 860);
         Font = new Font("Segoe UI", 9f);
 
         var deviceGroup = new GroupBox
@@ -256,7 +262,7 @@ internal sealed class SettingsForm : Form
         {
             Text = "Startup & updates",
             Location = new Point(16, 622),
-            Size = new Size(348, 118),
+            Size = new Size(348, 156),
         };
         _runAtStartup.Location = new Point(14, 24);
         _autoUpdate.Location = new Point(14, 50);
@@ -267,13 +273,21 @@ internal sealed class SettingsForm : Form
             Location = new Point(14, 80),
         };
         _pollInterval.Location = new Point(170, 76);
-        serviceGroup.Controls.AddRange([_runAtStartup, _autoUpdate, pollLabel, _pollInterval]);
+        _languageLabel.Text = "Language";
+        _languageLabel.Location = new Point(14, 112);
+        _languageCombo.Location = new Point(120, 108);
+        foreach (var (code, name) in UiLang.Choices)
+            _languageCombo.Items.Add(new LangItem(code, name));
+        serviceGroup.Controls.AddRange([
+            _runAtStartup, _autoUpdate, pollLabel, _pollInterval,
+            _languageLabel, _languageCombo,
+        ]);
 
         var okBtn = new Button
         {
             Text = "OK",
             DialogResult = DialogResult.OK,
-            Location = new Point(188, 752),
+            Location = new Point(188, 802),
             Size = new Size(84, 28),
         };
         okBtn.Click += (_, _) => SaveAndApply(close: true);
@@ -281,7 +295,7 @@ internal sealed class SettingsForm : Form
         var applyBtn = new Button
         {
             Text = "Apply",
-            Location = new Point(100, 752),
+            Location = new Point(100, 802),
             Size = new Size(84, 28),
         };
         applyBtn.Click += (_, _) => SaveAndApply(close: false);
@@ -290,7 +304,7 @@ internal sealed class SettingsForm : Form
         {
             Text = "Cancel",
             DialogResult = DialogResult.Cancel,
-            Location = new Point(276, 752),
+            Location = new Point(276, 802),
             Size = new Size(84, 28),
         };
 
@@ -300,6 +314,11 @@ internal sealed class SettingsForm : Form
         CancelButton = cancelBtn;
 
         LoadFromSettings();
+        _languageCombo.SelectedIndexChanged += (_, _) =>
+        {
+            if (!_loaded) return;
+            ApplyLocalizedLabels();
+        };
     }
 
     private void ReloadDevices()
@@ -382,7 +401,39 @@ internal sealed class SettingsForm : Form
         _posX.Value = pos.X;
         _posY.Value = pos.Y;
 
+        var lang = UiLang.Normalize(_settings.UiLanguage);
+        for (var i = 0; i < _languageCombo.Items.Count; i++)
+        {
+            if (_languageCombo.Items[i] is LangItem li && li.Code == lang)
+            {
+                _languageCombo.SelectedIndex = i;
+                break;
+            }
+        }
+        if (_languageCombo.SelectedIndex < 0 && _languageCombo.Items.Count > 0)
+            _languageCombo.SelectedIndex = 0;
+
+        ApplyLocalizedLabels();
         _loaded = true;
+    }
+
+    private void ApplyLocalizedLabels()
+    {
+        var lang = _languageCombo.SelectedItem is LangItem li
+            ? li.Code
+            : UiLang.Normalize(_settings.UiLanguage);
+        string S(string key) => UiText.T(lang, key);
+
+        Text = S("settings.title");
+        _refreshDevicesBtn.Text = S("settings.refreshList");
+        _trayBattery.Text = S("settings.batteryIcon");
+        _trayPercent.Text = S("settings.percentOnly");
+        _trayBoth.Text = S("settings.batteryPercent");
+        _widgetVisible.Text = S("settings.showWidget");
+        _widgetDraggable.Text = S("settings.dragWidget");
+        _runAtStartup.Text = S("settings.autostart");
+        _autoUpdate.Text = S("settings.autoUpdate");
+        _languageLabel.Text = S("settings.language");
     }
 
     private void CollectIntoSettings()
@@ -409,6 +460,9 @@ internal sealed class SettingsForm : Form
         _settings.PollIntervalSeconds = (int)_pollInterval.Value;
         _settings.RunAtStartup = _runAtStartup.Checked;
         _settings.AutoUpdateOnStart = _autoUpdate.Checked;
+        _settings.UiLanguage = _languageCombo.SelectedItem is LangItem langItem
+            ? langItem.Code
+            : UiLang.Normalize(_settings.UiLanguage);
     }
 
     private void PreviewIfLoaded()
@@ -433,5 +487,10 @@ internal sealed class SettingsForm : Form
     private sealed record DeviceItem(string? Key, string Label)
     {
         public override string ToString() => Label;
+    }
+
+    private sealed record LangItem(string Code, string NativeName)
+    {
+        public override string ToString() => NativeName;
     }
 }

@@ -12,6 +12,7 @@ import { useParams, usePathname, useRouter } from 'next/navigation'
 import { useDeviceSession } from '@/session/DeviceSessionContext'
 import {
   isLocale,
+  LOCALE_HTML_LANG,
   LOCALE_STORAGE_KEY,
   readStoredLocale,
   stripLocalePrefix,
@@ -63,7 +64,7 @@ export function LocaleProvider({
     (next: Locale) => {
       writeStoredLocale(next)
       writeLocaleCookie(next)
-      document.documentElement.lang = next
+      document.documentElement.lang = LOCALE_HTML_LANG[next]
       if (connected) {
         void apply((d) => d.patchSettings({ language: next }))
       }
@@ -79,7 +80,7 @@ export function LocaleProvider({
   )
 
   useEffect(() => {
-    document.documentElement.lang = locale
+    document.documentElement.lang = LOCALE_HTML_LANG[locale]
     writeStoredLocale(locale)
     writeLocaleCookie(locale)
   }, [locale])

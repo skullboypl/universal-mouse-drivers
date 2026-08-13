@@ -25,6 +25,8 @@ internal sealed class BridgeServer : IDisposable
     /// </summary>
     private static readonly HashSet<string> AllowedOrigins = new(StringComparer.OrdinalIgnoreCase)
     {
+        "https://umdrivers.com",
+        "https://www.umdrivers.com",
         "https://mouse.vxh.pl",
         "https://umd.skullmedia.pl",
         "http://localhost:3000",
@@ -206,7 +208,7 @@ internal sealed class BridgeServer : IDisposable
 
         res.AddHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         res.AddHeader("Access-Control-Allow-Headers", "Content-Type");
-        // Chrome Private Network Access: public HTTPS (mouse.vxh.pl) → http://127.0.0.1
+        // Chrome Private Network Access: public HTTPS (umdrivers.com) → http://127.0.0.1
         res.AddHeader("Access-Control-Allow-Private-Network", "true");
         res.AddHeader("Vary", "Origin");
     }

@@ -48,7 +48,7 @@ export function isValidOnboardProfileBytes(bytes: Uint8Array): boolean {
 
 function assertWebHid(): HID {
   if (!navigator.hid) {
-    throw new Error('WebHID unavailable - use Chrome/Edge on mouse.vxh.pl')
+    throw new Error('WebHID unavailable - use Chrome/Edge on umdrivers.com')
   }
   return navigator.hid
 }

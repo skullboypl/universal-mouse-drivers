@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { isLocale, type Locale } from '@/i18n/locale'
+import { LOCALES, isLocale, type Locale } from '@/i18n/locale'
 import { buildPageMetadata, seoPageIdForMouseSlug } from '@/lib/seo'
 import {
   DEVICE_SEO_ARTICLES,
@@ -10,8 +10,7 @@ import {
 import { DeviceSeoView } from '@/views/SeoArticleViews'
 
 export function generateStaticParams() {
-  const langs = ['pl', 'en'] as const
-  return langs.flatMap((lang) =>
+  return LOCALES.flatMap((lang) =>
     DEVICE_SEO_ARTICLES.map((a) => ({ lang, slug: a.slug })),
   )
 }

@@ -132,6 +132,10 @@
 }
 
 @media (max-width: 860px) {
+  .siteFooter {
+    padding: 16px 16px 18px;
+  }
+
   .footerInner {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -143,5 +147,15 @@
 
   .footerStatus {
     -webkit-line-clamp: 3;
+  }
+}
+
+@media (max-width: 480px) {
+  .siteFooter {
+    padding: 14px 12px 16px;
+  }
+
+  .footerLinks {
+    gap: 8px 12px;
   }
 }

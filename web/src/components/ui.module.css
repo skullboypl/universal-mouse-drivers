@@ -45,7 +45,9 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 0.5rem 2rem 0.5rem 0.75rem;
-  min-width: 140px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
 }
 
 .toggle {
@@ -119,7 +121,8 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-width: 160px;
+  min-width: 0;
+  flex: 1 1 160px;
 }
 
 .fieldLabel {

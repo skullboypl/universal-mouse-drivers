@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { LOCALES } from '@/i18n/locale'
 import { isLocale, type Locale } from '@/i18n/locale'
 import { buildPageMetadata } from '@/lib/seo'
 import { TraySeoView } from '@/views/SeoArticleViews'
 
 export function generateStaticParams() {
-  return [{ lang: 'pl' }, { lang: 'en' }]
+  return LOCALES.map((lang) => ({ lang }))
 }
 
 export async function generateMetadata({

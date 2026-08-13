@@ -172,6 +172,11 @@
 }
 
 @media (max-width: 720px) {
+  .page {
+    width: calc(100% - 24px);
+    padding: 20px 0 48px;
+  }
+
   .heroRow {
     flex-direction: column-reverse;
   }
@@ -183,5 +188,16 @@
 
   .shotGrid {
     grid-template-columns: 1fr;
+  }
+
+  .ctaRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cta,
+  .ctaGhost {
+    justify-content: center;
+    text-align: center;
   }
 }

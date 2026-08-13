@@ -22,10 +22,10 @@ src/styles/tokens.css
 src/styles/global.css
 src/devices/registry.ts
 src/devices/types.ts
-src/devices/redragon-king-ultra/identity.ts
-src/devices/redragon-king-ultra/defaults.ts
-src/devices/redragon-king-ultra/driver.ts
-src/devices/redragon-king-ultra/protocol.ts
+src/devices/mice/redragon/king-ultra/identity.ts
+src/devices/mice/redragon/king-ultra/defaults.ts
+src/devices/mice/redragon/king-ultra/driver.ts
+src/devices/mice/redragon/king-ultra/protocol.ts
 src/transport/types.ts
 src/transport/mock.ts
 src/transport/webhid.ts

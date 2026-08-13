@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { JsonLd } from '@/components/JsonLd'
 import { Shell } from '@/components/Shell'
 import { LocaleProvider } from '@/i18n/LocaleContext'
-import { isLocale, type Locale } from '@/i18n/locale'
+import { isLocale, LOCALES, type Locale } from '@/i18n/locale'
 import {
   softwareApplicationJsonLd,
   websiteJsonLd,
@@ -11,7 +11,7 @@ import {
 import { DeviceSessionProvider } from '@/session/DeviceSessionContext'
 
 export function generateStaticParams() {
-  return [{ lang: 'pl' }, { lang: 'en' }]
+  return LOCALES.map((lang) => ({ lang }))
 }
 
 export default async function LangLayout({

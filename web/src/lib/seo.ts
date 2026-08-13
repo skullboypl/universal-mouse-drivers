@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import type { Locale } from '@/i18n/locale'
+import { LOCALES, LOCALE_HTML_LANG } from '@/i18n/locale'
 import { DEVICE_SEO_ARTICLES, WHY_UMD, BATTERY_TRAY } from './seoContent'
+import { L, OG_LOCALE_TAG, type L10nString } from './l10n'
 import { getSiteUrl, SITE } from './site'
 
 export type SeoPageId =
@@ -16,16 +18,14 @@ export type SeoPageId =
   | 'mouse-gwolves-fenrir-max'
   | 'mouse-logitech-pro-x-superlight'
 
-type Localized = Record<Locale, string>
-
 export interface SeoPage {
   id: SeoPageId
   /** Path under /{lang}, e.g. "" or "/device/settings" */
   path: string
-  title: Localized
-  description: Localized
+  title: L10nString
+  description: L10nString
   /** Short label for OG image eyebrow */
-  eyebrow: Localized
+  eyebrow: L10nString
   /** Index in search engines (tool pages stay indexable as product docs). */
   index?: boolean
 }
@@ -50,14 +50,44 @@ export const SEO_PAGES: Record<SeoPageId, SeoPage> = {
   home: {
     id: 'home',
     path: '',
-    eyebrow: { pl: 'Połącz', en: 'Connect' },
+    eyebrow: {
+      pl: 'Połącz',
+      en: 'Connect',
+      de: 'Verbinden',
+      fr: 'Connecter',
+      es: 'Conectar',
+      pt: 'Ligar',
+      it: 'Collega',
+      zh: '连接',
+      ja: '接続',
+      ko: '연결',
+      ru: 'Подключить',
+    },
     title: {
-      pl: 'Połącz mysz - Universal Mouse Drivers',
-      en: 'Connect mouse - Universal Mouse Drivers',
+      pl: 'Universal Mouse Drivers (UMD) — sterowniki WebHID | umdrivers.com',
+      en: 'Universal Mouse Drivers (UMD) — WebHID mouse drivers | umdrivers.com',
+      de: 'Universal Mouse Drivers (UMD) — WebHID-Maus-Treiber | umdrivers.com',
+      fr: 'Universal Mouse Drivers (UMD) — pilotes souris WebHID | umdrivers.com',
+      es: 'Universal Mouse Drivers (UMD) — drivers WebHID para ratón | umdrivers.com',
+      pt: 'Universal Mouse Drivers (UMD) — drivers WebHID para rato | umdrivers.com',
+      it: 'Universal Mouse Drivers (UMD) — driver mouse WebHID | umdrivers.com',
+      zh: 'Universal Mouse Drivers (UMD) — WebHID 鼠标驱动 | umdrivers.com',
+      ja: 'Universal Mouse Drivers (UMD) — WebHID マウスドライバー | umdrivers.com',
+      ko: 'Universal Mouse Drivers (UMD) — WebHID 마우스 드라이버 | umdrivers.com',
+      ru: 'Universal Mouse Drivers (UMD) — WebHID-драйверы мыши | umdrivers.com',
     },
     description: {
-      pl: 'Sterowniki WebHID w przeglądarce dla Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max 8K i Logitech PRO X SUPERLIGHT. DPI, przyciski i profile bez instalacji OEM.',
-      en: 'Browser WebHID drivers for Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max 8K and Logitech PRO X SUPERLIGHT. DPI, buttons and profiles without an OEM install.',
+      pl: 'Oficjalna strona umdrivers.com: darmowe sterowniki WebHID (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, przyciski, profile + opcjonalny Battery Tray.',
+      en: 'Official site umdrivers.com: free WebHID drivers (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, buttons, profiles + optional Battery Tray.',
+      de: 'Offizielle Seite umdrivers.com: kostenlose WebHID-Treiber (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, Tasten, Profile + optional Battery Tray.',
+      fr: 'Site officiel umdrivers.com : pilotes WebHID gratuits (Chrome/Edge). Live : Redragon King Ultra, Rampage Blitz Ultimate. WIP : Fenrir Max 8K, PRO X SUPERLIGHT. DPI, boutons, profils + Battery Tray optionnel.',
+      es: 'Sitio oficial umdrivers.com: drivers WebHID gratis (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, botones, perfiles + Battery Tray opcional.',
+      pt: 'Site oficial umdrivers.com: drivers WebHID grátis (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, botões, perfis + Battery Tray opcional.',
+      it: 'Sito ufficiale umdrivers.com: driver WebHID gratis (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, pulsanti, profili + Battery Tray opzionale.',
+      zh: '官网 umdrivers.com：免费 WebHID 驱动（Chrome/Edge）。Live：Redragon King Ultra、Rampage Blitz Ultimate。WIP：Fenrir Max 8K、PRO X SUPERLIGHT。DPI、按键、配置 + 可选 Battery Tray。',
+      ja: '公式サイト umdrivers.com：無料 WebHID ドライバー（Chrome/Edge）。Live：Redragon King Ultra、Rampage Blitz Ultimate。WIP：Fenrir Max 8K、PRO X SUPERLIGHT。DPI・ボタン・プロファイル + 任意の Battery Tray。',
+      ko: '공식 사이트 umdrivers.com: 무료 WebHID 드라이버(Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, 버튼, 프로필 + 선택적 Battery Tray.',
+      ru: 'Официальный сайт umdrivers.com: бесплатные WebHID-драйверы (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, кнопки, профили + опциональный Battery Tray.',
     },
   },
   why: {
@@ -155,9 +185,10 @@ export function ogImageUrl(page: SeoPageId, lang: Locale): string {
   // Static PNGs in /public/og — CapRover next/og ImageResponse 502s; Discord needs a real .png.
   // ?v= busts Discord/CDN cache after regenerating assets.
   const v = '2'
-  if (page === 'home') return absoluteUrl(`/og/home-${lang}.png?v=${v}`)
-  if (page === 'why') return absoluteUrl(`/og/why-${lang}.png?v=${v}`)
-  if (page === 'tray') return absoluteUrl(`/og/tray-${lang}.png?v=${v}`)
+  const assetLang = lang === 'pl' ? 'pl' : 'en'
+  if (page === 'home') return absoluteUrl(`/og/home-${assetLang}.png?v=${v}`)
+  if (page === 'why') return absoluteUrl(`/og/why-${assetLang}.png?v=${v}`)
+  if (page === 'tray') return absoluteUrl(`/og/tray-${assetLang}.png?v=${v}`)
   return absoluteUrl(`/og/default.png?v=${v}`)
 }
 
@@ -166,16 +197,17 @@ export function buildPageMetadata(
   lang: Locale,
 ): Metadata {
   const page = SEO_PAGES[pageId]
-  const title = page.title[lang]
-  const description = page.description[lang]
+  const title = L(page.title, lang)
+  const description = L(page.description, lang)
   const canonicalPath = localePath(lang, page.path)
   const canonical = absoluteUrl(canonicalPath)
   const og = ogImageUrl(pageId, lang)
   const index = page.index !== false
 
   const languages: Record<string, string> = {}
-  for (const loc of SITE.locales) {
-    languages[loc] = localePath(loc, page.path)
+  for (const loc of LOCALES) {
+    const hrefLang = loc === 'zh' ? 'zh-CN' : loc
+    languages[hrefLang] = localePath(loc, page.path)
   }
   languages['x-default'] = localePath('en', page.path)
 
@@ -191,7 +223,7 @@ export function buildPageMetadata(
       description,
       url: canonical,
       siteName: SITE.name,
-      locale: lang === 'pl' ? 'pl_PL' : 'en_US',
+      locale: OG_LOCALE_TAG[lang],
       type: 'website',
       images: [
         {
@@ -221,11 +253,11 @@ export function softwareApplicationJsonLd(lang: Locale) {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: SITE.name,
-    alternateName: SITE.shortName,
+    alternateName: [SITE.shortName, 'UMD WebHID', SITE.domain],
     applicationCategory: 'UtilitiesApplication',
     operatingSystem: 'Windows, Chrome, Edge',
-    description: home.description[lang],
-    url: absoluteUrl(localePath(lang, '')),
+    description: L(home.description, lang),
+    url: getSiteUrl(),
     image: ogImageUrl('home', lang),
     offers: {
       '@type': 'Offer',
@@ -236,9 +268,10 @@ export function softwareApplicationJsonLd(lang: Locale) {
       '@type': 'Organization',
       name: 'SkullMedia',
       email: 'github@skullmedia.pl',
+      url: getSiteUrl(),
       sameAs: [...SITE.sameAs],
     },
-    inLanguage: lang,
+    inLanguage: LOCALE_HTML_LANG[lang],
   }
 }
 
@@ -247,7 +280,7 @@ export function websiteJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: SITE.name,
-    alternateName: SITE.shortName,
+    alternateName: [SITE.shortName, SITE.domain],
     url: getSiteUrl(),
     inLanguage: [...SITE.locales],
     potentialAction: {

@@ -16,7 +16,7 @@ import {
   resolveFenrirSleepSec,
 } from '../devices/mice/gwolves/fenrir-max/sleep'
 import { useLocale } from '../i18n/LocaleContext'
-import { LOCALES, type Locale } from '../i18n/locale'
+import { LOCALES, LOCALE_NATIVE_NAMES, type Locale } from '../i18n/locale'
 import { useT } from '../i18n/useT'
 import { useDeviceSession } from '../session/DeviceSessionContext'
 import {
@@ -111,7 +111,7 @@ export function SettingsPage() {
         >
           {LOCALES.map((code) => (
             <option key={code} value={code}>
-              {code === 'pl' ? tr('settings.langPl') : tr('settings.langEn')}
+              {LOCALE_NATIVE_NAMES[code]}
             </option>
           ))}
         </Select>
@@ -311,7 +311,7 @@ export function SettingsPage() {
         )}
 
         <p style={{ marginTop: 14, marginBottom: 0 }}>
-          <a href="https://mouse.vxh.pl" target="_blank" rel="noreferrer">
+          <a href="https://umdrivers.com" target="_blank" rel="noreferrer">
             {tr('settings.mouseSite')}
           </a>
         </p>

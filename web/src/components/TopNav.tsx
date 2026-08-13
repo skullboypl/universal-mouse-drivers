@@ -2,15 +2,16 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useId, useState } from 'react'
 import { UMD } from '@/brand/umd'
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
 import { useLocale } from '@/i18n/LocaleContext'
-import { LOCALE_LABELS, LOCALES, type Locale } from '@/i18n/locale'
 import { useT } from '@/i18n/useT'
 import type { MessageKey } from '@/i18n/messages'
 import { useDeviceSession } from '@/session/DeviceSessionContext'
 import { Button } from './Button'
+import { LanguageMenu } from './LanguageMenu'
 import styles from './TopNav.module.css'
 
 const KING_TABS: { path: string; key: MessageKey; disabled?: boolean }[] = [
@@ -24,6 +25,8 @@ const OEM_TABS: { path: string; key: MessageKey }[] = [
   { path: '/device/buttons', key: 'nav.mouse' },
   { path: '/device/settings', key: 'nav.settings' },
 ]
+
+type MarketingLink = { href: string; key: MessageKey }
 
 function isMarketingPath(pathname: string): boolean {
   const p = pathname.replace(/\/+$/, '') || '/'
@@ -58,7 +61,7 @@ export function TopNav() {
     deviceBusy,
     busyKind,
   } = useDeviceSession()
-  const { lp, locale, setLocale } = useLocale()
+  const { lp } = useLocale()
   const tr = useT()
   const pathname = usePathname() || ''
   const onMarketing = !connected && isMarketingPath(pathname)
@@ -67,6 +70,39 @@ export function TopNav() {
     driver?.identity.id === SUPERLIGHT_IDENTITY.id
   const tabs = oemSinglePage ? OEM_TABS : KING_TABS
   const refreshing = deviceBusy && busyKind === 'refresh'
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuId = useId()
+
+  const marketingLinks: MarketingLink[] = [
+    { href: `${lp('/')}#mice`, key: 'nav.mice' },
+    { href: lp('/tray'), key: 'nav.tray' },
+    { href: lp('/why'), key: 'nav.why' },
+    { href: `${lp('/')}#faq`, key: 'nav.faq' },
+    { href: `${lp('/')}#contact`, key: 'nav.contact' },
+  ]
+
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    const onResize = () => {
+      if (window.matchMedia('(min-width: 981px)').matches) setMenuOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('resize', onResize)
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('resize', onResize)
+      document.body.style.overflow = prev
+    }
+  }, [menuOpen])
 
   return (
     <header className={styles.nav}>
@@ -116,24 +152,18 @@ export function TopNav() {
         </nav>
       ) : onMarketing ? (
         <nav className={styles.homeLinks} aria-label={tr('nav.siteNav')}>
-          <Link className={styles.homeLink} href={`${lp('/')}#mice`}>
-            {tr('nav.mice')}
-          </Link>
-          <Link className={styles.homeLink} href={lp('/tray')}>
-            {tr('nav.tray')}
-          </Link>
-          <Link className={styles.homeLink} href={lp('/why')}>
-            {tr('nav.why')}
-          </Link>
-          <Link className={styles.homeLink} href={`${lp('/')}#faq`}>
-            {tr('nav.faq')}
-          </Link>
-          <Link className={styles.homeLink} href={`${lp('/')}#contact`}>
-            {tr('nav.contact')}
-          </Link>
+          {marketingLinks.map((link) => (
+            <Link
+              key={link.key}
+              className={styles.homeLink}
+              href={link.href}
+            >
+              {tr(link.key)}
+            </Link>
+          ))}
         </nav>
       ) : (
-        <div />
+        <div className={styles.navSpacer} />
       )}
 
       <div className={styles.meta}>
@@ -216,30 +246,59 @@ export function TopNav() {
           <span className={styles.pillMuted}>{transportKind}</span>
         ) : null}
         {connected && (
-          <Button variant="ghost" onClick={() => void disconnect()}>
+          <Button
+            variant="ghost"
+            className={styles.disconnectBtn}
+            onClick={() => void disconnect()}
+          >
             {tr('nav.disconnect')}
           </Button>
         )}
-        <div
-          className={styles.lang}
-          role="group"
-          aria-label={tr('footer.language')}
-        >
-          {LOCALES.map((code) => (
-            <button
-              key={code}
-              type="button"
-              className={
-                code === locale ? styles.langActive : styles.langBtn
-              }
-              aria-pressed={code === locale}
-              onClick={() => setLocale(code as Locale)}
-            >
-              {LOCALE_LABELS[code]}
-            </button>
-          ))}
-        </div>
+        <LanguageMenu />
+        {onMarketing && (
+          <button
+            type="button"
+            className={styles.menuBtn}
+            aria-expanded={menuOpen}
+            aria-controls={menuId}
+            aria-label={menuOpen ? tr('nav.closeMenu') : tr('nav.openMenu')}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span className={styles.menuBars} data-open={menuOpen || undefined}>
+              <span />
+              <span />
+              <span />
+            </span>
+          </button>
+        )}
       </div>
+
+      {onMarketing && menuOpen ? (
+        <>
+          <button
+            type="button"
+            className={styles.menuBackdrop}
+            aria-label={tr('nav.closeMenu')}
+            onClick={() => setMenuOpen(false)}
+          />
+          <nav
+            id={menuId}
+            className={styles.mobileMenu}
+            aria-label={tr('nav.siteNav')}
+          >
+            {marketingLinks.map((link) => (
+              <Link
+                key={link.key}
+                className={styles.mobileLink}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+              >
+                {tr(link.key)}
+              </Link>
+            ))}
+          </nav>
+        </>
+      ) : null}
     </header>
   )
 }

@@ -25,7 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         alternates: {
           languages: Object.fromEntries(
             SITE.locales.map((loc) => [
-              loc,
+              loc === 'zh' ? 'zh-CN' : loc,
               absoluteUrl(localePath(loc, page.path)),
             ]),
           ),

@@ -34,7 +34,7 @@ internal sealed class AppSettings
     // Autostart UMD Battery Tray with Windows (Startup folder shortcut).
     public bool RunAtStartup { get; set; }
 
-    // Check mouse.vxh.pl for a newer EXE on launch.
+    // Check umdrivers.com for a newer EXE on launch.
     public bool AutoUpdateOnStart { get; set; } = true;
 
     public string UpdateBaseUrl { get; set; } = AppConstants.DefaultUpdateBaseUrl;
@@ -43,6 +43,9 @@ internal sealed class AppSettings
     /// Preferred mouse as <c>VID:PID</c> (e.g. <c>3554:F54F</c>). When null, auto-picks first available.
     /// </summary>
     public string? PreferredDeviceKey { get; set; }
+
+    /// <summary>UI language code (pl/en/de/…), same as umdrivers.com.</summary>
+    public string UiLanguage { get; set; } = UiLang.FromOs();
 
     public static AppSettings Load()
     {
@@ -53,10 +56,12 @@ internal sealed class AppSettings
 
             var json = File.ReadAllText(SettingsPath);
             var settings = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
-            // Migrate canonical site after rebrand to mouse.vxh.pl
+            settings.UiLanguage = UiLang.Normalize(settings.UiLanguage);
+            // Migrate canonical site → umdrivers.com
             if (string.IsNullOrWhiteSpace(settings.UpdateBaseUrl)
                 || settings.UpdateBaseUrl.Contains("umd.skullmedia.pl", StringComparison.OrdinalIgnoreCase)
-                || settings.UpdateBaseUrl.Contains("umd.example.com", StringComparison.OrdinalIgnoreCase))
+                || settings.UpdateBaseUrl.Contains("umd.example.com", StringComparison.OrdinalIgnoreCase)
+                || settings.UpdateBaseUrl.Contains("mouse.vxh.pl", StringComparison.OrdinalIgnoreCase))
             {
                 settings.UpdateBaseUrl = AppConstants.DefaultUpdateBaseUrl;
                 try { settings.Save(); } catch { /* ignore */ }

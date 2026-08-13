@@ -1,10 +1,28 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { headers } from 'next/headers'
+import {
+  isLocale,
+  LOCALE_HTML_LANG,
+  LOCALES,
+  type Locale,
+} from '@/i18n/locale'
 import { SITE, getSiteUrl } from '@/lib/site'
 import { ogImageUrl } from '@/lib/seo'
 import './globals.css'
 
 const siteUrl = getSiteUrl()
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#0a0c10',
+}
+
+const languageAlternates = Object.fromEntries([
+  ...LOCALES.map((l) => [l === 'zh' ? 'zh-CN' : l, `/${l}`] as const),
+  ['x-default', '/en'] as const,
+])
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -63,11 +81,7 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true },
   },
   alternates: {
-    languages: {
-      pl: '/pl',
-      en: '/en',
-      'x-default': '/en',
-    },
+    languages: languageAlternates,
   },
 }
 
@@ -75,9 +89,10 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const h = await headers()
-  const lang = h.get('x-umd-locale') === 'en' ? 'en' : 'pl'
+  const raw = h.get('x-umd-locale')
+  const locale: Locale = isLocale(raw) ? raw : 'pl'
   return (
-    <html lang={lang} suppressHydrationWarning>
+    <html lang={LOCALE_HTML_LANG[locale]} suppressHydrationWarning>
       <body>{children}</body>
     </html>
   )

@@ -40,6 +40,10 @@
   font-size: 0.95rem;
   color: var(--fg);
   transition: background 0.15s;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .summary::-webkit-details-marker {
@@ -48,10 +52,11 @@
 
 .summary::after {
   content: '+';
-  float: right;
+  flex-shrink: 0;
   color: var(--accent-hot);
   font-family: var(--mono);
   font-weight: 700;
+  line-height: 1.2;
 }
 
 .item[open] .summary::after {

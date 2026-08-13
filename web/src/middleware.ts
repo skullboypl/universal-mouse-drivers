@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { isLocale } from '@/i18n/locale'
 
-/** Expose locale from /{pl|en}/… so root <html lang> can match the page. */
+/** Expose locale from /{locale}/… so root <html lang> can match the page. */
 export function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers)
   const seg = request.nextUrl.pathname.split('/')[1]
-  if (seg === 'pl' || seg === 'en') {
+  if (isLocale(seg)) {
     requestHeaders.set('x-umd-locale', seg)
   }
   return NextResponse.next({

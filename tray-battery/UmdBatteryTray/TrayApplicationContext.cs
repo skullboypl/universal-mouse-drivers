@@ -39,32 +39,40 @@ internal sealed class TrayApplicationContext : ApplicationContext
         };
         _menu.Items.Add(versionItem);
         _menu.Items.Add(new ToolStripSeparator());
-        _menu.Items.Add("Refresh now", null, (_, _) => _ = RefreshBatteryAsync());
+        _menu.Items.Add(UiText.T(_settings.UiLanguage, "tray.refreshNow"), null, (_, _) => _ = RefreshBatteryAsync());
 
-        _deviceMenuItem = new ToolStripMenuItem("Mouse");
+        _deviceMenuItem = new ToolStripMenuItem(UiText.T(_settings.UiLanguage, "settings.mouse"));
         _menu.Items.Add(_deviceMenuItem);
         _menu.Opening += (_, _) => RebuildDeviceMenu();
 
-        _widgetMenuItem = new ToolStripMenuItem("Show desktop widget", null, ToggleWidget)
+        _widgetMenuItem = new ToolStripMenuItem(
+            UiText.T(_settings.UiLanguage, "settings.showWidget"),
+            null,
+            ToggleWidget)
         {
             Checked = _settings.WidgetVisible,
         };
         _menu.Items.Add(_widgetMenuItem);
         _menu.Items.Add(new ToolStripSeparator());
-        // mouse.vxh.pl and UMD are the same product entry point.
         _menu.Items.Add(
-            "Open UMD (mouse.vxh.pl)",
+            UiText.T(_settings.UiLanguage, "tray.menuOpenSite"),
             null,
             (_, _) => OpenUrl(AppConstants.MouseSiteUrl));
         _menu.Items.Add(new ToolStripSeparator());
-        _menu.Items.Add("Settings…", null, (_, _) => OpenSettings());
+        _menu.Items.Add(
+            UiText.T(_settings.UiLanguage, "tray.menuSettings"),
+            null,
+            (_, _) => OpenSettings());
         _menu.Items.Add(new ToolStripSeparator());
-        _menu.Items.Add("Exit", null, (_, _) => ExitThread());
+        _menu.Items.Add(
+            UiText.T(_settings.UiLanguage, "tray.menuExit"),
+            null,
+            (_, _) => ExitThread());
 
         _trayIcon = new NotifyIcon
         {
             Visible = true,
-            Text = "UMD Battery - starting…",
+            Text = UiText.T(_settings.UiLanguage, "tray.starting"),
             ContextMenuStrip = _menu,
             Icon = _appIcon,
         };

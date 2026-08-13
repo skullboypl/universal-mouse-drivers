@@ -1,4 +1,13 @@
 import { normalizeLocale, type Locale } from './locale'
+import de from './catalogs/de.json'
+import fr from './catalogs/fr.json'
+import es from './catalogs/es.json'
+import pt from './catalogs/pt.json'
+import it from './catalogs/it.json'
+import zh from './catalogs/zh.json'
+import ja from './catalogs/ja.json'
+import ko from './catalogs/ko.json'
+import ru from './catalogs/ru.json'
 
 export type { Locale } from './locale'
 export { LOCALES, LOCALE_LABELS } from './locale'
@@ -18,6 +27,8 @@ export type MessageKey =
   | 'nav.faq'
   | 'nav.tray'
   | 'nav.siteNav'
+  | 'nav.openMenu'
+  | 'nav.closeMenu'
   | 'nav.deviceNav'
   | 'nav.refreshData'
   | 'connect.faqTitle'
@@ -273,6 +284,8 @@ const en: Dict = {
   'nav.faq': 'FAQ',
   'nav.tray': 'Battery tray',
   'nav.siteNav': 'Site',
+  'nav.openMenu': 'Open menu',
+  'nav.closeMenu': 'Close menu',
   'nav.deviceNav': 'Device',
   'nav.refreshData': 'Refresh data',
   'connect.faqTitle': 'FAQ',
@@ -501,9 +514,9 @@ const en: Dict = {
   'settings.boot': 'Run on system boot (requires bridge helper)',
   'settings.trayOnline': 'Tray online · v{v} · battery {n}%',
   'settings.trayOffline':
-    'Tray offline - run UmdBatteryTray.exe on this PC (browser on mouse.vxh.pl talks to the tray on your machine; the server cannot)',
+    'Tray offline - run UmdBatteryTray.exe on this PC (browser on umdrivers.com talks to the tray on your machine; the server cannot)',
   'settings.trayDownloadRun': 'Download and run UMD Battery Tray',
-  'settings.mouseSite': 'UMD · mouse.vxh.pl',
+  'settings.mouseSite': 'UMD · umdrivers.com',
   'settings.winMouse': 'Windows Mouse Properties',
   'settings.winMouseAlert':
     'Windows Mouse Properties is opened by the optional local bridge (main.cpl).',
@@ -558,6 +571,8 @@ const pl: Dict = {
   'nav.faq': 'FAQ',
   'nav.tray': 'Tray baterii',
   'nav.siteNav': 'Strona',
+  'nav.openMenu': 'Otwórz menu',
+  'nav.closeMenu': 'Zamknij menu',
   'nav.deviceNav': 'Urządzenie',
   'nav.refreshData': 'Odśwież dane',
   'connect.faqTitle': 'FAQ',
@@ -790,9 +805,9 @@ const pl: Dict = {
   'settings.boot': 'Uruchom przy starcie systemu (wymaga bridge)',
   'settings.trayOnline': 'Tray online · v{v} · bateria {n}%',
   'settings.trayOffline':
-    'Tray wyłączony - uruchom UmdBatteryTray.exe na tym PC (przeglądarka na mouse.vxh.pl łączy się z trayem u Ciebie; serwer tego nie widzi)',
+    'Tray wyłączony - uruchom UmdBatteryTray.exe na tym PC (przeglądarka na umdrivers.com łączy się z trayem u Ciebie; serwer tego nie widzi)',
   'settings.trayDownloadRun': 'Pobierz i uruchom UMD Battery Tray',
-  'settings.mouseSite': 'UMD · mouse.vxh.pl',
+  'settings.mouseSite': 'UMD · umdrivers.com',
   'settings.winMouse': 'Właściwości myszy Windows',
   'settings.winMouseAlert':
     'Właściwości myszy Windows otwiera opcjonalny lokalny bridge (main.cpl).',
@@ -832,7 +847,19 @@ const pl: Dict = {
   'write.error': 'Zapis nieudany',
 }
 
-const dictionaries: Record<Locale, Dict> = { pl, en }
+const dictionaries: Record<Locale, Dict> = {
+  pl,
+  en,
+  de: de as Dict,
+  fr: fr as Dict,
+  es: es as Dict,
+  pt: pt as Dict,
+  it: it as Dict,
+  zh: zh as Dict,
+  ja: ja as Dict,
+  ko: ko as Dict,
+  ru: ru as Dict,
+}
 
 export type MessageVars = Record<string, string | number>
 
@@ -841,7 +868,7 @@ export function t(
   key: MessageKey,
   vars?: MessageVars,
 ): string {
-  const loc = normalizeLocale(locale) ?? 'pl'
+  const loc = normalizeLocale(locale) ?? 'en'
   let text = dictionaries[loc][key] ?? en[key] ?? key
   if (vars) {
     for (const [k, v] of Object.entries(vars)) {

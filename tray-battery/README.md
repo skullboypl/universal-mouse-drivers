@@ -19,7 +19,7 @@ Independent of the Vite WebHID app (both talk to the mouse; close Chrome WebHID 
 - Optional always-on-top desktop widget (drag, opacity, size)
 - Settings window (right-click tray)
 - Poll interval 15–300 s (default 120)
-- Auto-update check on start (manifest from mouse.vxh.pl)
+- Auto-update check on start (manifest from umdrivers.com)
 - Single-file self-contained `.exe`
 - Multi-mouse picker: tray menu **Mouse**, Settings combo, or `POST /device` — persists `PreferredDeviceKey` (`VID:PID`)
 

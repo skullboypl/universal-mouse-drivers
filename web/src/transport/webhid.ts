@@ -41,7 +41,7 @@ interface HIDReportItem {
 
 function assertWebHid(): HID {
   if (!navigator.hid) {
-    throw new Error('WebHID unavailable - use Chrome/Edge on mouse.vxh.pl')
+    throw new Error('WebHID unavailable - use Chrome/Edge on umdrivers.com')
   }
   return navigator.hid
 }
