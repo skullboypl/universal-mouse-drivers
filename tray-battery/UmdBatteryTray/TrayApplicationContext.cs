@@ -20,6 +20,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private Icon? _currentIcon;
     private BatteryReading? _lastReading;
     private SettingsForm? _settingsForm;
+    private UpdatePromptForm? _updateForm;
     private bool _rebuildingDeviceMenu;
 
     public TrayApplicationContext()
@@ -58,6 +59,10 @@ internal sealed class TrayApplicationContext : ApplicationContext
             UiText.T(_settings.UiLanguage, "tray.menuOpenSite"),
             null,
             (_, _) => OpenUrl(AppConstants.MouseSiteUrl));
+        _menu.Items.Add(
+            UiText.T(_settings.UiLanguage, "tray.menuCheckUpdates"),
+            null,
+            (_, _) => OpenUpdatePrompt());
         _menu.Items.Add(new ToolStripSeparator());
         _menu.Items.Add(
             UiText.T(_settings.UiLanguage, "tray.menuSettings"),
@@ -97,7 +102,17 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
         RebuildDeviceMenu();
         _ = RefreshBatteryAsync();
-        _ = CheckUpdatesAsync();
+        if (_settings.AutoUpdateOnStart)
+        {
+            var updateKick = new System.Windows.Forms.Timer { Interval = 1200 };
+            updateKick.Tick += (_, _) =>
+            {
+                updateKick.Stop();
+                updateKick.Dispose();
+                OpenUpdatePrompt(silentIfUpToDate: true);
+            };
+            updateKick.Start();
+        }
     }
 
     private object BuildDevicesPayload()
@@ -257,13 +272,72 @@ internal sealed class TrayApplicationContext : ApplicationContext
         catch { /* ignore */ }
     }
 
-    private async Task CheckUpdatesAsync()
+    /// <summary>
+    /// Context-menu / startup update UI. When <paramref name="silentIfUpToDate"/> is true
+    /// (auto-check on start), the dialog is only shown if an update is available.
+    /// </summary>
+    private void OpenUpdatePrompt(bool silentIfUpToDate = false)
+    {
+        void Show()
+        {
+            if (_updateForm is { IsDisposed: false })
+            {
+                _updateForm.BringToFront();
+                _updateForm.Activate();
+                return;
+            }
+
+            if (silentIfUpToDate)
+            {
+                _ = CheckUpdatesQuietThenPromptAsync();
+                return;
+            }
+
+            _updateForm = new UpdatePromptForm(_settings);
+            _updateForm.FormClosed += (_, _) => _updateForm = null;
+            _updateForm.Show();
+            _updateForm.BringToFront();
+        }
+
+        try
+        {
+            if (_menu.IsHandleCreated && _menu.InvokeRequired)
+            {
+                _menu.BeginInvoke(Show);
+                return;
+            }
+        }
+        catch { /* fall through */ }
+
+        Show();
+    }
+
+    private async Task CheckUpdatesQuietThenPromptAsync()
     {
         try
         {
-            await new UpdateService(_settings).CheckAndApplyAsync();
+            var outcome = await new UpdateService(_settings).FetchLatestAsync();
+            if (!outcome.Success || !outcome.UpdateAvailable)
+                return;
+
+            RunOnUi(() =>
+            {
+                if (_updateForm is { IsDisposed: false })
+                {
+                    _updateForm.BringToFront();
+                    return;
+                }
+
+                _updateForm = new UpdatePromptForm(_settings);
+                _updateForm.FormClosed += (_, _) => _updateForm = null;
+                _updateForm.Show();
+                _updateForm.BringToFront();
+            });
         }
-        catch { /* ignore update failures */ }
+        catch
+        {
+            /* ignore auto-check failures */
+        }
     }
 
     /// <summary>
