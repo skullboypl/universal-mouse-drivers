@@ -113,3 +113,27 @@ Never `http://umdrivers.com`.
 ## Git deploy key (opcjonalnie)
 
 Jeśli CapRover łączy się po SSH do GitHuba, wklej **publiczny** klucz (`deploykey-caprover.pub`) jako Deploy Key w repo. **Nie** commituj prywatnego `deploykey-caprover`.
+
+## Security / incident (2026-08-18)
+
+Objawy w CapRover logs (to **nie** jest crash od WebHID):
+
+- `Error: x` z `digest` = base64 **całego `process.env`** (w tym `ADMIN_*`)
+- `sh: curl: not found` → potem `wget` z IP (np. `77.90.13.20`) do `/tmp/dashboard`
+- masa `[umd:webhid]` / `[umd:driver]` = tylko client log sink (hałas, nie RCE)
+
+**Przyczyna:** Next.js **15.5.2** podatny na **React2Shell** (CVE-2025-55182 / CVE-2025-66478) — RCE przez React Server Components. Publiczny `/api/umd-log` tylko zaśmiecał logi.
+
+**Naprawa w repo (od tego commit):**
+
+- Next.js ≥ **15.5.23**
+- `/api/umd-log` → **404 w production**
+- runner image bez `wget`/`curl`
+
+### Co zrób natychmiast na CapRover
+
+1. **Force rebuild** tej apki z `main` (czysty kontener — stary jest podejrzany).
+2. **Zmień** `ADMIN_PASSWORD` + `ADMIN_SECRET` (stare wyciekły w logach).
+3. Sprawdź host: `docker ps`, CPU, procesy w `/tmp` na VPS; jeśli miner na hoście — czyść CapRover/VPS.
+4. Upewnij się, że CapRover dashboard **nie** jest publiczny bez hasła.
+5. Po deployu: `curl -sS -o /dev/null -w "%{http_code}\n" -X POST https://umdrivers.com/api/umd-log` → oczekuj **404**.

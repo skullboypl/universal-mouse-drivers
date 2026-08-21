@@ -39,9 +39,14 @@ ENV DATA_DIR=/app/data
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV CAPROVER_GIT_COMMIT_SHA=$CAPROVER_GIT_COMMIT_SHA
 
+# Drop common post-RCE download helpers (busybox wget/curl) so a compromised
+# process cannot easily pull miners like the 2026-08-18 umdrivers.com incident.
 RUN addgroup -S nodejs && adduser -S nextjs -G nodejs \
   && mkdir -p /app/data/downloads \
-  && chown -R nextjs:nodejs /app/data
+  && chown -R nextjs:nodejs /app/data \
+  && rm -f /usr/bin/wget /bin/wget /usr/bin/curl /bin/curl \
+       /usr/bin/nc /bin/nc /usr/bin/ncat /bin/ncat 2>/dev/null || true \
+  && chmod 755 /tmp && chmod +t /tmp
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/data/umd-store.seed.json ./data-seed/umd-store.json
