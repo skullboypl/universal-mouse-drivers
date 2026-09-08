@@ -43,7 +43,9 @@ Network users of umdrivers.com can obtain corresponding source via this public G
 
 ### OpenMouse community
 
-Hundreds of VID:PID pairs from OpenMouse `SUPPORTED_HID_FILTERS` (Razer, Pulsar, Glorious, SteelSeries, Lamzu, …). Browse and filter on the [Community hub](https://umdrivers.com/en/mice/openmouse). Feature depth follows each OpenMouse client. Tray enumerates community devices; battery readers land per protocol family over time.
+Hundreds of VID:PID pairs from OpenMouse `SUPPORTED_HID_FILTERS` (Razer, Pulsar, Glorious, SteelSeries, Lamzu, …). Browse and filter on the [Community hub](https://umdrivers.com/en/mice/openmouse). Feature depth follows each OpenMouse client.
+
+**Battery Tray (v1.9+)** detects the full OpenMouse catalog. Battery **%** is wired for: G-Wolves, Logitech HID++, VGN / Pulsar / ATK / Teevolution, Lamzu / Glorious Classic, K-snake, SteelSeries, Razer, Keychron, WALLHACK, MCHOSE, Ninjutso. Other catalog brands stay **n/a** until OpenMouse exposes a battery HID path (or a port lands). Details: [`tray-battery/README.md`](tray-battery/README.md).
 
 Want your mouse listed? Open a **[Device request](https://github.com/skullboypl/universal-mouse-drivers/issues/new?template=device_request.yml)** issue.
 
