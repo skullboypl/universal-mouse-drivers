@@ -489,10 +489,13 @@ internal sealed class TrayApplicationContext : ApplicationContext
                 BatteryStatus.Charging => "charging",
                 BatteryStatus.Full => "full",
                 BatteryStatus.Discharging => "on battery",
+                BatteryStatus.Unknown => "battery n/a",
                 _ => "connected",
             };
             var device = _reader.DeviceLabel ?? "UMD mouse";
-            _trayIcon.Text = $"UMD: {reading.Value.Percent}% ({status}) · {TrimTip(device)}";
+            _trayIcon.Text = reading.Value.Status == BatteryStatus.Unknown
+                ? TrimTip($"UMD: n/a · {device}")
+                : $"UMD: {reading.Value.Percent}% ({status}) · {TrimTip(device)}";
         }
         else
         {
