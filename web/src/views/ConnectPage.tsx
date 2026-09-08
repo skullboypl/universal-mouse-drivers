@@ -231,7 +231,7 @@ export function ConnectPage() {
             <Button
               variant="primary"
               disabled={!webHidOk || busyAny}
-              onClick={() => void goHid(undefined, 'any')}
+              onClick={() => void goHid({ forcePicker: true }, 'any')}
             >
               {connectingKey === 'any' ? (
                 <span className={styles.rowBusy}>
@@ -247,7 +247,7 @@ export function ConnectPage() {
               disabled={!webHidOk || busyAny}
               onClick={() =>
                 void goHid(
-                  { catalogId: OPENMOUSE_BACKED_ID },
+                  { catalogId: OPENMOUSE_BACKED_ID, forcePicker: true },
                   `catalog:${OPENMOUSE_BACKED_ID}`,
                 )
               }
@@ -381,7 +381,7 @@ export function ConnectPage() {
               <Button
                 variant="ghost"
                 disabled={!webHidOk || busyAny}
-                onClick={() => void goHid(undefined, 'other')}
+                onClick={() => void goHid({ forcePicker: true }, 'other')}
               >
                 {connectingKey === 'other' ? (
                   <span className={styles.rowBusy}>
@@ -547,7 +547,7 @@ export function ConnectPage() {
               disabled={!webHidOk || busyAny}
               onClick={() =>
                 void goHid(
-                  { catalogId: OPENMOUSE_BACKED_ID },
+                  { catalogId: OPENMOUSE_BACKED_ID, forcePicker: true },
                   `catalog:${OPENMOUSE_BACKED_ID}`,
                 )
               }

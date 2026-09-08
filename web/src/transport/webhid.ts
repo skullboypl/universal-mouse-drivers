@@ -170,6 +170,11 @@ export type HidPickTarget = {
   vendorId?: number
   /** When set, only that family's VID:PIDs are offered / accepted. */
   catalogId?: string
+  /**
+   * Always open the Chrome/Edge HID chooser.
+   * Skips auto-connect to a previously authorized device from getDevices().
+   */
+  forcePicker?: boolean
 }
 
 function filtersForTarget(target?: HidPickTarget): Array<{
@@ -246,8 +251,9 @@ function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
 }
 
 /**
- * Pick a supported mouse (King Ultra or Fenrir Max) without opening it.
- * With a target (saved click), never falls back to another brand.
+ * Pick a supported mouse without opening it.
+ * With a saved/catalog VID:PID target, may reuse an already-authorized device.
+ * With forcePicker (or no specific VID/PID), always shows the browser chooser.
  */
 export async function pickSupportedHidDevice(
   target?: number | HidPickTarget,
@@ -256,21 +262,27 @@ export async function pickSupportedHidDevice(
     typeof target === 'number' ? { productId: target } : target
   const hid = assertWebHid()
   const filters = filtersForTarget(opts)
-  const existing = (await hid.getDevices())
-    .filter((d) => matchesTarget(d, opts))
-    .sort((a, b) => scoreDevice(b) - scoreDevice(a))
+  const hasSpecificPid = opts?.productId != null
+  const forcePicker =
+    opts?.forcePicker === true ||
+    (!hasSpecificPid && opts?.vendorId == null)
 
   let selected: HIDDevice | undefined
-  if (opts?.productId != null) {
-    selected = existing.find((d) => d.productId === opts.productId)
-    // Same catalog/family only - never another brand
-    if (!selected && opts.catalogId) {
-      selected = existing[0]
-    } else if (!selected && opts.vendorId != null) {
-      selected = existing.find((d) => d.vendorId === opts.vendorId)
+
+  if (!forcePicker) {
+    const existing = (await hid.getDevices())
+      .filter((d) => matchesTarget(d, opts))
+      .sort((a, b) => scoreDevice(b) - scoreDevice(a))
+
+    if (hasSpecificPid) {
+      selected = existing.find((d) => d.productId === opts!.productId)
+      // Same catalog/family only - never another brand
+      if (!selected && opts?.catalogId) {
+        selected = existing[0]
+      } else if (!selected && opts?.vendorId != null) {
+        selected = existing.find((d) => d.vendorId === opts.vendorId)
+      }
     }
-  } else {
-    selected = existing[0]
   }
 
   if (!selected) {
@@ -278,10 +290,10 @@ export async function pickSupportedHidDevice(
     const ranked = [...picked]
       .filter((d) => matchesTarget(d, opts))
       .sort((a, b) => scoreDevice(b) - scoreDevice(a))
-    if (opts?.productId != null) {
+    if (hasSpecificPid) {
       selected =
-        ranked.find((d) => d.productId === opts.productId) ??
-        (opts.catalogId || opts.vendorId != null ? ranked[0] : undefined)
+        ranked.find((d) => d.productId === opts!.productId) ??
+        (opts?.catalogId || opts?.vendorId != null ? ranked[0] : undefined)
     } else {
       selected = ranked[0]
     }
