@@ -6,36 +6,39 @@ using UmdBatteryTray.Protocol.Mice.Logitech.ProXSuperlight;
 namespace UmdBatteryTray.Protocol.OpenMouse;
 
 /// <summary>
-/// OpenMouse catalog devices: detect by VID:PID, then try family battery readers
-/// where UMD already has a wire path (G-Wolves feature reports, Logitech HID++ 0x1004).
-/// Other brands stay connected with battery n/a until Protocol/OpenMouse/{Brand}/ ports land.
+/// OpenMouse catalog devices: prefer native UMD readers (Fenrir / HID++), else
+/// ported OpenMouse battery codecs, else detect-only (n/a).
 /// </summary>
 internal sealed class OpenMouseCommunityBatteryReader : IDisposable
 {
     private enum Family
     {
         Placeholder,
-        Gwolves,
+        GwolvesNative,
         LogitechHidpp,
+        OpenMousePorted,
     }
 
     private Family _family = Family.Placeholder;
     private GwolvesBatteryReader? _gwolves;
     private SuperlightBatteryReader? _logitech;
+    private OmPortedBatteryReader? _ported;
     private HidDevice? _device;
     private string? _deviceLabel;
 
     public bool IsConnected => _family switch
     {
-        Family.Gwolves => _gwolves?.IsConnected == true,
+        Family.GwolvesNative => _gwolves?.IsConnected == true,
         Family.LogitechHidpp => _logitech?.IsConnected == true,
+        Family.OpenMousePorted => _ported?.IsConnected == true,
         _ => _device is not null,
     };
 
     public string? DeviceLabel => _family switch
     {
-        Family.Gwolves => _gwolves?.DeviceLabel ?? _deviceLabel,
+        Family.GwolvesNative => _gwolves?.DeviceLabel ?? _deviceLabel,
         Family.LogitechHidpp => _logitech?.DeviceLabel ?? _deviceLabel,
+        Family.OpenMousePorted => _ported?.DeviceLabel ?? _deviceLabel,
         _ => _deviceLabel,
     };
 
@@ -54,7 +57,7 @@ internal sealed class OpenMouseCommunityBatteryReader : IDisposable
             {
                 _gwolves = new GwolvesBatteryReader();
                 _gwolves.Connect(productId);
-                _family = Family.Gwolves;
+                _family = Family.GwolvesNative;
                 _deviceLabel = _gwolves.DeviceLabel;
                 return;
             }
@@ -80,6 +83,14 @@ internal sealed class OpenMouseCommunityBatteryReader : IDisposable
                 _logitech?.Dispose();
                 _logitech = null;
             }
+        }
+
+        _ported = OmPortedBatteryReader.TryConnect(brand, vendorId, productId);
+        if (_ported is not null)
+        {
+            _family = Family.OpenMousePorted;
+            _deviceLabel = _ported.DeviceLabel;
+            return;
         }
 
         ConnectPlaceholder(vendorId, productId, brand, nameHint);
@@ -114,8 +125,9 @@ internal sealed class OpenMouseCommunityBatteryReader : IDisposable
     {
         return _family switch
         {
-            Family.Gwolves when _gwolves is not null => _gwolves.ReadBattery(),
+            Family.GwolvesNative when _gwolves is not null => _gwolves.ReadBattery(),
             Family.LogitechHidpp when _logitech is not null => _logitech.ReadBattery(),
+            Family.OpenMousePorted when _ported is not null => _ported.ReadBattery(),
             Family.Placeholder when _device is not null =>
                 new BatteryReading(0, BatteryStatus.Unknown),
             _ => throw new InvalidOperationException("Device not connected."),
@@ -128,6 +140,8 @@ internal sealed class OpenMouseCommunityBatteryReader : IDisposable
         _gwolves = null;
         _logitech?.Dispose();
         _logitech = null;
+        _ported?.Dispose();
+        _ported = null;
         _device = null;
         _deviceLabel = null;
         _family = Family.Placeholder;
