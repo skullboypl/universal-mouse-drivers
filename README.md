@@ -1,20 +1,40 @@
-# UMD - Universal Mouse Drivers
+# Universal Mouse Drivers (UMD) × OpenMouse
 
-WebHID configurator (Next.js) + Windows battery tray for OEM gaming mice when factory tools fall short.
+**Live app:** [https://umdrivers.com](https://umdrivers.com)  
+**Public source (AGPL-3.0):** [github.com/skullboypl/universal-mouse-drivers](https://github.com/skullboypl/universal-mouse-drivers)  
+**OpenMouse:** [github.com/OpenMouse-Project](https://github.com/OpenMouse-Project)
 
-**Repo:** https://github.com/skullboypl/udm-universal-mouse-drivers
+Browser **WebHID** configurator for gaming mice + optional Windows **battery tray**.  
+UMD ships **native** drivers for selected SKUs and uses **[OpenMouse mouse-protocol](https://github.com/OpenMouse-Project/mouse-protocol)** for broader HID detection and OpenMouse-backed devices.
+
+## License
+
+This project is licensed under the **GNU Affero General Public License v3.0** — see [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).  
+Network users of umdrivers.com can obtain corresponding source via the public GitHub repo above (AGPL §13).
 
 ## Stack
 
 | Piece | Path |
 |--------|------|
-| Next.js app (SEO `/pl` `/en`, WebHID UI, `/admin`) | [`web/`](web/) |
-| CapRover | [`captain-definition`](captain-definition) + [`Dockerfile`](Dockerfile) → see [`CAPROVER.md`](CAPROVER.md) |
-| JSON store (persistent) | `/app/data/umd-store.json` |
-| Tray download | `/app/data/downloads/UmdBatteryTray.exe` |
+| Next.js app (i18n, WebHID UI) | [`web/`](web/) |
+| CapRover | [`captain-definition`](captain-definition) + [`Dockerfile`](Dockerfile) → [`CAPROVER.md`](CAPROVER.md) |
 | Battery tray (WinForms) | [`tray-battery/`](tray-battery/) |
+| Remote mouse onboarding plan | [`docs/remote-mouse-onboarding.md`](docs/remote-mouse-onboarding.md) |
 
-Legacy Vite prototype: local only under `old/web-app/` (gitignored, not deployed).
+## Supported mice
+
+### Native UMD (full product UI)
+
+| Mouse | Status |
+|--------|--------|
+| Redragon King Ultra (M916OB-ULT) | Live |
+| Rampage Blitz Ultimate | Live |
+| G-Wolves Fenrir Max 8K | WIP |
+| Logitech PRO X SUPERLIGHT (gen1) | WIP |
+
+### OpenMouse-backed
+
+Connect whitelist and control path use OpenMouse `DEVICE_DRIVERS` / vendor filters (Logitech, Razer, Pulsar, G-Wolves, Glorious, SteelSeries, Wooting, …). Feature depth follows each OpenMouse client. Tray battery remains **native UMD mice only** in v1.
 
 ## Dev
 
@@ -24,30 +44,29 @@ npm install
 npm run dev
 ```
 
-Open http://127.0.0.1:3000 → redirects to `/pl` or `/en`.  
-Admin: http://127.0.0.1:3000/admin (default `admin` / `umd-change-me` unless env set).
+Open http://127.0.0.1:3000. Admin is **local `next dev` only**.
 
 ## Tray (Windows)
 
 ```powershell
 cd tray-battery
 .\build.ps1
-# EV code signing (Fenrir-style signtool):
-$env:UMD_SIGN_THUMBPRINT = '<your-ev-cert-sha1>'
-.\sign.ps1
-# Upload signed exe → CapRover Persistent Directory /app/data/downloads/
+.\sign.ps1   # EV code signing — keep certs out of git
 ```
-
-## Hardware whitelist (King Ultra)
-
-- `3554:F54D` mouse
-- `3554:F54F` / `3554:F510` dongle
-
-Do not target Fenrir (`33E4`) or Wooting (`31E3`) during sniff/testing.
 
 ## CapRover
 
-Full checklist: **[CAPROVER.md](CAPROVER.md)**
+See **[CAPROVER.md](CAPROVER.md)**. Deploy from this public repo; secrets stay in CapRover env only.
 
-Persistent directory: **`/app/data`**  
-Env: `ADMIN_USER`, `ADMIN_PASSWORD`, `ADMIN_SECRET`, `DATA_DIR=/app/data`, `NEXT_PUBLIC_SITE_URL`
+## Contributing / new mice
+
+- Native SKU isolation: [`web/src/devices/README.md`](web/src/devices/README.md) + [`LOCK.md`](web/src/devices/LOCK.md)
+- Remote volunteer capture: [`docs/remote-mouse-onboarding.md`](docs/remote-mouse-onboarding.md)
+- Broader HID protocols: contribute upstream to [OpenMouse mouse-protocol](https://github.com/OpenMouse-Project/mouse-protocol)
+
+## Credits
+
+- **SkullMedia / UMD** — product shell, native OEM reverse engineering, tray  
+- **[OpenMouse Project](https://github.com/OpenMouse-Project)** — multi-vendor WebHID protocol library  
+
+Copyright © 2026 SkullMedia Artur Spychalski

@@ -182,6 +182,7 @@ export function ConnectPage() {
   function statusText(status: DeviceSupportStatus) {
     if (status === 'live') return tr('connect.statusLive')
     if (status === 'wip') return tr('connect.statusWip')
+    if (status === 'openmouse') return tr('connect.statusOpenMouse')
     return tr('connect.statusPlanned')
   }
 
@@ -192,7 +193,9 @@ export function ConnectPage() {
     <div className={styles.page} data-brand="umd">
       <section className={styles.hero} aria-label={UMD.name}>
         <div className={styles.heroCopy}>
-          <p className={styles.brandMark}>{UMD.shortName}</p>
+          <p className={styles.brandMark}>
+            {UMD.shortName} × OpenMouse
+          </p>
           <h1 className={styles.headline}>{UMD.name}</h1>
           <p className={styles.lede}>{tr('connect.lede')}</p>
           <div className={styles.ctaRow}>
@@ -339,7 +342,7 @@ export function ConnectPage() {
                           styles.badge,
                           d.status === 'live'
                             ? styles.badgeLive
-                            : d.status === 'wip'
+                            : d.status === 'wip' || d.status === 'openmouse'
                               ? styles.badgeWip
                               : styles.badgePlanned,
                         ].join(' ')}

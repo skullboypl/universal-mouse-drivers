@@ -112,6 +112,12 @@ export function Shell({ children }: { children: ReactNode }) {
             <a href={lp('/why')}>{tr('nav.why')}</a>
             <a href={`${lp('/')}#faq`}>{tr('nav.faq')}</a>
             <a href={`${lp('/')}#contact`}>{tr('nav.contact')}</a>
+            <a href={UMD.sourceUrl} target="_blank" rel="noreferrer">
+              {tr('footer.source')}
+            </a>
+            <a href={UMD.openMouseUrl} target="_blank" rel="noreferrer">
+              {tr('footer.openMouse')}
+            </a>
             <a href={UMD.githubFeedbackUrl} target="_blank" rel="noreferrer">
               GitHub
             </a>

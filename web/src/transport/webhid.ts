@@ -15,6 +15,13 @@ import {
   hidFilters,
   isKingUltraDevice,
 } from '../devices/mice/redragon/king-ultra/identity'
+import {
+  OPENMOUSE_BACKED_ID,
+  matchesOpenMouseVendor,
+  openMouseHidFilters,
+  openMouseScore,
+  openMouseSupports,
+} from '../devices/openmouse'
 import type { Transport } from './types'
 
 export interface HidDeviceInfo {
@@ -108,6 +115,8 @@ function scoreDevice(device: HIDDevice): number {
   if (isOemHidUsbDevice(device.vendorId, device.productId)) score += 100
   if (isFenrirMaxDevice(device.vendorId, device.productId)) score += 100
   if (isSuperlightDevice(device.vendorId, device.productId)) score += 100
+  // OpenMouse-backed (lower than native UMD so King/Blitz/Fenrir/SL win ties)
+  if (openMouseSupports(device)) score += 40 + Math.min(40, openMouseScore(device))
   const outs = collectReports(device, 'output')
   const feats = collectReports(device, 'feature')
   const ins = collectReports(device, 'input')
@@ -130,13 +139,16 @@ function scoreDevice(device: HIDDevice): number {
 }
 
 export function allSupportedHidFilters(): Array<{
-  vendorId: number
-  productId: number
+  vendorId?: number
+  productId?: number
+  usagePage?: number
+  usage?: number
 }> {
   return [
     ...oemHidUsbFilters(),
     ...fenrirMaxHidFilters(),
     ...superlightHidFilters(),
+    ...openMouseHidFilters(),
   ]
 }
 
@@ -147,7 +159,8 @@ export function isSupportedUmdDevice(
   return (
     isOemHidUsbDevice(vendorId, productId) ||
     isFenrirMaxDevice(vendorId, productId) ||
-    isSuperlightDevice(vendorId, productId)
+    isSuperlightDevice(vendorId, productId) ||
+    matchesOpenMouseVendor(vendorId)
   )
 }
 
@@ -160,8 +173,10 @@ export type HidPickTarget = {
 }
 
 function filtersForTarget(target?: HidPickTarget): Array<{
-  vendorId: number
-  productId: number
+  vendorId?: number
+  productId?: number
+  usagePage?: number
+  usage?: number
 }> {
   if (target?.catalogId === 'gwolves-fenrir-max') return fenrirMaxHidFilters()
   if (target?.catalogId === 'redragon-king-ultra') return hidFilters()
@@ -170,6 +185,9 @@ function filtersForTarget(target?: HidPickTarget): Array<{
   }
   if (target?.catalogId === 'logitech-pro-x-superlight') {
     return superlightHidFilters()
+  }
+  if (target?.catalogId === OPENMOUSE_BACKED_ID) {
+    return openMouseHidFilters()
   }
   if (target?.vendorId != null && target?.productId != null) {
     return [{ vendorId: target.vendorId, productId: target.productId }]
@@ -181,7 +199,12 @@ function filtersForTarget(target?: HidPickTarget): Array<{
 }
 
 function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
-  if (!target) return isSupportedUmdDevice(device.vendorId, device.productId)
+  if (!target) {
+    return (
+      isSupportedUmdDevice(device.vendorId, device.productId) ||
+      openMouseSupports(device)
+    )
+  }
   if (target.catalogId === 'gwolves-fenrir-max') {
     return isFenrirMaxDevice(device.vendorId, device.productId)
   }
@@ -193,6 +216,9 @@ function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
   }
   if (target.catalogId === 'logitech-pro-x-superlight') {
     return isSuperlightDevice(device.vendorId, device.productId)
+  }
+  if (target.catalogId === OPENMOUSE_BACKED_ID) {
+    return openMouseSupports(device)
   }
   if (target.vendorId != null && device.vendorId !== target.vendorId) return false
   if (target.productId != null && device.productId !== target.productId) {
@@ -213,7 +239,10 @@ function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
     }
     return false
   }
-  return isSupportedUmdDevice(device.vendorId, device.productId)
+  return (
+    isSupportedUmdDevice(device.vendorId, device.productId) ||
+    openMouseSupports(device)
+  )
 }
 
 /**

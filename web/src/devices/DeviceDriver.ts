@@ -24,8 +24,8 @@ export interface DeviceDriver {
 
   getState(): DeviceState
   attach(transport: Transport): Promise<void>
-  /** Fenrir / Superlight open their own HID stack (optional). */
-  attachNative?(opts?: { preferPid?: number }): Promise<void>
+  /** Fenrir / Superlight / OpenMouse open their own HID stack (optional). */
+  attachNative?(opts?: { preferPid?: number; device?: HIDDevice }): Promise<void>
   detach(): Promise<void>
   onWritePhase(cb: (p: DeviceWritePhase) => void): () => void
 

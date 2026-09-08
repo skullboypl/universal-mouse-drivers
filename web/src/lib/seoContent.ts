@@ -1,7 +1,7 @@
 import type { Locale } from '@/i18n/locale'
 import { DEVICE_CATALOG } from '@/devices/registry'
 import type { DeviceIdentity } from '@/devices/types'
-import { L, Llist, type L10nList, type L10nString } from './l10n'
+import { L, type L10nList, type L10nString } from './l10n'
 
 export type FaqItem = {
   question: L10nString
@@ -81,17 +81,17 @@ export const UMD_FAQ: FaqItem[] = [
       ru: 'Какие мыши поддерживаются?',
     },
     answer: {
-      pl: 'Live: Redragon King Ultra i Rampage Blitz Ultimate. WIP: G-Wolves Fenrir Max 8K oraz Logitech PRO X SUPERLIGHT (gen1). Lista rośnie wraz z reverse engineeringiem kolejnych protokołów.',
-      en: 'Live: Redragon King Ultra and Rampage Blitz Ultimate. WIP: G-Wolves Fenrir Max 8K and Logitech PRO X SUPERLIGHT (gen1). The list grows as more protocols are reverse-engineered.',
-      de: 'Live: Redragon King Ultra und Rampage Blitz Ultimate. In Arbeit: G-Wolves Fenrir Max 8K und Logitech PRO X SUPERLIGHT (Gen. 1). Die Liste wächst mit dem Reverse Engineering weiterer Protokolle.',
-      fr: 'Disponibles : Redragon King Ultra et Rampage Blitz Ultimate. En développement : G-Wolves Fenrir Max 8K et Logitech PRO X SUPERLIGHT (1re génération). La liste s’allonge à mesure que de nouveaux protocoles sont rétroconçus.',
-      es: 'Disponibles: Redragon King Ultra y Rampage Blitz Ultimate. En desarrollo: G-Wolves Fenrir Max 8K y Logitech PRO X SUPERLIGHT (1.ª generación). La lista crece a medida que se aplica ingeniería inversa a más protocolos.',
-      pt: 'Disponíveis: Redragon King Ultra e Rampage Blitz Ultimate. Em desenvolvimento: G-Wolves Fenrir Max 8K e Logitech PRO X SUPERLIGHT (1.ª geração). A lista cresce à medida que fazemos engenharia inversa de mais protocolos.',
-      it: 'Disponibili: Redragon King Ultra e Rampage Blitz Ultimate. In sviluppo: G-Wolves Fenrir Max 8K e Logitech PRO X SUPERLIGHT (prima generazione). L’elenco cresce con il reverse engineering di nuovi protocolli.',
-      zh: '已上线：Redragon King Ultra 和 Rampage Blitz Ultimate。开发中：G-Wolves Fenrir Max 8K 和 Logitech PRO X SUPERLIGHT（第一代）。随着更多协议完成逆向工程，支持列表将持续扩展。',
-      ja: '公開中：Redragon King Ultra、Rampage Blitz Ultimate。開発中：G-Wolves Fenrir Max 8K、Logitech PRO X SUPERLIGHT（第1世代）。対応リストは、より多くのプロトコルをリバースエンジニアリングするにつれて増えていきます。',
-      ko: '정식 지원: Redragon King Ultra, Rampage Blitz Ultimate. 개발 중: G-Wolves Fenrir Max 8K, Logitech PRO X SUPERLIGHT(1세대). 더 많은 프로토콜을 리버스 엔지니어링하면서 지원 목록을 확대하고 있습니다.',
-      ru: 'Доступны: Redragon King Ultra и Rampage Blitz Ultimate. В разработке: G-Wolves Fenrir Max 8K и Logitech PRO X SUPERLIGHT (1-е поколение). Список растёт по мере обратной разработки новых протоколов.',
+      pl: 'Live (native UMD): Redragon King Ultra i Rampage Blitz Ultimate. WIP: G-Wolves Fenrir Max 8K oraz Logitech PRO X SUPERLIGHT (gen1). Dodatkowo UMD × OpenMouse wykrywa i steruje myszami z protokołów OpenMouse (Logitech, Razer, Pulsar, Glorious, SteelSeries i inne) w przeglądarce.',
+      en: 'Live (native UMD): Redragon King Ultra and Rampage Blitz Ultimate. WIP: G-Wolves Fenrir Max 8K and Logitech PRO X SUPERLIGHT (gen1). UMD × OpenMouse also detects and drives mice via OpenMouse protocols (Logitech, Razer, Pulsar, Glorious, SteelSeries, and more) in the browser.',
+      de: 'Live (natives UMD): Redragon King Ultra und Rampage Blitz Ultimate. In Arbeit: G-Wolves Fenrir Max 8K und Logitech PRO X SUPERLIGHT (Gen. 1). UMD × OpenMouse erkennt und steuert zusätzlich Mäuse über OpenMouse-Protokolle (Logitech, Razer, Pulsar, Glorious, SteelSeries u. a.) im Browser.',
+      fr: 'Disponibles (UMD natif) : Redragon King Ultra et Rampage Blitz Ultimate. En développement : G-Wolves Fenrir Max 8K et Logitech PRO X SUPERLIGHT (1re génération). UMD × OpenMouse détecte et pilote aussi des souris via les protocoles OpenMouse (Logitech, Razer, Pulsar, Glorious, SteelSeries, etc.) dans le navigateur.',
+      es: 'Disponibles (UMD nativo): Redragon King Ultra y Rampage Blitz Ultimate. En desarrollo: G-Wolves Fenrir Max 8K y Logitech PRO X SUPERLIGHT (1.ª generación). UMD × OpenMouse también detecta y controla ratones con protocolos OpenMouse (Logitech, Razer, Pulsar, Glorious, SteelSeries y más) en el navegador.',
+      pt: 'Disponíveis (UMD nativo): Redragon King Ultra e Rampage Blitz Ultimate. Em desenvolvimento: G-Wolves Fenrir Max 8K e Logitech PRO X SUPERLIGHT (1.ª geração). O UMD × OpenMouse também deteta e controla ratos via protocolos OpenMouse (Logitech, Razer, Pulsar, Glorious, SteelSeries e outros) no navegador.',
+      it: 'Disponibili (UMD nativo): Redragon King Ultra e Rampage Blitz Ultimate. In sviluppo: G-Wolves Fenrir Max 8K e Logitech PRO X SUPERLIGHT (prima generazione). UMD × OpenMouse rileva e controlla anche mouse tramite i protocolli OpenMouse (Logitech, Razer, Pulsar, Glorious, SteelSeries e altri) nel browser.',
+      zh: '已上线（原生 UMD）：Redragon King Ultra 和 Rampage Blitz Ultimate。开发中：G-Wolves Fenrir Max 8K 和 Logitech PRO X SUPERLIGHT（第一代）。UMD × OpenMouse 还可在浏览器中通过 OpenMouse 协议检测并驱动更多鼠标（Logitech、Razer、Pulsar、Glorious、SteelSeries 等）。',
+      ja: '公開中（ネイティブ UMD）：Redragon King Ultra、Rampage Blitz Ultimate。開発中：G-Wolves Fenrir Max 8K、Logitech PRO X SUPERLIGHT（第1世代）。UMD × OpenMouse はブラウザ上で OpenMouse プロトコル（Logitech、Razer、Pulsar、Glorious、SteelSeries など）のマウスも検出・制御します。',
+      ko: '정식 지원(네이티브 UMD): Redragon King Ultra, Rampage Blitz Ultimate. 개발 중: G-Wolves Fenrir Max 8K, Logitech PRO X SUPERLIGHT(1세대). UMD × OpenMouse는 브라우저에서 OpenMouse 프로토콜(Logitech, Razer, Pulsar, Glorious, SteelSeries 등) 마우스도 감지하고 제어합니다.',
+      ru: 'Доступны (нативный UMD): Redragon King Ultra и Rampage Blitz Ultimate. В разработке: G-Wolves Fenrir Max 8K и Logitech PRO X SUPERLIGHT (1-е поколение). UMD × OpenMouse также обнаруживает и управляет мышами по протоколам OpenMouse (Logitech, Razer, Pulsar, Glorious, SteelSeries и др.) в браузере.',
     },
   },
   {
@@ -618,17 +618,17 @@ export const WHY_UMD = {
     ru: 'Зачем существует UMD | Universal Mouse Drivers · umdrivers.com',
   },
   description: {
-    pl: 'Dlaczego budujemy Universal Mouse Drivers na umdrivers.com: reverse engineering zamiast zamkniętych OEM, WebHID jak Wooting i jeden shell pod wiele myszy.',
-    en: 'Why we build Universal Mouse Drivers at umdrivers.com: reverse engineering instead of locked OEM apps, WebHID like Wooting, and one shell for many mice.',
-    de: 'Warum wir Universal Mouse Drivers auf umdrivers.com entwickeln: Reverse Engineering statt abgeschotteter OEM-Apps, WebHID nach dem Vorbild von Wooting und eine Oberfläche für viele Mäuse.',
-    fr: 'Pourquoi nous créons Universal Mouse Drivers sur umdrivers.com : rétro-ingénierie plutôt qu’applications OEM fermées, WebHID comme Wooting et une interface unique pour de nombreuses souris.',
-    es: 'Por qué desarrollamos Universal Mouse Drivers en umdrivers.com: ingeniería inversa frente a aplicaciones OEM cerradas, WebHID como Wooting y una sola interfaz para muchos ratones.',
-    pt: 'Porque criamos o Universal Mouse Drivers em umdrivers.com: engenharia inversa em vez de aplicações OEM fechadas, WebHID como o Wooting e uma única interface para muitos ratos.',
-    it: 'Perché sviluppiamo Universal Mouse Drivers su umdrivers.com: reverse engineering al posto di app OEM chiuse, WebHID come Wooting e un’unica interfaccia per tanti mouse.',
-    zh: '了解我们为何在 umdrivers.com 打造 Universal Mouse Drivers：用逆向工程打破封闭的 OEM 应用，采用类似 Wooting 的 WebHID 体验，并以统一界面支持多款鼠标。',
-    ja: 'umdrivers.com で Universal Mouse Drivers を開発する理由：閉鎖的な OEM アプリに代わるリバースエンジニアリング、Wooting のような WebHID、そして複数のマウスに対応する共通インターフェース。',
-    ko: 'umdrivers.com에서 Universal Mouse Drivers를 만드는 이유: 폐쇄적인 OEM 앱 대신 리버스 엔지니어링, Wooting과 같은 WebHID, 여러 마우스를 위한 하나의 통합 인터페이스.',
-    ru: 'Почему мы создаём Universal Mouse Drivers на umdrivers.com: обратная разработка вместо закрытых приложений OEM, WebHID по примеру Wooting и единый интерфейс для множества мышей.',
+    pl: 'Dlaczego budujemy Universal Mouse Drivers × OpenMouse na umdrivers.com: native OEM + protokoły OpenMouse, WebHID jak Wooting i jeden shell pod wiele myszy.',
+    en: 'Why we build Universal Mouse Drivers × OpenMouse at umdrivers.com: native OEM drivers plus OpenMouse protocols, WebHID like Wooting, and one shell for many mice.',
+    de: 'Warum wir Universal Mouse Drivers × OpenMouse auf umdrivers.com entwickeln: native OEM-Treiber plus OpenMouse-Protokolle, WebHID nach dem Vorbild von Wooting und eine Oberfläche für viele Mäuse.',
+    fr: 'Pourquoi nous créons Universal Mouse Drivers × OpenMouse sur umdrivers.com : pilotes OEM natifs et protocoles OpenMouse, WebHID comme Wooting et une interface unique pour de nombreuses souris.',
+    es: 'Por qué desarrollamos Universal Mouse Drivers × OpenMouse en umdrivers.com: drivers OEM nativos y protocolos OpenMouse, WebHID como Wooting y una sola interfaz para muchos ratones.',
+    pt: 'Porque criamos o Universal Mouse Drivers × OpenMouse em umdrivers.com: drivers OEM nativos e protocolos OpenMouse, WebHID como o Wooting e uma única interface para muitos ratos.',
+    it: 'Perché sviluppiamo Universal Mouse Drivers × OpenMouse su umdrivers.com: driver OEM nativi e protocolli OpenMouse, WebHID come Wooting e un’unica interfaccia per tanti mouse.',
+    zh: '了解我们为何在 umdrivers.com 打造 Universal Mouse Drivers × OpenMouse：原生 OEM 驱动与 OpenMouse 协议、类似 Wooting 的 WebHID，并以统一界面支持多款鼠标。',
+    ja: 'umdrivers.com で Universal Mouse Drivers × OpenMouse を開発する理由：ネイティブ OEM ドライバーと OpenMouse プロトコル、Wooting のような WebHID、複数マウス向けの共通 UI。',
+    ko: 'umdrivers.com에서 Universal Mouse Drivers × OpenMouse를 만드는 이유: 네이티브 OEM 드라이버와 OpenMouse 프로토콜, Wooting과 같은 WebHID, 여러 마우스를 위한 하나의 UI.',
+    ru: 'Почему мы создаём Universal Mouse Drivers × OpenMouse на umdrivers.com: нативные OEM-драйверы и протоколы OpenMouse, WebHID по примеру Wooting и единый интерфейс для множества мышей.',
   },
   eyebrow: {
     pl: 'Misja',

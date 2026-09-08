@@ -1,7 +1,7 @@
 export const UMD = {
   shortName: 'UMD',
   name: 'Universal Mouse Drivers',
-  tagline: 'Browser-native HID control for gaming mice.',
+  tagline: 'UMD × OpenMouse — browser-native HID control for gaming mice.',
   /** Compact mark for header / app icon. */
   logoMarkUrl: '/brand/umd-icon-192.png',
   /** Larger square PNG (OG / marketing). */
@@ -15,8 +15,13 @@ export const UMD = {
   tiktokUrl: 'https://www.tiktok.com/@skullboypl',
   githubHandle: 'skullboypl',
   githubUrl: 'https://github.com/skullboypl',
-  /** Public SEO / feedback hub (README + Issues). */
+  /** Public AGPL source + feedback hub. */
   githubFeedbackUrl: 'https://github.com/skullboypl/universal-mouse-drivers',
+  /** AGPL §13 corresponding source. */
+  sourceUrl: 'https://github.com/skullboypl/universal-mouse-drivers',
+  openMouseUrl: 'https://github.com/OpenMouse-Project',
+  openMouseProtocolUrl:
+    'https://github.com/OpenMouse-Project/mouse-protocol',
   copyrightName: 'SkullMedia Artur Spychalski',
   copyrightYear: 2026,
 } as const

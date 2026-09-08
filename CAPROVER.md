@@ -1,11 +1,14 @@
 # CapRover - UMD
 
-Repo: `https://github.com/skullboypl/udm-universal-mouse-drivers.git`
+**Preferred deploy source (AGPL / public):**  
+`https://github.com/skullboypl/universal-mouse-drivers.git` (`main`)
+
+Private mirror (optional): `https://github.com/skullboypl/udm-universal-mouse-drivers.git`
 
 ## App creation
 
 1. CapRover → **Apps** → **One-Click** / **New App** → name e.g. `umd`
-2. **Deployment** → Method: **GitHub** (lub webhook) → podłącz to repo, branch `main`
+2. **Deployment** → Method: **GitHub** (lub webhook) → podłącz **public** `universal-mouse-drivers`, branch `main`
 3. Root ma `captain-definition` → CapRover zbuduje z `Dockerfile`
 
 ## Persistent Directories (ważne)
@@ -113,6 +116,10 @@ Never `http://umdrivers.com`.
 ## Git deploy key (opcjonalnie)
 
 Jeśli CapRover łączy się po SSH do GitHuba, wklej **publiczny** klucz (`deploykey-caprover.pub`) jako Deploy Key w repo. **Nie** commituj prywatnego `deploykey-caprover`.
+
+## CapRover deploy source
+
+Prefer **public** `https://github.com/skullboypl/universal-mouse-drivers` as Git deploy source of truth (AGPL). Keep `ADMIN_*` and other secrets only in CapRover **Environmental Variables** — never in the repo.
 
 ## Security / incident (2026-08-18)
 

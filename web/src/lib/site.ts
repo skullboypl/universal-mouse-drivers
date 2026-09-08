@@ -56,7 +56,9 @@ export const SITE = {
     'https://www.tiktok.com/@skullboypl',
     'https://github.com/skullboypl',
     'https://github.com/skullboypl/universal-mouse-drivers',
-    'https://github.com/skullboypl/udm-universal-mouse-drivers',
+    'https://github.com/OpenMouse-Project',
+    'https://github.com/OpenMouse-Project/openmouse',
+    'https://github.com/OpenMouse-Project/mouse-protocol',
     'https://umdrivers.com',
   ],
 } as const

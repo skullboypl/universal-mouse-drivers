@@ -16,6 +16,11 @@ import { createDriver, DEVICE_CATALOG, findCatalogDevice } from '../devices/regi
 import { FENRIR_MAX_IDENTITY } from '../devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/identity'
 import { KING_ULTRA_IDENTITY } from '../devices/mice/redragon/king-ultra/identity'
+import {
+  OPENMOUSE_BACKED_ID,
+  createOpenMouseDriver,
+  openMouseSupports,
+} from '../devices/openmouse'
 import type { DeviceState } from '../devices/types'
 import { t } from '../i18n/messages'
 import { normalizeLocale, readStoredLocale, type Locale } from '../i18n/locale'
@@ -258,8 +263,13 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
           picked.vendorId,
           picked.productId,
         )
+        const openMouse =
+          !catalogFromPick && openMouseSupports(picked)
+            ? createOpenMouseDriver(picked)
+            : null
         if (
           opts?.catalogId &&
+          opts.catalogId !== OPENMOUSE_BACKED_ID &&
           catalogFromPick &&
           catalogFromPick.id !== opts.catalogId
         ) {
@@ -267,19 +277,28 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
             `Podłączono inne urządzenie niż wybrane (${opts.catalogId})`,
           )
         }
+        if (
+          opts?.catalogId === OPENMOUSE_BACKED_ID &&
+          !openMouse &&
+          !catalogFromPick
+        ) {
+          throw new Error('OpenMouse does not support the selected HID device')
+        }
         const catalog =
           catalogFromPick ??
+          (openMouse ? openMouse.identity : undefined) ??
           (opts?.catalogId
             ? DEVICE_CATALOG.find((c) => c.id === opts.catalogId)
             : undefined) ??
           KING_ULTRA_IDENTITY
 
         setConnectingCatalogId(catalog.id)
-        const d = createDriver(catalog.id)
+        const d = openMouse ?? createDriver(catalog.id)
 
         const useNative =
           catalog.id === FENRIR_MAX_IDENTITY.id ||
-          catalog.id === SUPERLIGHT_IDENTITY.id
+          catalog.id === SUPERLIGHT_IDENTITY.id ||
+          catalog.id === OPENMOUSE_BACKED_ID
 
         // Show device UI immediately (defaults) → SyncSpinner → attach + probe.
         // Do not await HID open/read before navigation (Logitech was blocking on Connect).
@@ -312,7 +331,10 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
               if (!d.attachNative) {
                 throw new Error(`${catalog.model} driver missing attachNative`)
               }
-              await d.attachNative({ preferPid: picked.productId })
+              await d.attachNative({
+                preferPid: picked.productId,
+                device: picked,
+              })
             } else {
               const transport = createWebHidTransport()
               await d.attach({

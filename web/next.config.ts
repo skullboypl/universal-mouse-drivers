@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   poweredByHeader: false,
   reactStrictMode: true,
+  transpilePackages: ['@openmouse/protocol'],
   async headers() {
     return [
       {

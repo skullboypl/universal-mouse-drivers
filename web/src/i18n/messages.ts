@@ -64,6 +64,7 @@ export type MessageKey =
   | 'connect.statusLive'
   | 'connect.statusWip'
   | 'connect.statusPlanned'
+  | 'connect.statusOpenMouse'
   | 'connect.contactTitle'
   | 'connect.contactBody'
   | 'connect.contactBarter'
@@ -262,6 +263,8 @@ export type MessageKey =
   | 'footer.language'
   | 'footer.madeWith'
   | 'footer.links'
+  | 'footer.source'
+  | 'footer.openMouse'
   | 'write.queued'
   | 'write.writing'
   | 'write.ok'
@@ -325,6 +328,9 @@ const en: Dict = {
   'connect.statusLive': 'Ready',
   'connect.statusWip': 'Beta',
   'connect.statusPlanned': 'Soon',
+  'connect.statusOpenMouse': 'OpenMouse',
+  'footer.source': 'Source (AGPL)',
+  'footer.openMouse': 'OpenMouse',
   'connect.contactTitle': 'Want your mouse here?',
   'connect.contactBody':
     'UMD grows with community requests. Tell us what you use - we will check if we can add a browser driver.',
@@ -616,6 +622,9 @@ const pl: Dict = {
   'connect.statusLive': 'Gotowe',
   'connect.statusWip': 'Beta',
   'connect.statusPlanned': 'Wkrótce',
+  'connect.statusOpenMouse': 'OpenMouse',
+  'footer.source': 'Kod źródłowy (AGPL)',
+  'footer.openMouse': 'OpenMouse',
   'connect.contactTitle': 'Chcesz dodać swoją mysz?',
   'connect.contactBody':
     'UMD rośnie dzięki prośbom społeczności. Napisz, czego używasz - sprawdzimy, czy da się dodać sterownik w przeglądarce.',

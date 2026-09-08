@@ -190,7 +190,7 @@ export interface DeviceState {
   info: DeviceInfo
 }
 
-export type DeviceSupportStatus = 'live' | 'wip' | 'planned'
+export type DeviceSupportStatus = 'live' | 'wip' | 'planned' | 'openmouse'
 
 export interface DeviceIdentity {
   id: string
