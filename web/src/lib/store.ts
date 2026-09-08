@@ -15,7 +15,7 @@ export type { ButtonPosition, LayoutId }
 export { LAYOUT_META }
 
 /** Keep in sync with tray-battery UmdBatteryTray.csproj Version. */
-export const BUNDLED_TRAY_VERSION = '1.8.0'
+export const BUNDLED_TRAY_VERSION = '1.9.0'
 
 export interface DownloadMeta {
   id: string

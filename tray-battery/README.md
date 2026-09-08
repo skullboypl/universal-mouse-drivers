@@ -12,7 +12,7 @@ Independent of the Vite WebHID app (both talk to the mouse; close Chrome WebHID 
 | Rampage Blitz Ultimate | `3554:F562` corded · `3554:F563` dongle | yes |
 | G-Wolves Fenrir Max | `33E4:3717` wireless · `33E4:3708` corded | yes |
 | Logitech PRO X SUPERLIGHT (gen1) | `046D:C547` LIGHTSPEED receiver | yes |
-| OpenMouse catalog (community) | VID:PID from generated catalog | detect all; % for G-Wolves + Logitech HID++ `0x1004` when present; else n/a |
+| OpenMouse catalog (community) | VID:PID from generated catalog | detect all; % for G-Wolves, Logitech HID++, VGN/Pulsar/ATK/Teevolution, Lamzu/Glorious Classic, K-snake, SteelSeries, Razer, Keychron, WALLHACK, MCHOSE, Ninjutso; else n/a |
 
 ## Features
 
