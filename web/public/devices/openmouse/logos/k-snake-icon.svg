@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="K-snake">
+  <rect width="128" height="128" rx="28" fill="#22d3ee"/>
+  <path fill="#0c2228" d="M34 70c0-18 12-30 30-30 10 0 18 4 22 10-4-14-16-22-30-22C34 28 18 46 18 70c0 20 12 34 30 36v-12c-10-2-14-12-14-24z"/>
+  <path fill="#0c2228" d="M94 58c0 18-12 30-30 30-10 0-18-4-22-10 4 14 16 22 30 22 22 0 38-18 38-42 0-20-12-34-30-36v12c10 2 14 12 14 24z"/>
+  <circle cx="48" cy="52" r="4" fill="#fff"/>
+  <text x="64" y="112" text-anchor="middle" fill="#0c2228" font-family="Segoe UI,Arial Black,Arial,sans-serif" font-size="12" font-weight="800" letter-spacing="1">K-SNAKE</text>
+</svg>

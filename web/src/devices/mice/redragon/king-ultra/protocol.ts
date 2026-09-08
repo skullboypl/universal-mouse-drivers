@@ -46,9 +46,9 @@ export type ProtocolCommand =
   | { op: 'read_current_dpi' }
   | { op: 'read_report_rate' }
   | { op: 'read_version' }
-  /** Mouse firmware — UsbCommandId.ReadVersionID (0x12). */
+  /** Mouse firmware - UsbCommandId.ReadVersionID (0x12). */
   | { op: 'read_mouse_version' }
-  /** Receiver/dongle firmware — UsbCommandId.GetDongleVersion (0xB3). */
+  /** Receiver/dongle firmware - UsbCommandId.GetDongleVersion (0xB3). */
   | { op: 'read_dongle_version' }
   /** @deprecated use read_mouse_version / read_dongle_version */
   | { op: 'read_slave_version' }
@@ -144,12 +144,12 @@ export const UsbCommandId = {
   SetCurrentConfig: 15,
   ReadCIDMID: 16,
   /**
-   * CS_UsbServer_ReadVersion / UsbFinder_GetVersion — cmd 0x12.
+   * CS_UsbServer_ReadVersion / UsbFinder_GetVersion - cmd 0x12.
    * Live King Ultra (F54F): reply maj/min = mouse firmware (OEM "Mouse Firmware ver").
    */
   ReadVersionID: 18,
   /**
-   * UsbFinder_GetSlaveVersion — packed as local_30=0xB308 → wire cmd 0xB3.
+   * UsbFinder_GetSlaveVersion - packed as local_30=0xB308 → wire cmd 0xB3.
    * (Enum name SetDeviceVidPid=11 is a different command; 0x0B never replies.)
    * Live King Ultra: reply maj/min = receiver/dongle firmware (OEM "Receiver Firmware ver").
    */
@@ -431,13 +431,13 @@ export function encodeCommand(cmd: ProtocolCommand): EncodedReport | null {
       return encodeReadFlash(FlashAddr.reportRate, 2, 0)
     case 'read_version':
     case 'read_mouse_version':
-      // CS_UsbServer_ReadVersion / UsbFinder_GetVersion — cmd 0x12 → mouse FW
+      // CS_UsbServer_ReadVersion / UsbFinder_GetVersion - cmd 0x12 → mouse FW
       return buildFrame({
         commandId: UsbCommandId.ReadVersionID,
         dataLen: 0,
       })
     case 'read_dongle_version':
-      // UsbFinder_GetSlaveVersion — cmd 0xB3 → receiver/dongle FW
+      // UsbFinder_GetSlaveVersion - cmd 0xB3 → receiver/dongle FW
       return buildFrame({
         commandId: UsbCommandId.GetDongleVersion,
         dataLen: 0,

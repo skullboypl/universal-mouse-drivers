@@ -3,7 +3,7 @@ import type { DeviceIdentity } from '../../../types'
 /**
  * Logitech PRO X SUPERLIGHT (gen1) over LIGHTSPEED receiver.
  * OMM / live probe: Decompile/mice/logitech/superlight-v1 + omm-2.6.1749
- * Not Superlight 2 (LIGHTSPEED 2) — separate PID/protocol path later.
+ * Not Superlight 2 (LIGHTSPEED 2) - separate PID/protocol path later.
  */
 export const SUPERLIGHT_IDENTITY: DeviceIdentity = {
   id: 'logitech-pro-x-superlight',

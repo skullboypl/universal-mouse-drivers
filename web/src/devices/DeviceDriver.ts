@@ -33,7 +33,7 @@ export interface DeviceDriver {
   setButtonAction(
     buttonId: number,
     action: ButtonAction,
-    /** When action is macro — library id copied into this button’s flash slot. */
+    /** When action is macro - library id copied into this button’s flash slot. */
     macroId?: string,
   ): void | Promise<void>
   /** May return a Promise when the write is flushed immediately (e.g. Axis Sync). */
@@ -55,7 +55,7 @@ export interface DeviceDriver {
   importProfile(json: string): void
   /**
    * Per-SKU button action catalog for Buttons UI.
-   * Each mouse owns its list — never share catalogs across devices.
+   * Each mouse owns its list - never share catalogs across devices.
    */
   readonly buttonActions?: ReadonlyArray<{
     id: ButtonAction
@@ -77,6 +77,20 @@ export interface DeviceDriver {
    * (DPI Loop / Polling Rate Switch on the mouse). Returns true if UI state changed.
    */
   refreshLiveSensorFromDevice?(): Promise<boolean>
+  /**
+   * Soft feature flags (mainly OpenMouse). When absent, UI assumes full native surface.
+   */
+  readonly capabilities?: {
+    dpi?: boolean
+    reportRate?: boolean
+    lod?: boolean
+    angleSnapping?: boolean
+    rippleControl?: boolean
+    motionSync?: boolean
+    powerModes?: boolean
+    buttons?: boolean
+    deviceSettings?: boolean
+  }
   probeFlashAndSync(): Promise<void>
   flushToDevice(): Promise<{ wrote: boolean }>
 }

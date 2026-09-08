@@ -1,7 +1,7 @@
 import type { DeviceState } from '../../../types'
 import { SUPERLIGHT_BUTTONS } from './buttons'
 
-/** Gen1 Superlight: 100–25600, step 50 (HID++ 0x2201 live list). */
+/** Gen1 Superlight: 100-25600, step 50 (HID++ 0x2201 live list). */
 export const SUPERLIGHT_DPI_MIN = 100
 export const SUPERLIGHT_DPI_MAX = 25600
 export const SUPERLIGHT_DPI_STEP = 50

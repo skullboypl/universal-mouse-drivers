@@ -14,6 +14,8 @@ ARG NEXT_PUBLIC_SITE_URL=
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY web/package.json web/package-lock.json ./
+# postinstall needs this before the full `web/` tree is copied
+COPY web/scripts/patch-openmouse-exports.js ./scripts/patch-openmouse-exports.js
 RUN npm ci
 
 FROM node:22-alpine AS builder

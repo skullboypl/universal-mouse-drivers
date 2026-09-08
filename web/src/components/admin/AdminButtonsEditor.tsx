@@ -34,7 +34,7 @@ function buttonMetaFor(layoutId: LayoutId): ButtonMeta[] {
       action: b.action,
     }))
   }
-  // king-ultra + hero use the same 1–6 badge set
+  // king-ultra + hero use the same 1-6 badge set
   return KING_ULTRA_BUTTONS.map((b) => ({
     id: b.id,
     label: b.label,
@@ -181,7 +181,7 @@ export function AdminButtonsEditor({
     <section className="panel" style={{ marginBottom: 16 }}>
       <h2 className="panel-label">{meta.label}</h2>
       <p className="muted" style={{ marginTop: 0 }}>
-        Ustaw pozycje badge’y 1–{buttonMeta.length} na grafice myszki. Przeciągnij
+        Ustaw pozycje badge’y 1-{buttonMeta.length} na grafice myszki. Przeciągnij
         numer albo wpisz X/Y. Canvas {meta.width}×{meta.height} ·{' '}
         <code className="mono">{meta.imageUrl}</code>
       </p>

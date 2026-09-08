@@ -1,0 +1,115 @@
+.mark {
+  --om-accent: #0ea5e9;
+  --om-soft: #0c1e2a;
+  --om-ink: #e0f2fe;
+  box-sizing: border-box;
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.55rem;
+  padding: 0.85rem 0.65rem 0.75rem;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      ellipse at 50% 28%,
+      color-mix(in srgb, var(--om-accent) 22%, transparent),
+      transparent 58%
+    ),
+    linear-gradient(165deg, var(--om-soft) 0%, #0a0c10 72%);
+  border: 1px solid color-mix(in srgb, var(--om-accent) 28%, transparent);
+}
+
+.logoWrap {
+  display: grid;
+  place-items: center;
+  border-radius: 0.85rem;
+  background: rgba(8, 10, 14, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+}
+
+.logo {
+  display: block;
+  object-fit: contain;
+  border-radius: 0.55rem;
+}
+
+.model {
+  margin: 0;
+  max-width: 100%;
+  padding: 0 0.2rem;
+  text-align: center;
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--fg, #f4f4f5);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.sm {
+  gap: 0.4rem;
+  padding: 0.55rem 0.4rem 0.5rem;
+  min-height: 5.6rem;
+}
+
+.sm .logoWrap {
+  width: 2.85rem;
+  height: 2.85rem;
+  border-radius: 0.65rem;
+}
+
+.sm .logo {
+  width: 2.1rem;
+  height: 2.1rem;
+}
+
+.sm .model {
+  font-size: 0.72rem;
+  -webkit-line-clamp: 2;
+}
+
+.md {
+  min-height: 9.5rem;
+}
+
+.md .logoWrap {
+  width: 4.1rem;
+  height: 4.1rem;
+}
+
+.md .logo {
+  width: 2.85rem;
+  height: 2.85rem;
+}
+
+.md .model {
+  font-size: 0.92rem;
+}
+
+.lg {
+  min-height: 12.5rem;
+  padding: 1.15rem 0.9rem 1rem;
+  gap: 0.75rem;
+}
+
+.lg .logoWrap {
+  width: 5.75rem;
+  height: 5.75rem;
+  border-radius: 1rem;
+}
+
+.lg .logo {
+  width: 4rem;
+  height: 4rem;
+}
+
+.lg .model {
+  font-size: 1.05rem;
+  max-width: 14rem;
+}

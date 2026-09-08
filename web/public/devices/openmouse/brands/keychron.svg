@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 360" role="img" aria-label="KC gaming mouse">
+  <defs>
+    <linearGradient id="bg" x1="40" y1="20" x2="280" y2="340" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0f1c2e"/>
+      <stop offset="1" stop-color="#0a0c10"/>
+    </linearGradient>
+    <linearGradient id="body" x1="80" y1="40" x2="240" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2a3038"/>
+      <stop offset="1" stop-color="#12151a"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="360" rx="28" fill="url(#bg)"/>
+  <rect x="68" y="48" width="184" height="250" rx="92" fill="url(#body)" stroke="#60a5fa" stroke-width="3" opacity="0.95"/>
+  <path d="M160 72v88" stroke="#5b6575" stroke-width="4" stroke-linecap="round"/>
+  <ellipse cx="160" cy="168" rx="18" ry="28" fill="#1a1f26" stroke="#60a5fa" stroke-width="2.5"/>
+  <circle cx="160" cy="268" r="28" fill="#60a5fa"/>
+  <text x="160" y="275" text-anchor="middle" fill="#eff6ff" font-family="Oxanium,Ubuntu,system-ui,sans-serif" font-size="14" font-weight="800">KC</text>
+  <rect x="24" y="312" width="272" height="28" rx="8" fill="#60a5fa" opacity="0.92"/>
+  <text x="160" y="331" text-anchor="middle" fill="#eff6ff" font-family="Oxanium,Ubuntu,system-ui,sans-serif" font-size="13" font-weight="700">OPENMOUSE</text>
+</svg>

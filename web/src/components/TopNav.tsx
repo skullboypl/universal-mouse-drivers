@@ -6,6 +6,7 @@ import { useEffect, useId, useState } from 'react'
 import { UMD } from '@/brand/umd'
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
+import { OPENMOUSE_BACKED_ID } from '@/devices/openmouse/constants'
 import { useLocale } from '@/i18n/LocaleContext'
 import { useT } from '@/i18n/useT'
 import type { MessageKey } from '@/i18n/messages'
@@ -16,6 +17,12 @@ import styles from './TopNav.module.css'
 
 const KING_TABS: { path: string; key: MessageKey; disabled?: boolean }[] = [
   { path: '/device/buttons', key: 'nav.buttons' },
+  { path: '/device/sensor', key: 'nav.sensor' },
+  { path: '/device/settings', key: 'nav.settings' },
+]
+
+/** OpenMouse: sensor-first; buttons/settings only when capabilities allow. */
+const OPENMOUSE_TABS: { path: string; key: MessageKey }[] = [
   { path: '/device/sensor', key: 'nav.sensor' },
   { path: '/device/settings', key: 'nav.settings' },
 ]
@@ -68,13 +75,21 @@ export function TopNav() {
   const oemSinglePage =
     driver?.identity.id === FENRIR_MAX_IDENTITY.id ||
     driver?.identity.id === SUPERLIGHT_IDENTITY.id
-  const tabs = oemSinglePage ? OEM_TABS : KING_TABS
+  const isOpenMouse = driver?.identity.id === OPENMOUSE_BACKED_ID
+  const omTabs = [
+    ...OPENMOUSE_TABS,
+    ...(driver?.capabilities?.buttons
+      ? [{ path: '/device/buttons', key: 'nav.buttons' as MessageKey }]
+      : []),
+  ]
+  const tabs = oemSinglePage ? OEM_TABS : isOpenMouse ? omTabs : KING_TABS
   const refreshing = deviceBusy && busyKind === 'refresh'
   const [menuOpen, setMenuOpen] = useState(false)
   const menuId = useId()
 
   const marketingLinks: MarketingLink[] = [
     { href: `${lp('/')}#mice`, key: 'nav.mice' },
+    { href: `${lp('/')}#openmouse`, key: 'nav.openMouse' },
     { href: lp('/tray'), key: 'nav.tray' },
     { href: lp('/why'), key: 'nav.why' },
     { href: `${lp('/')}#faq`, key: 'nav.faq' },
@@ -233,7 +248,7 @@ export function TopNav() {
             <span className={styles.batteryPct}>
               {state.info.batteryPercent != null
                 ? `${state.info.batteryPercent}%`
-                : '—'}
+                : '-'}
             </span>
             {state.info.charging ? (
               <span className={styles.batteryBolt} aria-hidden>

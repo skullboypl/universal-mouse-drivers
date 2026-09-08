@@ -20,7 +20,7 @@ export interface MouseDeviceProfile {
   dpiXyEnable: boolean
 }
 
-/** Hardcoded Fenrir Max 8K — source: FENRIR_MOUSE_DRIVERS env-models. */
+/** Hardcoded Fenrir Max 8K - source: FENRIR_MOUSE_DRIVERS env-models. */
 export const FENRIR_MAX_PROFILE: MouseDeviceProfile = {
   name: 'Fenir Max',
   vid: 0x33e4,

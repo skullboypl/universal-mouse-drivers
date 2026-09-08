@@ -26,6 +26,7 @@ export type MessageKey =
   | 'nav.why'
   | 'nav.faq'
   | 'nav.tray'
+  | 'nav.openMouse'
   | 'nav.siteNav'
   | 'nav.openMenu'
   | 'nav.closeMenu'
@@ -47,7 +48,21 @@ export type MessageKey =
   | 'connect.trayNote'
   | 'connect.lede'
   | 'connect.demo'
+  | 'connect.demoTitle'
+  | 'connect.demoSub'
+  | 'connect.demoNative'
+  | 'connect.demoOpenMouse'
+  | 'connect.demoClose'
+  | 'connect.demoOmFull'
+  | 'connect.demoOmFullHint'
+  | 'connect.demoOmSensor'
+  | 'connect.demoOmSensorHint'
+  | 'connect.demoOmDpi'
+  | 'connect.demoOmDpiHint'
   | 'connect.webhid'
+  | 'connect.webhidOm'
+  | 'connect.otherDevice'
+  | 'connect.otherDeviceTip'
   | 'connect.open'
   | 'connect.soon'
   | 'connect.pcOnly'
@@ -66,6 +81,13 @@ export type MessageKey =
   | 'connect.statusPlanned'
   | 'connect.statusOpenMouse'
   | 'connect.openMouseHub'
+  | 'connect.omTitle'
+  | 'connect.omSub'
+  | 'connect.omBrands'
+  | 'connect.omFeatured'
+  | 'connect.omConnect'
+  | 'connect.omBrowseAll'
+  | 'connect.badgeNative'
   | 'connect.contactTitle'
   | 'connect.contactBody'
   | 'connect.contactBarter'
@@ -79,6 +101,7 @@ export type MessageKey =
   | 'connect.contactNeed3'
   | 'buttons.title'
   | 'buttons.sub'
+  | 'buttons.omUnavailable'
   | 'buttons.profile'
   | 'buttons.profileN'
   | 'buttons.restore'
@@ -149,6 +172,7 @@ export type MessageKey =
   | 'buttons.action.led_effect_loop'
   | 'sensor.title'
   | 'sensor.sub'
+  | 'sensor.omCapsNote'
   | 'sensor.dpiStages'
   | 'sensor.stageCount'
   | 'sensor.stageCountTip'
@@ -213,6 +237,7 @@ export type MessageKey =
   | 'macro.namePrefix'
   | 'macro.delayMs'
   | 'settings.title'
+  | 'settings.omLimited'
   | 'settings.language'
   | 'settings.langPl'
   | 'settings.langEn'
@@ -287,6 +312,7 @@ const en: Dict = {
   'nav.why': 'Why UMD',
   'nav.faq': 'FAQ',
   'nav.tray': 'Battery tray',
+  'nav.openMouse': 'OpenMouse',
   'nav.siteNav': 'Site',
   'nav.openMenu': 'Open menu',
   'nav.closeMenu': 'Close menu',
@@ -310,13 +336,29 @@ const en: Dict = {
   'connect.trayNote':
     'Close G HUB / OEM apps / Chrome WebHID if the tray cannot open the mouse.',
   'connect.lede':
-    'Open a driver for your mouse in the browser - no Windows installer.',
+    'Connect any supported mouse (UMD native or OpenMouse community) in the browser - no Windows installer.',
   'connect.demo': 'Try without a mouse',
-  'connect.webhid': 'Open driver',
+  'connect.demoTitle': 'Choose a demo view',
+  'connect.demoSub':
+    'Native SKUs open their full UMD UI. OpenMouse demos emulate different HID capability levels on the shared community surface (not separate Razer/SteelSeries OEM UIs).',
+  'connect.demoNative': 'UMD native UI',
+  'connect.demoOpenMouse': 'OpenMouse community UI (by capability)',
+  'connect.demoClose': 'Close',
+  'connect.demoOmFull': 'Full sensor surface',
+  'connect.demoOmFullHint': 'DPI + poll + LOD + toggles',
+  'connect.demoOmSensor': 'Sensor basic',
+  'connect.demoOmSensorHint': 'DPI + poll + LOD',
+  'connect.demoOmDpi': 'DPI only',
+  'connect.demoOmDpiHint': 'Minimal client',
+  'connect.webhid': 'Connect any mouse',
+  'connect.webhidOm': 'Connect OpenMouse',
+  'connect.otherDevice': 'Use a different device',
+  'connect.otherDeviceTip':
+    'Opens the browser picker for any supported mouse - not only the ones remembered below.',
   'connect.open': 'Open',
   'connect.soon': 'Soon',
   'connect.pcOnly': 'PC only',
-  'connect.pcOnlyTip': 'WebHID works in desktop Chrome or Edge — not on phone / tablet.',
+  'connect.pcOnlyTip': 'WebHID works in desktop Chrome or Edge - not on phone / tablet.',
   'connect.noWebHid': 'Use Chrome or Edge (desktop) to connect a mouse.',
   'connect.step1': 'Pick your mouse',
   'connect.step2': 'Allow it in the browser prompt',
@@ -324,13 +366,22 @@ const en: Dict = {
   'connect.savedTitle': 'Your mice',
   'connect.savedSub': 'Already connected on this computer - click to reopen.',
   'connect.savedEmpty': 'Connect a mouse once and it will show up here.',
-  'connect.supportedTitle': 'Choose a mouse',
-  'connect.supportedSub': 'Click a model to open its driver.',
+  'connect.supportedTitle': 'UMD native mice',
+  'connect.supportedSub':
+    'Full UMD UI - King Ultra, Blitz Ultimate, Fenrir, Superlight. Click a card to connect.',
   'connect.statusLive': 'Ready',
   'connect.statusWip': 'Beta',
   'connect.statusPlanned': 'Soon',
   'connect.statusOpenMouse': 'OpenMouse',
   'connect.openMouseHub': 'Browse Community devices (OpenMouse) →',
+  'connect.omTitle': 'Community mice (OpenMouse)',
+  'connect.omSub':
+    'Hundreds of HID ids from OpenMouse protocols - shared WebHID surface with brand badges. Not the same depth as native UMD SKUs.',
+  'connect.omBrands': 'Brands',
+  'connect.omFeatured': 'Named models',
+  'connect.omConnect': 'Connect any OpenMouse device',
+  'connect.omBrowseAll': 'Full catalog →',
+  'connect.badgeNative': 'Native',
   'footer.source': 'Source (AGPL)',
   'footer.openMouse': 'OpenMouse',
   'connect.contactTitle': 'Want your mouse here?',
@@ -349,6 +400,8 @@ const en: Dict = {
   'buttons.title': 'Button mapping',
   'buttons.sub':
     'Profiles, binds, debounce - changes auto-save after a short delay.',
+  'buttons.omUnavailable':
+    'OpenMouse community clients do not expose a unified button remap API in UMD yet - use Sensor for DPI / poll / LOD when available.',
   'buttons.profile': 'Profile',
   'buttons.profileN': 'Profile {n}',
   'buttons.restore': 'Restore',
@@ -422,10 +475,12 @@ const en: Dict = {
   'sensor.title': 'Sensor',
   'sensor.sub':
     'DPI and flags update in the UI instantly; the mouse is written after a short debounce.',
+  'sensor.omCapsNote':
+    'OpenMouse: only controls your HID client actually exposes are shown. Depth varies by brand driver.',
   'sensor.dpiStages': 'DPI stages',
   'sensor.stageCount': 'Number of stages',
   'sensor.stageCountTip':
-    'How many DPI levels you can cycle with the DPI button (1–7).',
+    'How many DPI levels you can cycle with the DPI button (1-7).',
   'sensor.activeStage': 'Edit stage',
   'sensor.activeStageTip':
     'Which stage you are editing now - also becomes the active stage on the mouse.',
@@ -479,7 +534,7 @@ const en: Dict = {
   'macro.selectOrCreate': 'Select or create a macro.',
   'macro.deleteLast': 'Delete last',
   'macro.recordingHint':
-    'Recording — type on the keyboard. Real delays between keys are measured automatically.',
+    'Recording - type on the keyboard. Real delays between keys are measured automatically.',
   'macro.recordingIdle':
     'Click Start recording, then type. Down / up / delays are captured live.',
   'macro.autoDelay': 'Measure real delays while recording',
@@ -500,6 +555,8 @@ const en: Dict = {
   'macro.namePrefix': 'Macro {n}',
   'macro.delayMs': 'Delay {n}ms',
   'settings.title': 'Settings',
+  'settings.omLimited':
+    'OpenMouse: language and UMD profile export work here. Sleep / pairing / long-distance are native-UMD only unless a client exposes them.',
   'settings.language': 'Language',
   'settings.langPl': 'Polski',
   'settings.langEn': 'English',
@@ -578,6 +635,7 @@ const pl: Dict = {
   'nav.why': 'Dlaczego UMD',
   'nav.faq': 'FAQ',
   'nav.tray': 'Tray baterii',
+  'nav.openMouse': 'OpenMouse',
   'nav.siteNav': 'Strona',
   'nav.openMenu': 'Otwórz menu',
   'nav.closeMenu': 'Zamknij menu',
@@ -601,14 +659,30 @@ const pl: Dict = {
   'connect.trayNote':
     'Zamknij G HUB / aplikacje OEM / Chrome WebHID, jeśli tray nie otworzy myszy.',
   'connect.lede':
-    'Otwórz sterownik myszy w przeglądarce - bez instalacji Windows.',
-  'connect.demo': 'Wypróbuj bez myszy',
-  'connect.webhid': 'Otwórz sterownik',
+    'Połącz dowolną wspieraną mysz (UMD native albo OpenMouse community) w przeglądarce - bez instalatora Windows.',
+  'connect.demo': 'Wypróbuj bez myszki',
+  'connect.demoTitle': 'Wybierz widok demo',
+  'connect.demoSub':
+    'Native SKU otwierają pełny UI UMD. Demo OpenMouse emuluje różne poziomy capabilities HID na wspólnej powierzchni community (to nie osobny OEM UI Razer/SteelSeries).',
+  'connect.demoNative': 'UI native UMD',
+  'connect.demoOpenMouse': 'UI OpenMouse community (wg capabilities)',
+  'connect.demoClose': 'Zamknij',
+  'connect.demoOmFull': 'Pełny sensor',
+  'connect.demoOmFullHint': 'DPI + poll + LOD + przełączniki',
+  'connect.demoOmSensor': 'Sensor basic',
+  'connect.demoOmSensorHint': 'DPI + poll + LOD',
+  'connect.demoOmDpi': 'Tylko DPI',
+  'connect.demoOmDpiHint': 'Minimalny klient',
+  'connect.webhid': 'Połącz dowolną mysz',
+  'connect.webhidOm': 'Połącz OpenMouse',
+  'connect.otherDevice': 'Użyj innego urządzenia',
+  'connect.otherDeviceTip':
+    'Otwiera picker przeglądarki dla dowolnej wspieranej myszy - nie tylko tych zapamiętanych poniżej.',
   'connect.open': 'Otwórz',
   'connect.soon': 'Wkrótce',
   'connect.pcOnly': 'Tylko PC',
   'connect.pcOnlyTip':
-    'WebHID działa w Chrome lub Edge na komputerze — nie na telefonie / tablecie.',
+    'WebHID działa w Chrome lub Edge na komputerze - nie na telefonie / tablecie.',
   'connect.noWebHid':
     'Do podłączenia myszy użyj Chrome lub Edge (wersja desktop).',
   'connect.step1': 'Wybierz mysz',
@@ -618,14 +692,22 @@ const pl: Dict = {
   'connect.savedSub': 'Już łączone na tym komputerze - kliknij, żeby otworzyć ponownie.',
   'connect.savedEmpty':
     'Po pierwszym połączeniu mysz pojawi się tutaj.',
-  'connect.supportedTitle': 'Wybierz mysz',
+  'connect.supportedTitle': 'Myszy native UMD',
   'connect.supportedSub':
-    'Kliknij model, żeby otworzyć jego sterownik.',
+    'Pełny UI UMD - King Ultra, Blitz Ultimate, Fenrir, Superlight. Kliknij kartę, żeby połączyć.',
   'connect.statusLive': 'Gotowe',
   'connect.statusWip': 'Beta',
   'connect.statusPlanned': 'Wkrótce',
   'connect.statusOpenMouse': 'OpenMouse',
   'connect.openMouseHub': 'Przeglądaj Community devices (OpenMouse) →',
+  'connect.omTitle': 'Community mice (OpenMouse)',
+  'connect.omSub':
+    'Setki identyfikatorów HID z protokołów OpenMouse - wspólna powierzchnia WebHID ze znaczkami marek. Nie ten sam zakres co native SKU UMD.',
+  'connect.omBrands': 'Marki',
+  'connect.omFeatured': 'Modele z nazwą',
+  'connect.omConnect': 'Połącz dowolne urządzenie OpenMouse',
+  'connect.omBrowseAll': 'Pełny katalog →',
+  'connect.badgeNative': 'Native',
   'footer.source': 'Kod źródłowy (AGPL)',
   'footer.openMouse': 'OpenMouse',
   'connect.contactTitle': 'Chcesz dodać swoją mysz?',
@@ -644,6 +726,8 @@ const pl: Dict = {
   'buttons.title': 'Mapowanie przycisków',
   'buttons.sub':
     'Profile, przypisania, debounce - zmiany zapisują się automatycznie po chwili.',
+  'buttons.omUnavailable':
+    'Klienci OpenMouse nie mają jeszcze ujednoliconego remapu przycisków w UMD - użyj Sensora (DPI / poll / LOD), gdy klient to udostępnia.',
   'buttons.profile': 'Profil',
   'buttons.profileN': 'Profil {n}',
   'buttons.restore': 'Przywróć',
@@ -717,10 +801,12 @@ const pl: Dict = {
   'sensor.title': 'Sensor',
   'sensor.sub':
     'DPI i flagi od razu w UI; zapis na mysz dopiero po krótkim debounce.',
+  'sensor.omCapsNote':
+    'OpenMouse: pokazujemy tylko sterowanie, które klient HID faktycznie udostępnia. Głębokość zależy od drivera marki.',
   'sensor.dpiStages': 'Poziomy DPI',
   'sensor.stageCount': 'Liczba poziomów',
   'sensor.stageCountTip':
-    'Ile poziomów DPI możesz przełączać przyciskiem DPI (1–7).',
+    'Ile poziomów DPI możesz przełączać przyciskiem DPI (1-7).',
   'sensor.activeStage': 'Edytowany poziom',
   'sensor.activeStageTip':
     'Który poziom teraz edytujesz - staje się też aktywnym poziomem na myszy.',
@@ -774,7 +860,7 @@ const pl: Dict = {
   'macro.selectOrCreate': 'Wybierz lub utwórz makro.',
   'macro.deleteLast': 'Usuń ostatnie',
   'macro.recordingHint':
-    'Nagrywanie — pisz na klawiaturze. Opóźnienia między klawiszami są mierzone automatycznie.',
+    'Nagrywanie - pisz na klawiaturze. Opóźnienia między klawiszami są mierzone automatycznie.',
   'macro.recordingIdle':
     'Kliknij Start nagrywania, potem pisz. Zapisywane są down / up i czasy między nimi.',
   'macro.autoDelay': 'Mierz prawdziwe opóźnienia przy nagrywaniu',
@@ -795,6 +881,8 @@ const pl: Dict = {
   'macro.namePrefix': 'Makro {n}',
   'macro.delayMs': 'Opóźnienie {n} ms',
   'settings.title': 'Ustawienia',
+  'settings.omLimited':
+    'OpenMouse: język i eksport profilu UMD działają. Sen / parowanie / long-distance to opcje native UMD, dopóki klient ich nie udostępni.',
   'settings.language': 'Język',
   'settings.langPl': 'Polski',
   'settings.langEn': 'English',

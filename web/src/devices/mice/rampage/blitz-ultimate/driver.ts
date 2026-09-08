@@ -91,7 +91,7 @@ export class BlitzUltimateDriver {
     this.state = createDefaultState()
   }
 
-  /** Button action catalog for Buttons UI — Blitz OEM only. */
+  /** Button action catalog for Buttons UI - Blitz OEM only. */
   get buttonActions() {
     return BLITZ_BUTTON_ACTIONS
   }
@@ -227,7 +227,7 @@ export class BlitzUltimateDriver {
   }
 
   /**
-   * OEM GetLongRangeMode (cmd 23) — not in MouseConfig flash; must poll USB.
+   * OEM GetLongRangeMode (cmd 23) - not in MouseConfig flash; must poll USB.
    * Without this, UI resets to default false after reconnect.
    */
   async refreshLongDistanceFromDevice(): Promise<boolean | null> {
@@ -1137,7 +1137,7 @@ export class BlitzUltimateDriver {
       this.lastVerifyNote =
         wrote > 0
           ? `Saved ${wrote} macro slot(s) to mouse flash`
-          : 'No button has a macro assigned — assign from Buttons, then Save'
+          : 'No button has a macro assigned - assign from Buttons, then Save'
       umdLog('driver', 'info', this.lastVerifyNote)
     })
   }
@@ -1148,7 +1148,7 @@ export class BlitzUltimateDriver {
     return this.enqueueWrite(async () => {
       if (patch.sleepAfterMin != null) {
         const code = sleepMinutesToCode(patch.sleepAfterMin)
-        // Same prelude as DPI flush — flash writes need PC-driver session + wake.
+        // Same prelude as DPI flush - flash writes need PC-driver session + wake.
         await this.trySend({ op: 'set_pc_driver', active: true })
         await this.trySend({ op: 'read_online' })
         await sleep(40)
@@ -1171,7 +1171,7 @@ export class BlitzUltimateDriver {
         }
       }
       if (patch.longDistance != null) {
-        // Same prelude as sleep — long-range needs PC-driver + online wake.
+        // Same prelude as sleep - long-range needs PC-driver + online wake.
         await this.trySend({ op: 'set_pc_driver', active: true })
         await this.trySend({ op: 'read_online' })
         await sleep(40)

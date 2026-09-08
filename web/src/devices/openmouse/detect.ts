@@ -1,5 +1,5 @@
 /**
- * OpenMouse client factory — dynamic import only (client connect path).
+ * OpenMouse client factory - dynamic import only (client connect path).
  * Package is patched at postinstall so webpack can resolve subpath exports.
  */
 

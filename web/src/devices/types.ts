@@ -56,7 +56,7 @@ export type ButtonAction =
 export interface ButtonBinding {
   /** Display number on mouse art (1-based, OEM KeyParam order). */
   id: number
-  /** Flash KeyFunMap slot (0–15) at 0x60 + index×4. */
+  /** Flash KeyFunMap slot (0-15) at 0x60 + index×4. */
   flashIndex: number
   label: string
   action: ButtonAction
@@ -78,12 +78,12 @@ export interface DpiStage {
 
 export interface SensorState {
   dpiStages: DpiStage[]
-  /** How many DPI levels are active (OEM "DPI Stages" 1–7). */
+  /** How many DPI levels are active (OEM "DPI Stages" 1-7). */
   dpiStageCount: number
   activeDpiIndex: number
   /**
    * Onboard profile default DPI slot (Solaar `resolution_default_index`, profile byte[1]).
-   * Power-on / “Default DPI” button target — distinct from live activeDpiIndex.
+   * Power-on / “Default DPI” button target - distinct from live activeDpiIndex.
    */
   defaultDpiIndex?: number
   /**
@@ -91,7 +91,7 @@ export interface SensorState {
    * Used while a button mapped to DPI Shift is held.
    */
   dpiShiftIndex?: number
-  /** Live 0x2201 GetSensorDpiList — min/max/step from device (Superlight: 100/25600/50). */
+  /** Live 0x2201 GetSensorDpiList - min/max/step from device (Superlight: 100/25600/50). */
   dpiListMin?: number
   dpiListMax?: number
   dpiListStep?: number
@@ -105,15 +105,15 @@ export interface SensorState {
   motionSync: boolean
   debounceMs: number
   debounceEnabled: boolean
-  /** Fenrir: OEM click debounce preset index 0–5 when DIY is off. */
+  /** Fenrir: OEM click debounce preset index 0-5 when DIY is off. */
   debounceLevel?: number
-  /** Fenrir OEM debounce1 — Before Press (ms). */
+  /** Fenrir OEM debounce1 - Before Press (ms). */
   debounceBeforePress?: number
-  /** Fenrir OEM debounce2 — Before Release (ms). */
+  /** Fenrir OEM debounce2 - Before Release (ms). */
   debounceBeforeRelease?: number
-  /** Fenrir OEM debounce3 — After Press (ms). */
+  /** Fenrir OEM debounce3 - After Press (ms). */
   debounceAfterPress?: number
-  /** Fenrir OEM debounce4 — After Release (ms). */
+  /** Fenrir OEM debounce4 - After Release (ms). */
   debounceAfterRelease?: number
   /** Fenrir: OEM wheel scroll debounce (ms). */
   wheelDebounceMs?: number
@@ -121,7 +121,7 @@ export interface SensorState {
   wheelDebounceDiy?: boolean
   /** Fenrir: companion rate byte for setWheelDebounce. */
   wheelDebounceRate?: number
-  /** Fenrir: OEM wheel debounce preset index 0–3 when DIY is off. */
+  /** Fenrir: OEM wheel debounce preset index 0-3 when DIY is off. */
   wheelDebounceLevel?: number
   /** Fenrir OEM Axis Sync (DPI X = DPI Y). */
   dpiAxisSync?: boolean
@@ -173,7 +173,7 @@ export interface SettingsState {
   /** King Ultra sleep timeout in minutes (OEM PowerSaveTime). */
   sleepAfterMin: number
   /**
-   * Fenrir OEM Sleep Time in seconds (30–600, step 5).
+   * Fenrir OEM Sleep Time in seconds (30-600, step 5).
    * When set, this is the source of truth for Fenrir HID setSleepTime.
    */
   sleepAfterSec?: number

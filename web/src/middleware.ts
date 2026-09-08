@@ -8,7 +8,7 @@ import { getSiteUrl, isLegacyHost } from '@/lib/site'
  *   auto-update; 301 everything else to canonical umdrivers.com
  *
  * CapRover must point legacy domains at THIS app (alias), not a separate
- * HTTP→HTTP redirect app — .NET HttpClient refuses HTTPS→HTTP 302s.
+ * HTTP→HTTP redirect app - .NET HttpClient refuses HTTPS→HTTP 302s.
  */
 export function middleware(request: NextRequest) {
   const host = request.headers.get('host')

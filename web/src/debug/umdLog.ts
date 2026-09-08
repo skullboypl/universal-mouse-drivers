@@ -1,5 +1,5 @@
 /** Forward client logs to Next terminal + `.umd-debug.log` via `/api/umd-log`.
- * Production: browser console only — never POST (public endpoint removed).
+ * Production: browser console only - never POST (public endpoint removed).
  */
 
 type Level = 'info' | 'warn' | 'error'

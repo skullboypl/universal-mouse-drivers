@@ -11,7 +11,7 @@ function sleep(ms: number) {
   return new Promise<void>((r) => setTimeout(r, ms))
 }
 
-/** CRC-16/CCITT-FALSE (Solaar `common.crc16`) — used by onboard profile sectors. */
+/** CRC-16/CCITT-FALSE (Solaar `common.crc16`) - used by onboard profile sectors. */
 export function crc16Ccitt(data: Uint8Array): number {
   let crc = 0xffff
   for (let i = 0; i < data.length; i++) {
@@ -26,7 +26,7 @@ export function crc16Ccitt(data: Uint8Array): number {
 
 /**
  * True if sector looks like a usable onboard profile (not erased / mid-write trash).
- * ROM profiles often have CRC 0xFFFF — still accepted when header/buttons look sane.
+ * ROM profiles often have CRC 0xFFFF - still accepted when header/buttons look sane.
  * CRC mismatch alone is soft: prefer structural checks (rate / DPI / L button).
  */
 export function isValidOnboardProfileBytes(bytes: Uint8Array): boolean {
@@ -126,7 +126,7 @@ export type OnboardProfileInfo = {
 
 /**
  * Minimal HID++ 2.0 client over the LIGHTSPEED long collection (report 0x11).
- * Close G HUB / OMM before connect — exclusive open.
+ * Close G HUB / OMM before connect - exclusive open.
  */
 export class HidppClient {
   private device: HIDDevice | null = null
@@ -140,7 +140,7 @@ export class HidppClient {
     reject: (err: Error) => void
     timer: ReturnType<typeof setTimeout>
   }> = []
-  /** Serialize all HID++ traffic — concurrent WebHID TX drops LIGHTSPEED replies. */
+  /** Serialize all HID++ traffic - concurrent WebHID TX drops LIGHTSPEED replies. */
   private requestChain: Promise<unknown> = Promise.resolve()
   private onInputBound: (ev: HIDInputReportEvent) => void
 
@@ -272,7 +272,7 @@ export class HidppClient {
   /**
    * Send long HID++ request; returns params after featureIndex/fnSw header.
    * Wire: reportId 0x11 | deviceIndex | featureIndex | (fn<<4)|swId | params… (pad to 20)
-   * All calls are serialized — concurrent TX breaks wireless 8100 writes.
+   * All calls are serialized - concurrent TX breaks wireless 8100 writes.
    */
   async request(
     featureIndex: number,
@@ -351,7 +351,7 @@ export class HidppClient {
     const countResp = await this.request(idx, 0)
     const len = countResp[0] ?? 0
     const chars: number[] = []
-    // fn1 getDeviceName(charIndex) — first response returns from index 0 a chunk
+    // fn1 getDeviceName(charIndex) - first response returns from index 0 a chunk
     const chunk = await this.request(idx, 1, new Uint8Array([0]))
     for (let i = 0; i < chunk.length && chars.length < len; i++) {
       const c = chunk[i]!
@@ -374,7 +374,7 @@ export class HidppClient {
 
   async getBattery(): Promise<HidppBattery> {
     // OMM Battery.cs + Solaar: Feature1004
-    //   fn0 GetCapabilities  (flags / levels — NOT percent)
+    //   fn0 GetCapabilities  (flags / levels - NOT percent)
     //   fn1 GetStatus        → state_of_charge, charging_status, …
     // Live Superlight v1: fn1 = 0x53 → 83% (matches OMM UI).
     const r = await this.call(HIDPP.BATTERY_UNIFIED, 1)
@@ -442,7 +442,7 @@ export class HidppClient {
    * OMM DPITable: slot combo = consecutive Enabled count; Enabled iff resolution ≠ 0.
    * Solaar OnboardProfile.from_bytes: rate, idxs, 5× LE u16 @3; buttons @32 (4 B each).
    *
-   * fn2 = GetOnboardMode (1=onboard, 2=host) — NOT sector.
+   * fn2 = GetOnboardMode (1=onboard, 2=host) - NOT sector.
    * fn4 = GetActiveProfile (u16 BE; ROM ids use low byte as flash sector).
    */
   async getOnboardDpiTable(): Promise<OnboardDpiTable | null> {
@@ -468,7 +468,7 @@ export class HidppClient {
     const bytes = await this.readOnboardSector(profileId, sectorSize)
     if (!bytes) return null
 
-    // Flash slot may be corrupt after a failed write — don't poison UI with 0xFFFF trash.
+    // Flash slot may be corrupt after a failed write - don't poison UI with 0xFFFF trash.
     if (!isValidOnboardProfileBytes(bytes)) {
       umdLog('superlight', 'warn', '8100 active profile bytes invalid', {
         profileId: profileId.toString(16),
@@ -594,7 +594,7 @@ export class HidppClient {
     let sectorSize = ((info[7] ?? 0) << 8) | (info[8] ?? 0)
     if (sectorSize < 64 || sectorSize > 512) sectorSize = 255
 
-    // Do not rewrite directory on every sync — that blocks first paint.
+    // Do not rewrite directory on every sync - that blocks first paint.
     // ensureOnboardProfileDirectory runs on profile switch if needed.
     const sectors = await this.readOnboardProfileDirectory(sectorSize)
     const activeSector = await this.getActiveOnboardSector()
@@ -612,7 +612,7 @@ export class HidppClient {
 
   /**
    * Directory @ sector 0: entries of (sector u16 BE, enabled u8, 0x00), end FF FF 00 00.
-   * Live Superlight often ships without a flash directory (only ROM 0x0101) — then only
+   * Live Superlight often ships without a flash directory (only ROM 0x0101) - then only
    * profile 1 activates; we write a full 1..N directory once.
    */
   async readOnboardProfileDirectory(sectorSize = 255): Promise<number[]> {
@@ -673,7 +673,7 @@ export class HidppClient {
   }
 
   /**
-   * Flash profile must be valid before SetActiveProfile(00 0N) — corrupt sector →
+   * Flash profile must be valid before SetActiveProfile(00 0N) - corrupt sector →
    * HID++ invalid_argument and device stays on ROM 0x0101.
    */
   async ensureFlashProfileSector(
@@ -808,7 +808,7 @@ export class HidppClient {
         last & 0xff,
       ]),
     )
-    // last awkward slice — same as Solaar
+    // last awkward slice - same as Solaar
     const need = size - o
     buf.set(chunk.subarray(16 - need, 16), o)
     return buf
@@ -816,7 +816,7 @@ export class HidppClient {
 
   /**
    * Write full sector (fn6 start / fn7 data×16 / fn8 end). CRC must already be set.
-   * Live Superlight: while onboard mode is active, 8060 set is rejected — profile write
+   * Live Superlight: while onboard mode is active, 8060 set is rejected - profile write
    * is how OMM persists report rate + DPI table.
    */
   async writeOnboardSector(sector: number, data: Uint8Array): Promise<void> {
@@ -864,7 +864,7 @@ export class HidppClient {
     try {
       await this.call(HIDPP.ONBOARD_PROFILES, 8, new Uint8Array(0), 2000)
     } catch {
-      /* ignore — may already be idle */
+      /* ignore - may already be idle */
     }
   }
 
@@ -947,7 +947,7 @@ export class HidppClient {
       bytes[off] = v & 0xff
       bytes[off + 1] = (v >> 8) & 0xff
     }
-    // OMM never remaps Left/Right — keep factory macros even if sector was corrupted.
+    // OMM never remaps Left/Right - keep factory macros even if sector was corrupted.
     const left = new Uint8Array([0x80, 0x01, 0x00, 0x01])
     const right = new Uint8Array([0x80, 0x01, 0x00, 0x02])
     for (let i = 0; i < 5; i++) {
@@ -986,7 +986,7 @@ export class HidppClient {
   }
 
   /**
-   * 0x8060 — live Superlight: fn0 = supported bitmask (ms bits),
+   * 0x8060 - live Superlight: fn0 = supported bitmask (ms bits),
    * fn1 = current rate in ms (1 → 1000 Hz).
    */
   async getReportRateHz(): Promise<{ hz: number; supportedHz: number[] }> {
@@ -1000,7 +1000,7 @@ export class HidppClient {
         supportedHz.push(Math.round(1000 / ms))
       }
     }
-    // bit7 seen on device (0x8B) — ignore unknown extras
+    // bit7 seen on device (0x8B) - ignore unknown extras
 
     let hz = 1000
     try {

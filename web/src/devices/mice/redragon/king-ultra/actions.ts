@@ -3,7 +3,7 @@
  * Source: OEM `Language/0-English.xml` + Config.ini KeyParam encoding.
  * value="ABCD" → param1=0xCD (lo), param2=0xAB (hi).
  *
- * OWNED BY King Ultra only — never import from Blitz Ultimate.
+ * OWNED BY King Ultra only - never import from Blitz Ultimate.
  */
 import type { ButtonAction } from '../../../types'
 import { encodeWriteFlashChunks } from './macroFlash'
@@ -107,7 +107,7 @@ export const KING_ULTRA_BUTTON_ACTIONS: KingActionDef[] = [
         mediaUsage: [usage & 0xff, (usage >> 8) & 0xff] as [number, number],
       }) satisfies KingActionDef,
   ),
-  // Lighting — King XML SubKeyFunction type 08 (no “all toggle”)
+  // Lighting - King XML SubKeyFunction type 08 (no “all toggle”)
   {
     id: 'led_strip_toggle',
     labelKey: 'led_strip_toggle',
@@ -156,7 +156,7 @@ export function keyFunToAction(
   return 'disabled'
 }
 
-/** King ShortCutKey flash (OEM FlashDataMap.shortCutKey) — independent of Blitz copy. */
+/** King ShortCutKey flash (OEM FlashDataMap.shortCutKey) - independent of Blitz copy. */
 export const SHORTCUT_FLASH_BASE = 0x100
 export const SHORTCUT_FLASH_STRIDE = 0x20
 

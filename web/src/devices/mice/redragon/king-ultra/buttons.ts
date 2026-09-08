@@ -14,15 +14,15 @@ export { KING_ULTRA_BUTTON_ACTIONS }
 export const MOUSE_ART = { width: 432, height: 356 } as const
 
 /**
- * Remappable keys on mouse art — OEM Config.ini KeyParam1–6.
+ * Remappable keys on mouse art - OEM Config.ini KeyParam1-6.
  * Format: x,y,flashIndex,type,param1,param2
  *
  * Button 6 (DPI Loop): Config.ini `index=0x0C`. Factory flash also keeps
- * DPI Loop copies at slots 0x05 and 0x0B — remaps must hit all three or the
+ * DPI Loop copies at slots 0x05 and 0x0B - remaps must hit all three or the
  * physical DPI key can stay on an old copy / go dead. Primary = 0x0C.
  *
- * KeyParam7–16 exist in Config (extra flash slots / OEM side list) but are
- * not drawn on the 6-button overlay in UMD — see NOTES-buttons-oem.md.
+ * KeyParam7-16 exist in Config (extra flash slots / OEM side list) but are
+ * not drawn on the 6-button overlay in UMD - see NOTES-buttons-oem.md.
  */
 export const KING_ULTRA_BUTTONS: ButtonBinding[] = [
   {

@@ -14,13 +14,19 @@ export {
 } from './catalog.generated'
 export {
   getOpenMouseBrands,
+  getOpenMouseBrandCounts,
   getOpenMouseEntriesForBrand,
   getOpenMouseEntry,
   getOpenMouseNamedEntries,
+  getOpenMouseFeaturedEntries,
+  describeOpenMouseDevice,
+  describeOpenMouseBrand,
   openMouseDevicePath,
   openMouseBrandPath,
   OPENMOUSE_HUB_PATH,
   openMouseImageUrl,
+  openMouseLogoUrl,
+  formatVidPid,
 } from './catalog'
 export {
   openMouseHidFilters,
@@ -38,6 +44,12 @@ export {
   OpenMouseDriverAdapter,
   createOpenMouseDriver,
 } from './OpenMouseDriverAdapter'
+export {
+  OPENMOUSE_DEMO_PROFILES,
+  capabilitiesFromOmClient,
+  type OpenMouseCapabilityFlags,
+  type OpenMouseDemoProfile,
+} from './capabilities'
 
 export function openMouseBrandNames(): string[] {
   return [...OPENMOUSE_BRAND_LABELS]

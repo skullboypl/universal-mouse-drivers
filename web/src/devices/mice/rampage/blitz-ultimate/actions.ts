@@ -2,7 +2,7 @@
  * Blitz Ultimate KeyFunction / SubKeyFunction catalog (OEM Language XML).
  * value="ABCD" → param1=0xCD (lo), param2=0xAB (hi).
  *
- * OWNED BY Blitz Ultimate only — never import from King Ultra.
+ * OWNED BY Blitz Ultimate only - never import from King Ultra.
  */
 import type { ButtonAction } from '../../../types'
 import { encodeWriteFlashChunks } from './macroFlash'
@@ -114,7 +114,7 @@ export const BLITZ_BUTTON_ACTIONS: BlitzActionDef[] = [
         mediaUsage: [usage & 0xff, (usage >> 8) & 0xff] as [number, number],
       }) satisfies BlitzActionDef,
   ),
-  // Lighting (SubKeyFunction type 08 — exposed flat in UMD)
+  // Lighting (SubKeyFunction type 08 - exposed flat in UMD)
   {
     id: 'led_all_toggle',
     labelKey: 'led_all_toggle',
@@ -170,7 +170,7 @@ export function keyFunToAction(
   return 'disabled'
 }
 
-/** Blitz ShortCutKey flash layout (OEM) — do not reuse for King Ultra. */
+/** Blitz ShortCutKey flash layout (OEM) - do not reuse for King Ultra. */
 export const SHORTCUT_FLASH_BASE = 0x100
 export const SHORTCUT_FLASH_STRIDE = 0x20
 

@@ -1,69 +1,268 @@
 .wrap {
-  max-width: 1100px;
+  --om-max: 1120px;
+  width: min(var(--om-max), calc(100% - 1.5rem));
   margin: 0 auto;
-  padding: 2rem 1.25rem 4rem;
+  padding: 1.25rem 0 3.5rem;
+  color: var(--fg);
+}
+
+.head {
+  padding: 0.5rem 0 1.25rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .head h1 {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  margin: 0.25rem 0 0.5rem;
-  letter-spacing: -0.02em;
+  font-family: var(--display);
+  font-size: clamp(1.65rem, 4.5vw, 2.45rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  margin: 0.35rem 0 0.65rem;
 }
 
 .eyebrow {
   margin: 0;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.7;
+  font-size: 0.8rem;
+  color: var(--fg-dim);
 }
 
 .eyebrow a {
-  color: inherit;
+  color: var(--fg-muted);
+  text-decoration: none;
+}
+
+.eyebrow a:hover {
+  color: var(--accent-hot);
 }
 
 .sub {
   margin: 0;
-  max-width: 42rem;
-  opacity: 0.85;
-  line-height: 1.5;
+  max-width: 40rem;
+  color: var(--fg-muted);
+  line-height: 1.55;
+  font-size: 1.02rem;
 }
 
-.credit {
-  margin: 0.75rem 0 0;
-  font-size: 0.9rem;
+.headActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.1rem;
 }
 
-.credit a {
-  color: #0ea5e9;
+.cta,
+.ctaGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.65rem;
+  padding: 0.55rem 1.05rem;
+  border-radius: var(--radius);
+  font-weight: 650;
+  text-decoration: none;
+  font-size: 0.95rem;
 }
 
 .cta {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.65rem 1.1rem;
-  border-radius: 0.5rem;
-  background: #0ea5e9;
-  color: #04101a;
-  font-weight: 650;
+  background: var(--accent);
+  color: #120e08;
+}
+
+.cta:hover {
+  background: var(--accent-hot);
+}
+
+.ctaGhost {
+  border: 1px solid var(--border-strong);
+  color: var(--fg);
+  background: transparent;
+}
+
+.ctaGhost:hover {
+  border-color: var(--accent);
+  color: var(--accent-hot);
+}
+
+.how {
+  margin: 1.35rem 0 0;
+  padding: 1.1rem 1.15rem;
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+
+.how h2 {
+  margin: 0 0 0.45rem;
+  font-family: var(--display);
+  font-size: 1.05rem;
+}
+
+.how > p {
+  margin: 0;
+  color: var(--fg-muted);
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.legend {
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.legend li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.88rem;
+  color: var(--fg-muted);
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.45rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.42rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.pillLive {
+  background: rgba(62, 207, 142, 0.16);
+  color: var(--signal);
+  border-color: rgba(62, 207, 142, 0.35);
+}
+
+.pillOm {
+  background: rgba(14, 165, 233, 0.16);
+  color: #7dd3fc;
+  border-color: rgba(14, 165, 233, 0.35);
+}
+
+.pillNamed {
+  background: var(--accent-soft);
+  color: var(--accent-hot);
+  border-color: rgba(232, 162, 58, 0.35);
+}
+
+.pillWebhid {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fg-muted);
+  border-color: var(--border);
+}
+
+.brands {
+  margin-top: 1.6rem;
+}
+
+.brandsHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.brandsHead h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.15rem;
+}
+
+.brandsMeta {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--fg-dim);
+}
+
+.brandChips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.4rem;
+  padding: 0.25rem 0.65rem 0.25rem 0.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-panel);
+  color: var(--fg);
   text-decoration: none;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+}
+
+.chipActive {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.chipArt {
+  width: 1.85rem;
+  height: 1.85rem;
+  object-fit: contain;
+  border-radius: 0.45rem;
+  flex-shrink: 0;
+  background: #0c0e12;
+}
+
+.chipCount {
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.listSection {
+  margin-top: 1.75rem;
+}
+
+.listHead h2 {
+  margin: 0 0 0.75rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
 }
 
 .controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin: 1.75rem 0 0.75rem;
+  gap: 0.65rem;
   align-items: center;
 }
 
 .search,
 .select {
-  min-height: 2.5rem;
-  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
-  border-radius: 0.5rem;
-  background: color-mix(in srgb, currentColor 6%, transparent);
-  color: inherit;
+  min-height: 2.55rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  color: var(--fg);
   padding: 0.4rem 0.75rem;
   font: inherit;
 }
@@ -80,13 +279,23 @@
   display: inline-flex;
   gap: 0.4rem;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  color: var(--fg-muted);
 }
 
 .count {
-  margin: 0 0 1rem;
-  opacity: 0.65;
-  font-size: 0.9rem;
+  margin: 0.65rem 0 0.85rem;
+  font-size: 0.85rem;
+  color: var(--fg-dim);
+}
+
+.empty {
+  margin: 1rem 0;
+  padding: 1.25rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--fg-muted);
+  text-align: center;
 }
 
 .grid {
@@ -94,68 +303,209 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr));
+  gap: 0.9rem;
 }
 
 .card {
-  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 2px);
   overflow: hidden;
-  background: color-mix(in srgb, currentColor 4%, transparent);
+  background: var(--bg-elevated);
+  min-height: 100%;
+}
+
+.card:hover {
+  border-color: var(--border-strong);
 }
 
 .cardMain {
-  display: block;
+  display: grid;
+  grid-template-rows: auto 1fr;
   color: inherit;
   text-decoration: none;
-  padding: 0.85rem 0.85rem 0.35rem;
+  flex: 1;
 }
 
 .art {
   position: relative;
-  display: grid;
-  place-items: center;
-  min-height: 8rem;
+  display: block;
+  overflow: hidden;
+  border-radius: calc(var(--radius) + 2px) calc(var(--radius) + 2px) 0 0;
+  background: #0a0c10;
 }
 
-.art img {
-  width: 5.5rem;
-  height: auto;
-  opacity: 0.95;
+.art > * {
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
 }
 
-.badge {
-  position: absolute;
-  left: 0.35rem;
-  top: 0.35rem;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+.cardBody {
+  padding: 0.75rem 0.9rem 0.35rem;
+}
+
+.cardBrand {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.3rem;
-  background: #0ea5e9;
-  color: #04101a;
+  color: var(--fg-dim);
 }
 
 .card h2 {
-  font-size: 0.95rem;
-  margin: 0.5rem 0 0.15rem;
+  font-size: 1rem;
+  margin: 0.2rem 0 0.2rem;
   line-height: 1.25;
+  font-family: var(--display);
+  font-weight: 700;
 }
 
 .meta {
   margin: 0;
   font-size: 0.75rem;
-  opacity: 0.6;
+  color: var(--fg-dim);
   font-variant-numeric: tabular-nums;
+  font-family: var(--mono);
+}
+
+.cardDesc {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--fg-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .brandLink {
   display: block;
-  padding: 0.45rem 0.85rem 0.7rem;
-  font-size: 0.8rem;
-  color: #0ea5e9;
+  padding: 0.55rem 0.9rem 0.8rem;
+  font-size: 0.82rem;
+  color: var(--accent-hot);
   text-decoration: none;
+  border-top: 1px solid var(--border);
+}
+
+.brandLink:hover {
+  color: var(--accent);
+}
+
+/* Device detail */
+.deviceHero {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 0.75rem;
+}
+
+.deviceHeroArt {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: #0a0c10;
+}
+
+.deviceHeroArt > * {
+  border-radius: 0;
+  min-height: 14rem;
+}
+
+.deviceCopy h1 {
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  margin: 0.35rem 0 0.5rem;
+  line-height: 1.15;
+}
+
+.deviceLead {
+  margin: 0;
+  color: var(--fg-muted);
+  line-height: 1.55;
+  font-size: 1.02rem;
+}
+
+.deviceMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.85rem 0 0;
+}
+
+.steps {
+  margin: 1.35rem 0 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+}
+
+.steps h2 {
+  margin: 0 0 0.55rem;
+  font-size: 1rem;
+  font-family: var(--display);
+}
+
+.steps ol {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--fg-muted);
+  line-height: 1.55;
+}
+
+@media (min-width: 720px) {
+  .deviceHero {
+    grid-template-columns: minmax(12rem, 16rem) 1fr;
+    align-items: start;
+  }
+
+  .legend {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .wrap {
+    width: min(var(--om-max), calc(100% - 1rem));
+    padding-top: 0.75rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardMain {
+    grid-template-columns: 7.5rem 1fr;
+    grid-template-rows: auto;
+  }
+
+  .art {
+    min-height: 100%;
+  }
+
+  .art > * {
+    min-height: 100%;
+    height: 100%;
+  }
+
+  .cardDesc {
+    -webkit-line-clamp: 2;
+  }
+
+  .brandChips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.35rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .chip {
+    flex: 0 0 auto;
+  }
 }

@@ -6,7 +6,7 @@ export const BLITZ_MOUSE_ART = { width: 432, height: 356 } as const
 
 /**
  * Remappable keys from OEM Config.ini KeyParamN = x,y,flashIndex,type,p1,p2.
- * KeyParam6 = Fire key (type 0x04) @ flashIndex 0x05 — King Ultra uses different map.
+ * KeyParam6 = Fire key (type 0x04) @ flashIndex 0x05 - King Ultra uses different map.
  */
 export const BLITZ_ULTIMATE_BUTTONS: ButtonBinding[] = [
   {
@@ -59,7 +59,7 @@ export const BLITZ_ULTIMATE_BUTTONS: ButtonBinding[] = [
   },
 ]
 
-/** Blitz Ultimate KeyFun map — from Blitz Language XML only. */
+/** Blitz Ultimate KeyFun map - from Blitz Language XML only. */
 export function actionToKeyFun(action: ButtonAction): {
   type: number
   param1: number

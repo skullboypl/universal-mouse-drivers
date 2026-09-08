@@ -25,7 +25,7 @@ export function isLegacyHost(hostHeader: string | null | undefined): boolean {
 
 /**
  * Absolute URL for tray auto-update downloads.
- * Always canonical HTTPS site — never inherit a legacy Host — so old
+ * Always canonical HTTPS site - never inherit a legacy Host - so old
  * HttpClient clients never get http:// or a dying hostname in `url`.
  */
 export function getTrayDownloadBaseUrl(): string {

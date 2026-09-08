@@ -1,7 +1,7 @@
 /**
- * Factory onboard flash dump — PRO X SUPERLIGHT gen1 (046D:C547).
+ * Factory onboard flash dump - PRO X SUPERLIGHT gen1 (046D:C547).
  * Captured live after OMM restore defaults (2026-08-12).
- * Sector 0 = profile directory; 1–5 = profiles (255 B + CRC-16/CCITT BE).
+ * Sector 0 = profile directory; 1-5 = profiles (255 B + CRC-16/CCITT BE).
  *
  * Buttons @32 (all profiles):
  *   80 01 00 01 | 80 01 00 02 | 80 01 00 04 | 80 01 00 08 | 80 01 00 10
@@ -14,7 +14,7 @@
 
 export const SUPERLIGHT_FACTORY_SECTOR_SIZE = 255
 
-/** Default button macros (L/R/M/Back/Forward) — never change L/R. */
+/** Default button macros (L/R/M/Back/Forward) - never change L/R. */
 export const SUPERLIGHT_FACTORY_BUTTON_MACROS: readonly Uint8Array[] = [
   new Uint8Array([0x80, 0x01, 0x00, 0x01]), // Left
   new Uint8Array([0x80, 0x01, 0x00, 0x02]), // Right

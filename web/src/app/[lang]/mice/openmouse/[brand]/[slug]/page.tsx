@@ -2,15 +2,16 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { LOCALES, isLocale, type Locale } from '@/i18n/locale'
 import {
+  describeOpenMouseDevice,
   getOpenMouseEntry,
   getOpenMouseNamedEntries,
   openMouseDevicePath,
+  openMouseImageUrl,
 } from '@/devices/openmouse/catalog'
 import { absoluteUrl, localePath } from '@/lib/seo'
 import { OpenMouseDeviceView } from '@/views/OpenMouseDeviceView'
 
 export function generateStaticParams() {
-  // Named devices only (1A) — unnamed stay in hub search
   return LOCALES.flatMap((lang) =>
     getOpenMouseNamedEntries().map((e) => ({
       lang,
@@ -29,16 +30,20 @@ export async function generateMetadata({
   if (!isLocale(lang)) return {}
   const entry = getOpenMouseEntry(brand, slug)
   if (!entry) return {}
+  const description = describeOpenMouseDevice(entry, lang)
   const title = `${entry.name} (${entry.brand}) · OpenMouse | UMD`
-  const description = `${entry.name} via OpenMouse protocols in Universal Mouse Drivers (WebHID) at umdrivers.com.`
   const path = localePath(lang as Locale, openMouseDevicePath(brand, slug))
-  const index = entry.hasProductName
   return {
     title,
     description,
-    robots: index ? undefined : { index: false, follow: true },
+    robots: entry.hasProductName ? undefined : { index: false, follow: true },
     alternates: { canonical: absoluteUrl(path) },
-    openGraph: { title, description, url: absoluteUrl(path) },
+    openGraph: {
+      title,
+      description,
+      url: absoluteUrl(path),
+      images: [{ url: absoluteUrl(openMouseImageUrl(entry.brandSlug, entry.name, entry.slug)) }],
+    },
   }
 }
 
@@ -52,13 +57,31 @@ export default async function OpenMouseDevicePage({
   const entry = getOpenMouseEntry(brand, slug)
   if (!entry) notFound()
   const l = lang as Locale
+  const pl = l === 'pl'
   return (
     <OpenMouseDeviceView
       lang={l}
       entry={entry}
       hubLabel="Community (OpenMouse)"
-      connectLabel={l === 'pl' ? 'Połącz w UMD' : 'Connect in UMD'}
-      credit="Protocol credit: OpenMouse Project"
+      connectLabel={pl ? 'Połącz w UMD' : 'Connect in UMD'}
+      credit="OpenMouse protocol"
+      badgeNamed={pl ? 'Nazwa' : 'Named'}
+      badgeCommunity="OpenMouse"
+      badgeWebhid="WebHID"
+      stepsTitle={pl ? 'Jak połączyć' : 'How to connect'}
+      steps={
+        pl
+          ? [
+              'Otwórz umdrivers.com w Chrome lub Edge (desktop).',
+              'Zamknij OEM / G HUB / inne apki blokujące HID.',
+              'Kliknij „Połącz” i wybierz tę mysz na liście WebHID.',
+            ]
+          : [
+              'Open umdrivers.com in Chrome or Edge (desktop).',
+              'Close OEM / G HUB / other apps that lock HID.',
+              'Click Connect and pick this mouse in the WebHID prompt.',
+            ]
+      }
     />
   )
 }

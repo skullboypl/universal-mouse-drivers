@@ -12,7 +12,7 @@ function secret(): string {
   )
 }
 
-/** Admin UI + APIs only on local `next dev` — never on CapRover/production. */
+/** Admin UI + APIs only on local `next dev` - never on CapRover/production. */
 export function isAdminEnabled(): boolean {
   return process.env.NODE_ENV !== 'production'
 }
