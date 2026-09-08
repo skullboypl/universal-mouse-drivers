@@ -30,12 +30,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
                 ? 0.85
                 : 0.7,
         alternates: {
-          languages: Object.fromEntries(
-            SITE.locales.map((loc) => [
-              loc === 'zh' ? 'zh-CN' : loc,
-              absoluteUrl(localePath(loc, page.path)),
-            ]),
-          ),
+          languages: {
+            ...Object.fromEntries(
+              SITE.locales.map((loc) => [
+                loc === 'zh' ? 'zh-CN' : loc,
+                absoluteUrl(localePath(loc, page.path)),
+              ]),
+            ),
+            'x-default': absoluteUrl(localePath('en', page.path)),
+          },
         },
       })
     }
@@ -58,12 +61,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: 'weekly',
         priority: omPath === OPENMOUSE_HUB_PATH ? 0.88 : 0.8,
         alternates: {
-          languages: Object.fromEntries(
-            SITE.locales.map((loc) => [
-              loc === 'zh' ? 'zh-CN' : loc,
-              absoluteUrl(localePath(loc, omPath)),
-            ]),
-          ),
+          languages: {
+            ...Object.fromEntries(
+              SITE.locales.map((loc) => [
+                loc === 'zh' ? 'zh-CN' : loc,
+                absoluteUrl(localePath(loc, omPath)),
+              ]),
+            ),
+            'x-default': absoluteUrl(localePath('en', omPath)),
+          },
         },
       })
     }
