@@ -14,9 +14,21 @@ export default function manifest(): MetadataRoute.Manifest {
     lang: 'pl',
     icons: [
       {
+        src: '/favicon.ico',
+        sizes: '48x48',
+        type: 'image/x-icon',
+        purpose: 'any',
+      },
+      {
         src: '/favicon.svg',
         sizes: 'any',
         type: 'image/svg+xml',
+        purpose: 'any',
+      },
+      {
+        src: '/icon.png',
+        sizes: '32x32',
+        type: 'image/png',
         purpose: 'any',
       },
     ],
