@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "buttonLayouts": {
+    "king-ultra": [
+      { "id": 1, "uiX": 159, "uiY": 223 },
+      { "id": 2, "uiX": 43, "uiY": 186 },
+      { "id": 3, "uiX": 127, "uiY": 145 },
+      { "id": 4, "uiX": 286, "uiY": 169 },
+      { "id": 5, "uiX": 322, "uiY": 127 },
+      { "id": 6, "uiX": 313, "uiY": 240 }
+    ],
+    "king-ultra-hero": [
+      { "id": 1, "uiX": 500, "uiY": 640 },
+      { "id": 2, "uiX": 700, "uiY": 620 },
+      { "id": 3, "uiX": 600, "uiY": 520 },
+      { "id": 4, "uiX": 380, "uiY": 760 },
+      { "id": 5, "uiX": 360, "uiY": 900 },
+      { "id": 6, "uiX": 720, "uiY": 820 }
+    ],
+    "blitz-ultimate": [
+      { "id": 1, "uiX": 167, "uiY": 235 },
+      { "id": 2, "uiX": 65, "uiY": 201 },
+      { "id": 3, "uiX": 135, "uiY": 146 },
+      { "id": 4, "uiX": 281, "uiY": 161 },
+      { "id": 5, "uiX": 324, "uiY": 110 },
+      { "id": 6, "uiX": 376, "uiY": 230 }
+    ],
+    "fenrir-max": [
+      { "id": 1, "uiX": 150, "uiY": 210 },
+      { "id": 2, "uiX": 250, "uiY": 210 },
+      { "id": 3, "uiX": 200, "uiY": 155 },
+      { "id": 4, "uiX": 72, "uiY": 270 },
+      { "id": 5, "uiX": 62, "uiY": 330 }
+    ]
+  },
+  "downloads": {
+    "trayBattery": {
+      "id": "trayBattery",
+      "filename": "UmdBatteryTray.exe",
+      "displayName": "UMD Battery Tray",
+      "version": "1.7.2",
+      "signed": true,
+      "notes": "EV-signed; Check for updates menu + Yes/No prompt; longer download timeout; umdrivers.com fallback"
+    }
+  }
+}

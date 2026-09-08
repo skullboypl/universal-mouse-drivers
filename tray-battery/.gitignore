@@ -1,0 +1,20 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+*.user
+
+# Rider / VS
+.vs/
+.idea/
+*.suo
+
+# Signed artifacts / certs (thumbprint stays in env - sign.ps1 is safe to commit)
+*.pfx
+*.snk
+*.cer
+*.p12
+
+# OS
+Thumbs.db
+.DS_Store

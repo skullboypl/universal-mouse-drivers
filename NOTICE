@@ -1,0 +1,37 @@
+Universal Mouse Drivers (UMD)
+Copyright (C) 2026 SkullMedia Artur Spychalski
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program (see LICENSE). If not, see
+<https://www.gnu.org/licenses/>.
+
+Corresponding source for the network service at https://umdrivers.com
+is available at:
+  https://github.com/skullboypl/universal-mouse-drivers
+
+---------------------------------------------------------------------------
+Third-party / collaboration notices
+
+OpenMouse Project
+  https://github.com/OpenMouse-Project
+  https://github.com/OpenMouse-Project/openmouse
+  https://github.com/OpenMouse-Project/mouse-protocol
+
+UMD integrates HID vendor filters and device drivers from the OpenMouse
+mouse-protocol project (AGPL-3.0 ecosystem; see OpenMouse LICENSE).
+UMD × OpenMouse: native UMD drivers for Redragon King Ultra, Rampage
+Blitz Ultimate, and related SKUs; OpenMouse-backed detection and control
+for additional gaming mice.
+
+Please request that mouse-protocol publish an explicit LICENSE file so
+downstream AGPL compliance is unambiguous.

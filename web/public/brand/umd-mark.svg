@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="UMD">
+  <rect width="64" height="64" rx="14" fill="#0a0c10"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="12.5" stroke="#e8a23a" stroke-opacity="0.35"/>
+  <!-- U -->
+  <path fill="#f5f5f5" d="M10.4 14.5h5.1v18.8c0 3.1 1.8 4.9 4.7 4.9s4.7-1.8 4.7-4.9V14.5h5.1v19.1c0 6.1-3.9 9.7-9.8 9.7s-9.8-3.6-9.8-9.7V14.5z"/>
+  <!-- M -->
+  <path fill="#e8a23a" d="M32.4 14.5h4.7l3.1 14.2 3.1-14.2H49v28.8h-4.8V26.2l-3.5 15.1h-3.1L34.1 26.2v17.1h-4.7V14.5z"/>
+  <!-- mouse mark -->
+  <ellipse cx="32" cy="53" rx="6.2" ry="4.6" fill="#f5f5f5"/>
+  <rect x="30.7" y="49.6" width="2.6" height="4.2" rx="1.3" fill="#e8a23a"/>
+</svg>

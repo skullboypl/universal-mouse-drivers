@@ -1,0 +1,29 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "node scripts/patch-openmouse-exports.js",
+    "generate:openmouse-catalog": "node scripts/generate-openmouse-catalog.mjs",
+    "prebuild": "npm run generate:openmouse-catalog",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@openmouse/protocol": "github:OpenMouse-Project/mouse-protocol#main",
+    "next": "^15.5.23",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "^15.5.23",
+    "typescript": "^5"
+  }
+}

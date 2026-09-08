@@ -1,0 +1,51 @@
+# deps / build
+node_modules/
+web/node_modules/
+web/.next/
+web/out/
+**/bin/
+**/obj/
+*.user
+*.suo
+
+# runtime data (CapRover persistent - keep seed only)
+data/umd-store.json
+data/downloads/*
+!data/downloads/.gitkeep
+!data/umd-store.seed.json
+
+# Ship EV-signed tray with the image (do not ignore)
+!web/bundled-downloads/UmdBatteryTray.exe
+
+# secrets
+.env
+.env.*
+!.env.example
+!.env.caprover.example
+deploykey-caprover
+*.pem
+*.pfx
+*.p12
+
+# logs / OS
+*.log
+.umd-debug.log
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+# large RE dumps — entire tree is local / private only (not AGPL public source)
+Decompile/
+
+# private / internal — not part of public AGPL corresponding source
+docs/**
+!docs/screenshots/
+!docs/screenshots/**
+.cursor/
+tools/
+old/
+
+# local publish
+tray-battery/**/publish/
+

@@ -1,0 +1,203 @@
+.page {
+  width: min(820px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+
+.crumb {
+  margin: 0 0 18px;
+  font-size: 0.82rem;
+  color: var(--fg-dim);
+}
+
+.crumb a {
+  color: var(--fg-muted);
+  text-decoration: none;
+}
+
+.crumb a:hover {
+  color: var(--accent-hot);
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-hot);
+}
+
+.h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(1.7rem, 3.5vw, 2.35rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.intro {
+  margin: 16px 0 0;
+  color: var(--fg-muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.heroRow {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  margin-top: 8px;
+}
+
+.heroCopy {
+  flex: 1;
+  min-width: 0;
+}
+
+.heroArt {
+  flex-shrink: 0;
+  width: min(200px, 38%);
+}
+
+.heroArt img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.45));
+}
+
+.block {
+  margin-top: 32px;
+}
+
+.block h2 {
+  margin: 0 0 10px;
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.block p {
+  margin: 0 0 10px;
+  color: var(--fg-muted);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.block ul {
+  margin: 8px 0 0;
+  padding: 0 0 0 1.2rem;
+  color: var(--fg-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.block li::marker {
+  color: var(--accent-hot);
+}
+
+.ctaRow {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.65rem 1.1rem;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #0a0c10;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+.cta:hover {
+  background: var(--accent-hot);
+}
+
+.ctaGhost {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.65rem 1.1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+
+.ctaGhost:hover {
+  color: var(--fg);
+  border-color: rgba(232, 162, 58, 0.45);
+}
+
+.shotGrid {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.shot {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shot img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #0e1218;
+  display: block;
+}
+
+.shot figcaption {
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+  line-height: 1.35;
+}
+
+@media (max-width: 720px) {
+  .page {
+    width: calc(100% - 24px);
+    padding: 20px 0 48px;
+  }
+
+  .heroRow {
+    flex-direction: column-reverse;
+  }
+
+  .heroArt {
+    width: min(180px, 55%);
+    align-self: center;
+  }
+
+  .shotGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .ctaRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cta,
+  .ctaGhost {
+    justify-content: center;
+    text-align: center;
+  }
+}

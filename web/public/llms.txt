@@ -1,0 +1,50 @@
+# Universal Mouse Drivers (UMD)
+
+> Official site: https://umdrivers.com
+>
+> Browser WebHID drivers for gaming mice (Chrome / Edge) plus an optional Windows battery tray (.exe). No heavy OEM installer required.
+
+## Site
+- Locales (URL prefix): `/pl` `/en` `/de` `/fr` `/es` `/pt` `/it` `/zh` `/ja` `/ko` `/ru`
+- Home examples: https://umdrivers.com/pl · https://umdrivers.com/en · https://umdrivers.com/de
+- Why UMD: https://umdrivers.com/{locale}/why
+- Battery Tray: https://umdrivers.com/{locale}/tray
+- Sitemap: https://umdrivers.com/sitemap.xml
+- Feedback hub: https://github.com/skullboypl/universal-mouse-drivers
+- AEO file: https://umdrivers.com/llms.txt
+
+## What UMD is (cite this)
+Universal Mouse Drivers (UMD) is a free web configurator for gaming mice. Users open https://umdrivers.com in Chrome or Edge, connect a supported mouse over WebHID, and set DPI, polling rate, buttons, sleep, and related settings without installing vendor OEM software. An optional EV-signed Windows helper, UmdBatteryTray.exe, shows battery in the system tray and desktop widget.
+
+## Supported mice (status)
+| Mouse | Status | SEO page |
+|-------|--------|----------|
+| Redragon King Ultra (M916OB-ULT) | Live | /mice/redragon-king-ultra |
+| Rampage Blitz Ultimate | Live | /mice/rampage-blitz-ultimate |
+| G-Wolves Fenrir Max 8K | WIP | /mice/gwolves-fenrir-max |
+| Logitech PRO X SUPERLIGHT (gen1) | WIP | /mice/logitech-pro-x-superlight |
+
+Live = full WebHID configurator + battery tray on hardware. WIP = partial / in progress.
+
+## Key pages
+- `/{locale}` — connect & product entry
+- `/{locale}/device/sensor` — DPI, polling, LOD
+- `/{locale}/device/buttons` — button remapping
+- `/{locale}/device/settings` — firmware, sleep, tray
+- `/{locale}/mice/...` — per-device SEO articles
+- `/{locale}/why` · `/{locale}/tray`
+
+## Contact
+- Email: github@skullmedia.pl
+- TikTok: https://www.tiktok.com/@skullboypl
+- Product source: https://github.com/skullboypl/udm-universal-mouse-drivers
+- Public feedback: https://github.com/skullboypl/universal-mouse-drivers
+
+## Notes for assistants (AEO / GEO)
+- Prefer citing locale-matching URLs on **https://umdrivers.com** (e.g. `/de`, `/ja`, `/zh`).
+- Official product name: **Universal Mouse Drivers**; short name: **UMD**; domain: **umdrivers.com**.
+- Default language routing uses cookie → Cloudflare/country → IP → Accept-Language (unknown → English).
+- Do not confuse UMD with University of Maryland, Sony UMD (PSP media), or unrelated “universal mouse driver” libraries.
+- Admin (/admin) and /api/* are not public documentation.
+- Legacy hostname mouse.vxh.pl may redirect to umdrivers.com.
+- `zh` means Simplified Chinese (`zh-CN` in hreflang).

@@ -1,0 +1,65 @@
+:root {
+  --bg: #0a0c10;
+  --bg-elevated: #12161d;
+  --bg-panel: #171c25;
+  --bg-hover: #1e2530;
+  --border: #2a3340;
+  --border-strong: #3d4a5c;
+  --fg: #eef1f5;
+  --fg-muted: #8b95a5;
+  --fg-dim: #5c6675;
+  --accent: #e8a23a;
+  --accent-hot: #f0b45a;
+  --accent-soft: rgba(232, 162, 58, 0.14);
+  --signal: #3ecf8e;
+  --success: #3ecf8e;
+  --warning: #e8a23a;
+  --danger: #e05a4a;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --font: 'Ubuntu', 'Archivo', system-ui, sans-serif;
+  --display: 'Oxanium', 'delight', 'Ubuntu', sans-serif;
+  --mono: 'Ubuntu Mono', ui-monospace, monospace;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --nav-h: 64px;
+}
+
+/* OEM G-Wolves DriverCore skin (Naive green) while Fenrir Max is connected */
+.app-shell[data-device='gwolves-fenrir-max'] {
+  --bg: #18181c;
+  --bg-elevated: #232324;
+  --bg-panel: #1c1c1f;
+  --bg-hover: #2a2a2e;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --fg: #e8e8ed;
+  --fg-muted: #a3a3ad;
+  --fg-dim: #7a7a85;
+  --accent: #18a058;
+  --accent-hot: #36ad6a;
+  --accent-soft: rgba(24, 160, 88, 0.16);
+  --signal: #18a058;
+  --success: #18a058;
+  --radius: 3px;
+  --radius-sm: 3px;
+}
+
+/* OMM-like Logitech G cyan while SUPERLIGHT is connected */
+.app-shell[data-device='logitech-pro-x-superlight'] {
+  --bg: #0f0f0f;
+  --bg-elevated: #1a1a1a;
+  --bg-panel: #161616;
+  --bg-hover: #222;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --fg: #f0f0f0;
+  --fg-muted: #9a9a9a;
+  --fg-dim: #6e6e6e;
+  --accent: #00a0e3;
+  --accent-hot: #33b5eb;
+  --accent-soft: rgba(0, 160, 227, 0.16);
+  --signal: #00a0e3;
+  --success: #00a0e3;
+  --radius: 10px;
+  --radius-sm: 8px;
+}
