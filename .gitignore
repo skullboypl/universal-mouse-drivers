@@ -35,15 +35,9 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
-# large RE dumps (keep docs in Decompile/*/README if needed)
-Decompile/**/extracted/*.dll
-Decompile/**/extracted/*.exe
-Decompile/**/*.zip
-Decompile/**/*.7z
-Decompile/**/captures/*.pcap*
-Decompile/**/captures/*.bin
-# full ilspycmd tree (regenerate); keep extracted/cs-key/*.cs
-Decompile/logitech/omm-2.6.1749/netdecompile/
+# large RE dumps — entire tree is local / private only (not AGPL public source)
+Decompile/
+
 
 # local publish
 tray-battery/**/publish/

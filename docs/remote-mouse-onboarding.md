@@ -3,7 +3,9 @@
 **Status:** plan (2026-08-13) — jeszcze nie wdrożony  
 **Cel:** dodać SKU do UMD (`web/src/devices/…` + opcjonalnie tray), gdy mysz fizycznie jest u wolontariusza / klienta, a nie u Ciebie.
 
-> **Uwaga:** AI / Cursor **nie steruje** czyimś PC-em bezpośrednio. „Komunikacja z nimi” = oni uruchamiają u siebie narzędzie, które zbiera logi / wykonuje **bezpieczną, wersjonowaną** listę probe’ów i wysyła artefakty do Ciebie (ZIP / PR / Discord). Ty (lub agent lokalnie) analizujesz i kodujesz driver.
+> **Uwaga:** folder `Decompile/` (OEM dumps, ILSpy, capture’y) jest **tylko lokalny / prywatny** — nie trafia do publicznego AGPL repo. Publiczne źródło = clean-room UMD (`web/`, `tray-battery/`), nie dekompilaty OEM.
+
+> **Uwaga:** AI / Cursor **nie steruje** czyimś PC-em bezpośrednio. „Komunikacja z nimi” = oni uruchamiają u siebie narzędzie, które zbiera logi / wykonuje **bezpieczną, wersjonowaną** listę probe’ów i wysyła artefakty do Ciebie (ZIP / Discord / prywatny kanał). Ty (lub agent lokalnie) analizujesz i kodujesz driver.
 
 ---
 
