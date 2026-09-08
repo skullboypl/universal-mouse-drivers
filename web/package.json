@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "postinstall": "node scripts/patch-openmouse-exports.js",
+    "generate:openmouse-catalog": "node scripts/generate-openmouse-catalog.mjs",
+    "prebuild": "npm run generate:openmouse-catalog",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

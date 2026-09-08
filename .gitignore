@@ -39,7 +39,9 @@ Thumbs.db
 Decompile/
 
 # private / internal — not part of public AGPL corresponding source
-docs/
+docs/**
+!docs/screenshots/
+!docs/screenshots/**
 .cursor/
 tools/
 old/

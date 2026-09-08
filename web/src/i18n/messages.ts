@@ -65,6 +65,7 @@ export type MessageKey =
   | 'connect.statusWip'
   | 'connect.statusPlanned'
   | 'connect.statusOpenMouse'
+  | 'connect.openMouseHub'
   | 'connect.contactTitle'
   | 'connect.contactBody'
   | 'connect.contactBarter'
@@ -329,6 +330,7 @@ const en: Dict = {
   'connect.statusWip': 'Beta',
   'connect.statusPlanned': 'Soon',
   'connect.statusOpenMouse': 'OpenMouse',
+  'connect.openMouseHub': 'Browse Community devices (OpenMouse) →',
   'footer.source': 'Source (AGPL)',
   'footer.openMouse': 'OpenMouse',
   'connect.contactTitle': 'Want your mouse here?',
@@ -623,6 +625,7 @@ const pl: Dict = {
   'connect.statusWip': 'Beta',
   'connect.statusPlanned': 'Wkrótce',
   'connect.statusOpenMouse': 'OpenMouse',
+  'connect.openMouseHub': 'Przeglądaj Community devices (OpenMouse) →',
   'footer.source': 'Kod źródłowy (AGPL)',
   'footer.openMouse': 'OpenMouse',
   'connect.contactTitle': 'Chcesz dodać swoją mysz?',

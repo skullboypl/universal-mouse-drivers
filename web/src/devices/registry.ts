@@ -25,6 +25,7 @@ export const OPENMOUSE_BACKED_IDENTITY: DeviceIdentity = {
   hidIds: ['multi-vendor'],
   status: 'openmouse',
   sensor: 'Varies by OpenMouse driver',
+  imageUrl: '/devices/openmouse/mouse.svg',
 }
 
 export { OPENMOUSE_BACKED_ID }

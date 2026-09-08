@@ -5,9 +5,27 @@ export {
   OPENMOUSE_BRAND_LABELS,
   OPENMOUSE_VENDOR_IDS,
   matchesOpenMouseVendor,
+  openMouseCatalogVendorIds,
 } from './constants'
 export {
+  OPENMOUSE_CATALOG,
+  OPENMOUSE_BRANDS,
+  type OpenMouseCatalogEntry,
+} from './catalog.generated'
+export {
+  getOpenMouseBrands,
+  getOpenMouseEntriesForBrand,
+  getOpenMouseEntry,
+  getOpenMouseNamedEntries,
+  openMouseDevicePath,
+  openMouseBrandPath,
+  OPENMOUSE_HUB_PATH,
+  openMouseImageUrl,
+} from './catalog'
+export {
   openMouseHidFilters,
+  openMouseCatalogHidFilters,
+  loadOpenMouseHidFilters,
   openMouseSupports,
   openMouseScore,
 } from './filters'

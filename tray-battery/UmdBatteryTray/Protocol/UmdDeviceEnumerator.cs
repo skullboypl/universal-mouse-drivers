@@ -3,6 +3,7 @@ using UmdBatteryTray.Protocol.Mice.Gwolves.FenrirMax;
 using UmdBatteryTray.Protocol.Mice.Logitech.ProXSuperlight;
 using UmdBatteryTray.Protocol.Mice.Rampage.BlitzUltimate;
 using UmdBatteryTray.Protocol.Mice.Redragon.KingUltra;
+using UmdBatteryTray.Protocol.OpenMouse;
 
 namespace UmdBatteryTray.Protocol;
 
@@ -11,6 +12,7 @@ internal static class UmdDeviceEnumerator
     /// <summary>
     /// Lists unique VID:PID pairs currently attached for each SKU tree.
     /// Does not open streams (safe while Chrome WebHID holds a handle).
+    /// Native UMD SKUs win over OpenMouseCommunity on the same VID:PID.
     /// </summary>
     public static IReadOnlyList<UmdDeviceInfo> ListAvailable()
     {
@@ -44,17 +46,42 @@ internal static class UmdDeviceEnumerator
             UmdDeviceKind.Superlight,
             "PRO X SUPERLIGHT");
 
+        AddOpenMouseCatalog(byKey);
+
         return byKey.Values
             .OrderBy(d => d.Kind switch
             {
                 UmdDeviceKind.KingUltra => 0,
                 UmdDeviceKind.BlitzUltimate => 1,
                 UmdDeviceKind.FenrirMax => 2,
-                _ => 3,
+                UmdDeviceKind.Superlight => 3,
+                UmdDeviceKind.OpenMouseCommunity => 4,
+                _ => 5,
             })
             .ThenByDescending(d => IsWirelessPid(d) ? 1 : 0)
             .ThenBy(d => d.ProductId)
             .ToList();
+    }
+
+    private static void AddOpenMouseCatalog(Dictionary<string, UmdDeviceInfo> byKey)
+    {
+        foreach (var entry in OpenMouseCatalog.Devices)
+        {
+            foreach (var d in DeviceList.Local.GetHidDevices(entry.VendorId, entry.ProductId))
+            {
+                var key = $"{d.VendorID:X4}:{d.ProductID:X4}";
+                if (byKey.ContainsKey(key))
+                    continue; // native SKU already claimed this pair
+                string name;
+                try { name = d.GetProductName() ?? entry.Name; }
+                catch { name = entry.Name; }
+                byKey[key] = new UmdDeviceInfo(
+                    UmdDeviceKind.OpenMouseCommunity,
+                    d.VendorID,
+                    d.ProductID,
+                    $"{entry.Brand} · {name}");
+            }
+        }
     }
 
     private static void AddSku(
@@ -86,6 +113,7 @@ internal static class UmdDeviceEnumerator
             UmdDeviceKind.BlitzUltimate => BlitzUltimateConstants.IsWirelessDongle(d.ProductId),
             UmdDeviceKind.FenrirMax => d.ProductId == GwolvesConstants.FenrirMaxWirelessPid,
             UmdDeviceKind.Superlight => true,
+            UmdDeviceKind.OpenMouseCommunity => true,
             _ => false,
         };
 
@@ -104,6 +132,8 @@ internal static class UmdDeviceEnumerator
                 return match;
         }
 
-        return available[0];
+        // Prefer native UMD over OpenMouse community when auto-picking.
+        return available.FirstOrDefault(d => d.Kind != UmdDeviceKind.OpenMouseCommunity)
+            ?? available[0];
     }
 }

@@ -9,7 +9,9 @@ import ui from '@/components/ui.module.css'
 import {
   DEVICE_CATALOG,
   findCatalogDevice,
+  OPENMOUSE_BACKED_ID,
 } from '@/devices/registry'
+import { OPENMOUSE_HUB_PATH } from '@/devices/openmouse/catalog'
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
 import { BLITZ_ULTIMATE_IDENTITY } from '@/devices/mice/rampage/blitz-ultimate/identity'
@@ -300,6 +302,9 @@ export function ConnectPage() {
         <header className={styles.sectionHead}>
           <h2>{tr('connect.supportedTitle')}</h2>
           <p>{tr('connect.supportedSub')}</p>
+          <p>
+            <a href={lp(OPENMOUSE_HUB_PATH)}>{tr('connect.openMouseHub')}</a>
+          </p>
         </header>
         <ul className={styles.deviceGrid}>
           {DEVICE_CATALOG.map((d: DeviceIdentity) => {
@@ -373,7 +378,11 @@ export function ConnectPage() {
                     </div>
                     <a
                       className={styles.deviceSeoLink}
-                      href={lp(`/mice/${d.id}`)}
+                      href={lp(
+                        d.id === OPENMOUSE_BACKED_ID
+                          ? OPENMOUSE_HUB_PATH
+                          : `/mice/${d.id}`,
+                      )}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {tr('connect.learnMore')}

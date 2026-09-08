@@ -6,6 +6,8 @@ internal enum UmdDeviceKind
     BlitzUltimate,
     FenrirMax,
     Superlight,
+    /// <summary>OpenMouse catalog VID:PID — battery may be n/a until family reader lands.</summary>
+    OpenMouseCommunity,
 }
 
 /// <summary>One logical mouse (unique VID:PID) that UMD can read battery from.</summary>
