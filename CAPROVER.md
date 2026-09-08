@@ -121,7 +121,7 @@ Jeśli CapRover łączy się po SSH do GitHuba, wklej **publiczny** klucz (`depl
 
 Prefer **public** `https://github.com/skullboypl/universal-mouse-drivers` as Git deploy source of truth (AGPL). Keep `ADMIN_*` and other secrets only in CapRover **Environmental Variables** — never in the repo.
 
-**Do not** force-push the private product history onto public without filtering — `Decompile/` (OEM RE dumps) must stay out of the public tree and history. Sync forward from cleaned public / commits that already omit `Decompile/`.
+**Do not** force-push the private product history onto public without filtering — keep out of the public tree and history: `Decompile/`, `docs/`, `.cursor/`, `tools/`, `old/`. Sync forward from cleaned public / commits that already omit those paths.
 
 ## Security / incident (2026-08-18)
 

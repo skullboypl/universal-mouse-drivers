@@ -38,6 +38,12 @@ Thumbs.db
 # large RE dumps — entire tree is local / private only (not AGPL public source)
 Decompile/
 
+# private / internal — not part of public AGPL corresponding source
+docs/
+.cursor/
+tools/
+old/
 
 # local publish
 tray-battery/**/publish/
+

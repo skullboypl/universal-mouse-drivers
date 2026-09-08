@@ -19,7 +19,6 @@ Network users of umdrivers.com can obtain corresponding source via the public Gi
 | Next.js app (i18n, WebHID UI) | [`web/`](web/) |
 | CapRover | [`captain-definition`](captain-definition) + [`Dockerfile`](Dockerfile) → [`CAPROVER.md`](CAPROVER.md) |
 | Battery tray (WinForms) | [`tray-battery/`](tray-battery/) |
-| Remote mouse onboarding plan | [`docs/remote-mouse-onboarding.md`](docs/remote-mouse-onboarding.md) |
 
 ## Supported mice
 
@@ -61,7 +60,6 @@ See **[CAPROVER.md](CAPROVER.md)**. Deploy from this public repo; secrets stay i
 ## Contributing / new mice
 
 - Native SKU isolation: [`web/src/devices/README.md`](web/src/devices/README.md) + [`LOCK.md`](web/src/devices/LOCK.md)
-- Remote volunteer capture: [`docs/remote-mouse-onboarding.md`](docs/remote-mouse-onboarding.md)
 - Broader HID protocols: contribute upstream to [OpenMouse mouse-protocol](https://github.com/OpenMouse-Project/mouse-protocol)
 
 ## Credits
