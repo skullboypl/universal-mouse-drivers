@@ -6,12 +6,13 @@ Independent of the Vite WebHID app (both talk to the mouse; close Chrome WebHID 
 
 ## Supported now
 
-| Device | VID:PID |
-|--------|---------|
-| Redragon King Ultra (M916OB-ULT) | `3554:F54D` corded · `3554:F54F` / `F510` dongle |
-| Rampage Blitz Ultimate | `3554:F562` corded · `3554:F563` dongle |
-| G-Wolves Fenrir Max | `33E4:3717` wireless · `33E4:3708` corded |
-| Logitech PRO X SUPERLIGHT (gen1) | `046D:C547` LIGHTSPEED receiver |
+| Device | VID:PID | Battery |
+|--------|---------|---------|
+| Redragon King Ultra (M916OB-ULT) | `3554:F54D` corded · `3554:F54F` / `F510` dongle | yes |
+| Rampage Blitz Ultimate | `3554:F562` corded · `3554:F563` dongle | yes |
+| G-Wolves Fenrir Max | `33E4:3717` wireless · `33E4:3708` corded | yes |
+| Logitech PRO X SUPERLIGHT (gen1) | `046D:C547` LIGHTSPEED receiver | yes |
+| OpenMouse catalog (community) | VID:PID from generated catalog | detect all; % for G-Wolves + Logitech HID++ `0x1004` when present; else n/a |
 
 ## Features
 

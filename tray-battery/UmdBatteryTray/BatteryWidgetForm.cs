@@ -172,6 +172,11 @@ internal sealed class BatteryWidgetForm : Form
             _percentText = "--%";
             _statusText = "No data";
         }
+        else if (reading.Value.Status == BatteryStatus.Unknown)
+        {
+            _percentText = "n/a";
+            _statusText = "OpenMouse · battery n/a";
+        }
         else
         {
             _percentText = $"{reading.Value.Percent}%";

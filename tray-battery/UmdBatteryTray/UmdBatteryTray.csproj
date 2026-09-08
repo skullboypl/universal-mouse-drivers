@@ -10,13 +10,13 @@
     <AssemblyName>UmdBatteryTray</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
-    <Version>1.7.2</Version>
-    <AssemblyVersion>1.7.2.0</AssemblyVersion>
-    <FileVersion>1.7.2.0</FileVersion>
-    <InformationalVersion>1.7.2</InformationalVersion>
+    <Version>1.8.0</Version>
+    <AssemblyVersion>1.8.0.0</AssemblyVersion>
+    <FileVersion>1.8.0.0</FileVersion>
+    <InformationalVersion>1.8.0</InformationalVersion>
     <Company>UMD - Universal Mouse Drivers</Company>
     <Product>UMD Battery Tray</Product>
-    <Description>System tray + desktop widget battery monitor for UMD-supported mice (King Ultra, Blitz Ultimate, Fenrir Max, Superlight)</Description>
+    <Description>System tray + desktop widget battery monitor for UMD-supported mice (King Ultra, Blitz Ultimate, Fenrir Max, Superlight) plus OpenMouse catalog detection</Description>
   </PropertyGroup>
 
   <ItemGroup>

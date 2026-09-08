@@ -38,7 +38,7 @@
       "id": "trayBattery",
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
-      "version": "1.7.2",
+      "version": "1.8.0",
       "signed": true,
       "notes": "EV-signed; Check for updates menu + Yes/No prompt; longer download timeout; umdrivers.com fallback"
     }

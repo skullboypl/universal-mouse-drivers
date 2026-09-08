@@ -21,7 +21,7 @@
   "connect.learnMore": "Learn more",
   "connect.trayEyebrow": "Windows helper",
   "connect.trayTitle": "UMD Battery Tray",
-  "connect.trayBody": "Optional EV-signed .exe when you want battery % in the Windows tray without keeping the browser open. Works with King Ultra, Blitz Ultimate, Fenrir Max, and PRO X SUPERLIGHT.",
+  "connect.trayBody": "Optional EV-signed .exe when you want battery % in the Windows tray without keeping the browser open. Works with King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT, and OpenMouse catalog mice (battery % where protocol is wired; else n/a).",
   "connect.trayFeat1": "System tray icon with percent and charging status",
   "connect.trayFeat2": "Optional always-on-top desktop widget",
   "connect.trayFeat3": "Pick which supported mouse to monitor",
