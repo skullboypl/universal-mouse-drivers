@@ -901,17 +901,17 @@ export const BATTERY_TRAY = {
     ru: 'UMD Battery Tray - заряд в системном трее Windows | umdrivers.com',
   },
   description: {
-    pl: 'Pobierz z umdrivers.com/tray: lekki, podpisany EV .exe z poziomem baterii w trayu Windows i opcjonalnym widgetem. King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT.',
-    en: 'Download from umdrivers.com/tray: a light EV-signed Windows .exe for system-tray battery and an optional desktop widget. King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT.',
-    de: 'Download auf umdrivers.com/tray: eine schlanke, EV-signierte Windows-.exe mit Akkustand im Infobereich und optionalem Desktop-Widget. King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT.',
-    fr: 'À télécharger sur umdrivers.com/tray : un .exe Windows léger, signé EV, qui affiche la batterie dans la zone de notification et dans un widget de bureau facultatif. King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT.',
-    es: 'Descárgalo en umdrivers.com/tray: un .exe ligero para Windows, firmado con certificado EV, que muestra la batería en la bandeja del sistema y en un widget de escritorio opcional. King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT.',
-    pt: 'Transfira em umdrivers.com/tray: um .exe leve para Windows, assinado com certificado EV, que mostra a bateria na área de notificação e num widget opcional no ambiente de trabalho. King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT.',
-    it: 'Scaricalo da umdrivers.com/tray: un .exe leggero per Windows, firmato EV, che mostra la batteria nell’area di notifica e in un widget desktop opzionale. King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT.',
-    zh: '从 umdrivers.com/tray 下载：轻量且带 EV 签名的 Windows .exe，可在系统托盘中显示电量，并提供可选桌面小组件。支持 King Ultra、Blitz Ultimate、Fenrir Max、PRO X SUPERLIGHT。',
-    ja: 'umdrivers.com/tray からダウンロード：軽量で EV 署名済みの Windows .exe。システムトレイにバッテリー残量を表示し、オプションのデスクトップウィジェットも利用できます。King Ultra、Blitz Ultimate、Fenrir Max、PRO X SUPERLIGHT に対応。',
-    ko: 'umdrivers.com/tray에서 다운로드하세요. 가볍고 EV 서명된 Windows .exe로 시스템 트레이에 배터리를 표시하며 선택 사항인 데스크톱 위젯도 제공합니다. King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT 지원.',
-    ru: 'Скачайте с umdrivers.com/tray: лёгкий Windows .exe с EV-подписью, который показывает заряд в системном трее и дополнительном виджете рабочего стола. King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT.',
+    pl: 'Pobierz z umdrivers.com/tray: lekki, podpisany EV .exe z poziomem baterii w trayu Windows i opcjonalnym widgetem. Native: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT. Katalog OpenMouse: wykrywanie wszystkich VID:PID; % baterii dla G-Wolves i Logitech HID++ gdy dostępne, inaczej n/a.',
+    en: 'Download from umdrivers.com/tray: a light EV-signed Windows .exe for system-tray battery and an optional desktop widget. Native: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT. OpenMouse catalog: detects every listed VID:PID; battery % for G-Wolves and Logitech HID++ when present, otherwise n/a.',
+    de: 'Download auf umdrivers.com/tray: eine schlanke, EV-signierte Windows-.exe mit Akkustand im Infobereich und optionalem Desktop-Widget. Nativ: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT. OpenMouse-Katalog: erkennt alle gelisteten VID:PID; Akkustand für G-Wolves und Logitech HID++ wenn verfügbar, sonst n/a.',
+    fr: 'À télécharger sur umdrivers.com/tray : un .exe Windows léger, signé EV, qui affiche la batterie dans la zone de notification et dans un widget de bureau facultatif. Natif : King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT. Catalogue OpenMouse : détecte chaque VID:PID listé ; % batterie pour G-Wolves et Logitech HID++ si disponible, sinon n/a.',
+    es: 'Descárgalo en umdrivers.com/tray: un .exe ligero para Windows, firmado con certificado EV, que muestra la batería en la bandeja del sistema y en un widget de escritorio opcional. Nativo: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT. Catálogo OpenMouse: detecta cada VID:PID listado; % de batería para G-Wolves y Logitech HID++ si está disponible, si no n/a.',
+    pt: 'Transfira em umdrivers.com/tray: um .exe leve para Windows, assinado com certificado EV, que mostra a bateria na área de notificação e num widget opcional no ambiente de trabalho. Nativo: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT. Catálogo OpenMouse: deteta cada VID:PID listado; % de bateria para G-Wolves e Logitech HID++ quando disponível, senão n/a.',
+    it: 'Scaricalo da umdrivers.com/tray: un .exe leggero per Windows, firmato EV, che mostra la batteria nell’area di notifica e in un widget desktop opzionale. Nativo: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT. Catalogo OpenMouse: rileva ogni VID:PID elencato; % batteria per G-Wolves e Logitech HID++ quando disponibile, altrimenti n/a.',
+    zh: '从 umdrivers.com/tray 下载：轻量且带 EV 签名的 Windows .exe，可在系统托盘中显示电量，并提供可选桌面小组件。原生：King Ultra、Blitz Ultimate、Fenrir Max、PRO X SUPERLIGHT。OpenMouse 目录：检测所有列出的 VID:PID；G-Wolves 与 Logitech HID++ 在可用时显示电量，否则为 n/a。',
+    ja: 'umdrivers.com/tray からダウンロード：軽量で EV 署名済みの Windows .exe。システムトレイにバッテリー残量を表示し、オプションのデスクトップウィジェットも利用できます。ネイティブ：King Ultra、Blitz Ultimate、Fenrir Max、PRO X SUPERLIGHT。OpenMouse カタログ：掲載の全 VID:PID を検出。G-Wolves と Logitech HID++ は可能な場合に残量表示、それ以外は n/a。',
+    ko: 'umdrivers.com/tray에서 다운로드하세요. 가볍고 EV 서명된 Windows .exe로 시스템 트레이에 배터리를 표시하며 선택 사항인 데스크톱 위젯도 제공합니다. 네이티브: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT. OpenMouse 카탈로그: 등록된 모든 VID:PID 감지. G-Wolves 및 Logitech HID++는 가능할 때 잔량 표시, 그 외 n/a.',
+    ru: 'Скачайте с umdrivers.com/tray: лёгкий Windows .exe с EV-подписью, который показывает заряд в системном трее и дополнительном виджете рабочего стола. Нативно: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT. Каталог OpenMouse: обнаруживает все перечисленные VID:PID; % заряда для G-Wolves и Logitech HID++ при наличии, иначе n/a.',
   },
   eyebrow: {
     pl: 'Windows .exe',
@@ -1068,7 +1068,7 @@ export const BATTERY_TRAY = {
         pl: [
           'Ikona w trayu: bateria / procent / oba + tooltip',
           'Opcjonalny widget na pulpicie (zawsze na wierzchu, przezroczystość, rozmiar)',
-          'Wybór myszy: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT',
+          'Wybór myszy: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT + katalog OpenMouse (wykrywanie; % gdy protokół jest podpięty)',
           'Interwał odświeżania 15-300 s i autostart z Windows',
           'Auto-update: sprawdzanie aktualizacji przy starcie',
           'Współpraca z ustawieniami na umdrivers.com, gdy tray działa na tym samym PC',
@@ -1076,7 +1076,7 @@ export const BATTERY_TRAY = {
         en: [
           'Tray icon: battery / percent / both + tooltip',
           'Optional desktop widget (always on top, opacity, size)',
-          'Mouse picker: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT',
+          'Mouse picker: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT + OpenMouse catalog (detect; % when protocol is wired)',
           'Poll interval 15-300 s and Start with Windows',
           'Auto-update: checks for a new build on start',
           'Works with Settings on umdrivers.com when the tray runs on the same PC',
@@ -1084,7 +1084,7 @@ export const BATTERY_TRAY = {
         de: [
           'Tray-Symbol: Akku / Prozent / beides + Tooltip',
           'Optionales Desktop-Widget (immer im Vordergrund, Deckkraft, Größe)',
-          'Mausauswahl: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT',
+          'Mausauswahl: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT + OpenMouse-Katalog (Erkennung; % wenn Protokoll angebunden)',
           'Aktualisierungsintervall von 15-300 s und Autostart mit Windows',
           'Automatische Updates: prüft beim Start auf eine neue Version',
           'Arbeitet mit den Einstellungen auf umdrivers.com zusammen, wenn das Tray-Programm auf demselben PC läuft',
@@ -1092,7 +1092,7 @@ export const BATTERY_TRAY = {
         fr: [
           'Icône tray : batterie / pourcentage / les deux + infobulle',
           'Widget de bureau facultatif (toujours visible, opacité, taille)',
-          'Sélection de la souris : King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT',
+          'Sélection de la souris : King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT + catalogue OpenMouse (détection ; % si protocole branché)',
           'Intervalle d’actualisation de 15 à 300 s et démarrage avec Windows',
           'Mise à jour automatique : recherche une nouvelle version au démarrage',
           'Fonctionne avec les Paramètres sur umdrivers.com lorsque l’application tray s’exécute sur le même PC',
@@ -1100,7 +1100,7 @@ export const BATTERY_TRAY = {
         es: [
           'Icono de bandeja: batería / porcentaje / ambos + información emergente',
           'Widget de escritorio opcional (siempre visible, opacidad, tamaño)',
-          'Selector de ratón: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT',
+          'Selector de ratón: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT + catálogo OpenMouse (detección; % si el protocolo está cableado)',
           'Intervalo de actualización de 15-300 s e inicio con Windows',
           'Actualización automática: busca una versión nueva al iniciarse',
           'Funciona con los Ajustes de umdrivers.com cuando la aplicación de bandeja se ejecuta en el mismo PC',
@@ -1108,7 +1108,7 @@ export const BATTERY_TRAY = {
         pt: [
           'Ícone na área de notificação: bateria / percentagem / ambos + descrição',
           'Widget opcional no ambiente de trabalho (sempre visível, opacidade, tamanho)',
-          'Seletor de rato: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT',
+          'Seletor de rato: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT + catálogo OpenMouse (deteção; % quando o protocolo está ligado)',
           'Intervalo de atualização de 15-300 s e arranque com o Windows',
           'Atualização automática: procura uma nova versão ao iniciar',
           'Funciona com as Definições em umdrivers.com quando a aplicação é executada no mesmo PC',
@@ -1116,7 +1116,7 @@ export const BATTERY_TRAY = {
         it: [
           'Icona nell’area di notifica: batteria / percentuale / entrambe + descrizione',
           'Widget desktop opzionale (sempre in primo piano, opacità, dimensioni)',
-          'Selezione del mouse: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT',
+          'Selezione del mouse: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT + catalogo OpenMouse (rilevamento; % se il protocollo è collegato)',
           'Intervallo di aggiornamento di 15-300 s e avvio con Windows',
           'Aggiornamento automatico: verifica la disponibilità di una nuova versione all’avvio',
           'Funziona con le Impostazioni su umdrivers.com quando l’app è in esecuzione sullo stesso PC',
@@ -1124,7 +1124,7 @@ export const BATTERY_TRAY = {
         zh: [
           '托盘图标：电池 / 百分比 / 两者同时显示 + 提示信息',
           '可选桌面小组件（始终置顶、透明度、尺寸）',
-          '鼠标选择：King Ultra、Blitz Ultimate、Fenrir Max、PRO X SUPERLIGHT',
+          '鼠标选择：King Ultra、Blitz Ultimate、Fenrir Max、PRO X SUPERLIGHT + OpenMouse 目录（检测；协议就绪时显示电量）',
           '15-300 秒刷新间隔，并可随 Windows 启动',
           '自动更新：启动时检查新版本',
           '托盘程序与 umdrivers.com 在同一台 PC 上运行时，可配合网站“设置”使用',
@@ -1132,7 +1132,7 @@ export const BATTERY_TRAY = {
         ja: [
           'トレイアイコン：バッテリー / パーセント / 両方 + ツールチップ',
           'オプションのデスクトップウィジェット（常に手前、透明度、サイズ）',
-          'マウス選択：King Ultra、Blitz Ultimate、Fenrir Max、PRO X SUPERLIGHT',
+          'マウス選択：King Ultra、Blitz Ultimate、Fenrir Max、PRO X SUPERLIGHT + OpenMouse カタログ（検出；プロトコル接続時は残量）',
           '15～300 秒の更新間隔と Windows 起動時の自動実行',
           '自動更新：起動時に新しいバージョンを確認',
           '同じ PC でトレイアプリが動作している場合、umdrivers.com の設定と連携',
@@ -1140,7 +1140,7 @@ export const BATTERY_TRAY = {
         ko: [
           '트레이 아이콘: 배터리 / 퍼센트 / 둘 다 + 툴팁',
           '선택 사항인 데스크톱 위젯(항상 위, 투명도, 크기)',
-          '마우스 선택: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT',
+          '마우스 선택: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT + OpenMouse 카탈로그(감지; 프로토콜 연결 시 잔량)',
           '15-300초 새로 고침 간격 및 Windows 시작 시 실행',
           '자동 업데이트: 시작할 때 새 버전 확인',
           '트레이 앱과 umdrivers.com이 같은 PC에서 실행될 때 웹 설정과 연동',
@@ -1148,7 +1148,7 @@ export const BATTERY_TRAY = {
         ru: [
           'Значок в трее: батарея / проценты / оба варианта + подсказка',
           'Дополнительный виджет рабочего стола (поверх окон, прозрачность, размер)',
-          'Выбор мыши: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT',
+          'Выбор мыши: King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT + каталог OpenMouse (обнаружение; % при подключённом протоколе)',
           'Интервал обновления 15-300 с и запуск вместе с Windows',
           'Автообновление: проверка новой версии при запуске',
           'Работа с настройками на umdrivers.com, когда приложение запущено на том же ПК',

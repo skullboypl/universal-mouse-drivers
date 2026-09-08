@@ -71,7 +71,7 @@ export function OpenMouseHubClient({
 }: Props) {
   const [q, setQ] = useState('')
   const [brand, setBrand] = useState(brandSlug ?? '')
-  const [namedOnly, setNamedOnly] = useState(true)
+  const [namedOnly, setNamedOnly] = useState(false)
   const deferredQ = useDeferredValue(q.trim().toLowerCase())
 
   const brandCounts = useMemo(() => getOpenMouseBrandCounts(), [])

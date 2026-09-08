@@ -323,7 +323,7 @@ const en: Dict = {
   'connect.trayEyebrow': 'Windows helper',
   'connect.trayTitle': 'UMD Battery Tray',
   'connect.trayBody':
-    'Optional EV-signed .exe when you want battery % in the Windows tray without keeping the browser open. Works with King Ultra, Blitz Ultimate, Fenrir Max, and PRO X SUPERLIGHT.',
+    'Optional EV-signed .exe when you want battery % in the Windows tray without keeping the browser open. Works with King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT, and OpenMouse catalog mice (battery % where protocol is wired; else n/a).',
   'connect.trayFeat1': 'System tray icon with percent and charging status',
   'connect.trayFeat2': 'Optional always-on-top desktop widget',
   'connect.trayFeat3': 'Pick which supported mouse to monitor',
@@ -646,7 +646,7 @@ const pl: Dict = {
   'connect.trayEyebrow': 'Helper Windows',
   'connect.trayTitle': 'UMD Battery Tray',
   'connect.trayBody':
-    'Opcjonalny, podpisany EV .exe, gdy chcesz poziom baterii w trayu Windows bez otwartej przeglądarki. Działa z King Ultra, Blitz Ultimate, Fenrir Max i PRO X SUPERLIGHT.',
+    'Opcjonalny, podpisany EV .exe, gdy chcesz poziom baterii w trayu Windows bez otwartej przeglądarki. Działa z King Ultra, Blitz Ultimate, Fenrir Max, PRO X SUPERLIGHT oraz katalogiem OpenMouse (% baterii gdy protokół jest podpięty; inaczej n/a).',
   'connect.trayFeat1': 'Ikona w trayu z procentem i statusem ładowania',
   'connect.trayFeat2': 'Opcjonalny widget na pulpicie (zawsze na wierzchu)',
   'connect.trayFeat3': 'Wybór, którą wspieraną mysz monitorować',
