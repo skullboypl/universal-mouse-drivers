@@ -1,4 +1,4 @@
-# LOCKED — Redragon King Ultra (live)
+# LOCKED - Redragon King Ultra (live)
 
 See [`../../LOCK.md`](../../LOCK.md).
 

@@ -1,7 +1,7 @@
 export const UMD = {
   shortName: 'UMD',
   name: 'Universal Mouse Drivers',
-  tagline: 'UMD × OpenMouse — browser-native HID control for gaming mice.',
+  tagline: 'UMD × OpenMouse - browser-native HID control for gaming mice.',
   /** Compact mark for header / app icon. */
   logoMarkUrl: '/brand/umd-icon-192.png',
   /** Larger square PNG (OG / marketing). */

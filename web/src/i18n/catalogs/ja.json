@@ -177,7 +177,7 @@
   "macro.empty": "マクロはまだありません。",
   "macro.selectOrCreate": "マクロを選択または作成してください。",
   "macro.deleteLast": "最後を削除",
-  "macro.recordingHint": "録画中 — キーボードで入力してください。キー間の実際の遅延は自動測定されます。",
+  "macro.recordingHint": "録画中 - キーボードで入力してください。キー間の実際の遅延は自動測定されます。",
   "macro.recordingIdle": "「録画開始」をクリックして入力してください。押下、解放、遅延がリアルタイムで記録されます。",
   "macro.autoDelay": "録画中に実際の遅延を測定",
   "macro.defaultDelay": "固定遅延（ms）を使用",

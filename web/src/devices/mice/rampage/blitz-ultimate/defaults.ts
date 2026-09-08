@@ -1,7 +1,7 @@
 import type { DeviceState } from '../../../types'
 import { BLITZ_ULTIMATE_BUTTONS } from './buttons'
 
-/** Soft stage markers — Rampage red accent family. */
+/** Soft stage markers - Rampage red accent family. */
 export const DPI_STAGE_COLORS = [
   '#e28020',
   '#e21f1c',
@@ -19,7 +19,7 @@ export function dpiStageColor(index: number): string {
 export const DPI_MAX_STAGES = 6
 
 export function createDefaultState(): DeviceState {
-  // DPIGrade=400,800,1600,3200,6400,30000,… — first 6 are active grades.
+  // DPIGrade=400,800,1600,3200,6400,30000,… - first 6 are active grades.
   const grades = [400, 800, 1600, 3200, 6400, 30000]
   const dpiStageCount = DPI_MAX_STAGES
   return {

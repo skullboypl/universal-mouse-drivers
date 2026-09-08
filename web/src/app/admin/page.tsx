@@ -13,7 +13,7 @@ import { getButtonLayout, getDownloadMeta } from '@/lib/store'
 export const dynamic = 'force-dynamic'
 
 export default async function AdminPage() {
-  // Production (CapRover): no admin UI — badge positions ship in code / seed.
+  // Production (CapRover): no admin UI - badge positions ship in code / seed.
   if (!isAdminEnabled()) notFound()
 
   const user = await getAdminSession()
@@ -22,7 +22,7 @@ export default async function AdminPage() {
       <>
         <h1 className="page-title">UMD Admin</h1>
         <p className="page-sub">
-          Local only — ustaw pozycje znaczków 1–6, potem commituj defaults do
+          Local only - ustaw pozycje znaczków 1-6, potem commituj defaults do
           kodu (produkcja pokazuje je bez /admin).
         </p>
         <AdminLoginForm />

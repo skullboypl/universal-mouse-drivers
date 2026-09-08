@@ -20,6 +20,7 @@ import {
   OPENMOUSE_BACKED_ID,
   createOpenMouseDriver,
   openMouseSupports,
+  type OpenMouseDemoProfile,
 } from '../devices/openmouse'
 import type { DeviceState } from '../devices/types'
 import { t } from '../i18n/messages'
@@ -46,17 +47,20 @@ interface SessionValue {
   transportKind: TransportKind | null
   status: string | null
   saveStatus: SaveStatus
-  /** True while HID sync/write is in progress — UI should ignore clicks. */
+  /** True while HID sync/write is in progress - UI should ignore clicks. */
   deviceBusy: boolean
-  /** Why deviceBusy is on — SyncSpinner label (connect vs refresh read). */
+  /** Why deviceBusy is on - SyncSpinner label (connect vs refresh read). */
   busyKind: 'connect' | 'refresh' | null
   state: DeviceState | null
   driver: DeviceDriver | null
   webHidOk: boolean
-  /** Catalog id while connecting / syncing — drives shell skin before driver is ready. */
+  /** Catalog id while connecting / syncing - drives shell skin before driver is ready. */
   connectingCatalogId: string | null
   savedDevices: SavedDevice[]
-  connectMock: () => Promise<void>
+  connectMock: (
+    catalogId?: string,
+    opts?: { openMouseProfile?: OpenMouseDemoProfile },
+  ) => Promise<void>
   connectWebHid: (target?: number | HidPickTarget) => Promise<string>
   disconnect: () => Promise<void>
   refreshSavedDevices: () => void
@@ -104,7 +108,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<string | null>(null)
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
   const [deviceBusy, setDeviceBusy] = useState(false)
-  /** 'connect' | 'refresh' while deviceBusy — picks SyncSpinner label. */
+  /** 'connect' | 'refresh' while deviceBusy - picks SyncSpinner label. */
   const [busyKind, setBusyKind] = useState<'connect' | 'refresh' | null>(null)
   const [connectingCatalogId, setConnectingCatalogId] = useState<string | null>(
     null,
@@ -176,7 +180,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       const d = driverRef.current
       if (!d) return
       if (busyRef.current) {
-        umdLog('session', 'warn', 'apply ignored — device busy (sync/write)')
+        umdLog('session', 'warn', 'apply ignored - device busy (sync/write)')
         return
       }
       try {
@@ -234,10 +238,19 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const connectMock = useCallback(async () => {
+  const connectMock = useCallback(
+    async (
+      catalogId?: string,
+      opts?: { openMouseProfile?: OpenMouseDemoProfile },
+    ) => {
     const lang0 = uiLocale()
     setStatus(t(lang0, 'status.connectingDemo'))
-    const d = createDriver(KING_ULTRA_IDENTITY.id)
+    const id = catalogId ?? KING_ULTRA_IDENTITY.id
+    setConnectingCatalogId(id)
+    const d =
+      id === OPENMOUSE_BACKED_ID
+        ? createOpenMouseDriver(undefined, opts?.openMouseProfile ?? 'full')
+        : createDriver(id)
     const transport = createMockTransport()
     await d.attach(transport)
     mergeDraft(d)
@@ -248,7 +261,10 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
     const lang = uiLocale(d.getState().settings.language)
     setStatus(t(lang, 'status.mock'))
     setSaveStatus('idle')
-  }, [publish])
+    setConnectingCatalogId(null)
+  },
+  [publish],
+)
 
   const connectWebHid = useCallback(
     async (target?: number | HidPickTarget) => {

@@ -2,7 +2,7 @@ import type { Locale } from '@/i18n/locale'
 
 const FLAG_VIEW = '0 0 24 16'
 
-/** Compact SVG flags for the language menu (not political statements — UI affordance). */
+/** Compact SVG flags for the language menu (not political statements - UI affordance). */
 export function FlagIcon({
   locale,
   className,

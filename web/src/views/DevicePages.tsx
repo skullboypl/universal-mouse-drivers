@@ -10,7 +10,7 @@ import { SensorPage } from './SensorPage'
 import { SuperlightButtonsPage } from './superlight/SuperlightButtonsPage'
 import { SuperlightSensorPage } from './superlight/SuperlightSensorPage'
 
-/** Per-mouse UI router — Fenrir/Superlight use OEM-style pages, King keeps UMD chrome. */
+/** Per-mouse UI router - Fenrir/Superlight use OEM-style pages, King keeps UMD chrome. */
 export function DeviceButtonsPage() {
   const { driver } = useDeviceSession()
   if (driver?.identity.id === FENRIR_MAX_IDENTITY.id) {

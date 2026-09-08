@@ -12,14 +12,14 @@ export const FENRIR_CLICK_DEBOUNCE_LEVELS = [
   { select: 5, data: [25, 45, 30] as const },
 ] as const
 
-/** OEM wheel debounce preset levels (ms) — same order as mouse.xyz.
+/** OEM wheel debounce preset levels (ms) - same order as mouse.xyz.
  *  L1=8 · L2=20 · L3=15 · L4=30
  */
 export const FENRIR_WHEEL_DEBOUNCE_PRESETS = [8, 20, 15, 30] as const
 
-/** OEM ButtonDebounceTimeMax (Fenir Max env-models) — 50, not 30. */
+/** OEM ButtonDebounceTimeMax (Fenir Max env-models) - 50, not 30. */
 export const FENRIR_CLICK_DEBOUNCE_MAX = 50
-/** OEM WheelDebounceTimeMax (Fenir Max env-models) — 500. */
+/** OEM WheelDebounceTimeMax (Fenir Max env-models) - 500. */
 export const FENRIR_WHEEL_DEBOUNCE_MAX = 500
 
 export type FenrirClickDebounceQuad = {

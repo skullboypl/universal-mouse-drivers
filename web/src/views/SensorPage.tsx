@@ -32,6 +32,7 @@ import {
   REPORT_RATES as KING_REPORT_RATES,
   dpiStageColor as kingDpiStageColor,
 } from '../devices/mice/redragon/king-ultra/defaults'
+import { OPENMOUSE_BACKED_ID } from '../devices/openmouse/constants'
 import type { MessageKey } from '../i18n/messages'
 import { useT } from '../i18n/useT'
 import { useDeviceSession } from '../session/DeviceSessionContext'
@@ -70,7 +71,7 @@ export function SensorPage() {
   const { lp } = useLocale()
   const tr = useT()
 
-  // DPI Loop / Polling Rate Switch on the mouse update flash — poll while this page is open.
+  // DPI Loop / Polling Rate Switch on the mouse update flash - poll while this page is open.
   useEffect(() => {
     if (!connected || !driver?.refreshLiveSensorFromDevice) return
     let cancelled = false
@@ -101,6 +102,18 @@ export function SensorPage() {
 
   const isSuperlight = driver?.identity.id === SUPERLIGHT_IDENTITY.id
   const isBlitz = driver?.identity.id === BLITZ_ULTIMATE_IDENTITY.id
+  const isOpenMouse = driver?.identity.id === OPENMOUSE_BACKED_ID
+  const caps = driver?.capabilities
+  const showDpi = !isOpenMouse || caps?.dpi !== false
+  const showReportRate = !isOpenMouse || caps?.reportRate !== false
+  const showLod = !isOpenMouse || caps?.lod === true
+  const showPowerModes = !isOpenMouse || caps?.powerModes === true
+  const showRipple = !isOpenMouse || caps?.rippleControl === true
+  const showAngle = !isOpenMouse || caps?.angleSnapping === true
+  const showMotion = !isOpenMouse || caps?.motionSync === true
+  const showSensorPanel =
+    !isSuperlight &&
+    (showLod || showPowerModes || showRipple || showAngle || showMotion)
   const swatchMode: 'superlight' | 'blitz' | 'king' = isSuperlight
     ? 'superlight'
     : isBlitz
@@ -140,7 +153,14 @@ export function SensorPage() {
     <div className="page">
       <h1 className="page-title">{tr('sensor.title')}</h1>
       <p className="page-sub">{tr('sensor.sub')}</p>
+      {isOpenMouse ? (
+        <p className="page-sub" style={{ marginTop: -6 }}>
+          {tr('sensor.omCapsNote')}
+          {driver?.lastVerifyNote ? ` · ${driver.lastVerifyNote}` : ''}
+        </p>
+      ) : null}
 
+      {showDpi ? (
       <div className="panel">
         <h2 className="panel-label">{tr('sensor.dpiStages')}</h2>
         <div className="row" style={{ marginBottom: 14, gap: 20 }}>
@@ -238,7 +258,7 @@ export function SensorPage() {
         </div>
         <div className={styles.sliderWrap}>
           <ButtonIcon
-            label="−"
+            label="-"
             onClick={() => {
               if (!stage) return
               void apply((d) =>
@@ -297,7 +317,9 @@ export function SensorPage() {
           }}
         />
       </div>
+      ) : null}
 
+      {showReportRate ? (
       <div className="panel">
         <h2 className="panel-label">{tr('sensor.reportRate')}</h2>
         <Tip text={tr('sensor.reportRateTip')} />
@@ -318,12 +340,14 @@ export function SensorPage() {
           ))}
         </div>
       </div>
+      ) : null}
 
-      {!isSuperlight ? (
+      {showSensorPanel ? (
       <div className="panel">
         <h2 className="panel-label">{tr('sensor.sensorSetting')}</h2>
         <div className="grid-2">
           <div style={{ display: 'grid', gap: 14 }}>
+            {showPowerModes ? (
             <Field label={tr('sensor.mode')} tip={tr('sensor.modeTip')}>
               <Select
                 value={state.sensor.mode}
@@ -343,6 +367,8 @@ export function SensorPage() {
                 </option>
               </Select>
             </Field>
+            ) : null}
+            {showLod ? (
             <Field label={tr('sensor.lod')} tip={tr('sensor.lodTip')}>
               <Select
                 value={String(state.sensor.lodMm)}
@@ -359,6 +385,9 @@ export function SensorPage() {
                 <option value="2">2mm</option>
               </Select>
             </Field>
+            ) : null}
+            {showPowerModes ? (
+            <>
             <div>
               <label className={styles.check}>
                 <input
@@ -393,14 +422,22 @@ export function SensorPage() {
                 ))}
               </Select>
             </Field>
+            </>
+            ) : null}
           </div>
           <div style={{ display: 'grid', gap: 16, alignContent: 'start' }}>
             {(
               [
-                ['sensor.ripple', 'sensor.rippleTip', 'rippleControl'],
-                ['sensor.angle', 'sensor.angleTip', 'angleSnapping'],
-                ['sensor.motion', 'sensor.motionTip', 'motionSync'],
-              ] as Array<
+                showRipple
+                  ? (['sensor.ripple', 'sensor.rippleTip', 'rippleControl'] as const)
+                  : null,
+                showAngle
+                  ? (['sensor.angle', 'sensor.angleTip', 'angleSnapping'] as const)
+                  : null,
+                showMotion
+                  ? (['sensor.motion', 'sensor.motionTip', 'motionSync'] as const)
+                  : null,
+              ].filter(Boolean) as Array<
                 [MessageKey, MessageKey, 'rippleControl' | 'angleSnapping' | 'motionSync']
               >
             ).map(([labelKey, tipKey, field]) => (

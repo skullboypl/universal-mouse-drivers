@@ -1,6 +1,6 @@
 import type { DeviceIdentity } from '../../../types'
 
-/** Hard whitelist — Rampage Blitz only (not King Ultra F54D/F54F). */
+/** Hard whitelist - Rampage Blitz only (not King Ultra F54D/F54F). */
 export const BLITZ_ULTIMATE_IDENTITY: DeviceIdentity = {
   id: 'rampage-blitz-ultimate',
   brand: 'Rampage',

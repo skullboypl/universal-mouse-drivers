@@ -11,7 +11,17 @@ import {
   findCatalogDevice,
   OPENMOUSE_BACKED_ID,
 } from '@/devices/registry'
-import { OPENMOUSE_HUB_PATH } from '@/devices/openmouse/catalog'
+import {
+  OPENMOUSE_HUB_PATH,
+  getOpenMouseBrandCounts,
+  getOpenMouseFeaturedEntries,
+  openMouseBrandPath,
+  openMouseDevicePath,
+  openMouseLogoUrl,
+} from '@/devices/openmouse/catalog'
+import { OPENMOUSE_CATALOG } from '@/devices/openmouse/catalog.generated'
+import type { OpenMouseDemoProfile } from '@/devices/openmouse/capabilities'
+import { OpenMouseProductMark } from '@/components/OpenMouseProductMark'
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
 import { BLITZ_ULTIMATE_IDENTITY } from '@/devices/mice/rampage/blitz-ultimate/identity'
@@ -125,6 +135,7 @@ export function ConnectPage() {
   const tr = useT()
   const [connectingKey, setConnectingKey] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [demoOpen, setDemoOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -171,11 +182,24 @@ export function ConnectPage() {
     )
   }
 
-  async function goDemo() {
-    setConnectingKey('demo')
+  async function goDemo(
+    catalogId: string,
+    opts?: { openMouseProfile?: OpenMouseDemoProfile },
+  ) {
+    setConnectingKey(
+      `demo:${catalogId}${opts?.openMouseProfile ? `:${opts.openMouseProfile}` : ''}`,
+    )
+    setDemoOpen(false)
     try {
-      await connectMock()
-      nav.push(lp('/device/sensor'))
+      await connectMock(catalogId, opts)
+      nav.push(
+        lp(
+          catalogId === FENRIR_MAX_IDENTITY.id ||
+            catalogId === SUPERLIGHT_IDENTITY.id
+            ? '/device/buttons'
+            : '/device/sensor',
+        ),
+      )
     } finally {
       setConnectingKey(null)
     }
@@ -190,6 +214,9 @@ export function ConnectPage() {
 
   const busyAny = connectingKey != null
   const showSaved = mounted && savedDevices.length > 0
+  const nativeDevices = DEVICE_CATALOG.filter((d) => d.id !== OPENMOUSE_BACKED_ID)
+  const omBrands = getOpenMouseBrandCounts().slice(0, 14)
+  const omFeatured = getOpenMouseFeaturedEntries(8)
 
   return (
     <div className={styles.page} data-brand="umd">
@@ -215,10 +242,115 @@ export function ConnectPage() {
                 tr('connect.webhid')
               )}
             </Button>
-            <Button disabled={busyAny} variant="ghost" onClick={() => void goDemo()}>
+            <Button
+              variant="ghost"
+              disabled={!webHidOk || busyAny}
+              onClick={() =>
+                void goHid(
+                  { catalogId: OPENMOUSE_BACKED_ID },
+                  `catalog:${OPENMOUSE_BACKED_ID}`,
+                )
+              }
+            >
+              {connectingKey === `catalog:${OPENMOUSE_BACKED_ID}` ? (
+                <span className={styles.rowBusy}>
+                  <span className={styles.rowSpin} aria-hidden />
+                  {tr('status.syncing')}
+                </span>
+              ) : (
+                tr('connect.webhidOm')
+              )}
+            </Button>
+            <Button
+              disabled={busyAny}
+              variant="ghost"
+              onClick={() => setDemoOpen((v) => !v)}
+              aria-expanded={demoOpen}
+            >
               {tr('connect.demo')}
             </Button>
           </div>
+          {demoOpen ? (
+            <div className={styles.demoPanel} role="region" aria-label={tr('connect.demoTitle')}>
+              <header className={styles.demoHead}>
+                <div>
+                  <h2>{tr('connect.demoTitle')}</h2>
+                  <p>{tr('connect.demoSub')}</p>
+                </div>
+                <button
+                  type="button"
+                  className={styles.demoClose}
+                  onClick={() => setDemoOpen(false)}
+                >
+                  {tr('connect.demoClose')}
+                </button>
+              </header>
+              <p className={styles.demoLabel}>{tr('connect.demoNative')}</p>
+              <ul className={styles.demoGrid}>
+                {nativeDevices.map((d) => (
+                  <li key={d.id}>
+                    <button
+                      type="button"
+                      className={styles.demoCard}
+                      disabled={busyAny}
+                      onClick={() => void goDemo(d.id)}
+                    >
+                      {d.imageUrl ? (
+                        <img src={d.imageUrl} alt="" width={72} height={72} />
+                      ) : null}
+                      <span className={styles.demoBrand}>{d.brand}</span>
+                      <strong>{d.model}</strong>
+                      <span className={`${styles.badge} ${styles.badgeLive}`}>
+                        {tr('connect.badgeNative')}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <p className={styles.demoLabel}>{tr('connect.demoOpenMouse')}</p>
+              <ul className={styles.demoGrid}>
+                {(
+                  [
+                    ['full', 'connect.demoOmFull', 'connect.demoOmFullHint'],
+                    ['sensor', 'connect.demoOmSensor', 'connect.demoOmSensorHint'],
+                    ['dpi', 'connect.demoOmDpi', 'connect.demoOmDpiHint'],
+                  ] as const
+                ).map(([profile, titleKey, hintKey]) => (
+                  <li key={profile}>
+                    <button
+                      type="button"
+                      className={styles.demoCard}
+                      disabled={busyAny}
+                      onClick={() =>
+                        void goDemo(OPENMOUSE_BACKED_ID, {
+                          openMouseProfile: profile,
+                        })
+                      }
+                    >
+                      <img
+                        src={openMouseLogoUrl(
+                          profile === 'full'
+                            ? 'razer'
+                            : profile === 'sensor'
+                              ? 'steelseries'
+                              : 'glorious',
+                        )}
+                        alt=""
+                        width={48}
+                        height={48}
+                      />
+                      <span className={styles.demoBrand}>OpenMouse</span>
+                      <strong>{tr(titleKey)}</strong>
+                      <span className={styles.demoHint}>{tr(hintKey)}</span>
+                      <span className={`${styles.badge} ${styles.badgeOm}`}>
+                        {tr('connect.statusOpenMouse')}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
           {mounted && !webHidOk ? (
             <p className={styles.warn}>{tr('connect.noWebHid')}</p>
           ) : null}
@@ -237,7 +369,7 @@ export function ConnectPage() {
             </li>
           </ol>
         </div>
-        <HeroMiceSlider devices={DEVICE_CATALOG} />
+        <HeroMiceSlider devices={nativeDevices} />
       </section>
 
       {showSaved ? (
@@ -245,6 +377,23 @@ export function ConnectPage() {
           <header className={styles.sectionHead}>
             <h2>{tr('connect.savedTitle')}</h2>
             <p>{tr('connect.savedSub')}</p>
+            <div className={styles.savedActions}>
+              <Button
+                variant="ghost"
+                disabled={!webHidOk || busyAny}
+                onClick={() => void goHid(undefined, 'other')}
+              >
+                {connectingKey === 'other' ? (
+                  <span className={styles.rowBusy}>
+                    <span className={styles.rowSpin} aria-hidden />
+                    {tr('status.syncing')}
+                  </span>
+                ) : (
+                  tr('connect.otherDevice')
+                )}
+              </Button>
+              <p className={styles.savedOtherTip}>{tr('connect.otherDeviceTip')}</p>
+            </div>
           </header>
           <ul className={styles.savedList}>
             {savedDevices.map((d) => {
@@ -302,12 +451,9 @@ export function ConnectPage() {
         <header className={styles.sectionHead}>
           <h2>{tr('connect.supportedTitle')}</h2>
           <p>{tr('connect.supportedSub')}</p>
-          <p>
-            <a href={lp(OPENMOUSE_HUB_PATH)}>{tr('connect.openMouseHub')}</a>
-          </p>
         </header>
         <ul className={styles.deviceGrid}>
-          {DEVICE_CATALOG.map((d: DeviceIdentity) => {
+          {nativeDevices.map((d: DeviceIdentity) => {
             const hidReady = webHidOk
             const planned = d.status === 'planned'
             const canConnect = hidReady && !planned
@@ -347,7 +493,7 @@ export function ConnectPage() {
                           styles.badge,
                           d.status === 'live'
                             ? styles.badgeLive
-                            : d.status === 'wip' || d.status === 'openmouse'
+                            : d.status === 'wip'
                               ? styles.badgeWip
                               : styles.badgePlanned,
                         ].join(' ')}
@@ -378,11 +524,7 @@ export function ConnectPage() {
                     </div>
                     <a
                       className={styles.deviceSeoLink}
-                      href={lp(
-                        d.id === OPENMOUSE_BACKED_ID
-                          ? OPENMOUSE_HUB_PATH
-                          : `/mice/${d.id}`,
-                      )}
+                      href={lp(`/mice/${d.id}`)}
                       onClick={(e) => e.stopPropagation()}
                     >
                       {tr('connect.learnMore')}
@@ -392,6 +534,83 @@ export function ConnectPage() {
               </li>
             )
           })}
+        </ul>
+      </section>
+
+      <section className={styles.omSection} id="openmouse" aria-labelledby="om-home">
+        <header className={styles.omHead}>
+          <h2 id="om-home">{tr('connect.omTitle')}</h2>
+          <p>{tr('connect.omSub')}</p>
+          <div className={styles.omActions}>
+            <Button
+              variant="primary"
+              disabled={!webHidOk || busyAny}
+              onClick={() =>
+                void goHid(
+                  { catalogId: OPENMOUSE_BACKED_ID },
+                  `catalog:${OPENMOUSE_BACKED_ID}`,
+                )
+              }
+            >
+              {connectingKey === `catalog:${OPENMOUSE_BACKED_ID}` ? (
+                <span className={styles.rowBusy}>
+                  <span className={styles.rowSpin} aria-hidden />
+                  {tr('status.syncing')}
+                </span>
+              ) : (
+                tr('connect.omConnect')
+              )}
+            </Button>
+            <a className={ui.btnGhost} href={lp(OPENMOUSE_HUB_PATH)}>
+              {tr('connect.omBrowseAll')} ({OPENMOUSE_CATALOG.length})
+            </a>
+          </div>
+        </header>
+
+        <p className={styles.omBrandsTitle}>{tr('connect.omBrands')}</p>
+        <ul className={styles.omBrandChips}>
+          {omBrands.map((b) => (
+            <li key={b.brandSlug}>
+              <a
+                className={styles.omChip}
+                href={lp(openMouseBrandPath(b.brandSlug))}
+              >
+                <img
+                  src={openMouseLogoUrl(b.brandSlug)}
+                  alt=""
+                  width={22}
+                  height={22}
+                />
+                <span>{b.brand}</span>
+                <span className={styles.omChipCount}>{b.count}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <p className={styles.omFeaturedTitle}>{tr('connect.omFeatured')}</p>
+        <ul className={styles.omFeatured}>
+          {omFeatured.map((e) => (
+            <li key={e.id}>
+              <a
+                className={styles.omFeatureCard}
+                href={lp(openMouseDevicePath(e.brandSlug, e.slug))}
+                aria-label={`${e.brand} ${e.name}`}
+              >
+                <OpenMouseProductMark
+                  brandSlug={e.brandSlug}
+                  brand={e.brand}
+                  model={e.name}
+                  size="sm"
+                  className={styles.omFeatureMark}
+                />
+                <p className={styles.omFeatureBrand}>{e.brand}</p>
+                <span className={`${styles.badge} ${styles.badgeOm}`}>
+                  {tr('connect.statusOpenMouse')}
+                </span>
+              </a>
+            </li>
+          ))}
         </ul>
       </section>
 

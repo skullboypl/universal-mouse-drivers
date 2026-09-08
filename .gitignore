@@ -35,16 +35,22 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
-# large RE dumps — entire tree is local / private only (not AGPL public source)
+# large RE dumps - entire tree is local / private only (not AGPL public source)
 Decompile/
 
-# private / internal — not part of public AGPL corresponding source
+# private / internal - not part of public AGPL corresponding source
 docs/**
 !docs/screenshots/
 !docs/screenshots/**
 .cursor/
 tools/
 old/
+
+# OpenMouse scraped packshots (UI uses logos + OpenMouseProductMark instead)
+web/public/devices/openmouse/models/
+web/public/devices/openmouse/mice/*
+!web/public/devices/openmouse/mice/_generic.png
+!web/public/devices/openmouse/mice/.gitkeep
 
 # local publish
 tray-battery/**/publish/

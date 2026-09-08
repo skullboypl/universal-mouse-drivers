@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="microsoft">
+  <rect width="128" height="128" rx="28" fill="#00a4ef"/>
+  <g transform="translate(24,24) scale(0.333)">
+    <svg viewBox="0 0 24 24" width="240" height="240"><title>Microsoft</title><path fill="#fff" d="M0 0v11.408h11.408V0zm12.594 0v11.408H24V0zM0 12.594V24h11.408V12.594zm12.594 0V24H24V12.594z"/></svg>
+  </g>
+</svg>

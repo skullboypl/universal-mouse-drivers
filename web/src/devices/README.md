@@ -20,6 +20,6 @@ Examples:
 
 **Isolation rule:** each model owns its protocol, action catalog, flash addresses, and defaults. Do not import those from another model.
 
-Catalog `id` strings (e.g. `redragon-king-ultra`) and public art URLs under `/devices/...` stay stable — only the TypeScript folder path uses `mice/<brand>/<model>`.
+Catalog `id` strings (e.g. `redragon-king-ultra`) and public art URLs under `/devices/...` stay stable - only the TypeScript folder path uses `mice/<brand>/<model>`.
 
-**Live locks:** see [`LOCK.md`](./LOCK.md) — locked SKUs must not have protocol/address/HID edits.
+**Live locks:** see [`LOCK.md`](./LOCK.md) - locked SKUs must not have protocol/address/HID edits.

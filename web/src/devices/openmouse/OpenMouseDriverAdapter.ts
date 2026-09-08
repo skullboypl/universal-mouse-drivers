@@ -15,6 +15,12 @@ import type {
 } from '../types'
 import { OPENMOUSE_BACKED_ID } from './constants'
 import { createOpenMouseClient } from './detect'
+import {
+  capabilitiesFromOmClient,
+  OPENMOUSE_DEMO_PROFILES,
+  type OpenMouseCapabilityFlags,
+  type OpenMouseDemoProfile,
+} from './capabilities'
 
 type OmClient = {
   brand?: string
@@ -107,16 +113,23 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   private client: OmClient | null = null
   private hidDevice: HIDDevice | null = null
   private pendingDevice: HIDDevice | null = null
+  /** Soft flags from live client methods or demo profile. */
+  capabilities: OpenMouseCapabilityFlags = { ...OPENMOUSE_DEMO_PROFILES.full.caps }
   lastWriteError: string | null = null
   lastWriteOk = false
   lastVerifyNote: string | null = null
   mouseReachable = false
   writePhase: DeviceWritePhase = 'idle'
   private writePhaseListeners = new Set<(p: DeviceWritePhase) => void>()
+  private demoProfile: OpenMouseDemoProfile | null = null
 
-  constructor(seedDevice?: HIDDevice) {
+  constructor(seedDevice?: HIDDevice, demoProfile?: OpenMouseDemoProfile) {
     this.state = createOpenMouseDefaultState()
     this.pendingDevice = seedDevice ?? null
+    this.demoProfile = demoProfile ?? null
+    if (demoProfile) {
+      this.capabilities = { ...OPENMOUSE_DEMO_PROFILES[demoProfile].caps }
+    }
     const brand = 'OpenMouse'
     this.identity = {
       id: OPENMOUSE_BACKED_ID,
@@ -152,7 +165,36 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   }
 
   async attach(transport: Transport): Promise<void> {
-    void transport
+    if (transport.kind === 'mock') {
+      const profile = this.demoProfile ?? 'full'
+      const preset = OPENMOUSE_DEMO_PROFILES[profile]
+      this.capabilities = { ...preset.caps }
+      this.identity = {
+        id: OPENMOUSE_BACKED_ID,
+        brand: 'OpenMouse',
+        model: preset.model,
+        tagline: 'Shared OpenMouse surface (mock)',
+        vendorId: 0,
+        productIds: [],
+        hidIds: [`demo:${profile}`],
+        status: 'openmouse',
+        sensor: 'Varies by OpenMouse driver',
+        imageUrl: '/devices/openmouse/mouse.svg',
+      }
+      this.state = {
+        ...createOpenMouseDefaultState(),
+        info: {
+          ...createOpenMouseDefaultState().info,
+          mouseFirmware: `OpenMouse demo · ${profile}`,
+          connection: 'wireless',
+          batteryPercent: null,
+        },
+      }
+      this.mouseReachable = true
+      this.lastVerifyNote = preset.note
+      this.lastWriteOk = true
+      return
+    }
     await this.attachNative()
   }
 
@@ -174,6 +216,7 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
       throw new Error('OpenMouse: no supported client for this HID device')
     }
     this.client = client as OmClient
+    this.capabilities = capabilitiesFromOmClient(this.client)
     const brand = this.client.brand || 'OpenMouse'
     this.identity = {
       ...this.identity,
@@ -403,6 +446,9 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   }
 }
 
-export function createOpenMouseDriver(seed?: HIDDevice): OpenMouseDriverAdapter {
-  return new OpenMouseDriverAdapter(seed)
+export function createOpenMouseDriver(
+  seed?: HIDDevice,
+  demoProfile?: OpenMouseDemoProfile,
+): OpenMouseDriverAdapter {
+  return new OpenMouseDriverAdapter(seed, demoProfile)
 }

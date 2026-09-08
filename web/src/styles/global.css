@@ -14,6 +14,59 @@ body,
 
 html {
   overflow-x: clip;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--accent) 55%, #3a414c) #12151a;
+}
+
+html::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+html::-webkit-scrollbar-track {
+  background: #0c1016;
+  border-left: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+html::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 70%, #5a6575), #3a414c);
+  border-radius: 999px;
+  border: 2px solid #0c1016;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--accent-hot), color-mix(in srgb, var(--accent) 50%, #3a414c));
+}
+
+html::-webkit-scrollbar-corner {
+  background: #0c1016;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--accent) 45%, #3a414c) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 40%, #3a414c);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--accent-hot) 65%, #3a414c);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 body {

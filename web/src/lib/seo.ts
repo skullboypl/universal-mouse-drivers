@@ -64,17 +64,17 @@ export const SEO_PAGES: Record<SeoPageId, SeoPage> = {
       ru: 'Подключить',
     },
     title: {
-      pl: 'Universal Mouse Drivers (UMD) — sterowniki WebHID | umdrivers.com',
-      en: 'Universal Mouse Drivers (UMD) — WebHID mouse drivers | umdrivers.com',
-      de: 'Universal Mouse Drivers (UMD) — WebHID-Maus-Treiber | umdrivers.com',
-      fr: 'Universal Mouse Drivers (UMD) — pilotes souris WebHID | umdrivers.com',
-      es: 'Universal Mouse Drivers (UMD) — drivers WebHID para ratón | umdrivers.com',
-      pt: 'Universal Mouse Drivers (UMD) — drivers WebHID para rato | umdrivers.com',
-      it: 'Universal Mouse Drivers (UMD) — driver mouse WebHID | umdrivers.com',
-      zh: 'Universal Mouse Drivers (UMD) — WebHID 鼠标驱动 | umdrivers.com',
-      ja: 'Universal Mouse Drivers (UMD) — WebHID マウスドライバー | umdrivers.com',
-      ko: 'Universal Mouse Drivers (UMD) — WebHID 마우스 드라이버 | umdrivers.com',
-      ru: 'Universal Mouse Drivers (UMD) — WebHID-драйверы мыши | umdrivers.com',
+      pl: 'Universal Mouse Drivers (UMD) - sterowniki WebHID | umdrivers.com',
+      en: 'Universal Mouse Drivers (UMD) - WebHID mouse drivers | umdrivers.com',
+      de: 'Universal Mouse Drivers (UMD) - WebHID-Maus-Treiber | umdrivers.com',
+      fr: 'Universal Mouse Drivers (UMD) - pilotes souris WebHID | umdrivers.com',
+      es: 'Universal Mouse Drivers (UMD) - drivers WebHID para ratón | umdrivers.com',
+      pt: 'Universal Mouse Drivers (UMD) - drivers WebHID para rato | umdrivers.com',
+      it: 'Universal Mouse Drivers (UMD) - driver mouse WebHID | umdrivers.com',
+      zh: 'Universal Mouse Drivers (UMD) - WebHID 鼠标驱动 | umdrivers.com',
+      ja: 'Universal Mouse Drivers (UMD) - WebHID マウスドライバー | umdrivers.com',
+      ko: 'Universal Mouse Drivers (UMD) - WebHID 마우스 드라이버 | umdrivers.com',
+      ru: 'Universal Mouse Drivers (UMD) - WebHID-драйверы мыши | umdrivers.com',
     },
     description: {
       pl: 'Oficjalna strona umdrivers.com: darmowe sterowniki WebHID (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, przyciski, profile + opcjonalny Battery Tray.',
@@ -182,7 +182,7 @@ export function absoluteUrl(path: string): string {
 }
 
 export function ogImageUrl(page: SeoPageId, lang: Locale): string {
-  // Static PNGs in /public/og — CapRover next/og ImageResponse 502s; Discord needs a real .png.
+  // Static PNGs in /public/og - CapRover next/og ImageResponse 502s; Discord needs a real .png.
   // ?v= busts Discord/CDN cache after regenerating assets.
   const v = '2'
   const assetLang = lang === 'pl' ? 'pl' : 'en'

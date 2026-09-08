@@ -7,6 +7,7 @@ import { Select } from '../components/Select'
 import styles from '../components/ui.module.css'
 import { FENRIR_MAX_IDENTITY } from '../devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/identity'
+import { OPENMOUSE_BACKED_ID } from '../devices/openmouse/constants'
 import {
   clampFenrirSleepSec,
   FENRIR_SLEEP_MAX_SEC,
@@ -57,6 +58,9 @@ export function SettingsPage() {
   const isFenrir = driver?.identity.id === FENRIR_MAX_IDENTITY.id
   const isSuperlight = driver?.identity.id === SUPERLIGHT_IDENTITY.id
   const isBlitz = driver?.identity.id === 'rampage-blitz-ultimate'
+  const isOpenMouse = driver?.identity.id === OPENMOUSE_BACKED_ID
+  const omDeviceSettings = isOpenMouse && driver?.capabilities?.deviceSettings === true
+  const showNativeDevicePanels = !isOpenMouse || omDeviceSettings
   const sleepMinutesToCode = isBlitz
     ? blitzSleepMinutesToCode
     : kingSleepMinutesToCode
@@ -102,6 +106,11 @@ export function SettingsPage() {
       <p className="page-sub">
         {tr('settings.driveVer', { v: state.info.driveVersion })}
       </p>
+      {isOpenMouse && !omDeviceSettings ? (
+        <p className="page-sub" style={{ marginTop: -6 }}>
+          {tr('settings.omLimited')}
+        </p>
+      ) : null}
 
       <div className="panel">
         <h2 className="panel-label">{tr('settings.language')}</h2>
@@ -195,7 +204,7 @@ export function SettingsPage() {
         ) : null}
       </div>
 
-      {!isFenrir && !isSuperlight ? (
+      {showNativeDevicePanels && !isFenrir && !isSuperlight ? (
         <div className="panel">
           <h2 className="panel-label">{tr('settings.pairing')}</h2>
           <Button
@@ -208,7 +217,7 @@ export function SettingsPage() {
         </div>
       ) : null}
 
-      {!isSuperlight ? (
+      {showNativeDevicePanels && !isSuperlight ? (
       <div className="panel">
         <h2 className="panel-label">{tr('settings.sleep')}</h2>
         <p className="muted" style={{ marginTop: 0 }}>
@@ -335,7 +344,7 @@ export function SettingsPage() {
         </p>
       </div>
 
-      {!isFenrir && !isSuperlight ? (
+      {showNativeDevicePanels && !isFenrir && !isSuperlight ? (
         <div className="panel">
           <h2 className="panel-label">{tr('settings.advanced')}</h2>
           <label className={styles.check}>

@@ -28,7 +28,7 @@ import { HidppClient } from './protocol/hidpp'
 
 /**
  * UMD driver for PRO X SUPERLIGHT gen1 (HID++ 2.0 over C547 Col02).
- * RE: OMM 2.6.1749 + live FeatureSet — onboard 8100/8110 still WIP.
+ * RE: OMM 2.6.1749 + live FeatureSet - onboard 8100/8110 still WIP.
  */
 export class SuperlightDriver implements DeviceDriver {
   readonly identity = SUPERLIGHT_IDENTITY
@@ -48,11 +48,11 @@ export class SuperlightDriver implements DeviceDriver {
   private savedResolutions: number[] = [800, 0, 0, 0, 0]
   private writeChain: Promise<void> = Promise.resolve()
   private supportedRates: number[] = [125, 250, 500, 1000]
-  /** Bumped on profile switch — drops stale DPI/rate writes still on the queue. */
+  /** Bumped on profile switch - drops stale DPI/rate writes still on the queue. */
   private profileEpoch = 0
   /** Onboard profile slots (1..N) from 8100 info. */
   profileCount = 5
-  /** Live 2201 list — updated on sync (fallback = OMM Superlight constants). */
+  /** Live 2201 list - updated on sync (fallback = OMM Superlight constants). */
   private dpiMin = SUPERLIGHT_DPI_MIN
   private dpiMax = SUPERLIGHT_DPI_MAX
   private dpiStep = SUPERLIGHT_DPI_STEP
@@ -282,7 +282,7 @@ export class SuperlightDriver implements DeviceDriver {
       this.mouseReachable = false
       this.lastWriteError = err instanceof Error ? err.message : String(err)
       this.lastVerifyNote =
-        'SUPERLIGHT: brak odpowiedzi HID++ — zamknij G HUB/OMM i wybierz interfejs vendor (report 0x11)'
+        'SUPERLIGHT: brak odpowiedzi HID++ - zamknij G HUB/OMM i wybierz interfejs vendor (report 0x11)'
       umdLog('superlight', 'error', 'probe failed', this.lastWriteError)
     }
   }
@@ -309,7 +309,7 @@ export class SuperlightDriver implements DeviceDriver {
   async setProfile(index: number) {
     const max = Math.max(0, this.profileCount - 1)
     const i = Math.min(max, Math.max(0, Math.floor(index)))
-    // Cancel pending profile patches — they still carry the OLD slot table and would
+    // Cancel pending profile patches - they still carry the OLD slot table and would
     // RMW the NEW sector once profileIndex flips (seen clobbering profile 3 with 1-slot data).
     if (this.onboardDpiTimer) {
       clearTimeout(this.onboardDpiTimer)
@@ -322,7 +322,7 @@ export class SuperlightDriver implements DeviceDriver {
     }
     this.profileEpoch++
     const epoch = this.profileEpoch
-    // Do NOT set profileIndex until the mouse confirms — otherwise UI lies vs OMM.
+    // Do NOT set profileIndex until the mouse confirms - otherwise UI lies vs OMM.
     await this.enqueue(async () => {
       if (epoch !== this.profileEpoch) return
       await this.activateOnboardProfile(i + 1)
@@ -437,11 +437,11 @@ export class SuperlightDriver implements DeviceDriver {
       ...this.state,
       sensor: { ...this.state.sensor, dpiStages: stages },
     }
-    // One queued job writes sector + applies live DPI — avoid parallel 2201 TX mid-write.
+    // One queued job writes sector + applies live DPI - avoid parallel 2201 TX mid-write.
     this.queueOnboardDpiWrite()
   }
 
-  /** OMM: „Ustaw jako aktualny DPI” — live slot via 8100 fn12. */
+  /** OMM: „Ustaw jako aktualny DPI” - live slot via 8100 fn12. */
   setActiveDpiSlot(index: number) {
     const max = Math.max(0, (this.state.sensor.dpiStageCount ?? 1) - 1)
     const i = Math.min(max, Math.max(0, Math.floor(index)))
@@ -471,7 +471,7 @@ export class SuperlightDriver implements DeviceDriver {
     })
   }
 
-  /** OMM: „Ustaw jako profil domyślny” — profile byte[1]. */
+  /** OMM: „Ustaw jako profil domyślny” - profile byte[1]. */
   setDefaultDpiSlot(index: number) {
     const max = Math.max(0, (this.state.sensor.dpiStageCount ?? 1) - 1)
     const i = Math.min(max, Math.max(0, Math.floor(index)))
@@ -482,7 +482,7 @@ export class SuperlightDriver implements DeviceDriver {
     this.queueOnboardDpiWrite()
   }
 
-  /** OMM: „Przypisz zmianę DPI” — profile byte[2] (DPI Shift). */
+  /** OMM: „Przypisz zmianę DPI” - profile byte[2] (DPI Shift). */
   setDpiShiftSlot(index: number) {
     const max = Math.max(0, (this.state.sensor.dpiStageCount ?? 1) - 1)
     const i = Math.min(max, Math.max(0, Math.floor(index)))
@@ -493,7 +493,7 @@ export class SuperlightDriver implements DeviceDriver {
     this.queueOnboardDpiWrite()
   }
 
-  /** OMM: „Resetuj” — restore last synced value for one slot. */
+  /** OMM: „Resetuj” - restore last synced value for one slot. */
   resetDpiSlot(index: number) {
     const i = Math.max(0, Math.floor(index))
     const saved = this.savedResolutions[i] ?? 0
@@ -533,7 +533,7 @@ export class SuperlightDriver implements DeviceDriver {
         1,
         Math.min(8, Math.round(1000 / this.state.sensor.reportRate)),
       )
-      // 5 macros @8100 offset 32 — L/R always factory (locked).
+      // 5 macros @8100 offset 32 - L/R always factory (locked).
       const buttonMacros = SUPERLIGHT_BUTTONS.slice(0, 5).map((tpl, i) => {
         if (SUPERLIGHT_LOCKED_BUTTON_IDS.has(tpl.id)) {
           return encodeOnboardButtonMacro(tpl.id === 1 ? 'left' : 'right')
@@ -618,7 +618,7 @@ export class SuperlightDriver implements DeviceDriver {
       info: keepInfo,
       buttons: SUPERLIGHT_BUTTONS.map((b) => ({ ...b })),
     }
-    // Flash OMM factory sectors (directory + profiles 1–5) onto the mouse.
+    // Flash OMM factory sectors (directory + profiles 1-5) onto the mouse.
     return this.enqueue(async () => {
       await this.writeFactoryProfilesToDevice()
     })
@@ -709,7 +709,7 @@ export class SuperlightDriver implements DeviceDriver {
         return { wrote: false }
       }
     }
-    // No pending DPI debounce — draft already saved by session; avoid re-flash.
+    // No pending DPI debounce - draft already saved by session; avoid re-flash.
     return { wrote: false }
   }
 

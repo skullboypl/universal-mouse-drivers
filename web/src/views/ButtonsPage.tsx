@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
 import { ClientRedirect } from '../components/ClientRedirect'
 import { Button } from '../components/Button'
 import { Select } from '../components/Select'
 import styles from '../components/ui.module.css'
 import { MOUSE_ART } from '../devices/mice/redragon/king-ultra/buttons'
+import { OPENMOUSE_BACKED_ID } from '../devices/openmouse/constants'
 import type { ButtonAction } from '../devices/types'
 import { useLocale } from '../i18n/LocaleContext'
 import type { MessageKey } from '../i18n/messages'
@@ -57,7 +59,7 @@ export function ButtonsPage() {
   const catalogId = driver?.identity.id
   const isDemo = catalogId === 'umd-demo'
   const isBlitz = catalogId === 'rampage-blitz-ultimate'
-  /** Always from the active driver — never a shared cross-SKU catalog. */
+  /** Always from the active driver - never a shared cross-SKU catalog. */
   const buttonActions = driver?.buttonActions ?? []
   const layoutId =
     isBlitz
@@ -91,6 +93,24 @@ export function ButtonsPage() {
   if (!connected || !state || !driver) {
     return <ClientRedirect href={lp('/')} />
   }
+
+  if (
+    catalogId === OPENMOUSE_BACKED_ID &&
+    driver.capabilities?.buttons !== true
+  ) {
+    return (
+      <div className="page">
+        <h1 className="page-title">{tr('buttons.title')}</h1>
+        <p className="page-sub">{tr('buttons.omUnavailable')}</p>
+        <div className="panel">
+          <Link href={lp('/device/sensor')}>
+            <Button>{tr('nav.sensor')}</Button>
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   const mouseSrc = isDemo
     ? '/devices/demo/mouse.png'
     : (driver.identity.imageUrl ?? '/devices/king-ultra/mouse.png')

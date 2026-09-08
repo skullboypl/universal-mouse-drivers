@@ -265,7 +265,7 @@ export class GWolvesDriver {
 
   async getFullState(): Promise<MouseFullState> {
     this.assertDevice();
-    // OEM profileSelectValue defaults to 1 — NOT WiredDeviceID (2).
+    // OEM profileSelectValue defaults to 1 - NOT WiredDeviceID (2).
     // WiredDeviceID only rewrites feature frame byte[2].
     const profileSlot = 1;
 
@@ -282,7 +282,7 @@ export class GWolvesDriver {
 
     const battery = await this.getBatteryLevel();
 
-    // Serialize HID transactions — concurrent feature reports collide on one interface.
+    // Serialize HID transactions - concurrent feature reports collide on one interface.
     const firmware = await soft(() => this.getFirmwareVersion(), '-', 'firmware');
     const pollingHz = await soft(() => this.getPollingRateHz(), 0, 'polling');
     const activeDpiStage = await soft(
@@ -301,7 +301,7 @@ export class GWolvesDriver {
       [] as string[],
       'dpiColors',
     );
-    // OEM ships getDPIXYOnOff — keep the HID flag (UI also derives from X==Y on first load).
+    // OEM ships getDPIXYOnOff - keep the HID flag (UI also derives from X==Y on first load).
     const dpiAxisSyncFlag = await soft(
       () => this.getDpiAxisSync(profileSlot),
       null as boolean | null,
@@ -363,7 +363,7 @@ export class GWolvesDriver {
   }
 
   async getFirmwareVersion(): Promise<string> {
-    // OEM getFirmwareVersion — feature [2]=2,[3]=16,[5]=129 (not dongle output)
+    // OEM getFirmwareVersion - feature [2]=2,[3]=16,[5]=129 (not dongle output)
     try {
       const req = new Uint8Array(REPORT_SIZE);
       req[2] = 2;
@@ -395,7 +395,7 @@ export class GWolvesDriver {
 
   async getPollingRateHz(_deviceId = 1): Promise<number> {
     if (!this.profile.isNewProtocol) {
-      // OEM getPollRate — setReportOld cmd 130, code≠new-protocol index
+      // OEM getPollRate - setReportOld cmd 130, code≠new-protocol index
       const req = legacyCmd(2, 130, 0);
       const res = await this.transactFeatureLegacy(req);
       const idx = this.legacyPayloadIndex();
@@ -436,7 +436,7 @@ export class GWolvesDriver {
   }
 
   async getActiveDpiStage(profileSlot = 1): Promise<number> {
-    // OEM getActiveDPI(profileSelectValue) — 1-based stage at a[8-hidIndex]
+    // OEM getActiveDPI(profileSelectValue) - 1-based stage at a[8-hidIndex]
     const req = featureCmd(2, 2, 1, 130, profileSlot);
     const res = await this.transactFeature(req);
     const stage = res[this.featureDataIndex()];
@@ -498,7 +498,7 @@ export class GWolvesDriver {
 
   async getLod(_deviceId = 1): Promise<number> {
     if (!this.profile.isNewProtocol) {
-      // OEM getLiftOff — setReportOld cmd 134 (0x86)
+      // OEM getLiftOff - setReportOld cmd 134 (0x86)
       const req = legacyCmd(1, 134, 0);
       const res = await this.transactFeatureLegacy(req);
       const raw = res[this.legacyPayloadIndex()];
@@ -531,7 +531,7 @@ export class GWolvesDriver {
     return (res[idx] << 8) | res[idx + 1];
   }
 
-  /** OEM setSleepTime — BE u16 seconds. SET cmd [5]=7. */
+  /** OEM setSleepTime - BE u16 seconds. SET cmd [5]=7. */
   async setSleepTime(seconds: number, deviceId = this.profile.wiredDeviceId): Promise<void> {
     const sec = Math.max(0, Math.min(0xffff, Math.round(seconds)));
     const hi = (sec >> 8) & 0xff;
@@ -604,7 +604,7 @@ export class GWolvesDriver {
 
   async getDebounceInfo(deviceId = this.profile.wiredDeviceId): Promise<DebounceInfo> {
     if (!this.profile.isNewProtocol) {
-      // OEM getDebounce — setReportOld cmd 133
+      // OEM getDebounce - setReportOld cmd 133
       const req = legacyCmd(5, 133, 0);
       const res = await this.transactFeatureLegacy(req);
       const base = this.legacyPayloadIndex();
@@ -749,7 +749,7 @@ export class GWolvesDriver {
   }
 
   /**
-   * OEM setActiveDPIValue — read table, patch one 1-based stage, write back.
+   * OEM setActiveDPIValue - read table, patch one 1-based stage, write back.
    */
   async setDpiStageValue(
     profileSlot: number,
@@ -815,7 +815,7 @@ export class GWolvesDriver {
     await this.transactFeatureLegacy(req);
   }
 
-  /** OEM setAngleTune — signed degrees. */
+  /** OEM setAngleTune - signed degrees. */
   async setSensorAngle(degrees: number): Promise<void> {
     let enc = Math.round(degrees);
     if (enc <= 0) enc = 255 - Math.abs(enc) + 1;
@@ -829,7 +829,7 @@ export class GWolvesDriver {
     await this.transactFeature(req);
   }
 
-  /** OEM setDPIXYOnOff — old: [6]=onOff; new: [6]=profile,[7]=onOff. */
+  /** OEM setDPIXYOnOff - old: [6]=onOff; new: [6]=profile,[7]=onOff. */
   async setDpiAxisSync(enabled: boolean, profileSlot = 1): Promise<void> {
     const v = enabled ? 1 : 0;
     if (this.profile.isNewProtocol) {
@@ -837,7 +837,7 @@ export class GWolvesDriver {
       await this.transactFeature(req);
       return;
     }
-    // Fenrir Max (old): only on/off in byte[6] — profile arg ignored by firmware.
+    // Fenrir Max (old): only on/off in byte[6] - profile arg ignored by firmware.
     const req = featureCmd(2, 2, 1, 13, v);
     await this.transactFeature(req);
   }
@@ -858,7 +858,7 @@ export class GWolvesDriver {
   }
 
   /**
-   * OEM getGWButton — 36-byte payload (6 slots × 6), starts at legacyPayloadIndex.
+   * OEM getGWButton - 36-byte payload (6 slots × 6), starts at legacyPayloadIndex.
    */
   async getGwButtons(): Promise<Uint8Array> {
     const req = legacyCmd(36, 132, 0);
@@ -883,20 +883,20 @@ export class GWolvesDriver {
     await this.transactFeatureLegacy(req);
   }
 
-  /** OEM resetDevice — fire-and-forget. */
+  /** OEM resetDevice - fire-and-forget. */
   async resetDevice(): Promise<void> {
     const req = legacyCmd(1, 9, 0, 1);
     await this.sendFeatureReport(req, true);
   }
 
-  /** OEM getSensorModel — raw byte at [11-hidIndex]. */
+  /** OEM getSensorModel - raw byte at [11-hidIndex]. */
   async getSensorModelId(): Promise<number> {
     const req = legacyCmd(7, 129, 1);
     const res = await this.transactFeatureLegacy(req);
     return res[11 - this.hidIndex] ?? 0;
   }
 
-  /** Główna metoda - zwraca % baterii (0–100) lub rzuca błąd. */
+  /** Główna metoda - zwraca % baterii (0-100) lub rzuca błąd. */
   async getBatteryPercent(): Promise<number> {
     const level = await this.getBatteryLevel();
     if (!level || !isValidBatteryPercent(level.percent)) {

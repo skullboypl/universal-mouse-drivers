@@ -155,7 +155,7 @@ export function FenrirOemWorkspace() {
     setClickLevelDrag(null)
     touch('clickDebounce')
     if (clickDiyOn) {
-      // While DIY is on, level slider selects a preset into the 4 fields (A–F).
+      // While DIY is on, level slider selects a preset into the 4 fields (A-F).
       const quad = fenrirClickQuadFromLevel(level)
       void apply((d) =>
         d.patchSensor({
@@ -170,7 +170,7 @@ export function FenrirOemWorkspace() {
       )
       return
     }
-    // OEM et(): DIY already off — apply preset only.
+    // OEM et(): DIY already off - apply preset only.
     void apply((d) =>
       d.patchSensor({
         debounceEnabled: false,

@@ -1,5 +1,5 @@
 /**
- * OpenMouse HID filters — sync vendor list for SSR scoring;
+ * OpenMouse HID filters - sync vendor list for SSR scoring;
  * async full SUPPORTED_HID_FILTERS for connect / requestDevice.
  */
 
@@ -11,7 +11,7 @@ import { OPENMOUSE_CATALOG } from './catalog.generated'
 
 export type OpenMouseHidFilter = HIDDeviceFilter
 
-/** Vendor-only filters (small list) — safe for SSR / scoring. */
+/** Vendor-only filters (small list) - safe for SSR / scoring. */
 export function openMouseHidFilters(): OpenMouseHidFilter[] {
   return OPENMOUSE_VENDOR_IDS.map((vendorId) => ({ vendorId }))
 }

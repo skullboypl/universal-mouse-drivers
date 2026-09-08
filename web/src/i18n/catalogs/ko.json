@@ -177,7 +177,7 @@
   "macro.empty": "매크로가 없습니다.",
   "macro.selectOrCreate": "매크로를 선택하거나 만드세요.",
   "macro.deleteLast": "마지막 항목 삭제",
-  "macro.recordingHint": "녹화 중 — 키보드로 입력하세요. 키 사이의 실제 지연 시간이 자동 측정됩니다.",
+  "macro.recordingHint": "녹화 중 - 키보드로 입력하세요. 키 사이의 실제 지연 시간이 자동 측정됩니다.",
   "macro.recordingIdle": "녹화 시작을 클릭한 뒤 입력하세요. 누름, 뗌 및 지연이 실시간으로 기록됩니다.",
   "macro.autoDelay": "녹화 중 실제 지연 시간 측정",
   "macro.defaultDelay": "고정 지연 시간(ms) 사용",

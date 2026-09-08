@@ -164,7 +164,7 @@ export function isSupportedUmdDevice(
   )
 }
 
-/** Target a specific saved / catalog mouse — never cross-brand fallback. */
+/** Target a specific saved / catalog mouse - never cross-brand fallback. */
 export type HidPickTarget = {
   productId?: number
   vendorId?: number
@@ -263,7 +263,7 @@ export async function pickSupportedHidDevice(
   let selected: HIDDevice | undefined
   if (opts?.productId != null) {
     selected = existing.find((d) => d.productId === opts.productId)
-    // Same catalog/family only — never another brand
+    // Same catalog/family only - never another brand
     if (!selected && opts.catalogId) {
       selected = existing[0]
     } else if (!selected && opts.vendorId != null) {

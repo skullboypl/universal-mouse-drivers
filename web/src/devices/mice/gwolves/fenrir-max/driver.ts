@@ -85,7 +85,7 @@ export class FenrirMaxDriver implements DeviceDriver {
     for (const cb of this.writePhaseListeners) cb(phase)
   }
 
-  /** Mock / unused for Fenrir WebHID — prefer attachNative. */
+  /** Mock / unused for Fenrir WebHID - prefer attachNative. */
   async attach(transport: Transport) {
     this.mock = transport.kind === 'mock'
     if (this.mock) {
@@ -155,7 +155,7 @@ export class FenrirMaxDriver implements DeviceDriver {
       this.mouseReachable = this.mock
       return
     }
-    // Read-only — do not drive WriteToast ("Zapisuję…"). Session shows SyncSpinner.
+    // Read-only - do not drive WriteToast ("Zapisuję…"). Session shows SyncSpinner.
     try {
       const full = await this.hid.getFullState()
       this.applyFullState(full)
@@ -190,7 +190,7 @@ export class FenrirMaxDriver implements DeviceDriver {
         ? `Fenrir synced · ${full.pollingHz || '?'}Hz · DPI ${full.activeDpiStage}${
             gotBattery ? ` · ${full.battery!.percent}%` : ''
           }`
-        : 'Fenrir: brak odpowiedzi feature-64 — wybierz interfejs vendor/dongle w oknie HID'
+        : 'Fenrir: brak odpowiedzi feature-64 - wybierz interfejs vendor/dongle w oknie HID'
       umdLog('fenrir', 'info', 'full state', {
         battery: full.battery?.percent,
         pollingHz: full.pollingHz,
@@ -568,7 +568,7 @@ export class FenrirMaxDriver implements DeviceDriver {
         })),
       }
     }
-    // OEM tt(): enabling DIY seeds debounce1–4 from the current preset level.
+    // OEM tt(): enabling DIY seeds debounce1-4 from the current preset level.
     if (patch.debounceEnabled === true && this.state.sensor.debounceEnabled !== true) {
       const quad = fenrirClickQuadFromLevel(sensor.debounceLevel ?? 0)
       sensor = {
@@ -603,7 +603,7 @@ export class FenrirMaxDriver implements DeviceDriver {
     }
     this.pendingSensorPatch = { ...this.pendingSensorPatch, ...patch }
 
-    // Axis Sync: OEM fires setDPIStageInfo immediately on toggle — don't debounce.
+    // Axis Sync: OEM fires setDPIStageInfo immediately on toggle - don't debounce.
     if (patch.dpiAxisSync != null) {
       if (this.sensorWriteTimer) {
         clearTimeout(this.sensorWriteTimer)
@@ -618,7 +618,7 @@ export class FenrirMaxDriver implements DeviceDriver {
     }, 220)
   }
 
-  /** OEM zr — change active DPI stage LED color via SetDPIStageColors. */
+  /** OEM zr - change active DPI stage LED color via SetDPIStageColors. */
   setActiveDpiColor(color: string) {
     const idx = this.state.sensor.activeDpiIndex
     const dpiStages = this.state.sensor.dpiStages.map((s) =>
@@ -810,7 +810,7 @@ export class FenrirMaxDriver implements DeviceDriver {
         )
         const pairs = this.state.sensor.dpiStages.slice(0, count).map((s) => {
           const x = s.value
-          // Always send an explicit Y — never leave firmware guessing.
+          // Always send an explicit Y - never leave firmware guessing.
           const y = patch.dpiAxisSync ? x : (s.valueY ?? x)
           return { x, y }
         })

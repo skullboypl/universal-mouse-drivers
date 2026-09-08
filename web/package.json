@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "node scripts/patch-openmouse-exports.js",
+    "postinstall": "node -e \"const fs=require('fs');const p='scripts/patch-openmouse-exports.js';if(!fs.existsSync(p)){console.warn('[postinstall] skip missing '+p);process.exit(0)}\" && node scripts/patch-openmouse-exports.js",
     "generate:openmouse-catalog": "node scripts/generate-openmouse-catalog.mjs",
+    "fetch:openmouse-images": "node scripts/fetch-openmouse-product-images.mjs",
     "prebuild": "npm run generate:openmouse-catalog",
     "dev": "next dev",
     "build": "next build",
@@ -24,6 +25,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "^15.5.23",
+    "sharp": "^0.34.2",
     "typescript": "^5"
   }
 }

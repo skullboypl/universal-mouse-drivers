@@ -1,4 +1,4 @@
-# LOCKED — Rampage Blitz Ultimate (live)
+# LOCKED - Rampage Blitz Ultimate (live)
 
 See [`../../LOCK.md`](../../LOCK.md).
 

@@ -4,7 +4,7 @@ import type { ButtonAction, ButtonBinding } from '../../../types'
 export const SUPERLIGHT_ART = { width: 420, height: 520 } as const
 
 /**
- * Physical buttons — order matches OMM / onboard profile `0x8100`
+ * Physical buttons - order matches OMM / onboard profile `0x8100`
  * (Solaar offsets @32): Left, Right, Middle, Back, Forward.
  * Live Superlight v1 factory macros: `80 01 00 {01,02,04,08,10}`.
  * Left + Right are locked in OMM / UMD (cannot remapped).
@@ -104,7 +104,7 @@ export function decodeOnboardButtonMacro(bytes: Uint8Array): ButtonAction {
     }
     return 'disabled'
   }
-  // FUNCTION (0x9) — OMM FUNCTION_OPCODES; 5 = Cycle DPIs
+  // FUNCTION (0x9) - OMM FUNCTION_OPCODES; 5 = Cycle DPIs
   if (behavior === 0x9) {
     const fn = bytes[1]!
     if (fn === 5) return 'dpi_cycle'

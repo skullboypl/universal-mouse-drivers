@@ -1,6 +1,6 @@
 /**
  * Webpack (Next.js) resolves package "exports" with conditions that only
- * include `import` — many subpaths then fail with ERR_PACKAGE_PATH_NOT_EXPORTED.
+ * include `import` - many subpaths then fail with ERR_PACKAGE_PATH_NOT_EXPORTED.
  * Add `default` + `require` pointing at the same ESM file for every export map entry.
  */
 const fs = require('fs')
@@ -16,7 +16,7 @@ const pkgPath = path.join(
 )
 
 if (!fs.existsSync(pkgPath)) {
-  console.warn('[patch-openmouse-exports] @openmouse/protocol not installed — skip')
+  console.warn('[patch-openmouse-exports] @openmouse/protocol not installed - skip')
   process.exit(0)
 }
 
