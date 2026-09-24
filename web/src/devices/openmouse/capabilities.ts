@@ -210,12 +210,18 @@ export function applyOpenMouseUiHints(
   }
 
   const editor = ui.dpiStageEditor
-  const lodOptions =
-    status.supportedLiftOffDistances?.length
-      ? [...status.supportedLiftOffDistances]
-      : ui.hideLodLow
-        ? (['Medium', 'High'] as OmLodLabel[])
-        : null
+  // Empty array = driver advertised "no adjustable LOD" (e.g. many Logitech).
+  // Undefined = keep method-based caps / default three stops.
+  const lodExplicit = Array.isArray(status.supportedLiftOffDistances)
+  const lodFromStatus = lodExplicit
+    ? [...(status.supportedLiftOffDistances ?? [])]
+    : null
+  const lodOptions: OmLodLabel[] | null = lodFromStatus
+    ? lodFromStatus
+    : ui.hideLodLow
+      ? (['Medium', 'High'] as OmLodLabel[])
+      : null
+  const lodAdjustable = !lodFromStatus || lodFromStatus.length > 0
 
   return {
     ...base,
@@ -224,8 +230,9 @@ export function applyOpenMouseUiHints(
     reportRate: settingsReady ? base.reportRate : base.reportRate,
     reportRateWritable:
       settingsReady && !ui.pollingReadOnly ? base.reportRateWritable : false,
-    lod: settingsReady ? base.lod : base.lod,
-    lodWritable: settingsReady ? base.lodWritable : false,
+    lod: settingsReady && lodAdjustable ? base.lod : false,
+    lodWritable:
+      settingsReady && lodAdjustable ? base.lodWritable : false,
     angleSnapping: settingsReady ? angleSnapping : false,
     rippleControl: settingsReady ? rippleControl : false,
     motionSync: settingsReady ? motionSync : false,

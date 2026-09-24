@@ -180,6 +180,24 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   private writePhaseListeners = new Set<(p: DeviceWritePhase) => void>()
   private demoProfile: OpenMouseDemoProfile | null = null
   private allowedPollRates: number[] | null = null
+  /** Last values known on the mouse — flush only writes diffs (avoids LOD fail on DPI-only edits). */
+  private synced: {
+    dpiX: number | null
+    dpiY: number | null
+    reportRate: number | null
+    lod: OmLod | null
+    angleSnapping: boolean | null
+    rippleControl: boolean | null
+    motionSync: boolean | null
+  } = {
+    dpiX: null,
+    dpiY: null,
+    reportRate: null,
+    lod: null,
+    angleSnapping: null,
+    rippleControl: null,
+    motionSync: null,
+  }
 
   constructor(seedDevice?: HIDDevice, demoProfile?: OpenMouseDemoProfile) {
     this.state = createOpenMouseDefaultState()
@@ -284,8 +302,11 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
       )
     }
     this.client = bundle.client as OmClient
+    // Sibling collection may have been the real match.
+    this.hidDevice = bundle.device
+    this.pendingDevice = bundle.device
     this.capabilities = capabilitiesFromOmClient(this.client)
-    const labels = resolveOpenMouseIdentityLabels(device, {
+    const labels = resolveOpenMouseIdentityLabels(bundle.device, {
       brandFromDriver: bundle.brand,
     })
     this.identity = {
@@ -294,10 +315,10 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
       brand: labels.brand,
       model: labels.model,
       tagline: `${labels.brand} via OpenMouse`,
-      vendorId: device.vendorId,
-      productIds: [device.productId],
+      vendorId: bundle.device.vendorId,
+      productIds: [bundle.device.productId],
       hidIds: [
-        `${device.vendorId.toString(16)}:${device.productId.toString(16)}`,
+        `${bundle.device.vendorId.toString(16)}:${bundle.device.productId.toString(16)}`,
       ],
       status: 'openmouse',
       imageUrl: labels.brandSlug
@@ -480,6 +501,18 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
       this.lastVerifyNote = hintNote
         ? `${this.identity.brand} ${this.identity.model} · ${hintNote}`
         : `${this.identity.brand} ${this.identity.model} · status OK`
+      const active =
+        this.state.sensor.dpiStages[this.state.sensor.activeDpiIndex] ??
+        this.state.sensor.dpiStages[0]
+      this.synced = {
+        dpiX: active?.value ?? dpiX,
+        dpiY: active?.valueY ?? dpiY ?? active?.value ?? dpiX,
+        reportRate: this.state.sensor.reportRate,
+        lod: st.liftOffDistance ?? lodMmToLabel(this.state.sensor.lodMm),
+        angleSnapping: this.state.sensor.angleSnapping,
+        rippleControl: this.state.sensor.rippleControl,
+        motionSync: this.state.sensor.motionSync,
+      }
     } catch (e) {
       this.lastWriteError = e instanceof Error ? e.message : String(e)
       this.mouseReachable = false
@@ -495,8 +528,14 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
       const stage =
         this.state.sensor.dpiStages[this.state.sensor.activeDpiIndex] ??
         this.state.sensor.dpiStages[0]
+      const dpiX = stage?.value ?? null
+      const dpiY = stage?.valueY ?? dpiX
+      const dpiChanged =
+        dpiX != null &&
+        (this.synced.dpiX !== dpiX || this.synced.dpiY !== dpiY)
 
       if (
+        dpiChanged &&
         stage &&
         this.capabilities.dpiWritable &&
         typeof this.client.setDpi === 'function'
@@ -504,6 +543,8 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
         try {
           await this.client.setDpi(stage.value, stage.valueY ?? stage.value)
           wrote = true
+          this.synced.dpiX = stage.value
+          this.synced.dpiY = stage.valueY ?? stage.value
         } catch (e) {
           errors.push(`DPI: ${e instanceof Error ? e.message : String(e)}`)
         }
@@ -511,72 +552,92 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
 
       const setRate =
         this.client.setPollingRate ?? this.client.setReportRate
-      if (this.capabilities.reportRateWritable && typeof setRate === 'function') {
+      const hz = hzToRate(
+        this.state.sensor.reportRate,
+        this.allowedPollRates ?? undefined,
+      )
+      if (
+        this.synced.reportRate !== hz &&
+        this.capabilities.reportRateWritable &&
+        typeof setRate === 'function'
+      ) {
         try {
-          const hz = hzToRate(
-            this.state.sensor.reportRate,
-            this.allowedPollRates ?? undefined,
-          )
           await setRate.call(this.client, hz)
           wrote = true
+          this.synced.reportRate = hz
         } catch (e) {
           errors.push(`Poll: ${e instanceof Error ? e.message : String(e)}`)
         }
       }
 
+      const lodLabel = lodMmToLabel(this.state.sensor.lodMm)
+      const lodOpts = this.capabilities.lodOptions
+      const lodAllowed =
+        lodOpts == null ||
+        (lodOpts.length > 0 && lodOpts.includes(lodLabel))
       if (
+        this.synced.lod !== lodLabel &&
+        lodAllowed &&
         this.capabilities.lodWritable &&
         typeof this.client.setLiftOffDistance === 'function'
       ) {
         try {
-          await this.client.setLiftOffDistance(
-            lodMmToLabel(this.state.sensor.lodMm),
-          )
+          await this.client.setLiftOffDistance(lodLabel)
           wrote = true
+          this.synced.lod = lodLabel
         } catch (e) {
           errors.push(`LOD: ${e instanceof Error ? e.message : String(e)}`)
         }
       } else if (
+        this.synced.lod !== lodLabel &&
+        lodAllowed &&
         this.capabilities.lodWritable &&
         typeof this.client.setLod === 'function'
       ) {
         try {
           await this.client.setLod(this.state.sensor.lodMm)
           wrote = true
+          this.synced.lod = lodLabel
         } catch (e) {
           errors.push(`LOD: ${e instanceof Error ? e.message : String(e)}`)
         }
       }
 
       if (
+        this.synced.angleSnapping !== this.state.sensor.angleSnapping &&
         this.capabilities.angleSnapping &&
         typeof this.client.setAngleSnapping === 'function'
       ) {
         try {
           await this.client.setAngleSnapping(this.state.sensor.angleSnapping)
           wrote = true
+          this.synced.angleSnapping = this.state.sensor.angleSnapping
         } catch (e) {
           errors.push(`Angle: ${e instanceof Error ? e.message : String(e)}`)
         }
       }
       if (
+        this.synced.rippleControl !== this.state.sensor.rippleControl &&
         this.capabilities.rippleControl &&
         typeof this.client.setRippleControl === 'function'
       ) {
         try {
           await this.client.setRippleControl(this.state.sensor.rippleControl)
           wrote = true
+          this.synced.rippleControl = this.state.sensor.rippleControl
         } catch (e) {
           errors.push(`Ripple: ${e instanceof Error ? e.message : String(e)}`)
         }
       }
       if (
+        this.synced.motionSync !== this.state.sensor.motionSync &&
         this.capabilities.motionSync &&
         typeof this.client.setMotionSync === 'function'
       ) {
         try {
           await this.client.setMotionSync(this.state.sensor.motionSync)
           wrote = true
+          this.synced.motionSync = this.state.sensor.motionSync
         } catch (e) {
           errors.push(`Motion: ${e instanceof Error ? e.message : String(e)}`)
         }
@@ -590,14 +651,16 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
         return { wrote }
       }
 
-      // Re-read so UI matches what the mouse kept.
-      await this.probeFlashAndSync()
-      this.lastWriteOk = wrote
-      this.lastWriteError = wrote
-        ? null
-        : 'No writable OpenMouse setters on this client'
-      if (!wrote) this.lastVerifyNote = this.lastWriteError
-      this.setWritePhase(wrote ? 'ok' : 'error')
+      if (wrote) {
+        // Re-read so UI matches what the mouse kept.
+        await this.probeFlashAndSync()
+      }
+      this.lastWriteOk = true
+      this.lastWriteError = null
+      this.setWritePhase('ok')
+      if (!wrote) {
+        this.lastVerifyNote = `${this.identity.brand} ${this.identity.model} · up to date`
+      }
       return { wrote }
     } catch (e) {
       this.lastWriteOk = false

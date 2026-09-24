@@ -76,7 +76,6 @@ const KNOWN_ICON_SVG = new Set([
   'k-snake',
   'keychron',
   'lamzu',
-  'logitech',
   'mchose',
   'microsoft',
   'ninjutso',
@@ -90,6 +89,9 @@ const KNOWN_ICON_SVG = new Set([
   'wooting',
   'zaunkoenig',
 ])
+
+/** Brands that only ship a wordmark SVG (no *-icon.svg on disk). */
+const WORDMARK_ONLY_SVG = new Set(['logitech', 'amd', 'intel'])
 
 /** Map MouseStatus / registry brand labels onto catalog brandSlug keys. */
 export function openMouseBrandSlugFromLabel(brand?: string | null): string {
@@ -113,7 +115,7 @@ export function openMouseBrandSlugFromLabel(brand?: string | null): string {
   }
   if (aliases[raw]) return aliases[raw]
   const slug = raw.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-  if (VISUALS[slug] || KNOWN_ICON_SVG.has(slug) || LOGO_SLUG_ALIAS[slug]) {
+  if (VISUALS[slug] || KNOWN_ICON_SVG.has(slug) || WORDMARK_ONLY_SVG.has(slug) || LOGO_SLUG_ALIAS[slug]) {
     return slug
   }
   return slug || 'openmouse'
@@ -128,6 +130,9 @@ export function openMouseBrandLogoUrl(brandSlug: string): string {
   const slug = resolveLogoSlug(brandSlug)
   const ext = OPENMOUSE_LOGO_RASTER[slug] ?? OPENMOUSE_LOGO_RASTER[brandSlug]
   if (ext) return `/devices/openmouse/logos/${slug}-icon.${ext}`
+  if (WORDMARK_ONLY_SVG.has(slug)) {
+    return `/devices/openmouse/logos/${slug}.svg`
+  }
   if (KNOWN_ICON_SVG.has(slug)) {
     return `/devices/openmouse/logos/${slug}-icon.svg`
   }

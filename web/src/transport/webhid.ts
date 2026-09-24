@@ -304,7 +304,16 @@ export async function pickSupportedHidDevice(
   }
 
   if (!selected) {
-    const picked = await hid.requestDevice({ filters })
+    let picked: HIDDevice[] = []
+    try {
+      picked = await hid.requestDevice({ filters })
+    } catch (err) {
+      // Chrome/Edge: user closed the chooser without picking.
+      if (err instanceof DOMException && err.name === 'NotFoundError') {
+        throw new Error('Anulowano wybór urządzenia w oknie HID')
+      }
+      throw err
+    }
     // OpenMouse / generic force picker: keep the user's choice — session verifies
     // via native catalog match or createSupportedClient (no pre-block by VID list).
     const acceptRawPick =
@@ -321,11 +330,18 @@ export async function pickSupportedHidDevice(
     } else {
       selected = ranked[0]
     }
+    if (!selected && picked.length > 0) {
+      const d = picked[0]
+      const id = `${d.vendorId.toString(16)}:${d.productId.toString(16)}`
+      throw new Error(
+        `Wybrano inne urządzenie HID (${d.productName || 'bez nazwy'} · ${id}) — nie pasuje do tej karty. Wybierz właściwą mysz / interfejs.`,
+      )
+    }
   }
   if (!selected) {
     throw new Error(
       opts?.catalogId || opts?.productId != null
-        ? 'Wybrana mysz nie jest podłączona / nie wybrano jej w oknie HID'
+        ? 'Nie wybrano myszy w oknie HID ( Esc / Anuluj ) albo nie jest podłączona'
         : 'No supported mouse selected',
     )
   }
