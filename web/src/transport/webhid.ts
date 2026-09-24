@@ -176,6 +176,11 @@ export type HidPickTarget = {
    * Skips auto-connect to a previously authorized device from getDevices().
    */
   forcePicker?: boolean
+  /**
+   * Skip the Native / OpenMouse chooser when both stacks match.
+   * Use when the user already picked a stack (or reconnect preference).
+   */
+  driverStack?: 'native' | 'openmouse'
 }
 
 function filtersForTarget(target?: HidPickTarget): Array<{

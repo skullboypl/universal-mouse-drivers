@@ -111,6 +111,72 @@ export function formatVidPid(vendorId: number, productId: number): string {
   return `${vendorId.toString(16).padStart(4, '0')}:${productId.toString(16).padStart(4, '0')}`
 }
 
+/** Dongle / generic USB strings — never use as the mouse model. */
+export function isGenericHidProductName(name?: string | null): boolean {
+  const n = (name ?? '').trim().toLowerCase()
+  if (!n) return true
+  return (
+    /^(usb\s*)?(wireless\s*)?(receiver|dongle|adapter)$/.test(n) ||
+    /^usb\s+receiver$/.test(n) ||
+    /^(hid[- ]?compliant\s+)?mouse$/.test(n) ||
+    n === 'gaming mouse' ||
+    n === '2.4g wireless mouse' ||
+    n === 'wireless mouse'
+  )
+}
+
+/** Catalog row for a live HID VID:PID (named products preferred). */
+export function findOpenMouseCatalogEntry(
+  vendorId: number,
+  productId: number,
+): OpenMouseCatalogEntry | undefined {
+  const matches = OPENMOUSE_CATALOG.filter(
+    (e) => e.vendorId === vendorId && e.productId === productId,
+  )
+  return matches.find((e) => e.hasProductName) ?? matches[0]
+}
+
+/**
+ * Brand + model for UI before / without MouseStatus.
+ * Prefer OpenMouse catalog over HID productName (dongles report "USB Receiver").
+ */
+export function resolveOpenMouseIdentityLabels(
+  device: Pick<HIDDevice, 'vendorId' | 'productId' | 'productName'>,
+  opts?: { brandFromDriver?: string | null; nameFromStatus?: string | null },
+): { brand: string; model: string; brandSlug?: string; catalogName?: string } {
+  const entry = findOpenMouseCatalogEntry(device.vendorId, device.productId)
+  const brandFromDriver = opts?.brandFromDriver?.trim()
+  const nameFromStatus = opts?.nameFromStatus?.trim()
+  const hidName = device.productName?.trim()
+  const brand =
+    (brandFromDriver && brandFromDriver !== 'OpenMouse' && brandFromDriver !== 'Unknown'
+      ? brandFromDriver
+      : null) ||
+    entry?.brand ||
+    'OpenMouse'
+  let model =
+    nameFromStatus ||
+    (entry?.hasProductName ? entry.name : undefined) ||
+    (!isGenericHidProductName(hidName) ? hidName : undefined) ||
+    (entry ? entry.name : undefined) ||
+    (!isGenericHidProductName(hidName) ? hidName : undefined) ||
+    `0x${device.vendorId.toString(16)}:0x${device.productId.toString(16)}`
+  // Status often returns "G-Wolves Fenrir" while brand is already G-Wolves.
+  if (
+    nameFromStatus &&
+    brand &&
+    nameFromStatus.toLowerCase().startsWith(`${brand.toLowerCase()} `)
+  ) {
+    model = nameFromStatus.slice(brand.length).trim() || model
+  }
+  return {
+    brand,
+    model,
+    brandSlug: entry?.brandSlug,
+    catalogName: entry?.name,
+  }
+}
+
 export function describeOpenMouseDevice(
   entry: OpenMouseCatalogEntry,
   locale: string,

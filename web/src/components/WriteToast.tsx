@@ -21,7 +21,12 @@ export function WriteToast() {
     }
     const unsub = driver.onWritePhase((p) => {
       setPhase(p)
-      setNote(driver.lastVerifyNote ?? driver.lastWriteError)
+      // On error prefer the real write failure (not a stale "brand · brand" probe note).
+      setNote(
+        p === 'error'
+          ? driver.lastWriteError ?? driver.lastVerifyNote
+          : driver.lastVerifyNote ?? driver.lastWriteError,
+      )
       if (p === 'idle') {
         setVisible(false)
         return

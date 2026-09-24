@@ -10,6 +10,11 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import {
+  DriverStackDialog,
+  type DriverStackChoice,
+  type DriverStackPrompt,
+} from '../components/DriverStackDialog'
 import { umdLog } from '../debug/umdLog'
 import type { DeviceDriver } from '../devices/DeviceDriver'
 import { createDriver, DEVICE_CATALOG, findCatalogDevice } from '../devices/registry'
@@ -20,6 +25,7 @@ import {
   OPENMOUSE_BACKED_ID,
   createOpenMouseDriver,
   looksLikeNonMouseHid,
+  openMouseSupports,
   type OpenMouseDemoProfile,
 } from '../devices/openmouse'
 import type { DeviceState } from '../devices/types'
@@ -41,6 +47,13 @@ import {
 } from './savedDevices'
 
 export type SaveStatus = 'idle' | 'dirty' | 'saving' | 'saved' | 'error'
+
+class DriverStackCancelledError extends Error {
+  constructor() {
+    super('Driver stack choice cancelled')
+    this.name = 'DriverStackCancelledError'
+  }
+}
 
 interface SessionValue {
   connected: boolean
@@ -154,6 +167,10 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
   const [connectingCatalogId, setConnectingCatalogId] = useState<string | null>(
     null,
   )
+  const [stackPrompt, setStackPrompt] = useState<DriverStackPrompt | null>(null)
+  const stackResolveRef = useRef<
+    ((choice: DriverStackChoice | null) => void) | null
+  >(null)
   // SSR-safe: localStorage / navigator.hid differ on server vs client.
   const [savedDevices, setSavedDevices] = useState<SavedDevice[]>([])
   const [webHidOk, setWebHidOk] = useState(false)
@@ -167,6 +184,21 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setWebHidOk(webHidSupported())
     setSavedDevices(loadSavedDevices())
+  }, [])
+
+  const askDriverStack = useCallback((prompt: DriverStackPrompt) => {
+    return new Promise<DriverStackChoice | null>((resolve) => {
+      stackResolveRef.current?.(null)
+      stackResolveRef.current = resolve
+      setStackPrompt(prompt)
+    })
+  }, [])
+
+  const finishDriverStack = useCallback((choice: DriverStackChoice | null) => {
+    const resolve = stackResolveRef.current
+    stackResolveRef.current = null
+    setStackPrompt(null)
+    resolve?.(choice)
   }, [])
 
   const publish = useCallback((d: DeviceDriver | null) => {
@@ -322,13 +354,31 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
           picked.vendorId,
           picked.productId,
         )
-        const preferOpenMouse = opts?.catalogId === OPENMOUSE_BACKED_ID
+        const omSoft =
+          !looksLikeNonMouseHid(picked) && openMouseSupports(picked)
 
-        // Do NOT await createSupportedClient here — it opens HID and can hang
-        // (Logitech) or return null after Chrome already paired the device, leaving
-        // the user stuck on Connect with no driver UI. Verify in attachNative.
+        // Native Superlight / Fenrir / King / Blitz path is unchanged when the
+        // user already chose a stack, or when OpenMouse does not soft-match.
+        // When BOTH match, ask: Native (recommended) vs OpenMouse.
+        let stack: DriverStackChoice
+        if (opts?.driverStack === 'native' || opts?.driverStack === 'openmouse') {
+          stack = opts.driverStack
+        } else if (catalogFromPick && omSoft) {
+          const choice = await askDriverStack({
+            nativeBrand: catalogFromPick.brand,
+            nativeModel: catalogFromPick.model,
+            productHint: `${catalogFromPick.brand} ${catalogFromPick.model}`,
+          })
+          if (!choice) throw new DriverStackCancelledError()
+          stack = choice
+        } else if (catalogFromPick) {
+          stack = 'native'
+        } else {
+          stack = 'openmouse'
+        }
+
         let openMouse = null
-        if (preferOpenMouse || !catalogFromPick) {
+        if (stack === 'openmouse') {
           if (looksLikeNonMouseHid(picked)) {
             throw new Error(
               'Selected HID looks like a headset/keyboard — OpenMouse only accepts mice',
@@ -340,13 +390,14 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
           opts?.catalogId &&
           opts.catalogId !== OPENMOUSE_BACKED_ID &&
           catalogFromPick &&
-          catalogFromPick.id !== opts.catalogId
+          catalogFromPick.id !== opts.catalogId &&
+          stack !== 'openmouse'
         ) {
           throw new Error(
             `Podłączono inne urządzenie niż wybrane (${opts.catalogId})`,
           )
         }
-        if (preferOpenMouse && !openMouse) {
+        if (stack === 'openmouse' && !openMouse) {
           throw new Error('OpenMouse does not support the selected HID device')
         }
         const catalog =
@@ -470,6 +521,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
               batteryPercent: bat,
               mouseReachable: d.mouseReachable,
               lastVerifyNote: d.lastVerifyNote,
+              driverStack: isOpenMouse ? 'openmouse' : 'native',
             })
             await d.refreshFirmwareVersions()
             if (!stillThisConnect()) return
@@ -509,6 +561,11 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         setDeviceBusy(false)
         setBusyKind(null)
         setConnectingCatalogId(null)
+        finishDriverStack(null)
+        if (err instanceof DriverStackCancelledError) {
+          setStatus(t(uiLocale(), 'status.omCancelled'))
+          throw err
+        }
         umdLog(
           'session',
           'error',
@@ -523,7 +580,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         throw err
       }
     },
-    [publish],
+    [askDriverStack, finishDriverStack, publish],
   )
 
   const cancelConnect = useCallback(() => {
@@ -533,6 +590,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
     setBusyKind(null)
     setConnectingCatalogId(null)
     setConnectError(null)
+    finishDriverStack(null)
     const d = driverRef.current
     void (async () => {
       try {
@@ -545,7 +603,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       setSaveStatus('idle')
       setStatus(t(uiLocale(), 'status.omCancelled'))
     })()
-  }, [publish])
+  }, [finishDriverStack, publish])
 
   const dismissConnectError = useCallback(() => {
     setConnectError(null)
@@ -617,6 +675,13 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
   return (
     <DeviceSessionContext.Provider value={value}>
       {children}
+      {stackPrompt ? (
+        <DriverStackDialog
+          prompt={stackPrompt}
+          onChoose={(choice) => finishDriverStack(choice)}
+          onCancel={() => finishDriverStack(null)}
+        />
+      ) : null}
     </DeviceSessionContext.Provider>
   )
 }

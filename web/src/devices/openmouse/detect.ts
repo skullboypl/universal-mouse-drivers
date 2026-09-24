@@ -3,10 +3,18 @@
  * Package is patched at postinstall so webpack can resolve subpath exports.
  */
 
+import { findOpenMouseCatalogEntry } from './catalog'
+
 export type OpenMouseMatch = {
   brandLabel: string
   driverId: string
   score: number
+}
+
+export type OpenMouseClientBundle = {
+  client: unknown
+  /** From DEVICE_DRIVERS registry (clients rarely expose .brand). */
+  brand: string
 }
 
 /**
@@ -15,10 +23,37 @@ export type OpenMouseMatch = {
  */
 export async function createOpenMouseClient(
   device: HIDDevice,
-): Promise<unknown | null> {
-  const { createSupportedClient } = await import('@openmouse/protocol/drivers')
+): Promise<OpenMouseClientBundle | null> {
+  const { createSupportedClient, deviceBrand, DEVICE_DRIVERS } = await import(
+    '@openmouse/protocol/drivers'
+  )
   try {
-    return await createSupportedClient(device)
+    const client = await createSupportedClient(device)
+    if (!client) return null
+    let brand = 'OpenMouse'
+    try {
+      brand = String(deviceBrand(client as never) || 'OpenMouse')
+    } catch {
+      const matched = (
+        DEVICE_DRIVERS as unknown as Array<{
+          brand: string
+          supports: (d: HIDDevice) => boolean
+        }>
+      ).find((d) => {
+        try {
+          return d.supports(device)
+        } catch {
+          return false
+        }
+      })
+      brand = matched?.brand ?? 'OpenMouse'
+    }
+    if (!brand || brand === 'Unknown') {
+      brand =
+        findOpenMouseCatalogEntry(device.vendorId, device.productId)?.brand ??
+        'OpenMouse'
+    }
+    return { client, brand }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     throw new Error(
@@ -32,26 +67,13 @@ export async function createOpenMouseClient(
 export async function findOpenMouseMatch(
   device: HIDDevice,
 ): Promise<OpenMouseMatch | null> {
-  const { createSupportedClient, DEVICE_DRIVERS } = await import(
-    '@openmouse/protocol/drivers'
-  )
   try {
-    const client = await createSupportedClient(device)
-    if (!client) return null
-    const brand = String((client as { brand?: string }).brand ?? 'OpenMouse')
-    const vid = device.vendorId
-    const pid = device.productId
-    const entry = (
-      DEVICE_DRIVERS as unknown as Array<{
-        id: string
-        devices?: Array<{ vendorId: number; productId: number }>
-      }>
-    ).find((d) =>
-      d.devices?.some((x) => x.vendorId === vid && x.productId === pid),
-    )
+    const bundle = await createOpenMouseClient(device)
+    if (!bundle) return null
+    const entry = findOpenMouseCatalogEntry(device.vendorId, device.productId)
     return {
-      brandLabel: brand,
-      driverId: entry?.id ?? `openmouse-${brand.toLowerCase()}`,
+      brandLabel: bundle.brand,
+      driverId: entry?.id ?? `openmouse-${bundle.brand.toLowerCase()}`,
       score: 50,
     }
   } catch {
