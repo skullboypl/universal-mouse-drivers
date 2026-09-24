@@ -281,6 +281,12 @@ export type MessageKey =
   | 'status.selectMouse'
   | 'status.syncing'
   | 'status.reading'
+  | 'status.omOpening'
+  | 'status.omProbing'
+  | 'status.omReading'
+  | 'status.omTimeout'
+  | 'status.omCancelled'
+  | 'status.cancelConnect'
   | 'status.readOk'
   | 'status.disconnected'
   | 'status.applyFailed'
@@ -607,6 +613,13 @@ const en: Dict = {
   'status.selectMouse': 'Select a supported mouse…',
   'status.syncing': 'syncing…',
   'status.reading': 'Reading from mouse…',
+  'status.omOpening': 'OpenMouse · opening HID…',
+  'status.omProbing': 'OpenMouse · probing protocol drivers…',
+  'status.omReading': 'OpenMouse · reading device status…',
+  'status.omTimeout':
+    'OpenMouse timed out probing this HID interface — try another collection or the native driver',
+  'status.omCancelled': 'Connect cancelled',
+  'status.cancelConnect': 'Cancel',
   'status.readOk': 'Read from mouse',
   'status.disconnected': 'Device disconnected',
   'status.applyFailed': 'Apply failed',
@@ -933,6 +946,13 @@ const pl: Dict = {
   'status.selectMouse': 'Wybierz wspieraną mysz…',
   'status.syncing': 'synchronizacja…',
   'status.reading': 'Odczytuję z myszy…',
+  'status.omOpening': 'OpenMouse · otwieram HID…',
+  'status.omProbing': 'OpenMouse · szukam protokołu wśród driverów…',
+  'status.omReading': 'OpenMouse · odczyt statusu urządzenia…',
+  'status.omTimeout':
+    'OpenMouse: timeout przy sondowaniu HID — spróbuj innej kolekcji albo natywnego drivera',
+  'status.omCancelled': 'Anulowano łączenie',
+  'status.cancelConnect': 'Anuluj',
   'status.readOk': 'Odczytano z myszy',
   'status.disconnected': 'Urządzenie rozłączone',
   'status.applyFailed': 'Nie udało się zastosować',

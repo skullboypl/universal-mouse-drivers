@@ -62,6 +62,8 @@ interface SessionValue {
     opts?: { openMouseProfile?: OpenMouseDemoProfile },
   ) => Promise<void>
   connectWebHid: (target?: number | HidPickTarget) => Promise<string>
+  /** Abort in-flight HID / OpenMouse connect+sync (busy overlay Cancel). */
+  cancelConnect: () => void
   disconnect: () => Promise<void>
   refreshSavedDevices: () => void
   syncFromDriver: () => void
@@ -75,9 +77,40 @@ interface SessionValue {
 
 const DeviceSessionContext = createContext<SessionValue | null>(null)
 const AUTOSAVE_MS = 450
+/** OpenMouse createSupportedClient can hang on a bad HID collection. */
+const OPENMOUSE_ATTACH_MS = 12_000
 
 function cloneState(state: DeviceState): DeviceState {
   return structuredClone(state)
+}
+
+function withTimeout<T>(
+  promise: Promise<T>,
+  ms: number,
+  timeoutMessage: string,
+): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const id = window.setTimeout(() => {
+      reject(new Error(timeoutMessage))
+    }, ms)
+    promise.then(
+      (value) => {
+        window.clearTimeout(id)
+        resolve(value)
+      },
+      (err: unknown) => {
+        window.clearTimeout(id)
+        reject(err)
+      },
+    )
+  })
+}
+
+/** Let React paint status / spinner before a potentially blocking HID call. */
+function yieldToUi(): Promise<void> {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, 40)
+  })
 }
 
 function uiLocale(raw?: string | null): Locale {
@@ -120,6 +153,8 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
   const transportKindRef = useRef<TransportKind | null>(null)
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const busyRef = useRef(false)
+  /** Bumped to cancel in-flight connect/sync background work. */
+  const connectGenRef = useRef(0)
 
   useEffect(() => {
     setWebHidOk(webHidSupported())
@@ -316,21 +351,30 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
 
         setConnectingCatalogId(catalog.id)
         const d = openMouse ?? createDriver(catalog.id)
+        const isOpenMouse = catalog.id === OPENMOUSE_BACKED_ID
 
         const useNative =
           catalog.id === FENRIR_MAX_IDENTITY.id ||
           catalog.id === SUPERLIGHT_IDENTITY.id ||
-          catalog.id === OPENMOUSE_BACKED_ID
+          isOpenMouse
 
         // Show device UI immediately (defaults) → SyncSpinner → attach + probe.
         // Do not await HID open/read before navigation (Logitech was blocking on Connect).
+        const connectGen = ++connectGenRef.current
+        const stillThisConnect = () =>
+          connectGenRef.current === connectGen && driverRef.current === d
+
         mergeDraft(d)
         d.patchSettings({ language: uiLocale() })
         transportKindRef.current = 'webhid'
         setTransportKind('webhid')
         publish(d)
         const lang = uiLocale(d.getState().settings.language)
-        setStatus(`${t(lang, 'status.webhid')} · ${t(lang, 'status.syncing')}`)
+        setStatus(
+          isOpenMouse
+            ? t(lang, 'status.omOpening')
+            : `${t(lang, 'status.webhid')} · ${t(lang, 'status.syncing')}`,
+        )
         setSaveStatus('idle')
         busyRef.current = true
         setBusyKind('connect')
@@ -353,10 +397,26 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
               if (!d.attachNative) {
                 throw new Error(`${catalog.model} driver missing attachNative`)
               }
-              await d.attachNative({
-                preferPid: picked.productId,
-                device: picked,
-              })
+              if (isOpenMouse) {
+                await yieldToUi()
+                if (!stillThisConnect()) return
+                setStatus(t(lang, 'status.omProbing'))
+                await yieldToUi()
+                if (!stillThisConnect()) return
+                await withTimeout(
+                  d.attachNative({
+                    preferPid: picked.productId,
+                    device: picked,
+                  }),
+                  OPENMOUSE_ATTACH_MS,
+                  t(lang, 'status.omTimeout'),
+                )
+              } else {
+                await d.attachNative({
+                  preferPid: picked.productId,
+                  device: picked,
+                })
+              }
             } else {
               const transport = createWebHidTransport()
               await d.attach({
@@ -372,10 +432,16 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
                 setSaveStatus('idle')
               })
             }
-            if (driverRef.current !== d) return
+            if (!stillThisConnect()) return
+
+            if (isOpenMouse) {
+              setStatus(t(lang, 'status.omReading'))
+              await yieldToUi()
+              if (!stillThisConnect()) return
+            }
 
             await d.probeFlashAndSync()
-            if (driverRef.current !== d) return
+            if (!stillThisConnect()) return
             setState(cloneState(d.getState()))
             const bat = d.getState().info.batteryPercent
             const langSync = uiLocale(d.getState().settings.language)
@@ -394,9 +460,10 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
               lastVerifyNote: d.lastVerifyNote,
             })
             await d.refreshFirmwareVersions()
-            if (driverRef.current !== d) return
+            if (!stillThisConnect()) return
             setState(cloneState(d.getState()))
           } catch (err) {
+            if (!stillThisConnect()) return
             umdLog(
               'session',
               'error',
@@ -411,7 +478,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
               setStatus(msg)
               // OpenMouse attach/probe failed after optimistic publish — drop the
               // empty shell so Connect does not look "paired" with no controls.
-              if (catalog.id === OPENMOUSE_BACKED_ID) {
+              if (isOpenMouse) {
                 try {
                   await d.detach()
                 } catch {
@@ -424,7 +491,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
               }
             }
           } finally {
-            if (driverRef.current === d) {
+            if (connectGenRef.current === connectGen) {
               busyRef.current = false
               setDeviceBusy(false)
               setBusyKind(null)
@@ -455,12 +522,35 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
     [publish],
   )
 
+  const cancelConnect = useCallback(() => {
+    connectGenRef.current += 1
+    busyRef.current = false
+    setDeviceBusy(false)
+    setBusyKind(null)
+    setConnectingCatalogId(null)
+    const d = driverRef.current
+    void (async () => {
+      try {
+        await d?.detach()
+      } catch {
+        /* ignore */
+      }
+      publish(null)
+      setTransportKind(null)
+      setSaveStatus('idle')
+      setStatus(t(uiLocale(), 'status.omCancelled'))
+    })()
+  }, [publish])
+
   const disconnect = useCallback(async () => {
+    connectGenRef.current += 1
     if (saveTimer.current) clearTimeout(saveTimer.current)
     await driverRef.current?.detach()
     publish(null)
     setTransportKind(null)
     setConnectingCatalogId(null)
+    setDeviceBusy(false)
+    setBusyKind(null)
     setStatus(t(uiLocale(), 'status.disconnected'))
     setSaveStatus('idle')
   }, [publish])
@@ -480,6 +570,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       savedDevices,
       connectMock,
       connectWebHid,
+      cancelConnect,
       disconnect,
       refreshSavedDevices,
       syncFromDriver,
@@ -499,6 +590,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       savedDevices,
       connectMock,
       connectWebHid,
+      cancelConnect,
       disconnect,
       refreshSavedDevices,
       syncFromDriver,
