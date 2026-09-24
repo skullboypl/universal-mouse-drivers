@@ -110,7 +110,11 @@ export function SensorPage() {
   const showReportRate = !isOpenMouse || caps?.reportRate !== false
   const reportRateWritable =
     !isOpenMouse || caps?.reportRateWritable !== false
-  const showLod = !isOpenMouse || caps?.lod === true
+  const showLod =
+    !isOpenMouse
+      ? true
+      : caps?.lod === true &&
+        (caps.lodOptions == null || caps.lodOptions.length > 0)
   const lodWritable = !isOpenMouse || caps?.lodWritable !== false
   const showPowerModes = !isOpenMouse || caps?.powerModes === true
   const showRipple = !isOpenMouse || caps?.rippleControl === true
@@ -161,8 +165,10 @@ export function SensorPage() {
         ? [...BLITZ_REPORT_RATES]
         : [...KING_REPORT_RATES]
   const lodOptions = isOpenMouse
-    ? caps?.lodOptions?.length
-      ? caps.lodOptions
+    ? caps?.lodOptions != null
+      ? caps.lodOptions.length
+        ? caps.lodOptions
+        : null
       : (['Low', 'Medium', 'High'] as const)
     : null
   const lodMmOptions = lodOptions
@@ -409,6 +415,37 @@ export function SensorPage() {
             </Field>
             ) : null}
             {showLod ? (
+            isOpenMouse && lodOptions ? (
+            <div>
+              <span className={styles.fieldLabel}>{tr('sensor.lod')}</span>
+              <Tip text={tr('sensor.lodTip')} />
+              <div className={styles.chipRow}>
+                {lodOptions.map((label) => {
+                  const mm = label === 'Low' ? 0.7 : label === 'High' ? 2 : 1
+                  return (
+                    <button
+                      key={label}
+                      type="button"
+                      disabled={!lodWritable}
+                      className={
+                        state.sensor.lodMm === mm
+                          ? styles.chipActive
+                          : styles.chip
+                      }
+                      onClick={() => {
+                        if (!lodWritable) return
+                        void apply((d) =>
+                          d.patchSensor({ lodMm: mm as 0.7 | 1 | 2 }),
+                        )
+                      }}
+                    >
+                      {label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+            ) : (
             <Field label={tr('sensor.lod')} tip={tr('sensor.lodTip')}>
               <Select
                 value={String(state.sensor.lodMm)}
@@ -428,6 +465,7 @@ export function SensorPage() {
                 ))}
               </Select>
             </Field>
+            )
             ) : null}
             {showPowerModes ? (
             <>
