@@ -36,6 +36,7 @@ export function Shell({ children }: { children: ReactNode }) {
     deviceBusy,
     busyKind,
     connectingCatalogId,
+    cancelConnect,
   } = useDeviceSession()
   const pathname = usePathname()
   const { lp } = useLocale()
@@ -57,8 +58,9 @@ export function Shell({ children }: { children: ReactNode }) {
   const busyLabelKey =
     busyKind === 'refresh' ? 'status.reading' : 'status.syncing'
 
+  // Prefer live session status during busy (OpenMouse probe phases, etc.).
   const statusText = deviceBusy
-    ? tr(busyLabelKey)
+    ? status?.trim() || tr(busyLabelKey)
     : status ?? tr('status.ready')
   const statusWithSave =
     !deviceBusy && saveHint && !statusText.includes(saveHint)
@@ -76,7 +78,16 @@ export function Shell({ children }: { children: ReactNode }) {
         <div className={deviceBusy ? styles.blurContent : undefined}>
           {children}
         </div>
-        {deviceBusy ? <SyncSpinner labelKey={busyLabelKey} /> : null}
+        {deviceBusy ? (
+          <SyncSpinner
+            label={statusText}
+            labelKey={busyLabelKey}
+            onCancel={
+              busyKind === 'connect' ? () => cancelConnect() : undefined
+            }
+            cancelLabel={tr('status.cancelConnect')}
+          />
+        ) : null}
       </main>
       <WriteToast />
       <footer className={styles.siteFooter}>
