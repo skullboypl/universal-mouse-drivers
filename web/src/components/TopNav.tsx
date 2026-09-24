@@ -7,6 +7,10 @@ import { UMD } from '@/brand/umd'
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
 import { OPENMOUSE_BACKED_ID } from '@/devices/openmouse/constants'
+import {
+  openMouseBrandLogoUrl,
+  openMouseBrandSlugFromLabel,
+} from '@/devices/openmouse/brandVisuals'
 import { useLocale } from '@/i18n/LocaleContext'
 import { useT } from '@/i18n/useT'
 import type { MessageKey } from '@/i18n/messages'
@@ -120,21 +124,50 @@ export function TopNav() {
   }, [menuOpen])
 
   return (
-    <header className={styles.nav}>
-      <Link href={lp('/')} className={styles.brand} aria-label={UMD.name}>
-        <img
-          className={styles.logo}
-          src={UMD.logoMarkUrl}
-          alt=""
-          width={36}
-          height={36}
-          draggable={false}
-        />
-        <span className={styles.brandText}>
-          <span className={styles.brandMain}>{UMD.shortName}</span>
-          <span className={styles.brandSub}>{UMD.name}</span>
-        </span>
-      </Link>
+    <header className={styles.nav} data-om={isOpenMouse || undefined}>
+      {isOpenMouse && driver ? (
+        <Link
+          href={lp('/')}
+          className={`${styles.brand} ${styles.omBrand}`}
+          aria-label={`OpenMouse · ${driver.identity.brand} ${driver.identity.model}`}
+        >
+          <img
+            className={styles.omLogo}
+            src={
+              driver.identity.logoUrl ||
+              openMouseBrandLogoUrl(
+                openMouseBrandSlugFromLabel(driver.identity.brand),
+              )
+            }
+            alt=""
+            width={36}
+            height={36}
+            draggable={false}
+          />
+          <span className={styles.brandText}>
+            <span className={styles.omStack}>
+              <span className={styles.omBadge}>OpenMouse</span>
+              <span className={styles.omBrandName}>{driver.identity.brand}</span>
+            </span>
+            <span className={styles.brandSub}>{driver.identity.model}</span>
+          </span>
+        </Link>
+      ) : (
+        <Link href={lp('/')} className={styles.brand} aria-label={UMD.name}>
+          <img
+            className={styles.logo}
+            src={UMD.logoMarkUrl}
+            alt=""
+            width={36}
+            height={36}
+            draggable={false}
+          />
+          <span className={styles.brandText}>
+            <span className={styles.brandMain}>{UMD.shortName}</span>
+            <span className={styles.brandSub}>{UMD.name}</span>
+          </span>
+        </Link>
+      )}
 
       {connected ? (
         <nav className={styles.tabs} aria-label={tr('nav.deviceNav')}>

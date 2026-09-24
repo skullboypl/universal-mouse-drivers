@@ -57,6 +57,57 @@
   text-overflow: ellipsis;
 }
 
+.omBrand {
+  gap: 10px;
+}
+
+.omLogo {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: block;
+  object-fit: contain;
+  background: #050607;
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius: 0;
+}
+
+.omStack {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.omBadge {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #04110e;
+  background: var(--accent);
+  padding: 2px 6px 1px;
+  line-height: 1.3;
+}
+
+.omBrandName {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav[data-om] {
+  background: color-mix(in srgb, var(--bg) 88%, #000);
+  border-bottom-color: color-mix(in srgb, var(--accent) 28%, var(--border));
+}
+
 .navSpacer {
   flex: 1;
   min-width: 0;

@@ -99,6 +99,54 @@ body:has(.app-shell[data-device='logitech-pro-x-superlight']) {
   background: var(--bg);
 }
 
+.app-shell[data-device='openmouse-backed'] {
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(45, 212, 191, 0.07), transparent 42%),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 23px,
+      rgba(45, 212, 191, 0.035) 23px,
+      rgba(45, 212, 191, 0.035) 24px
+    ),
+    var(--bg);
+}
+
+body:has(.app-shell[data-device='openmouse-backed']) {
+  background: var(--bg);
+}
+
+.app-shell[data-device='openmouse-backed'] .page-title {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.app-shell[data-device='openmouse-backed'] .page-sub {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--fg-muted);
+}
+
+.app-shell[data-device='openmouse-backed'] .panel {
+  border-radius: 0;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--bg-panel) 92%, transparent);
+  box-shadow: none;
+}
+
+.app-shell[data-device='openmouse-backed'] .panel-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-hot);
+}
+
 button,
 input,
 select {

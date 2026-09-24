@@ -17,7 +17,7 @@ import type {
 import {
   resolveOpenMouseIdentityLabels,
 } from './catalog'
-import { openMouseDeviceImageUrl } from './brandVisuals'
+import { openMouseBrandLogoUrl, openMouseDeviceImageUrl } from './brandVisuals'
 import { OPENMOUSE_BACKED_ID } from './constants'
 import { createOpenMouseClient } from './detect'
 import {
@@ -209,6 +209,9 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
       imageUrl: labels.brandSlug
         ? openMouseDeviceImageUrl(labels.brandSlug, labels.model)
         : '/devices/openmouse/mouse.svg',
+      logoUrl: labels.brandSlug
+        ? openMouseBrandLogoUrl(labels.brandSlug)
+        : undefined,
     }
   }
 
@@ -300,6 +303,9 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
       imageUrl: labels.brandSlug
         ? openMouseDeviceImageUrl(labels.brandSlug, labels.model)
         : this.identity.imageUrl,
+      logoUrl: labels.brandSlug
+        ? openMouseBrandLogoUrl(labels.brandSlug)
+        : this.identity.logoUrl,
     }
     this.state = {
       ...createOpenMouseDefaultState(),
@@ -456,6 +462,9 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
           imageUrl: labels.brandSlug
             ? openMouseDeviceImageUrl(labels.brandSlug, labels.model)
             : this.identity.imageUrl,
+          logoUrl: labels.brandSlug
+            ? openMouseBrandLogoUrl(labels.brandSlug)
+            : this.identity.logoUrl,
         }
       } else {
         if (st.brand) {

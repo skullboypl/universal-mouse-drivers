@@ -8,6 +8,7 @@ import styles from '../components/ui.module.css'
 import { FENRIR_MAX_IDENTITY } from '../devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/identity'
 import { OPENMOUSE_BACKED_ID } from '../devices/openmouse/constants'
+import { OpenMouseSessionChrome } from '../components/OpenMouseSessionChrome'
 import {
   clampFenrirSleepSec,
   FENRIR_SLEEP_MAX_SEC,
@@ -102,15 +103,21 @@ export function SettingsPage() {
 
   return (
     <div className="page">
+      {isOpenMouse && driver ? (
+        <OpenMouseSessionChrome
+          brand={driver.identity.brand}
+          model={driver.identity.model}
+          logoUrl={driver.identity.logoUrl}
+          caps={driver.capabilities}
+          note={driver.lastVerifyNote}
+        />
+      ) : null}
       <h1 className="page-title">{tr('settings.title')}</h1>
       <p className="page-sub">
-        {tr('settings.driveVer', { v: state.info.driveVersion })}
+        {isOpenMouse
+          ? tr('settings.omLimited')
+          : tr('settings.driveVer', { v: state.info.driveVersion })}
       </p>
-      {isOpenMouse && !omDeviceSettings ? (
-        <p className="page-sub" style={{ marginTop: -6 }}>
-          {tr('settings.omLimited')}
-        </p>
-      ) : null}
 
       <div className="panel">
         <h2 className="panel-label">{tr('settings.language')}</h2>
