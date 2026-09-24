@@ -38,9 +38,9 @@
       "id": "trayBattery",
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
-      "version": "1.9.0",
+      "version": "1.9.1",
       "signed": true,
-      "notes": "EV-signed; Check for updates menu + Yes/No prompt; longer download timeout; umdrivers.com fallback"
+      "notes": "EV-signed; OpenMouse catalog refresh (Asus/Dareu/HyperX/MCHOSE A5/Ninjutso + more); detect from generated HID list"
     }
   }
 }
