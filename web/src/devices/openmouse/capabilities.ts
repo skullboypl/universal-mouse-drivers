@@ -15,6 +15,8 @@ export type OpenMouseUiHints = {
   hideRippleControl?: boolean
   statusNote?: string
   pollingNote?: string
+  /** Sidebar / display name before first status (e.g. G-Wolves Fenrir). */
+  defaultDisplayName?: string
   dpiStageEditor?: {
     maxStages: number
     countEditable?: boolean

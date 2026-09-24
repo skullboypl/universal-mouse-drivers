@@ -59,6 +59,14 @@ export type MessageKey =
   | 'connect.demoOmSensorHint'
   | 'connect.demoOmDpi'
   | 'connect.demoOmDpiHint'
+  | 'connect.stackTitle'
+  | 'connect.stackBody'
+  | 'connect.stackNative'
+  | 'connect.stackNativeHint'
+  | 'connect.stackOpenMouse'
+  | 'connect.stackOpenMouseHint'
+  | 'connect.stackRecommended'
+  | 'connect.stackCancel'
   | 'connect.webhid'
   | 'connect.webhidOm'
   | 'connect.otherDevice'
@@ -357,6 +365,16 @@ const en: Dict = {
   'connect.demoOmSensorHint': 'DPI + poll + LOD',
   'connect.demoOmDpi': 'DPI only',
   'connect.demoOmDpiHint': 'Minimal client',
+  'connect.stackTitle': 'Which driver stack?',
+  'connect.stackBody':
+    'This mouse matches a UMD native driver and OpenMouse community support. Native is recommended for full UI and verified writes.',
+  'connect.stackNative': 'Native UMD',
+  'connect.stackNativeHint': 'Full UMD UI for {device}',
+  'connect.stackOpenMouse': 'OpenMouse',
+  'connect.stackOpenMouseHint':
+    'Shared community sensor surface (capability-gated)',
+  'connect.stackRecommended': 'Recommended',
+  'connect.stackCancel': 'Cancel',
   'connect.webhid': 'Connect any mouse',
   'connect.webhidOm': 'Connect OpenMouse',
   'connect.otherDevice': 'Use a different device',
@@ -688,6 +706,16 @@ const pl: Dict = {
   'connect.demoOmSensorHint': 'DPI + poll + LOD',
   'connect.demoOmDpi': 'Tylko DPI',
   'connect.demoOmDpiHint': 'Minimalny klient',
+  'connect.stackTitle': 'Który sterownik?',
+  'connect.stackBody':
+    'Ta mysz pasuje do natywnego UMD oraz do OpenMouse. Natywny jest zalecany — pełne UI i sprawdzone zapisy.',
+  'connect.stackNative': 'Natywny UMD',
+  'connect.stackNativeHint': 'Pełne UI UMD dla {device}',
+  'connect.stackOpenMouse': 'OpenMouse',
+  'connect.stackOpenMouseHint':
+    'Wspólna karta społecznościowa (kontrola wg możliwości klienta)',
+  'connect.stackRecommended': 'Zalecane',
+  'connect.stackCancel': 'Anuluj',
   'connect.webhid': 'Połącz dowolną mysz',
   'connect.webhidOm': 'Połącz OpenMouse',
   'connect.otherDevice': 'Użyj innego urządzenia',

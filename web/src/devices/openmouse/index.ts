@@ -27,6 +27,9 @@ export {
   openMouseImageUrl,
   openMouseLogoUrl,
   formatVidPid,
+  resolveOpenMouseIdentityLabels,
+  isGenericHidProductName,
+  findOpenMouseCatalogEntry,
 } from './catalog'
 export {
   openMouseHidFilters,
