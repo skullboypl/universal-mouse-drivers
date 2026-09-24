@@ -50,8 +50,10 @@ export {
 export {
   OPENMOUSE_DEMO_PROFILES,
   capabilitiesFromOmClient,
+  applyOpenMouseUiHints,
   type OpenMouseCapabilityFlags,
   type OpenMouseDemoProfile,
+  type OpenMouseUiHints,
 } from './capabilities'
 
 export function openMouseBrandNames(): string[] {

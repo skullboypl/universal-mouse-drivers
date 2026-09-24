@@ -17,19 +17,23 @@ import type {
 import { OPENMOUSE_BACKED_ID } from './constants'
 import { createOpenMouseClient } from './detect'
 import {
+  applyOpenMouseUiHints,
   capabilitiesFromOmClient,
   OPENMOUSE_DEMO_PROFILES,
+  type OmLodLabel,
   type OpenMouseCapabilityFlags,
   type OpenMouseDemoProfile,
+  type OpenMouseUiHints,
 } from './capabilities'
 
-type OmLod = 'Low' | 'Medium' | 'High'
+type OmLod = OmLodLabel
 
 type OmStatus = {
   dpi?: number
   dpiY?: number
   pollingRateHz?: number
   supportedPollingRates?: number[]
+  supportedLiftOffDistances?: OmLod[]
   liftOffDistance?: OmLod | null
   angleSnapping?: boolean | null
   rippleControl?: boolean | null
@@ -43,6 +47,7 @@ type OmStatus = {
   dpiStages?: number[]
   activeDpiStage?: number
   sensor?: string
+  ui?: OpenMouseUiHints | null
 }
 
 type OmClient = {
@@ -388,11 +393,18 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
       }
 
       const charging = chargingFromState(st.batteryState)
+      const methodCaps = capabilitiesFromOmClient(this.client)
+      this.capabilities = applyOpenMouseUiHints(methodCaps, st)
+      if (this.capabilities.pollRatesHz?.length) {
+        this.allowedPollRates = [...this.capabilities.pollRatesHz]
+      }
+
       const fw =
         st.firmware?.filter(Boolean).join(' · ') ||
         st.sensor ||
         this.state.info.mouseFirmware
 
+      const hintNote = this.capabilities.statusNote
       this.state = {
         ...this.state,
         sensor: {
@@ -430,7 +442,9 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
       this.mouseReachable = true
       this.lastWriteOk = true
       this.lastWriteError = null
-      this.lastVerifyNote = `${this.identity.brand} · status OK`
+      this.lastVerifyNote = hintNote
+        ? `${this.identity.brand} · ${hintNote}`
+        : `${this.identity.brand} · status OK`
     } catch (e) {
       this.lastWriteError = e instanceof Error ? e.message : String(e)
       this.mouseReachable = false

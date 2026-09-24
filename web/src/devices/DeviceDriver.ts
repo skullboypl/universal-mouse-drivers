@@ -93,6 +93,15 @@ export interface DeviceDriver {
     powerModes?: boolean
     buttons?: boolean
     deviceSettings?: boolean
+    pollRatesHz?: number[] | null
+    lodOptions?: Array<'Low' | 'Medium' | 'High'> | null
+    dpiMin?: number
+    dpiMax?: number
+    dpiStep?: number
+    dpiMaxStages?: number
+    dpiCountEditable?: boolean
+    statusNote?: string | null
+    pollingNote?: string | null
   }
   probeFlashAndSync(): Promise<void>
   flushToDevice(): Promise<{ wrote: boolean }>

@@ -123,31 +123,52 @@ export function SensorPage() {
     : isBlitz
       ? 'blitz'
       : 'king'
-  const dpiMin = isSuperlight
-    ? SUPERLIGHT_DPI_MIN
-    : isBlitz
-      ? BLITZ_DPI_MIN
-      : KING_DPI_MIN
-  const dpiMax = isSuperlight
-    ? SUPERLIGHT_DPI_MAX
-    : isBlitz
-      ? BLITZ_DPI_MAX
-      : KING_DPI_MAX
-  const dpiStep = isSuperlight
-    ? SUPERLIGHT_DPI_STEP
-    : isBlitz
-      ? BLITZ_DPI_STEP
-      : KING_DPI_STEP
-  const dpiMaxStages = isSuperlight
-    ? SUPERLIGHT_DPI_MAX_STAGES
-    : isBlitz
-      ? BLITZ_DPI_MAX_STAGES
-      : KING_DPI_MAX_STAGES
-  const reportRates = isSuperlight
-    ? [...SUPERLIGHT_REPORT_RATES]
-    : isBlitz
-      ? [...BLITZ_REPORT_RATES]
-      : [...KING_REPORT_RATES]
+  const dpiMin = isOpenMouse && caps?.dpiMin != null
+    ? caps.dpiMin
+    : isSuperlight
+      ? SUPERLIGHT_DPI_MIN
+      : isBlitz
+        ? BLITZ_DPI_MIN
+        : KING_DPI_MIN
+  const dpiMax = isOpenMouse && caps?.dpiMax != null
+    ? caps.dpiMax
+    : isSuperlight
+      ? SUPERLIGHT_DPI_MAX
+      : isBlitz
+        ? BLITZ_DPI_MAX
+        : KING_DPI_MAX
+  const dpiStep = isOpenMouse && caps?.dpiStep != null
+    ? caps.dpiStep
+    : isSuperlight
+      ? SUPERLIGHT_DPI_STEP
+      : isBlitz
+        ? BLITZ_DPI_STEP
+        : KING_DPI_STEP
+  const dpiMaxStages = isOpenMouse && caps?.dpiMaxStages != null
+    ? caps.dpiMaxStages
+    : isSuperlight
+      ? SUPERLIGHT_DPI_MAX_STAGES
+      : isBlitz
+        ? BLITZ_DPI_MAX_STAGES
+        : KING_DPI_MAX_STAGES
+  const dpiCountEditable = !isOpenMouse || caps?.dpiCountEditable !== false
+  const reportRates = isOpenMouse && caps?.pollRatesHz?.length
+    ? [...caps.pollRatesHz]
+    : isSuperlight
+      ? [...SUPERLIGHT_REPORT_RATES]
+      : isBlitz
+        ? [...BLITZ_REPORT_RATES]
+        : [...KING_REPORT_RATES]
+  const lodOptions = isOpenMouse
+    ? caps?.lodOptions?.length
+      ? caps.lodOptions
+      : (['Low', 'Medium', 'High'] as const)
+    : null
+  const lodMmOptions = lodOptions
+    ? lodOptions.map((label) =>
+        label === 'Low' ? 0.7 : label === 'High' ? 2 : 1,
+      )
+    : ([0.7, 1, 2] as const)
 
   const stage = state.sensor.dpiStages[state.sensor.activeDpiIndex]
   const cordedModeOk =
@@ -161,6 +182,7 @@ export function SensorPage() {
         <p className="page-sub" style={{ marginTop: -6 }}>
           {tr('sensor.omCapsNote')}
           {driver?.lastVerifyNote ? ` · ${driver.lastVerifyNote}` : ''}
+          {caps?.pollingNote ? ` · ${caps.pollingNote}` : ''}
         </p>
       ) : null}
 
@@ -171,7 +193,7 @@ export function SensorPage() {
           <Field label={tr('sensor.stageCount')} tip={tr('sensor.stageCountTip')}>
             <Select
               value={String(state.sensor.dpiStageCount ?? dpiMaxStages)}
-              disabled={!dpiWritable}
+              disabled={!dpiWritable || !dpiCountEditable}
               onChange={(e) => {
                 void apply((d) => d.setDpiStageCount(Number(e.target.value)))
               }}
@@ -393,9 +415,11 @@ export function SensorPage() {
                   )
                 }}
               >
-                <option value="0.7">0.7mm</option>
-                <option value="1">1mm</option>
-                <option value="2">2mm</option>
+                {lodMmOptions.map((mm) => (
+                  <option key={mm} value={String(mm)}>
+                    {mm}mm
+                  </option>
+                ))}
               </Select>
             </Field>
             ) : null}
