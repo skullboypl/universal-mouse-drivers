@@ -63,3 +63,26 @@
   --radius: 10px;
   --radius-sm: 8px;
 }
+
+/* OpenMouse community session - protocol-lab look, not UMD amber / OEM skins */
+.app-shell[data-device='openmouse-backed'] {
+  --bg: #07090c;
+  --bg-elevated: #0e1218;
+  --bg-panel: #0c1016;
+  --bg-hover: #141a22;
+  --border: rgba(45, 212, 191, 0.18);
+  --border-strong: rgba(45, 212, 191, 0.34);
+  --fg: #e8f5f2;
+  --fg-muted: #8aa39c;
+  --fg-dim: #5f746e;
+  --accent: #2dd4bf;
+  --accent-hot: #5eead4;
+  --accent-soft: rgba(45, 212, 191, 0.14);
+  --signal: #2dd4bf;
+  --success: #2dd4bf;
+  --radius: 0;
+  --radius-sm: 0;
+  --font: 'Ubuntu Mono', 'Ubuntu', ui-monospace, monospace;
+  --display: 'Oxanium', 'Ubuntu Mono', sans-serif;
+  --nav-h: 58px;
+}

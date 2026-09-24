@@ -202,4 +202,6 @@ export {
   openMouseDeviceImageUrl,
   openMouseBrandImageUrl,
   openMouseBrandLogoUrl,
+  openMouseBrandSlugFromLabel,
+  openMouseBrandVisual,
 } from './brandVisuals'

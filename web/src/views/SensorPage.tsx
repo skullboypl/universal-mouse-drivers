@@ -33,6 +33,7 @@ import {
   dpiStageColor as kingDpiStageColor,
 } from '../devices/mice/redragon/king-ultra/defaults'
 import { OPENMOUSE_BACKED_ID } from '../devices/openmouse/constants'
+import { OpenMouseSessionChrome } from '../components/OpenMouseSessionChrome'
 import type { MessageKey } from '../i18n/messages'
 import { useT } from '../i18n/useT'
 import { useDeviceSession } from '../session/DeviceSessionContext'
@@ -176,15 +177,20 @@ export function SensorPage() {
 
   return (
     <div className="page">
-      <h1 className="page-title">{tr('sensor.title')}</h1>
-      <p className="page-sub">{tr('sensor.sub')}</p>
-      {isOpenMouse ? (
-        <p className="page-sub" style={{ marginTop: -6 }}>
-          {tr('sensor.omCapsNote')}
-          {driver?.lastVerifyNote ? ` · ${driver.lastVerifyNote}` : ''}
-          {caps?.pollingNote ? ` · ${caps.pollingNote}` : ''}
-        </p>
+      {isOpenMouse && driver ? (
+        <OpenMouseSessionChrome
+          brand={driver.identity.brand}
+          model={driver.identity.model}
+          logoUrl={driver.identity.logoUrl}
+          caps={caps}
+          note={driver.lastVerifyNote}
+          pollingNote={caps?.pollingNote}
+        />
       ) : null}
+      <h1 className="page-title">{tr('sensor.title')}</h1>
+      <p className="page-sub">
+        {isOpenMouse ? tr('sensor.omCapsNote') : tr('sensor.sub')}
+      </p>
 
       {showDpi ? (
       <div className="panel">

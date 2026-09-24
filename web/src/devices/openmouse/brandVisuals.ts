@@ -1,5 +1,7 @@
 /** Brand accents + asset URLs for OpenMouse community catalog. */
 
+import { OPENMOUSE_LOGO_RASTER } from './logoAssets.generated'
+
 export type OpenMouseBrandVisual = {
   brandSlug: string
   accent: string
@@ -47,8 +49,6 @@ export function openMouseBrandVisual(brandSlug: string): OpenMouseBrandVisual {
   return { brandSlug, ...base }
 }
 
-import { OPENMOUSE_LOGO_RASTER } from './logoAssets.generated'
-
 /**
  * Catalog brandSlug → logo file slug when names diverge (A5 gen1, HyperX HP, …).
  */
@@ -90,6 +90,34 @@ const KNOWN_ICON_SVG = new Set([
   'wooting',
   'zaunkoenig',
 ])
+
+/** Map MouseStatus / registry brand labels onto catalog brandSlug keys. */
+export function openMouseBrandSlugFromLabel(brand?: string | null): string {
+  const raw = (brand ?? '').trim().toLowerCase()
+  if (!raw) return 'openmouse'
+  const aliases: Record<string, string> = {
+    'g-wolves': 'g-wolves',
+    gwolves: 'g-wolves',
+    'endgame gear': 'endgame-gear',
+    endgame: 'endgame-gear',
+    'k-snake': 'k-snake',
+    ksnake: 'k-snake',
+    'attack shark': 'atk',
+    attackshark: 'atk',
+    hyperx: 'hyperx-kingston',
+    'hyperx hp': 'hyperx-hp',
+    moddomouse: 'moddo',
+    wallhack: 'wallhack',
+    mchose: 'mchose',
+    logitech: 'logitech',
+  }
+  if (aliases[raw]) return aliases[raw]
+  const slug = raw.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  if (VISUALS[slug] || KNOWN_ICON_SVG.has(slug) || LOGO_SLUG_ALIAS[slug]) {
+    return slug
+  }
+  return slug || 'openmouse'
+}
 
 function resolveLogoSlug(brandSlug: string): string {
   return LOGO_SLUG_ALIAS[brandSlug] ?? brandSlug
