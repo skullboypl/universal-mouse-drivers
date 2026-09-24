@@ -7,29 +7,41 @@ import { OPENMOUSE_BRANDS, OPENMOUSE_CATALOG } from './catalog.generated'
 
 export const OPENMOUSE_BACKED_ID = 'openmouse-backed'
 
-/** Unique vendor IDs used by OpenMouse DEVICE_DRIVERS / VENDOR_ID map. */
+/**
+ * Unique vendor IDs from @openmouse/protocol VENDOR_ID map (sync on catalog regen).
+ * Used for SSR scoring / coarse match only — connect still requires catalog PID
+ * or a live createSupportedClient success (so brand headphones are rejected).
+ */
 export const OPENMOUSE_VENDOR_IDS: readonly number[] = [
+  1008, // hyperxHp
+  1118, // microsoft
   1133, // logitech
   1155, // zaunkoenig
-  1118, // microsoft
-  2362, // glorious / ninjutso
+  1241, // redragon
+  1267, // ryunix
+  2362, // glorious / ninjutso / incott
+  2385, // hyperxKingston
+  2821, // asus
   4152, // steelseries
   5426, // razer
-  6421, // orbital / ninjutsoLegacy
+  6421, // orbital / rawm / ninjutsoLegacy
   6940, // corsair
   7338, // wallhackKeyboardAlt
   7511, // attackSharkX
+  8227, // mchoseA5Gen1
   8916, // gloriousClassicI
   9610, // gloriousClassic
   9639, // attackShark
+  9741, // dareu
   12259, // moddo
+  12375, // vaxee
   12625, // fantech
   12771, // wooting
   12815, // gloriousClassicIWired
   13159, // endgameGear
   13284, // gwolves
   13364, // keychron
-  13652, // teevolution / vgn
+  13652, // teevolution / vgn / atk (legacy VID)
   13853, // finalmouse
   13991, // wlmouse
   14096, // pulsar

@@ -1,6 +1,7 @@
 /**
  * Bridges an OpenMouse mouse client to the UMD DeviceDriver interface.
- * DPI / poll / basic sensor when the brand client exposes getStatus / setters.
+ * Matches @openmouse/protocol HID clients: readStatus, setDpi, setPollingRate,
+ * setLiftOffDistance ("Low"|"Medium"|"High"), setAngleSnapping, …
  */
 
 import type { Transport } from '../../transport/types'
@@ -17,25 +18,45 @@ import { OPENMOUSE_BACKED_ID } from './constants'
 import { createOpenMouseClient } from './detect'
 import {
   capabilitiesFromOmClient,
+  OPENMOUSE_CAPS_NONE,
   OPENMOUSE_DEMO_PROFILES,
   type OpenMouseCapabilityFlags,
   type OpenMouseDemoProfile,
 } from './capabilities'
 
+type OmLod = 'Low' | 'Medium' | 'High'
+
+type OmStatus = {
+  dpi?: number
+  dpiY?: number
+  pollingRateHz?: number
+  supportedPollingRates?: number[]
+  liftOffDistance?: OmLod | null
+  angleSnapping?: boolean | null
+  rippleControl?: boolean | null
+  motionSync?: boolean | null
+  batteryPercent?: number | null
+  batteryState?: string
+  name?: string
+  brand?: string
+  connectionType?: string
+  firmware?: string[]
+  dpiStages?: number[]
+  activeDpiStage?: number
+  sensor?: string
+}
+
 type OmClient = {
   brand?: string
   close?: () => Promise<void> | void
-  getStatus?: () => Promise<{
-    dpi?: { x: number; y: number; linked?: boolean }
-    report_rate?: number
-    lod?: number
-    angle_snapping?: boolean
-    ripple_control?: boolean
-    motion_sync?: boolean
-    sensor?: string
-  } | null>
+  /** Current OpenMouse API. */
+  readStatus?: () => Promise<OmStatus | null>
+  /** Legacy alias some forks used - keep as fallback. */
+  getStatus?: () => Promise<OmStatus | null>
   setDpi?: (x: number, y?: number) => Promise<unknown>
+  setPollingRate?: (hz: number) => Promise<unknown>
   setReportRate?: (hz: number) => Promise<unknown>
+  setLiftOffDistance?: (lod: OmLod) => Promise<unknown>
   setLod?: (mm: number) => Promise<unknown>
   setAngleSnapping?: (on: boolean) => Promise<unknown>
   setRippleControl?: (on: boolean) => Promise<unknown>
@@ -87,11 +108,13 @@ function createOpenMouseDefaultState(): DeviceState {
   }
 }
 
-function hzToRate(hz: number): number {
-  const allowed = [125, 250, 500, 1000, 2000, 4000, 8000]
-  let best = 1000
+function hzToRate(hz: number, allowed?: number[]): number {
+  const rates = allowed?.length
+    ? allowed
+    : [125, 250, 500, 1000, 2000, 4000, 8000]
+  let best = rates[0] ?? 1000
   let bestDiff = Infinity
-  for (const a of allowed) {
+  for (const a of rates) {
     const d = Math.abs(a - hz)
     if (d < bestDiff) {
       bestDiff = d
@@ -101,10 +124,22 @@ function hzToRate(hz: number): number {
   return best
 }
 
-function lodMm(v: number): 0.7 | 1 | 2 {
-  if (v <= 0.7) return 0.7
-  if (v >= 2) return 2
+function lodLabelToMm(label: OmLod | null | undefined): 0.7 | 1 | 2 {
+  if (label === 'Low') return 0.7
+  if (label === 'High') return 2
   return 1
+}
+
+function lodMmToLabel(mm: number): OmLod {
+  if (mm <= 0.7) return 'Low'
+  if (mm >= 2) return 'High'
+  return 'Medium'
+}
+
+function chargingFromState(state: string | undefined): boolean {
+  if (!state) return false
+  const s = state.toLowerCase()
+  return s.includes('charg') && !s.includes('discharg')
 }
 
 export class OpenMouseDriverAdapter implements DeviceDriver {
@@ -114,7 +149,7 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   private hidDevice: HIDDevice | null = null
   private pendingDevice: HIDDevice | null = null
   /** Soft flags from live client methods or demo profile. */
-  capabilities: OpenMouseCapabilityFlags = { ...OPENMOUSE_DEMO_PROFILES.full.caps }
+  capabilities: OpenMouseCapabilityFlags = { ...OPENMOUSE_CAPS_NONE }
   lastWriteError: string | null = null
   lastWriteOk = false
   lastVerifyNote: string | null = null
@@ -122,6 +157,7 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   writePhase: DeviceWritePhase = 'idle'
   private writePhaseListeners = new Set<(p: DeviceWritePhase) => void>()
   private demoProfile: OpenMouseDemoProfile | null = null
+  private allowedPollRates: number[] | null = null
 
   constructor(seedDevice?: HIDDevice, demoProfile?: OpenMouseDemoProfile) {
     this.state = createOpenMouseDefaultState()
@@ -213,11 +249,18 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
     }
     const client = await createOpenMouseClient(device)
     if (!client) {
-      throw new Error('OpenMouse: no supported client for this HID device')
+      throw new Error(
+        'OpenMouse: no supported mouse client for this HID device (headphones / keyboards from the same brand are ignored)',
+      )
     }
     this.client = client as OmClient
     this.capabilities = capabilitiesFromOmClient(this.client)
-    const brand = this.client.brand || 'OpenMouse'
+    const brand =
+      this.client.brand ||
+      (typeof (client as { deviceBrand?: () => string }).deviceBrand ===
+      'function'
+        ? (client as { deviceBrand: () => string }).deviceBrand()
+        : 'OpenMouse')
     this.identity = {
       ...this.identity,
       id: OPENMOUSE_BACKED_ID,
@@ -259,49 +302,123 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
     this.mouseReachable = false
   }
 
+  private async pullStatus(): Promise<OmStatus | null> {
+    if (!this.client) return null
+    if (typeof this.client.readStatus === 'function') {
+      return (await this.client.readStatus()) ?? null
+    }
+    if (typeof this.client.getStatus === 'function') {
+      return (await this.client.getStatus()) ?? null
+    }
+    return null
+  }
+
   async probeFlashAndSync(): Promise<void> {
-    if (!this.client?.getStatus) {
-      this.mouseReachable = Boolean(this.client)
+    if (!this.client) {
+      this.mouseReachable = false
       return
     }
     try {
-      const st = await this.client.getStatus()
+      const st = await this.pullStatus()
       if (!st) {
         this.mouseReachable = true
+        this.lastVerifyNote = `${this.identity.brand} · connected (no status read)`
         return
       }
-      const dpiX = st.dpi ? Math.max(50, Math.round(st.dpi.x)) : null
+
+      if (st.supportedPollingRates?.length) {
+        this.allowedPollRates = [...st.supportedPollingRates]
+      }
+
+      const dpiX =
+        typeof st.dpi === 'number' && st.dpi > 0
+          ? Math.max(50, Math.round(st.dpi))
+          : null
+      const dpiY =
+        typeof st.dpiY === 'number' && st.dpiY > 0
+          ? Math.max(50, Math.round(st.dpiY))
+          : dpiX
       const rate =
-        typeof st.report_rate === 'number' ? hzToRate(st.report_rate) : null
+        typeof st.pollingRateHz === 'number'
+          ? hzToRate(st.pollingRateHz, this.allowedPollRates ?? undefined)
+          : null
+
+      let dpiStages = this.state.sensor.dpiStages
+      let dpiStageCount = this.state.sensor.dpiStageCount
+      let activeDpiIndex = this.state.sensor.activeDpiIndex
+
+      if (st.dpiStages?.length) {
+        dpiStages = st.dpiStages.map((value, index) => ({
+          index,
+          value,
+          valueY: value,
+          color: '#888888',
+          enabled: true,
+        }))
+        dpiStageCount = st.dpiStages.length
+        activeDpiIndex = Math.min(
+          Math.max(0, st.activeDpiStage ?? 0),
+          dpiStageCount - 1,
+        )
+      } else if (dpiX != null) {
+        dpiStages = this.state.sensor.dpiStages.map((s, i) =>
+          i === 0
+            ? {
+                ...s,
+                value: dpiX,
+                valueY: dpiY ?? dpiX,
+                enabled: true,
+              }
+            : s,
+        )
+        dpiStageCount = Math.max(1, this.state.sensor.dpiStageCount)
+        activeDpiIndex = 0
+      }
+
+      const charging = chargingFromState(st.batteryState)
+      const fw =
+        st.firmware?.filter(Boolean).join(' · ') ||
+        st.sensor ||
+        this.state.info.mouseFirmware
+
       this.state = {
         ...this.state,
         sensor: {
           ...this.state.sensor,
-          ...(dpiX != null
-            ? {
-                dpiStages: this.state.sensor.dpiStages.map((s, i) =>
-                  i === 0
-                    ? { ...s, value: dpiX, valueY: dpiX, enabled: true }
-                    : s,
-                ),
-                dpiStageCount: Math.max(1, this.state.sensor.dpiStageCount),
-                activeDpiIndex: 0,
-              }
-            : {}),
+          dpiStages,
+          dpiStageCount,
+          activeDpiIndex,
           ...(rate != null ? { reportRate: rate } : {}),
-          lodMm: typeof st.lod === 'number' ? lodMm(st.lod) : this.state.sensor.lodMm,
-          angleSnapping: Boolean(st.angle_snapping),
-          rippleControl: st.ripple_control !== false,
-          motionSync: Boolean(st.motion_sync),
+          lodMm: lodLabelToMm(st.liftOffDistance),
+          angleSnapping: Boolean(st.angleSnapping),
+          rippleControl: st.rippleControl !== false,
+          motionSync: Boolean(st.motionSync),
+          dpiAxisSync: dpiY == null || dpiY === dpiX,
         },
         info: {
           ...this.state.info,
-          mouseFirmware: st.sensor || this.state.info.mouseFirmware,
+          mouseFirmware: fw,
+          batteryPercent:
+            typeof st.batteryPercent === 'number' ? st.batteryPercent : null,
+          charging,
+          connection:
+            st.connectionType === 'Wired'
+              ? 'corded'
+              : st.connectionType === 'Wireless'
+                ? 'wireless'
+                : this.state.info.connection,
         },
+      }
+      if (st.name) {
+        this.identity = { ...this.identity, model: st.name }
+      }
+      if (st.brand) {
+        this.identity = { ...this.identity, brand: st.brand }
       }
       this.mouseReachable = true
       this.lastWriteOk = true
       this.lastWriteError = null
+      this.lastVerifyNote = `${this.identity.brand} · status OK`
     } catch (e) {
       this.lastWriteError = e instanceof Error ? e.message : String(e)
       this.mouseReachable = false
@@ -311,32 +428,93 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   async flushToDevice(): Promise<{ wrote: boolean }> {
     if (!this.client) return { wrote: false }
     this.setWritePhase('writing')
+    const errors: string[] = []
+    let wrote = false
     try {
       const stage =
         this.state.sensor.dpiStages[this.state.sensor.activeDpiIndex] ??
         this.state.sensor.dpiStages[0]
-      if (stage && this.client.setDpi) {
-        await this.client.setDpi(stage.value, stage.valueY ?? stage.value)
+
+      if (stage && typeof this.client.setDpi === 'function') {
+        try {
+          await this.client.setDpi(stage.value, stage.valueY ?? stage.value)
+          wrote = true
+        } catch (e) {
+          errors.push(`DPI: ${e instanceof Error ? e.message : String(e)}`)
+        }
       }
-      if (this.client.setReportRate) {
-        await this.client.setReportRate(this.state.sensor.reportRate)
+
+      const setRate =
+        this.client.setPollingRate ?? this.client.setReportRate
+      if (typeof setRate === 'function') {
+        try {
+          const hz = hzToRate(
+            this.state.sensor.reportRate,
+            this.allowedPollRates ?? undefined,
+          )
+          await setRate.call(this.client, hz)
+          wrote = true
+        } catch (e) {
+          errors.push(`Poll: ${e instanceof Error ? e.message : String(e)}`)
+        }
       }
-      if (this.client.setLod) {
-        await this.client.setLod(this.state.sensor.lodMm)
+
+      if (typeof this.client.setLiftOffDistance === 'function') {
+        try {
+          await this.client.setLiftOffDistance(
+            lodMmToLabel(this.state.sensor.lodMm),
+          )
+          wrote = true
+        } catch (e) {
+          errors.push(`LOD: ${e instanceof Error ? e.message : String(e)}`)
+        }
+      } else if (typeof this.client.setLod === 'function') {
+        try {
+          await this.client.setLod(this.state.sensor.lodMm)
+          wrote = true
+        } catch (e) {
+          errors.push(`LOD: ${e instanceof Error ? e.message : String(e)}`)
+        }
       }
-      if (this.client.setAngleSnapping) {
-        await this.client.setAngleSnapping(this.state.sensor.angleSnapping)
+
+      if (typeof this.client.setAngleSnapping === 'function') {
+        try {
+          await this.client.setAngleSnapping(this.state.sensor.angleSnapping)
+          wrote = true
+        } catch (e) {
+          errors.push(`Angle: ${e instanceof Error ? e.message : String(e)}`)
+        }
       }
-      if (this.client.setRippleControl) {
-        await this.client.setRippleControl(this.state.sensor.rippleControl)
+      if (typeof this.client.setRippleControl === 'function') {
+        try {
+          await this.client.setRippleControl(this.state.sensor.rippleControl)
+          wrote = true
+        } catch (e) {
+          errors.push(`Ripple: ${e instanceof Error ? e.message : String(e)}`)
+        }
       }
-      if (this.client.setMotionSync) {
-        await this.client.setMotionSync(this.state.sensor.motionSync)
+      if (typeof this.client.setMotionSync === 'function') {
+        try {
+          await this.client.setMotionSync(this.state.sensor.motionSync)
+          wrote = true
+        } catch (e) {
+          errors.push(`Motion: ${e instanceof Error ? e.message : String(e)}`)
+        }
       }
-      this.lastWriteOk = true
-      this.lastWriteError = null
-      this.setWritePhase('ok')
-      return { wrote: true }
+
+      if (errors.length) {
+        this.lastWriteOk = false
+        this.lastWriteError = errors.join(' · ')
+        this.setWritePhase('error')
+        return { wrote }
+      }
+
+      // Re-read so UI matches what the mouse kept.
+      await this.probeFlashAndSync()
+      this.lastWriteOk = wrote
+      this.lastWriteError = wrote ? null : 'No writable OpenMouse setters on this client'
+      this.setWritePhase(wrote ? 'ok' : 'error')
+      return { wrote }
     } catch (e) {
       this.lastWriteOk = false
       this.lastWriteError = e instanceof Error ? e.message : String(e)
@@ -357,7 +535,6 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
     void buttonId
     void action
     void macroId
-    /* OpenMouse button remap not unified in v1 */
   }
 
   patchSensor(patch: Partial<SensorState>): void {
@@ -368,6 +545,7 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   }
 
   setDpiStageCount(count: number): void {
+    if (!this.capabilities.dpiWritable) return
     const n = Math.max(1, Math.min(7, count))
     this.state = {
       ...this.state,
@@ -383,6 +561,7 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   }
 
   setDpiStage(index: number, value: number, valueY?: number): void {
+    if (!this.capabilities.dpiWritable) return
     this.state = {
       ...this.state,
       sensor: {
@@ -442,13 +621,13 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   }
 
   async refreshFirmwareVersions(): Promise<void> {
-    /* no unified FW API */
+    await this.probeFlashAndSync()
   }
 }
 
 export function createOpenMouseDriver(
-  seed?: HIDDevice,
+  seedDevice?: HIDDevice,
   demoProfile?: OpenMouseDemoProfile,
 ): OpenMouseDriverAdapter {
-  return new OpenMouseDriverAdapter(seed, demoProfile)
+  return new OpenMouseDriverAdapter(seedDevice, demoProfile)
 }

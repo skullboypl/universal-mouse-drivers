@@ -105,8 +105,12 @@ export function SensorPage() {
   const isOpenMouse = driver?.identity.id === OPENMOUSE_BACKED_ID
   const caps = driver?.capabilities
   const showDpi = !isOpenMouse || caps?.dpi !== false
+  const dpiWritable = !isOpenMouse || caps?.dpiWritable !== false
   const showReportRate = !isOpenMouse || caps?.reportRate !== false
+  const reportRateWritable =
+    !isOpenMouse || caps?.reportRateWritable !== false
   const showLod = !isOpenMouse || caps?.lod === true
+  const lodWritable = !isOpenMouse || caps?.lodWritable !== false
   const showPowerModes = !isOpenMouse || caps?.powerModes === true
   const showRipple = !isOpenMouse || caps?.rippleControl === true
   const showAngle = !isOpenMouse || caps?.angleSnapping === true
@@ -167,6 +171,7 @@ export function SensorPage() {
           <Field label={tr('sensor.stageCount')} tip={tr('sensor.stageCountTip')}>
             <Select
               value={String(state.sensor.dpiStageCount ?? dpiMaxStages)}
+              disabled={!dpiWritable}
               onChange={(e) => {
                 void apply((d) => d.setDpiStageCount(Number(e.target.value)))
               }}
@@ -183,6 +188,7 @@ export function SensorPage() {
           <Field label={tr('sensor.activeStage')} tip={tr('sensor.activeStageTip')}>
             <Select
               value={String(state.sensor.activeDpiIndex)}
+              disabled={!dpiWritable}
               onChange={(e) => {
                 const idx = Number(e.target.value)
                 void apply((d) => {
@@ -220,10 +226,10 @@ export function SensorPage() {
             <button
               key={s.index}
               type="button"
-              disabled={!s.enabled}
+              disabled={!s.enabled || !dpiWritable}
               title={`${tr('sensor.stage')} ${s.index + 1}: ${s.value}`}
               onClick={() => {
-                if (!s.enabled) return
+                if (!s.enabled || !dpiWritable) return
                 void apply((d) => {
                   d.patchSensor({ activeDpiIndex: s.index })
                   d.setDpiStage(s.index, s.value)
@@ -238,7 +244,7 @@ export function SensorPage() {
                     ? '1px solid rgba(232, 162, 58, 0.55)'
                     : '1px solid transparent',
                 padding: 0,
-                cursor: s.enabled ? 'pointer' : 'default',
+                cursor: s.enabled && dpiWritable ? 'pointer' : 'default',
                 opacity: s.enabled
                   ? s.index === state.sensor.activeDpiIndex
                     ? 1
@@ -259,8 +265,9 @@ export function SensorPage() {
         <div className={styles.sliderWrap}>
           <ButtonIcon
             label="-"
+            disabled={!dpiWritable}
             onClick={() => {
-              if (!stage) return
+              if (!stage || !dpiWritable) return
               void apply((d) =>
                 d.setDpiStage(stage.index, stage.value - dpiStep),
               )
@@ -272,17 +279,19 @@ export function SensorPage() {
             min={dpiMin}
             max={dpiMax}
             step={dpiStep}
+            disabled={!dpiWritable}
             value={stage?.value ?? 800}
             onChange={(e) => {
-              if (!stage) return
+              if (!stage || !dpiWritable) return
               const value = Number(e.target.value)
               void apply((d) => d.setDpiStage(stage.index, value))
             }}
           />
           <ButtonIcon
             label="+"
+            disabled={!dpiWritable}
             onClick={() => {
-              if (!stage) return
+              if (!stage || !dpiWritable) return
               void apply((d) =>
                 d.setDpiStage(stage.index, stage.value + dpiStep),
               )
@@ -298,9 +307,10 @@ export function SensorPage() {
               padding: '0.45rem',
               textAlign: 'center',
             }}
+            disabled={!dpiWritable}
             value={stage?.value ?? 800}
             onChange={(e) => {
-              if (!stage) return
+              if (!stage || !dpiWritable) return
               const n = Number(e.target.value)
               if (!Number.isFinite(n)) return
               void apply((d) => d.setDpiStage(stage.index, n))
@@ -328,10 +338,12 @@ export function SensorPage() {
             <button
               key={hz}
               type="button"
+              disabled={!reportRateWritable}
               className={
                 state.sensor.reportRate === hz ? styles.chipActive : styles.chip
               }
               onClick={() => {
+                if (!reportRateWritable) return
                 void apply((d) => d.patchSensor({ reportRate: hz }))
               }}
             >
@@ -372,6 +384,7 @@ export function SensorPage() {
             <Field label={tr('sensor.lod')} tip={tr('sensor.lodTip')}>
               <Select
                 value={String(state.sensor.lodMm)}
+                disabled={!lodWritable}
                 onChange={(e) => {
                   void apply((d) =>
                     d.patchSensor({
@@ -460,10 +473,19 @@ export function SensorPage() {
   )
 }
 
-function ButtonIcon({ label, onClick }: { label: string; onClick: () => void }) {
+function ButtonIcon({
+  label,
+  onClick,
+  disabled,
+}: {
+  label: string
+  onClick: () => void
+  disabled?: boolean
+}) {
   return (
     <button
       type="button"
+      disabled={disabled}
       onClick={onClick}
       style={{
         width: 36,
@@ -473,7 +495,8 @@ function ButtonIcon({ label, onClick }: { label: string; onClick: () => void }) 
         background: 'var(--accent)',
         color: 'white',
         fontWeight: 700,
-        cursor: 'pointer',
+        cursor: disabled ? 'default' : 'pointer',
+        opacity: disabled ? 0.45 : 1,
       }}
     >
       {label}
