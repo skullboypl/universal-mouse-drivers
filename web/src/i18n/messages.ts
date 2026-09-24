@@ -287,6 +287,7 @@ export type MessageKey =
   | 'status.omTimeout'
   | 'status.omCancelled'
   | 'status.cancelConnect'
+  | 'status.dismissError'
   | 'status.readOk'
   | 'status.disconnected'
   | 'status.applyFailed'
@@ -620,6 +621,7 @@ const en: Dict = {
     'OpenMouse timed out probing this HID interface — try another collection or the native driver',
   'status.omCancelled': 'Connect cancelled',
   'status.cancelConnect': 'Cancel',
+  'status.dismissError': 'Close',
   'status.readOk': 'Read from mouse',
   'status.disconnected': 'Device disconnected',
   'status.applyFailed': 'Apply failed',
@@ -953,6 +955,7 @@ const pl: Dict = {
     'OpenMouse: timeout przy sondowaniu HID — spróbuj innej kolekcji albo natywnego drivera',
   'status.omCancelled': 'Anulowano łączenie',
   'status.cancelConnect': 'Anuluj',
+  'status.dismissError': 'Zamknij',
   'status.readOk': 'Odczytano z myszy',
   'status.disconnected': 'Urządzenie rozłączone',
   'status.applyFailed': 'Nie udało się zastosować',

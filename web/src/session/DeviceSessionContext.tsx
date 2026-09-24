@@ -51,6 +51,11 @@ interface SessionValue {
   deviceBusy: boolean
   /** Why deviceBusy is on - SyncSpinner label (connect vs refresh read). */
   busyKind: 'connect' | 'refresh' | null
+  /**
+   * Sticky connect failure (esp. OpenMouse). Overlay stays until dismissConnectError.
+   * Driver shell remains so /device/sensor UI does not bounce back to Connect.
+   */
+  connectError: string | null
   state: DeviceState | null
   driver: DeviceDriver | null
   webHidOk: boolean
@@ -64,6 +69,8 @@ interface SessionValue {
   connectWebHid: (target?: number | HidPickTarget) => Promise<string>
   /** Abort in-flight HID / OpenMouse connect+sync (busy overlay Cancel). */
   cancelConnect: () => void
+  /** Close sticky connect error overlay and drop the optimistic session. */
+  dismissConnectError: () => void
   disconnect: () => Promise<void>
   refreshSavedDevices: () => void
   syncFromDriver: () => void
@@ -143,6 +150,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
   const [deviceBusy, setDeviceBusy] = useState(false)
   /** 'connect' | 'refresh' while deviceBusy - picks SyncSpinner label. */
   const [busyKind, setBusyKind] = useState<'connect' | 'refresh' | null>(null)
+  const [connectError, setConnectError] = useState<string | null>(null)
   const [connectingCatalogId, setConnectingCatalogId] = useState<string | null>(
     null,
   )
@@ -364,6 +372,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         const stillThisConnect = () =>
           connectGenRef.current === connectGen && driverRef.current === d
 
+        setConnectError(null)
         mergeDraft(d)
         d.patchSettings({ language: uiLocale() })
         transportKindRef.current = 'webhid'
@@ -411,6 +420,9 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
                   OPENMOUSE_ATTACH_MS,
                   t(lang, 'status.omTimeout'),
                 )
+                if (!stillThisConnect()) return
+                // Refresh React so OpenMouse capabilities bind into Sensor UI.
+                setState(cloneState(d.getState()))
               } else {
                 await d.attachNative({
                   preferPid: picked.productId,
@@ -476,18 +488,10 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
                   ? err.message
                   : t(uiLocale(), 'status.webhidFailed')
               setStatus(msg)
-              // OpenMouse attach/probe failed after optimistic publish — drop the
-              // empty shell so Connect does not look "paired" with no controls.
+              // Keep OpenMouse driver shell + sticky error overlay (do not
+              // publish(null) — that bounced Sensor back to Connect with no UI).
               if (isOpenMouse) {
-                try {
-                  await d.detach()
-                } catch {
-                  /* ignore */
-                }
-                publish(null)
-                setTransportKind(null)
-                setConnectingCatalogId(null)
-                setSaveStatus('idle')
+                setConnectError(msg)
               }
             }
           } finally {
@@ -528,6 +532,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
     setDeviceBusy(false)
     setBusyKind(null)
     setConnectingCatalogId(null)
+    setConnectError(null)
     const d = driverRef.current
     void (async () => {
       try {
@@ -542,9 +547,15 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
     })()
   }, [publish])
 
+  const dismissConnectError = useCallback(() => {
+    setConnectError(null)
+    cancelConnect()
+  }, [cancelConnect])
+
   const disconnect = useCallback(async () => {
     connectGenRef.current += 1
     if (saveTimer.current) clearTimeout(saveTimer.current)
+    setConnectError(null)
     await driverRef.current?.detach()
     publish(null)
     setTransportKind(null)
@@ -563,6 +574,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       saveStatus,
       deviceBusy,
       busyKind,
+      connectError,
       connectingCatalogId,
       state,
       driver,
@@ -571,6 +583,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       connectMock,
       connectWebHid,
       cancelConnect,
+      dismissConnectError,
       disconnect,
       refreshSavedDevices,
       syncFromDriver,
@@ -584,6 +597,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       saveStatus,
       deviceBusy,
       busyKind,
+      connectError,
       connectingCatalogId,
       state,
       webHidOk,
@@ -591,6 +605,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       connectMock,
       connectWebHid,
       cancelConnect,
+      dismissConnectError,
       disconnect,
       refreshSavedDevices,
       syncFromDriver,
