@@ -21,6 +21,7 @@ import {
   openMouseHidFilters,
   openMouseScore,
   openMouseSupports,
+  loadOpenMouseHidFilters,
 } from '../devices/openmouse'
 import type { Transport } from './types'
 
@@ -192,6 +193,7 @@ function filtersForTarget(target?: HidPickTarget): Array<{
     return superlightHidFilters()
   }
   if (target?.catalogId === OPENMOUSE_BACKED_ID) {
+    // Sync fallback; pickSupportedHidDevice replaces with protocol filters.
     return openMouseHidFilters()
   }
   if (target?.vendorId != null && target?.productId != null) {
@@ -223,7 +225,9 @@ function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
     return isSuperlightDevice(device.vendorId, device.productId)
   }
   if (target.catalogId === OPENMOUSE_BACKED_ID) {
-    return openMouseSupports(device)
+    // Protocol filters already narrowed the chooser; accept the user's pick and
+    // let createSupportedClient decide support (do not re-block by catalog PID).
+    return true
   }
   if (target.vendorId != null && device.vendorId !== target.vendorId) return false
   if (target.productId != null && device.productId !== target.productId) {
@@ -261,7 +265,16 @@ export async function pickSupportedHidDevice(
   const opts: HidPickTarget | undefined =
     typeof target === 'number' ? { productId: target } : target
   const hid = assertWebHid()
-  const filters = filtersForTarget(opts)
+  let filters = filtersForTarget(opts)
+  // OpenMouse: use upstream SUPPORTED_HID_FILTERS (Logitech is usage-page based,
+  // not VID:PID in the generated catalog — catalog-only filters showed nothing).
+  if (opts?.catalogId === OPENMOUSE_BACKED_ID) {
+    try {
+      filters = await loadOpenMouseHidFilters()
+    } catch {
+      filters = openMouseHidFilters()
+    }
+  }
   const hasSpecificPid = opts?.productId != null
   const forcePicker =
     opts?.forcePicker === true ||
@@ -287,9 +300,15 @@ export async function pickSupportedHidDevice(
 
   if (!selected) {
     const picked = await hid.requestDevice({ filters })
-    const ranked = [...picked]
-      .filter((d) => matchesTarget(d, opts))
-      .sort((a, b) => scoreDevice(b) - scoreDevice(a))
+    // OpenMouse / generic force picker: keep the user's choice — session verifies
+    // via native catalog match or createSupportedClient (no pre-block by VID list).
+    const acceptRawPick =
+      opts?.catalogId === OPENMOUSE_BACKED_ID ||
+      (forcePicker && opts?.catalogId == null)
+    const pool = acceptRawPick
+      ? [...picked]
+      : [...picked].filter((d) => matchesTarget(d, opts))
+    const ranked = pool.sort((a, b) => scoreDevice(b) - scoreDevice(a))
     if (hasSpecificPid) {
       selected =
         ranked.find((d) => d.productId === opts!.productId) ??
