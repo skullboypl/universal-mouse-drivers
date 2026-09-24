@@ -26,6 +26,10 @@ const VISUALS: Record<string, Omit<OpenMouseBrandVisual, 'brandSlug'>> = {
   steelseries: { accent: '#ff6400', accentSoft: '#2a1608', ink: '#fff7ed', mark: 'SS' },
   teevolution: { accent: '#38bdf8', accentSoft: '#0c1e28', ink: '#f0f9ff', mark: 'TV' },
   vgn: { accent: '#fbbf24', accentSoft: '#2a2008', ink: '#fffbeb', mark: 'VGN' },
+  vaxee: { accent: '#f5f5f5', accentSoft: '#1a1a1a', ink: '#111111', mark: 'VX' },
+  'hyperx-hp': { accent: '#c8102e', accentSoft: '#2a0c12', ink: '#fff5f5', mark: 'HX' },
+  'hyperx-kingston': { accent: '#c8102e', accentSoft: '#2a0c12', ink: '#fff5f5', mark: 'HX' },
+  'mchose-a5gen1': { accent: '#a3e635', accentSoft: '#1a2410', ink: '#f7fee7', mark: 'MC' },
   wallhack: { accent: '#e2e8f0', accentSoft: '#1a1f28', ink: '#0f172a', mark: 'WH' },
   wooting: { accent: '#ff5a36', accentSoft: '#2a120c', ink: '#fff5f2', mark: 'WO' },
   zaunkoenig: { accent: '#94a3b8', accentSoft: '#1a2030', ink: '#f8fafc', mark: 'ZK' },
@@ -45,11 +49,62 @@ export function openMouseBrandVisual(brandSlug: string): OpenMouseBrandVisual {
 
 import { OPENMOUSE_LOGO_RASTER } from './logoAssets.generated'
 
+/**
+ * Catalog brandSlug → logo file slug when names diverge (A5 gen1, HyperX HP, …).
+ */
+const LOGO_SLUG_ALIAS: Record<string, string> = {
+  'mchose-a5gen1': 'mchose',
+  'hyperx-hp': 'hyperx-hp',
+  'hyperx-kingston': 'hyperx-kingston',
+  asus: 'asus',
+  dareu: 'dareu',
+  redragon: 'redragon',
+  ryunix: 'ryunix',
+  incott: 'incott',
+}
+
+/** Slugs that have a committed *-icon.svg (or covered by raster map / alias). */
+const KNOWN_ICON_SVG = new Set([
+  'atk',
+  'corsair',
+  'fantech',
+  'finalmouse',
+  'g-wolves',
+  'glorious',
+  'hyperx-hp',
+  'hyperx-kingston',
+  'k-snake',
+  'keychron',
+  'lamzu',
+  'logitech',
+  'mchose',
+  'microsoft',
+  'ninjutso',
+  'pulsar',
+  'razer',
+  'steelseries',
+  'teevolution',
+  'vaxee',
+  'vgn',
+  'wallhack',
+  'wooting',
+  'zaunkoenig',
+])
+
+function resolveLogoSlug(brandSlug: string): string {
+  return LOGO_SLUG_ALIAS[brandSlug] ?? brandSlug
+}
+
 /** Square brand mark (chip / badge). Prefer raster when available - SVG data-URI embeds do not render in <img>. */
 export function openMouseBrandLogoUrl(brandSlug: string): string {
-  const ext = OPENMOUSE_LOGO_RASTER[brandSlug]
-  if (ext) return `/devices/openmouse/logos/${brandSlug}-icon.${ext}`
-  return `/devices/openmouse/logos/${brandSlug}-icon.svg`
+  const slug = resolveLogoSlug(brandSlug)
+  const ext = OPENMOUSE_LOGO_RASTER[slug] ?? OPENMOUSE_LOGO_RASTER[brandSlug]
+  if (ext) return `/devices/openmouse/logos/${slug}-icon.${ext}`
+  if (KNOWN_ICON_SVG.has(slug)) {
+    return `/devices/openmouse/logos/${slug}-icon.svg`
+  }
+  // Unknown new catalog brands: shared mark, never 404.
+  return '/devices/openmouse/mouse.svg'
 }
 
 /** Wide brand wordmark. */
