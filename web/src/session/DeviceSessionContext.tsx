@@ -18,7 +18,6 @@ import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/i
 import { KING_ULTRA_IDENTITY } from '../devices/mice/redragon/king-ultra/identity'
 import {
   OPENMOUSE_BACKED_ID,
-  createOpenMouseClient,
   createOpenMouseDriver,
   looksLikeNonMouseHid,
   type OpenMouseDemoProfile,
@@ -282,25 +281,17 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         )
         const preferOpenMouse = opts?.catalogId === OPENMOUSE_BACKED_ID
 
-        // Try OpenMouse whenever: user asked for OM, or there is no native UMD
-        // match. createSupportedClient is the only real capability gate — do not
-        // require our generated catalog / vendor list (Logitech etc. are usage-based).
+        // Do NOT await createSupportedClient here — it opens HID and can hang
+        // (Logitech) or return null after Chrome already paired the device, leaving
+        // the user stuck on Connect with no driver UI. Verify in attachNative.
         let openMouse = null
         if (preferOpenMouse || !catalogFromPick) {
-          const client = await createOpenMouseClient(picked)
-          if (client) {
-            openMouse = createOpenMouseDriver(picked)
-          } else if (preferOpenMouse) {
-            throw new Error(
-              looksLikeNonMouseHid(picked)
-                ? 'Selected HID looks like a headset/keyboard — OpenMouse only accepts mice'
-                : 'OpenMouse: no mouse client for this device (unsupported HID or wrong interface)',
-            )
-          } else if (looksLikeNonMouseHid(picked)) {
+          if (looksLikeNonMouseHid(picked)) {
             throw new Error(
               'Selected HID looks like a headset/keyboard — OpenMouse only accepts mice',
             )
           }
+          openMouse = createOpenMouseDriver(picked)
         }
         if (
           opts?.catalogId &&
@@ -413,11 +404,24 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
               err instanceof Error ? err.message : String(err),
             )
             if (driverRef.current === d) {
-              setStatus(
+              const msg =
                 err instanceof Error
                   ? err.message
-                  : t(uiLocale(), 'status.webhidFailed'),
-              )
+                  : t(uiLocale(), 'status.webhidFailed')
+              setStatus(msg)
+              // OpenMouse attach/probe failed after optimistic publish — drop the
+              // empty shell so Connect does not look "paired" with no controls.
+              if (catalog.id === OPENMOUSE_BACKED_ID) {
+                try {
+                  await d.detach()
+                } catch {
+                  /* ignore */
+                }
+                publish(null)
+                setTransportKind(null)
+                setConnectingCatalogId(null)
+                setSaveStatus('idle')
+              }
             }
           } finally {
             if (driverRef.current === d) {
