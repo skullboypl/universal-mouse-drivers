@@ -1,5 +1,29 @@
 /** What the OpenMouse client / demo profile can show vs write in UMD UI. */
 
+export type OmLodLabel = 'Low' | 'Medium' | 'High'
+
+/** Subset of OpenMouse MouseUiHints we honor in UMD Sensor. */
+export type OpenMouseUiHints = {
+  settingsReady?: boolean
+  valuesVerified?: boolean
+  hideLodLow?: boolean
+  hideUnsupportedPollingRates?: boolean
+  pollingReadOnly?: boolean
+  hideProcessingCard?: boolean
+  hideMotionSync?: boolean
+  hideAngleSnapping?: boolean
+  hideRippleControl?: boolean
+  statusNote?: string
+  pollingNote?: string
+  dpiStageEditor?: {
+    maxStages: number
+    countEditable?: boolean
+    minDpi: number
+    maxDpi: number
+    stepDpi: number
+  }
+}
+
 export type OpenMouseCapabilityFlags = {
   /** Show DPI panel (read and/or write). */
   dpi: boolean
@@ -16,6 +40,19 @@ export type OpenMouseCapabilityFlags = {
   buttons: boolean
   /** Sleep / long-distance / tray - local-only unless true. */
   deviceSettings: boolean
+  /** Live rates from MouseStatus.supportedPollingRates (when present). */
+  pollRatesHz?: number[] | null
+  /** LOD stops the mouse actually supports. */
+  lodOptions?: OmLodLabel[] | null
+  /** DPI editor bounds from MouseUiHints.dpiStageEditor. */
+  dpiMin?: number
+  dpiMax?: number
+  dpiStep?: number
+  dpiMaxStages?: number
+  dpiCountEditable?: boolean
+  /** From MouseUiHints.statusNote / pollingNote. */
+  statusNote?: string | null
+  pollingNote?: string | null
 }
 
 export type OpenMouseDemoProfile = 'full' | 'sensor' | 'dpi'
@@ -132,5 +169,74 @@ export function capabilitiesFromOmClient(client: {
     powerModes: false,
     buttons: false,
     deviceSettings: false,
+  }
+}
+
+/**
+ * Merge OpenMouse MouseStatus.ui (+ status fields) into method-based caps.
+ * This is how OpenMouse control.ts stays brand-agnostic per HID client.
+ */
+export function applyOpenMouseUiHints(
+  base: OpenMouseCapabilityFlags,
+  status: {
+    ui?: OpenMouseUiHints | null
+    supportedPollingRates?: number[]
+    supportedLiftOffDistances?: OmLodLabel[]
+    angleSnapping?: boolean | null
+    rippleControl?: boolean | null
+    motionSync?: boolean | null
+  } | null,
+): OpenMouseCapabilityFlags {
+  if (!status) return base
+  const ui = status.ui ?? {}
+  const settingsReady = ui.settingsReady !== false
+
+  let angleSnapping = base.angleSnapping
+  let rippleControl = base.rippleControl
+  let motionSync = base.motionSync
+  if (status.angleSnapping != null) angleSnapping = true
+  if (status.rippleControl != null) rippleControl = true
+  if (status.motionSync != null) motionSync = true
+  if (ui.hideProcessingCard) {
+    angleSnapping = false
+    rippleControl = false
+    motionSync = false
+  } else {
+    if (ui.hideAngleSnapping) angleSnapping = false
+    if (ui.hideRippleControl) rippleControl = false
+    if (ui.hideMotionSync) motionSync = false
+  }
+
+  const editor = ui.dpiStageEditor
+  const lodOptions =
+    status.supportedLiftOffDistances?.length
+      ? [...status.supportedLiftOffDistances]
+      : ui.hideLodLow
+        ? (['Medium', 'High'] as OmLodLabel[])
+        : null
+
+  return {
+    ...base,
+    dpi: settingsReady ? base.dpi : base.dpi && Boolean(ui.valuesVerified),
+    dpiWritable: settingsReady ? base.dpiWritable : false,
+    reportRate: settingsReady ? base.reportRate : base.reportRate,
+    reportRateWritable:
+      settingsReady && !ui.pollingReadOnly ? base.reportRateWritable : false,
+    lod: settingsReady ? base.lod : base.lod,
+    lodWritable: settingsReady ? base.lodWritable : false,
+    angleSnapping: settingsReady ? angleSnapping : false,
+    rippleControl: settingsReady ? rippleControl : false,
+    motionSync: settingsReady ? motionSync : false,
+    pollRatesHz: status.supportedPollingRates?.length
+      ? [...status.supportedPollingRates]
+      : base.pollRatesHz ?? null,
+    lodOptions,
+    dpiMin: editor?.minDpi ?? base.dpiMin,
+    dpiMax: editor?.maxDpi ?? base.dpiMax,
+    dpiStep: editor?.stepDpi ?? base.dpiStep,
+    dpiMaxStages: editor?.maxStages ?? base.dpiMaxStages,
+    dpiCountEditable: editor?.countEditable ?? base.dpiCountEditable,
+    statusNote: ui.statusNote ?? base.statusNote ?? null,
+    pollingNote: ui.pollingNote ?? base.pollingNote ?? null,
   }
 }
