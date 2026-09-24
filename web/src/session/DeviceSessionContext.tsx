@@ -21,8 +21,6 @@ import {
   createOpenMouseClient,
   createOpenMouseDriver,
   looksLikeNonMouseHid,
-  matchesOpenMouseVendor,
-  openMouseCatalogSupports,
   type OpenMouseDemoProfile,
 } from '../devices/openmouse'
 import type { DeviceState } from '../devices/types'
@@ -282,31 +280,26 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
           picked.vendorId,
           picked.productId,
         )
-        if (looksLikeNonMouseHid(picked) && !catalogFromPick) {
-          throw new Error(
-            'Selected HID looks like a headset/keyboard — OpenMouse only accepts mice',
-          )
-        }
-        // Verify createSupportedClient BEFORE publishing UI (vendor-only used to
-        // accept brand headphones and show DPI panels with no real mouse client).
+        const preferOpenMouse = opts?.catalogId === OPENMOUSE_BACKED_ID
+
+        // Try OpenMouse whenever: user asked for OM, or there is no native UMD
+        // match. createSupportedClient is the only real capability gate — do not
+        // require our generated catalog / vendor list (Logitech etc. are usage-based).
         let openMouse = null
-        if (!catalogFromPick) {
-          const maybeOm =
-            opts?.catalogId === OPENMOUSE_BACKED_ID ||
-            openMouseCatalogSupports(picked) ||
-            matchesOpenMouseVendor(picked.vendorId)
-          if (maybeOm) {
-            const client = await createOpenMouseClient(picked)
-            if (client) {
-              openMouse = createOpenMouseDriver(picked)
-            } else if (
-              opts?.catalogId === OPENMOUSE_BACKED_ID ||
-              openMouseCatalogSupports(picked)
-            ) {
-              throw new Error(
-                'OpenMouse: no mouse client for this device (same-brand headphones/keyboards are ignored)',
-              )
-            }
+        if (preferOpenMouse || !catalogFromPick) {
+          const client = await createOpenMouseClient(picked)
+          if (client) {
+            openMouse = createOpenMouseDriver(picked)
+          } else if (preferOpenMouse) {
+            throw new Error(
+              looksLikeNonMouseHid(picked)
+                ? 'Selected HID looks like a headset/keyboard — OpenMouse only accepts mice'
+                : 'OpenMouse: no mouse client for this device (unsupported HID or wrong interface)',
+            )
+          } else if (looksLikeNonMouseHid(picked)) {
+            throw new Error(
+              'Selected HID looks like a headset/keyboard — OpenMouse only accepts mice',
+            )
           }
         }
         if (
@@ -319,16 +312,12 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
             `Podłączono inne urządzenie niż wybrane (${opts.catalogId})`,
           )
         }
-        if (
-          opts?.catalogId === OPENMOUSE_BACKED_ID &&
-          !openMouse &&
-          !catalogFromPick
-        ) {
+        if (preferOpenMouse && !openMouse) {
           throw new Error('OpenMouse does not support the selected HID device')
         }
         const catalog =
-          catalogFromPick ??
           (openMouse ? openMouse.identity : undefined) ??
+          catalogFromPick ??
           (opts?.catalogId
             ? DEVICE_CATALOG.find((c) => c.id === opts.catalogId)
             : undefined) ??

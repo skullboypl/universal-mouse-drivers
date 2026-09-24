@@ -1,6 +1,9 @@
 /**
- * OpenMouse HID filters - catalog VID:PID (+ usage) for pickers;
- * vendor-only list only for coarse SSR scoring.
+ * OpenMouse HID filters.
+ *
+ * Picker: prefer protocol SUPPORTED_HID_FILTERS (vendor+usage / VID:PID as upstream).
+ * Catalog VID:PID is for SSR scoring + hub pages — Logitech is often usage-only
+ * (no productId in SUPPORTED_HID_FILTERS), so it never lands in catalog.generated.
  */
 
 import {
@@ -15,34 +18,48 @@ const catalogVidPid = new Set(
   OPENMOUSE_CATALOG.map((e) => `${e.vendorId}:${e.productId}`),
 )
 
-/** Vendor-only filters — do not use for requestDevice (pulls in headphones). */
+/** Vendor-only — last-resort / scoring; too broad alone for requestDevice. */
 export function openMouseVendorOnlyHidFilters(): OpenMouseHidFilter[] {
   return OPENMOUSE_VENDOR_IDS.map((vendorId) => ({ vendorId }))
 }
 
 /**
- * Product-level filters from the generated catalog (usagePage/usage when known).
- * Prefer this for WebHID requestDevice / connect.
+ * Catalog VID:PID without usagePage/usage.
+ * Chrome often hides devices when usage filters don't match the exposed collection.
  */
 export function openMouseCatalogHidFilters(): OpenMouseHidFilter[] {
-  return OPENMOUSE_CATALOG.map((e) => {
-    const f: OpenMouseHidFilter = {
-      vendorId: e.vendorId,
-      productId: e.productId,
-    }
-    if (e.usagePage != null) f.usagePage = e.usagePage
-    if (e.usage != null) f.usage = e.usage
-    return f
-  })
-}
-
-/** Alias used by transport — catalog filters, not vendor-only. */
-export function openMouseHidFilters(): OpenMouseHidFilter[] {
-  return openMouseCatalogHidFilters()
+  return OPENMOUSE_CATALOG.map((e) => ({
+    vendorId: e.vendorId,
+    productId: e.productId,
+  }))
 }
 
 /**
- * Full OpenMouse picker whitelist from the protocol package.
+ * Sync filters for requestDevice / allSupportedHidFilters.
+ * VID:PID from catalog + vendor-only for brands (e.g. Logitech) that OpenMouse
+ * matches by usage at createSupportedClient time, not by productId list.
+ */
+export function openMouseHidFilters(): OpenMouseHidFilter[] {
+  const byKey = new Map<string, OpenMouseHidFilter>()
+  for (const f of openMouseCatalogHidFilters()) {
+    byKey.set(`${f.vendorId}:${f.productId ?? '*'}`, f)
+  }
+  for (const vendorId of OPENMOUSE_VENDOR_IDS) {
+    const key = `${vendorId}:*`
+    if (![...byKey.keys()].some((k) => k.startsWith(`${vendorId}:`))) {
+      byKey.set(key, { vendorId })
+    }
+  }
+  // Always keep Logitech / common usage-driven vendors as vendor-wide so they
+  // appear even when other PIDs from that VID exist in catalog.
+  for (const vendorId of [1133 /* logitech */, 1118 /* microsoft */]) {
+    byKey.set(`${vendorId}:*`, { vendorId })
+  }
+  return [...byKey.values()]
+}
+
+/**
+ * Full upstream whitelist (includes Logitech usage-page filters).
  * Dynamic import so Next SSR never evaluates @openmouse/protocol.
  */
 export async function loadOpenMouseHidFilters(): Promise<OpenMouseHidFilter[]> {
@@ -50,7 +67,7 @@ export async function loadOpenMouseHidFilters(): Promise<OpenMouseHidFilter[]> {
   return [...(SUPPORTED_HID_FILTERS as OpenMouseHidFilter[])]
 }
 
-/** True when VID:PID appears in the OpenMouse catalog (not vendor alone). */
+/** True when VID:PID appears in the generated product catalog. */
 export function openMouseCatalogSupports(
   device: Pick<HIDDevice, 'vendorId' | 'productId'>,
 ): boolean {
@@ -58,13 +75,15 @@ export function openMouseCatalogSupports(
 }
 
 /**
- * Coarse match for scoring / “maybe OpenMouse”.
- * Prefer openMouseCatalogSupports or createSupportedClient before accepting.
+ * After the user picks a device for OpenMouse: vendor match is enough here;
+ * createSupportedClient is the real accept/reject gate (headphones fail it).
  */
 export function openMouseSupports(
   device: Pick<HIDDevice, 'vendorId' | 'productId'>,
 ): boolean {
-  return openMouseCatalogSupports(device)
+  return (
+    openMouseCatalogSupports(device) || matchesOpenMouseVendor(device.vendorId)
+  )
 }
 
 /** Product-name heuristics for non-mice sharing a gaming brand VID. */
@@ -85,7 +104,7 @@ export function openMouseScore(
   device: Pick<HIDDevice, 'vendorId' | 'productId'>,
 ): number {
   if (openMouseCatalogSupports(device)) return 40
-  if (matchesOpenMouseVendor(device.vendorId)) return 5
+  if (matchesOpenMouseVendor(device.vendorId)) return 10
   return 0
 }
 
