@@ -35,8 +35,10 @@ export function Shell({ children }: { children: ReactNode }) {
     driver,
     deviceBusy,
     busyKind,
+    connectError,
     connectingCatalogId,
     cancelConnect,
+    dismissConnectError,
   } = useDeviceSession()
   const pathname = usePathname()
   const { lp } = useLocale()
@@ -58,37 +60,46 @@ export function Shell({ children }: { children: ReactNode }) {
   const busyLabelKey =
     busyKind === 'refresh' ? 'status.reading' : 'status.syncing'
 
-  // Prefer live session status during busy (OpenMouse probe phases, etc.).
-  const statusText = deviceBusy
-    ? status?.trim() || tr(busyLabelKey)
-    : status ?? tr('status.ready')
+  const overlayOpen = deviceBusy || Boolean(connectError)
+  const statusText = connectError
+    ? connectError
+    : deviceBusy
+      ? status?.trim() || tr(busyLabelKey)
+      : status ?? tr('status.ready')
   const statusWithSave =
-    !deviceBusy && saveHint && !statusText.includes(saveHint)
+    !overlayOpen && saveHint && !statusText.includes(saveHint)
       ? `${statusText} · ${saveHint}`
       : statusText
 
   return (
     <div
-      className={`app-shell ${deviceBusy ? styles.deviceBusy : ''}`}
+      className={`app-shell ${overlayOpen ? styles.deviceBusy : ''}`}
       data-device={deviceSkin}
       aria-busy={deviceBusy || undefined}
     >
       <TopNav />
-      <main className={`${styles.main} ${deviceBusy ? styles.busyMain : ''}`}>
-        <div className={deviceBusy ? styles.blurContent : undefined}>
+      <main className={`${styles.main} ${overlayOpen ? styles.busyMain : ''}`}>
+        <div className={overlayOpen ? styles.blurContent : undefined}>
           {children}
         </div>
-        {deviceBusy ? (
-          <SyncSpinner
-            label={statusText}
-            labelKey={busyLabelKey}
-            onCancel={
-              busyKind === 'connect' ? () => cancelConnect() : undefined
-            }
-            cancelLabel={tr('status.cancelConnect')}
-          />
-        ) : null}
       </main>
+      {overlayOpen ? (
+        <SyncSpinner
+          label={statusText}
+          labelKey={busyLabelKey}
+          error={Boolean(connectError)}
+          onCancel={
+            connectError
+              ? () => dismissConnectError()
+              : busyKind === 'connect'
+                ? () => cancelConnect()
+                : undefined
+          }
+          cancelLabel={tr(
+            connectError ? 'status.dismissError' : 'status.cancelConnect',
+          )}
+        />
+      ) : null}
       <WriteToast />
       <footer className={styles.siteFooter}>
         <div className={styles.footerInner}>

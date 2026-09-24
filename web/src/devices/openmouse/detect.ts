@@ -9,14 +9,23 @@ export type OpenMouseMatch = {
   score: number
 }
 
+/**
+ * Calls upstream `createSupportedClient` (DEVICE_DRIVERS supports/create).
+ * Throws with a real message on import/runtime failure — do not swallow to null.
+ */
 export async function createOpenMouseClient(
   device: HIDDevice,
 ): Promise<unknown | null> {
   const { createSupportedClient } = await import('@openmouse/protocol/drivers')
   try {
     return await createSupportedClient(device)
-  } catch {
-    return null
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    throw new Error(
+      msg && msg !== 'undefined'
+        ? `OpenMouse protocol: ${msg}`
+        : 'OpenMouse protocol: createSupportedClient failed',
+    )
   }
 }
 

@@ -18,7 +18,6 @@ import { OPENMOUSE_BACKED_ID } from './constants'
 import { createOpenMouseClient } from './detect'
 import {
   capabilitiesFromOmClient,
-  OPENMOUSE_CAPS_NONE,
   OPENMOUSE_DEMO_PROFILES,
   type OpenMouseCapabilityFlags,
   type OpenMouseDemoProfile,
@@ -149,7 +148,21 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   private hidDevice: HIDDevice | null = null
   private pendingDevice: HIDDevice | null = null
   /** Soft flags from live client methods or demo profile. */
-  capabilities: OpenMouseCapabilityFlags = { ...OPENMOUSE_CAPS_NONE }
+  capabilities: OpenMouseCapabilityFlags = {
+    // Show sensor chrome while OpenMouse protocol is still probing.
+    dpi: true,
+    dpiWritable: false,
+    reportRate: true,
+    reportRateWritable: false,
+    lod: true,
+    lodWritable: false,
+    angleSnapping: false,
+    rippleControl: false,
+    motionSync: false,
+    powerModes: false,
+    buttons: false,
+    deviceSettings: false,
+  }
   lastWriteError: string | null = null
   lastWriteOk = false
   lastVerifyNote: string | null = null
@@ -244,13 +257,12 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
     }
     this.pendingDevice = device
     this.hidDevice = device
-    if (!device.opened) {
-      await device.open()
-    }
+    // Let createSupportedClient / brand create() open the device — pre-open
+    // breaks some Logitech/G-Wolves clients and hides the real protocol error.
     const client = await createOpenMouseClient(device)
     if (!client) {
       throw new Error(
-        'OpenMouse: no supported mouse client for this HID device (headphones / keyboards from the same brand are ignored)',
+        'OpenMouse: no protocol driver matched this HID interface (try another collection in the picker — Superlight needs HID++ / Fenrir the vendor feature report)',
       )
     }
     this.client = client as OmClient
