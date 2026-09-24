@@ -18,8 +18,11 @@ import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/i
 import { KING_ULTRA_IDENTITY } from '../devices/mice/redragon/king-ultra/identity'
 import {
   OPENMOUSE_BACKED_ID,
+  createOpenMouseClient,
   createOpenMouseDriver,
-  openMouseSupports,
+  looksLikeNonMouseHid,
+  matchesOpenMouseVendor,
+  openMouseCatalogSupports,
   type OpenMouseDemoProfile,
 } from '../devices/openmouse'
 import type { DeviceState } from '../devices/types'
@@ -279,10 +282,33 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
           picked.vendorId,
           picked.productId,
         )
-        const openMouse =
-          !catalogFromPick && openMouseSupports(picked)
-            ? createOpenMouseDriver(picked)
-            : null
+        if (looksLikeNonMouseHid(picked) && !catalogFromPick) {
+          throw new Error(
+            'Selected HID looks like a headset/keyboard — OpenMouse only accepts mice',
+          )
+        }
+        // Verify createSupportedClient BEFORE publishing UI (vendor-only used to
+        // accept brand headphones and show DPI panels with no real mouse client).
+        let openMouse = null
+        if (!catalogFromPick) {
+          const maybeOm =
+            opts?.catalogId === OPENMOUSE_BACKED_ID ||
+            openMouseCatalogSupports(picked) ||
+            matchesOpenMouseVendor(picked.vendorId)
+          if (maybeOm) {
+            const client = await createOpenMouseClient(picked)
+            if (client) {
+              openMouse = createOpenMouseDriver(picked)
+            } else if (
+              opts?.catalogId === OPENMOUSE_BACKED_ID ||
+              openMouseCatalogSupports(picked)
+            ) {
+              throw new Error(
+                'OpenMouse: no mouse client for this device (same-brand headphones/keyboards are ignored)',
+              )
+            }
+          }
+        }
         if (
           opts?.catalogId &&
           opts.catalogId !== OPENMOUSE_BACKED_ID &&

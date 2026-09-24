@@ -31,8 +31,11 @@ export {
 export {
   openMouseHidFilters,
   openMouseCatalogHidFilters,
+  openMouseVendorOnlyHidFilters,
   loadOpenMouseHidFilters,
   openMouseSupports,
+  openMouseCatalogSupports,
+  looksLikeNonMouseHid,
   openMouseScore,
 } from './filters'
 export {

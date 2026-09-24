@@ -476,7 +476,7 @@ const en: Dict = {
   'sensor.sub':
     'DPI and flags update in the UI instantly; the mouse is written after a short debounce.',
   'sensor.omCapsNote':
-    'OpenMouse: only controls your HID client actually exposes are shown. Depth varies by brand driver.',
+    'OpenMouse: controls appear when the HID client can read them; edits stay disabled unless that client exposes a setter. Depth varies by brand.',
   'sensor.dpiStages': 'DPI stages',
   'sensor.stageCount': 'Number of stages',
   'sensor.stageCountTip':
@@ -802,7 +802,7 @@ const pl: Dict = {
   'sensor.sub':
     'DPI i flagi od razu w UI; zapis na mysz dopiero po krótkim debounce.',
   'sensor.omCapsNote':
-    'OpenMouse: pokazujemy tylko sterowanie, które klient HID faktycznie udostępnia. Głębokość zależy od drivera marki.',
+    'OpenMouse: kontrolki widać przy odczycie z klienta HID; edycja jest zablokowana, dopóki driver nie ma settera. Głębokość zależy od marki.',
   'sensor.dpiStages': 'Poziomy DPI',
   'sensor.stageCount': 'Liczba poziomów',
   'sensor.stageCountTip':

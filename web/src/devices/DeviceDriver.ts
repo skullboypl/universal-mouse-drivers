@@ -82,8 +82,11 @@ export interface DeviceDriver {
    */
   readonly capabilities?: {
     dpi?: boolean
+    dpiWritable?: boolean
     reportRate?: boolean
+    reportRateWritable?: boolean
     lod?: boolean
+    lodWritable?: boolean
     angleSnapping?: boolean
     rippleControl?: boolean
     motionSync?: boolean
