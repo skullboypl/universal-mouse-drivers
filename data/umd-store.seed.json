@@ -38,9 +38,9 @@
       "id": "trayBattery",
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
-      "version": "1.9.1",
+      "version": "1.10.0",
       "signed": true,
-      "notes": "EV-signed; OpenMouse catalog refresh (Asus/Dareu/HyperX/MCHOSE A5/Ninjutso + more); detect from generated HID list"
+      "notes": "EV-signed; PRO X3 SUPERSTRIKE battery (corded C0A9 + LIGHTSPEED receiver C54F) over HID++ 0x1004"
     }
   }
 }

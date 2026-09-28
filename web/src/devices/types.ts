@@ -26,6 +26,10 @@ export type ButtonAction =
   | 'scroll_left'
   | 'scroll_right'
   | 'polling_rate_switch'
+  /** Logitech onboard functions (OMM FUNCTION_OPCODES 7 / 11 / 10). */
+  | 'dpi_shift'
+  | 'g_shift'
+  | 'profile_cycle'
   /** OEM KeyFunction type 0x04 (Fire key). */
   | 'fire'
   | 'combo'
@@ -97,6 +101,14 @@ export interface SensorState {
   dpiListStep?: number
   reportRate: number
   lodMm: 0.7 | 1 | 2
+  /** Logitech 0x2202 lift-off level: 1=low, 2=medium, 3=high. */
+  lodLevel?: 1 | 2 | 3
+  /** X3: separate onboard polling rates per link (profile bytes 0 and 1). */
+  reportRateWireless?: number
+  reportRateWired?: number
+  /** X3 bunny-hop (BHOP) timeout: profile byte 0x25 = ms / 10, 0 = off. */
+  bhopEnabled?: boolean
+  bhopTimeoutMs?: number
   mode: 'lp' | 'hp' | 'corded'
   peakPerformance: boolean
   peakPerformanceTimeoutMin: number
@@ -134,6 +146,22 @@ export interface SensorState {
   ledEffect?: number
   /** Fenrir OEM Sensor Angle (degrees). */
   sensorAngle?: number
+  /**
+   * X3 SUPERSTRIKE HITS (feature 0x1B0C / onboard component 0x19).
+   * Undefined means the physical value could not be verified; physical
+   * writes remain disabled until the component layout is proven.
+   */
+  hitsLeftActuation?: number
+  hitsRightActuation?: number
+  hitsLeftRapidTriggerEnabled?: boolean
+  hitsRightRapidTriggerEnabled?: boolean
+  hitsLeftRapidTriggerSensitivity?: number
+  hitsRightRapidTriggerSensitivity?: number
+  hitsLeftHaptic?: number
+  hitsRightHaptic?: number
+  /** 0..resolution live travel, only set while HITS monitoring mode is on. */
+  hitsLeftLiveTravel?: number
+  hitsRightLiveTravel?: number
 }
 
 export interface MacroEvent {
@@ -165,7 +193,15 @@ export interface DeviceInfo {
   mouseFirmware: string
   batteryPercent: number | null
   charging: boolean
+  /** Precise protocol state when the device reports more than a boolean. */
+  batteryState?: 'discharging' | 'charging' | 'full' | 'error' | 'unknown'
+  batteryStatusCode?: number
   connection: ConnectionMode
+  /** Logitech feature 0x0003 identity, used only for confirmed SKU mappings. */
+  modelIdHex?: string
+  extendedModelId?: number
+  colorVariant?: 'midnight-black' | 'magenta-eclipse' | 'unknown'
+  identityDiagnostic?: string
 }
 
 export interface SettingsState {

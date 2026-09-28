@@ -89,6 +89,15 @@ export type HidppBattery = {
   charging: boolean
 }
 
+export type HidppDeviceInfo = {
+  entityCount: number
+  unitId: number
+  transport: number
+  modelIdHex: string
+  extendedModelId: number
+  raw: Uint8Array
+}
+
 export type HidppDpiInfo = {
   dpi: number
   defaultDpi: number
@@ -143,6 +152,8 @@ export class HidppClient {
   /** Serialize all HID++ traffic - concurrent WebHID TX drops LIGHTSPEED replies. */
   private requestChain: Promise<unknown> = Promise.resolve()
   private onInputBound: (ev: HIDInputReportEvent) => void
+  /** Unsolicited feature broadcasts (e.g. X3 HITS button_event) keyed by featureIndex. */
+  private eventListeners = new Map<number, Set<(functionId: number, params: Uint8Array) => void>>()
 
   constructor() {
     this.onInputBound = (ev) => this.onInput(ev)
@@ -185,10 +196,7 @@ export class HidppClient {
       throw new Error('Nie wybrano PRO X SUPERLIGHT (odbiornik C547)')
     }
 
-    if (!selected.opened) await selected.open()
-    selected.addEventListener('inputreport', this.onInputBound)
-    this.device = selected
-    this.featureMap = new Map([[HIDPP.ROOT, 0]])
+    await this.attachSelectedDevice(selected)
 
     umdLog('superlight', 'info', 'hidpp open', {
       productId: selected.productId.toString(16),
@@ -197,11 +205,20 @@ export class HidppClient {
     })
 
     // Prove link
-    const proto = await this.request(0, 1, new Uint8Array([0x00, 0x00, 0x88]))
+    const proto = await this.ping()
     umdLog('superlight', 'info', 'protocol', {
-      major: proto[0],
-      minor: proto[1],
+      major: proto.major,
+      minor: proto.minor,
     })
+  }
+
+  /** Attach an already-authorized Logitech HID++ collection without SKU-specific writes. */
+  async attachSelectedDevice(selected: HIDDevice, deviceIndex = DEFAULT_DEVICE_INDEX) {
+    if (!selected.opened) await selected.open()
+    selected.addEventListener('inputreport', this.onInputBound)
+    this.device = selected
+    this.deviceIndex = deviceIndex & 0xff
+    this.featureMap = new Map([[HIDPP.ROOT, 0]])
   }
 
   async disconnect() {
@@ -212,6 +229,7 @@ export class HidppClient {
       p.reject(new Error('disconnected'))
     }
     this.pending = []
+    this.eventListeners.clear()
     if (!d) return
     d.removeEventListener('inputreport', this.onInputBound)
     try {
@@ -256,7 +274,16 @@ export class HidppClient {
     const matchIdx = this.pending.findIndex(
       (p) => p.featureIndex === featureIndex && p.swId === swId,
     )
-    if (matchIdx < 0) return
+    if (matchIdx < 0) {
+      // Not a reply to anything we sent - only an unsolicited feature
+      // broadcast (e.g. X3 HITS button_event) can land here.
+      const listeners = this.eventListeners.get(featureIndex)
+      if (listeners?.size) {
+        const functionId = (fnSw >> 4) & 0x0f
+        for (const cb of listeners) cb(functionId, params)
+      }
+      return
+    }
     const match = this.pending[matchIdx]!
     this.pending.splice(matchIdx, 1)
     clearTimeout(match.timer)
@@ -309,6 +336,28 @@ export class HidppClient {
       () => undefined,
     )
     return next
+  }
+
+  /**
+   * Subscribe to unsolicited reports tagged with `featureId` (runtime feature
+   * index is resolved once and cached, same as `call`). Returns an
+   * unsubscribe function. Used for read-only live broadcasts (X3 HITS
+   * button_event); never used to drive a write.
+   */
+  async onFeatureEvent(
+    featureId: number,
+    cb: (functionId: number, params: Uint8Array) => void,
+  ): Promise<() => void> {
+    const idx = await this.getFeature(featureId)
+    if (idx == null) return () => undefined
+    let set = this.eventListeners.get(idx)
+    if (!set) {
+      set = new Set()
+      this.eventListeners.set(idx, set)
+    }
+    set.add(cb)
+    const captured = set
+    return () => captured.delete(cb)
   }
 
   async getFeature(featureId: number): Promise<number | null> {
@@ -369,6 +418,29 @@ export class HidppClient {
       return name.replace(/\0/g, '').trim() || '-'
     } catch {
       return '-'
+    }
+  }
+
+  async getDeviceInfo(): Promise<HidppDeviceInfo> {
+    const r = await this.call(HIDPP.DEVICE_INFO, 0)
+    const unitId =
+      (((r[1] ?? 0) << 24) |
+        ((r[2] ?? 0) << 16) |
+        ((r[3] ?? 0) << 8) |
+        (r[4] ?? 0)) >>>
+      0
+    const transport = ((r[5] ?? 0) << 8) | (r[6] ?? 0)
+    const modelBytes = r.slice(7, 13)
+    return {
+      entityCount: r[0] ?? 0,
+      unitId,
+      transport,
+      modelIdHex: [...modelBytes]
+        .map((value) => value.toString(16).padStart(2, '0'))
+        .join('')
+        .toUpperCase(),
+      extendedModelId: r[13] ?? 0,
+      raw: r,
     }
   }
 
@@ -701,6 +773,36 @@ export class HidppClient {
       await this.writeOnboardSector(s, factory)
     }
     await sleep(60)
+  }
+
+  /** Raw 0x8100 fn0 description (memory model, profile format, sector size, ...). */
+  async getOnboardProfilesInfoBytes(): Promise<Uint8Array | null> {
+    const feat = await this.getFeature(HIDPP.ONBOARD_PROFILES)
+    if (feat == null) return null
+    return this.call(HIDPP.ONBOARD_PROFILES, 0)
+  }
+
+  /** 0x8100 fn2 GetOnboardMode: 1 = onboard, 2 = host (G HUB / software control). */
+  async getOnboardMode(): Promise<number | null> {
+    const feat = await this.getFeature(HIDPP.ONBOARD_PROFILES)
+    if (feat == null) return null
+    const mode = await this.call(HIDPP.ONBOARD_PROFILES, 2)
+    return mode[0] ?? null
+  }
+
+  /** 0x8100 fn1 SetOnboardMode - what OMM's Enable/DisableHostMode call. */
+  async setOnboardMode(mode: 1 | 2): Promise<void> {
+    // OMM's native set_onboard_mode waits 3000 ms for the ack.
+    await this.call(HIDPP.ONBOARD_PROFILES, 1, new Uint8Array([mode]), 3000)
+  }
+
+  /**
+   * fn3 with a full profile id (u16 BE). Unlike `setActiveOnboardProfile`
+   * this never repairs the directory or writes factory sectors, so it is
+   * safe for devices whose profile layout is not Superlight's.
+   */
+  async activateOnboardProfile(profileId: number): Promise<void> {
+    await this.setActiveProfileRaw(profileId)
   }
 
   /** Activate onboard profile sector (fn3). Params = u16 BE sector (00 0N). */

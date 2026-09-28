@@ -21,6 +21,16 @@ export interface DeviceDriver {
   lastVerifyNote: string | null
   mouseReachable: boolean
   writePhase: DeviceWritePhase
+  /** X3 clean-room read-only capability discovery; absent on other devices. */
+  readonly hitsCapabilities?: {
+    featureIndex: number | null
+    analogButtonsBitfield: number | null
+    actuationMax: number | null
+    hapticsMax: number | null
+    rapidTriggerMax: number | null
+    source: 'device' | 'static-analysis'
+  }
+  readonly protocolDiagnostics?: ReadonlyArray<string>
 
   getState(): DeviceState
   attach(transport: Transport): Promise<void>

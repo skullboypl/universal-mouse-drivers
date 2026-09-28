@@ -12,6 +12,7 @@ Independent of the Vite WebHID app (both talk to the mouse; close Chrome WebHID 
 | Rampage Blitz Ultimate | `3554:F562` corded · `3554:F563` dongle | yes |
 | G-Wolves Fenrir Max | `33E4:3717` wireless · `33E4:3708` corded | yes |
 | Logitech PRO X SUPERLIGHT (gen1) | `046D:C547` LIGHTSPEED receiver | yes |
+| Logitech G PRO X3 SUPERSTRIKE | `046D:C0A9` corded · `046D:C54F` LIGHTSPEED receiver | yes |
 | OpenMouse catalog (community) | VID:PID from generated catalog | detect all; % for G-Wolves, Logitech HID++, VGN/Pulsar/ATK/Teevolution, Lamzu/Glorious Classic, K-snake, SteelSeries, Razer, Keychron, WALLHACK, MCHOSE, Ninjutso; else n/a |
 
 ## Features
@@ -81,6 +82,11 @@ Copies signed exe to `../data/downloads/UmdBatteryTray.exe`. Upload that file in
 1. Opens HID++ long collection (usage page `FF00` / usage `02`, report id `0x11`)
 2. Root.GetFeature(`0x1004`) → feature index, then fn1 GetStatus
 3. Params: SoC %, level flags, charging_status (≠0 → charging). Close G HUB / OMM if open fails.
+
+### PRO X3 SUPERSTRIKE (`Protocol/Mice/Logitech/ProX3Superstrike/`)
+1. Opens the HID++ long collection on vendor usage page `FF43` (report id `0x11`); the exact interface is confirmed by a HID++ ping
+2. Device index `0xFF` when corded (`C0A9`), `0x01` through the receiver (`C54F`)
+3. Root.GetFeature(`0x1004`) → feature index, then fn1 GetStatus; status `0` discharging · `1`/`3` charging · `2` full. Close G HUB / OMM if open fails.
 
 ## License
 

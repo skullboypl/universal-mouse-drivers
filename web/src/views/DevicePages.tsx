@@ -2,6 +2,7 @@
 
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
+import { PRO_X3_SUPERSTRIKE_IDENTITY } from '@/devices/mice/logitech/pro-x3-superstrike/identity'
 import { useDeviceSession } from '@/session/DeviceSessionContext'
 import { ButtonsPage } from './ButtonsPage'
 import { FenrirButtonsPage } from './fenrir/FenrirButtonsPage'
@@ -9,6 +10,7 @@ import { FenrirSensorPage } from './fenrir/FenrirSensorPage'
 import { SensorPage } from './SensorPage'
 import { SuperlightButtonsPage } from './superlight/SuperlightButtonsPage'
 import { SuperlightSensorPage } from './superlight/SuperlightSensorPage'
+import { ProX3Workspace } from './pro-x3/ProX3Workspace'
 
 /** Per-mouse UI router - Fenrir/Superlight use OEM-style pages, King keeps UMD chrome. */
 export function DeviceButtonsPage() {
@@ -19,6 +21,7 @@ export function DeviceButtonsPage() {
   if (driver?.identity.id === SUPERLIGHT_IDENTITY.id) {
     return <SuperlightButtonsPage />
   }
+  if (driver?.identity.id === PRO_X3_SUPERSTRIKE_IDENTITY.id) return <ProX3Workspace />
   return <ButtonsPage />
 }
 
@@ -30,5 +33,6 @@ export function DeviceSensorPage() {
   if (driver?.identity.id === SUPERLIGHT_IDENTITY.id) {
     return <SuperlightSensorPage />
   }
+  if (driver?.identity.id === PRO_X3_SUPERSTRIKE_IDENTITY.id) return <ProX3Workspace />
   return <SensorPage />
 }

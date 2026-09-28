@@ -1,4 +1,5 @@
 using UmdBatteryTray.Protocol.Mice.Gwolves.FenrirMax;
+using UmdBatteryTray.Protocol.Mice.Logitech.ProX3Superstrike;
 using UmdBatteryTray.Protocol.Mice.Logitech.ProXSuperlight;
 using UmdBatteryTray.Protocol.Mice.Rampage.BlitzUltimate;
 using UmdBatteryTray.Protocol.Mice.Redragon.KingUltra;
@@ -8,7 +9,7 @@ namespace UmdBatteryTray.Protocol;
 
 /// <summary>
 /// Multi-device battery facade: preferred VID:PID, else first available
-/// (King → Blitz → Fenrir → Superlight → OpenMouse community).
+/// (King → Blitz → Fenrir → Superlight → PRO X3 SUPERSTRIKE → OpenMouse community).
 /// </summary>
 internal sealed class UmdBatteryReader : IDisposable
 {
@@ -16,6 +17,7 @@ internal sealed class UmdBatteryReader : IDisposable
     private BlitzUltimateBatteryReader? _blitz;
     private GwolvesBatteryReader? _fenrir;
     private SuperlightBatteryReader? _superlight;
+    private ProX3BatteryReader? _proX3;
     private OpenMouseCommunityBatteryReader? _openMouse;
     private UmdDeviceInfo? _active;
 
@@ -25,6 +27,7 @@ internal sealed class UmdBatteryReader : IDisposable
         UmdDeviceKind.BlitzUltimate => _blitz?.IsConnected == true,
         UmdDeviceKind.FenrirMax => _fenrir?.IsConnected == true,
         UmdDeviceKind.Superlight => _superlight?.IsConnected == true,
+        UmdDeviceKind.ProX3Superstrike => _proX3?.IsConnected == true,
         UmdDeviceKind.OpenMouseCommunity => _openMouse?.IsConnected == true,
         _ => false,
     };
@@ -35,6 +38,7 @@ internal sealed class UmdBatteryReader : IDisposable
         UmdDeviceKind.BlitzUltimate => _blitz?.DeviceLabel,
         UmdDeviceKind.FenrirMax => _fenrir?.DeviceLabel,
         UmdDeviceKind.Superlight => _superlight?.DeviceLabel,
+        UmdDeviceKind.ProX3Superstrike => _proX3?.DeviceLabel,
         UmdDeviceKind.OpenMouseCommunity => _openMouse?.DeviceLabel,
         _ => null,
     };
@@ -63,7 +67,7 @@ internal sealed class UmdBatteryReader : IDisposable
         var available = ListAvailable();
         var target = UmdDeviceEnumerator.ResolvePreferred(available, PreferredDeviceKey)
             ?? throw new InvalidOperationException(
-                "No UMD mouse found (King Ultra, Blitz Ultimate, Fenrir Max, Superlight, " +
+                "No UMD mouse found (King Ultra, Blitz Ultimate, Fenrir Max, Superlight, PRO X3 SUPERSTRIKE, " +
                 "or OpenMouse community VID:PID). Close Chrome WebHID / G HUB / OMM / OEM apps.");
 
         try
@@ -118,6 +122,11 @@ internal sealed class UmdBatteryReader : IDisposable
                 _superlight.Connect(target.ProductId);
                 _active = target;
                 break;
+            case UmdDeviceKind.ProX3Superstrike:
+                _proX3 = new ProX3BatteryReader();
+                _proX3.Connect(target.ProductId);
+                _active = target;
+                break;
             case UmdDeviceKind.OpenMouseCommunity:
                 _openMouse = new OpenMouseCommunityBatteryReader();
                 _openMouse.Connect(target.VendorId, target.ProductId);
@@ -136,6 +145,7 @@ internal sealed class UmdBatteryReader : IDisposable
             UmdDeviceKind.BlitzUltimate when _blitz is not null => _blitz.ReadBattery(),
             UmdDeviceKind.FenrirMax when _fenrir is not null => _fenrir.ReadBattery(),
             UmdDeviceKind.Superlight when _superlight is not null => _superlight.ReadBattery(),
+            UmdDeviceKind.ProX3Superstrike when _proX3 is not null => _proX3.ReadBattery(),
             UmdDeviceKind.OpenMouseCommunity when _openMouse is not null => _openMouse.ReadBattery(),
             _ => throw new InvalidOperationException("Device not connected."),
         };
@@ -151,6 +161,8 @@ internal sealed class UmdBatteryReader : IDisposable
         _fenrir = null;
         _superlight?.Dispose();
         _superlight = null;
+        _proX3?.Dispose();
+        _proX3 = null;
         _openMouse?.Dispose();
         _openMouse = null;
         _active = null;

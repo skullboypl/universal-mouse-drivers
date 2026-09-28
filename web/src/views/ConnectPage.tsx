@@ -24,6 +24,7 @@ import type { OpenMouseDemoProfile } from '@/devices/openmouse/capabilities'
 import { OpenMouseProductMark } from '@/components/OpenMouseProductMark'
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
+import { PRO_X3_SUPERSTRIKE_IDENTITY } from '@/devices/mice/logitech/pro-x3-superstrike/identity'
 import { BLITZ_ULTIMATE_IDENTITY } from '@/devices/mice/rampage/blitz-ultimate/identity'
 import { KING_ULTRA_IDENTITY } from '@/devices/mice/redragon/king-ultra/identity'
 import type { DeviceIdentity, DeviceSupportStatus } from '@/devices/types'
@@ -56,6 +57,7 @@ function connectingLabel(
   if (catalogId === KING_ULTRA_IDENTITY.id) return 'King Ultra…'
   if (catalogId === BLITZ_ULTIMATE_IDENTITY.id) return 'Blitz Ultimate…'
   if (catalogId === SUPERLIGHT_IDENTITY.id) return 'SUPERLIGHT…'
+  if (catalogId === PRO_X3_SUPERSTRIKE_IDENTITY.id) return 'PRO X3 SUPERSTRIKE…'
   return syncing
 }
 
@@ -147,8 +149,9 @@ export function ConnectPage() {
       const catalogId = await connectWebHid(target)
       nav.push(
         lp(
-          catalogId === FENRIR_MAX_IDENTITY.id ||
-            catalogId === SUPERLIGHT_IDENTITY.id
+            catalogId === FENRIR_MAX_IDENTITY.id ||
+            catalogId === SUPERLIGHT_IDENTITY.id ||
+            catalogId === PRO_X3_SUPERSTRIKE_IDENTITY.id
             ? '/device/buttons'
             : '/device/sensor',
         ),
@@ -195,7 +198,8 @@ export function ConnectPage() {
       nav.push(
         lp(
           catalogId === FENRIR_MAX_IDENTITY.id ||
-            catalogId === SUPERLIGHT_IDENTITY.id
+            catalogId === SUPERLIGHT_IDENTITY.id ||
+            catalogId === PRO_X3_SUPERSTRIKE_IDENTITY.id
             ? '/device/buttons'
             : '/device/sensor',
         ),

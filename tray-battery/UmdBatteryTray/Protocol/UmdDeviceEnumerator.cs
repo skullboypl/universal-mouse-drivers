@@ -1,5 +1,6 @@
 using HidSharp;
 using UmdBatteryTray.Protocol.Mice.Gwolves.FenrirMax;
+using UmdBatteryTray.Protocol.Mice.Logitech.ProX3Superstrike;
 using UmdBatteryTray.Protocol.Mice.Logitech.ProXSuperlight;
 using UmdBatteryTray.Protocol.Mice.Rampage.BlitzUltimate;
 using UmdBatteryTray.Protocol.Mice.Redragon.KingUltra;
@@ -46,6 +47,14 @@ internal static class UmdDeviceEnumerator
             UmdDeviceKind.Superlight,
             "PRO X SUPERLIGHT");
 
+        AddSku(
+            byKey,
+            ProX3SuperstrikeConstants.VendorId,
+            ProX3SuperstrikeConstants.ProductIds,
+            UmdDeviceKind.ProX3Superstrike,
+            ProX3SuperstrikeConstants.DefaultLabel,
+            alwaysUseFallbackName: true); // the receiver reports itself as "USB Receiver"
+
         AddOpenMouseCatalog(byKey);
 
         return byKey.Values
@@ -55,8 +64,9 @@ internal static class UmdDeviceEnumerator
                 UmdDeviceKind.BlitzUltimate => 1,
                 UmdDeviceKind.FenrirMax => 2,
                 UmdDeviceKind.Superlight => 3,
-                UmdDeviceKind.OpenMouseCommunity => 4,
-                _ => 5,
+                UmdDeviceKind.ProX3Superstrike => 4,
+                UmdDeviceKind.OpenMouseCommunity => 5,
+                _ => 6,
             })
             .ThenByDescending(d => IsWirelessPid(d) ? 1 : 0)
             .ThenBy(d => d.ProductId)
@@ -89,7 +99,8 @@ internal static class UmdDeviceEnumerator
         int vendorId,
         IReadOnlyList<int> productIds,
         UmdDeviceKind kind,
-        string fallbackName)
+        string fallbackName,
+        bool alwaysUseFallbackName = false)
     {
         foreach (var pid in productIds)
         {
@@ -99,7 +110,7 @@ internal static class UmdDeviceEnumerator
                 if (byKey.ContainsKey(key))
                     continue;
                 string name;
-                try { name = d.GetProductName() ?? fallbackName; }
+                try { name = alwaysUseFallbackName ? fallbackName : d.GetProductName() ?? fallbackName; }
                 catch { name = fallbackName; }
                 byKey[key] = new UmdDeviceInfo(kind, d.VendorID, d.ProductID, name);
             }
@@ -113,6 +124,7 @@ internal static class UmdDeviceEnumerator
             UmdDeviceKind.BlitzUltimate => BlitzUltimateConstants.IsWirelessDongle(d.ProductId),
             UmdDeviceKind.FenrirMax => d.ProductId == GwolvesConstants.FenrirMaxWirelessPid,
             UmdDeviceKind.Superlight => true,
+            UmdDeviceKind.ProX3Superstrike => ProX3SuperstrikeConstants.IsWirelessReceiver(d.ProductId),
             UmdDeviceKind.OpenMouseCommunity => true,
             _ => false,
         };
