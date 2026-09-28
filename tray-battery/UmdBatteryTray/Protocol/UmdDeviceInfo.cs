@@ -6,6 +6,7 @@ internal enum UmdDeviceKind
     BlitzUltimate,
     FenrirMax,
     Superlight,
+    ProX3Superstrike,
     /// <summary>OpenMouse catalog VID:PID — battery may be n/a until family reader lands.</summary>
     OpenMouseCommunity,
 }

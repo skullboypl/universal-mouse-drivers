@@ -6,6 +6,7 @@ import { useEffect, useId, useState } from 'react'
 import { UMD } from '@/brand/umd'
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
+import { PRO_X3_SUPERSTRIKE_IDENTITY } from '@/devices/mice/logitech/pro-x3-superstrike/identity'
 import { OPENMOUSE_BACKED_ID } from '@/devices/openmouse/constants'
 import {
   openMouseBrandLogoUrl,
@@ -78,7 +79,8 @@ export function TopNav() {
   const onMarketing = !connected && isMarketingPath(pathname)
   const oemSinglePage =
     driver?.identity.id === FENRIR_MAX_IDENTITY.id ||
-    driver?.identity.id === SUPERLIGHT_IDENTITY.id
+    driver?.identity.id === SUPERLIGHT_IDENTITY.id ||
+    driver?.identity.id === PRO_X3_SUPERSTRIKE_IDENTITY.id
   const isOpenMouse = driver?.identity.id === OPENMOUSE_BACKED_ID
   const omTabs = [
     ...OPENMOUSE_TABS,
