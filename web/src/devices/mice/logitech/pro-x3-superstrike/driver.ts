@@ -675,8 +675,15 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
           pl: 'Ta mysz nie udostępnia sterowania powierzchnią gamingową.',
         })
       }
+      // modeStatus1 (the byte gaming surface/LightForce live in) is payload
+      // byte index 1, not 4: OpenMouse's own reply[4] is measured against
+      // their *unsliced* report (header still at indices 0-2, so index 4 is
+      // payload byte 1), but our HidppClient.request() already strips the
+      // 3-byte header before resolving - copying their index literally read
+      // past the real payload and decoded as 0 (Auto) regardless of the
+      // mouse's actual state.
       const before = await hidpp.request(idx, 0)
-      const currentByte = before[4] ?? 0
+      const currentByte = before[1] ?? 0
       if (decodeGamingSurfaceMode(currentByte) === mode) {
         this.state.sensor.gamingSurfaceMode = mode
         this.lastWriteOk = true
@@ -686,7 +693,7 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
       }
       await hidpp.request(idx, 1, encodeGamingSurfaceWrite(currentByte, mode))
       const after = await hidpp.request(idx, 0)
-      const confirmed = decodeGamingSurfaceMode(after[4] ?? 0)
+      const confirmed = decodeGamingSurfaceMode(after[1] ?? 0)
       if (confirmed !== mode) {
         return this.writeFailure({
           en: `The mouse kept ${confirmed ?? 'an unknown'} gaming surface mode instead of ${mode}.`,
@@ -976,7 +983,7 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
       if (modeStatusIndex != null) {
         try {
           const resp = await hidpp.request(modeStatusIndex, 0)
-          const mode = decodeGamingSurfaceMode(resp[4] ?? 0)
+          const mode = decodeGamingSurfaceMode(resp[1] ?? 0)
           this.state.sensor.gamingSurfaceMode = mode ?? undefined
           this.protocolDiagnostics.push(`feature 0x8090 index ${modeStatusIndex} gaming surface ${mode ?? 'unknown'}`)
         } catch (error) {
