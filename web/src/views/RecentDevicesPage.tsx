@@ -74,18 +74,22 @@ export function RecentDevicesPage() {
               onClick={() => void goHid({ forcePicker: true }, 'other')}
             >
               {connectingKey === 'other' ? (
-                <span className={styles.busy}>
-                  <span className={styles.spin} aria-hidden />
-                  {tr('status.syncing')}
+                <span className={styles.addArt}>
+                  <span className={styles.busy}>
+                    <span className={styles.spin} aria-hidden />
+                    {tr('status.syncing')}
+                  </span>
                 </span>
               ) : (
-                <>
+                <span className={styles.addArt}>
                   <span className={styles.addIcon} aria-hidden>
                     +
                   </span>
-                  <span className={styles.addLabel}>{tr('connect.addDevice')}</span>
-                </>
+                </span>
               )}
+              <span className={styles.addBody}>
+                <span className={styles.addLabel}>{tr('connect.addDevice')}</span>
+              </span>
             </button>
           </li>
 
