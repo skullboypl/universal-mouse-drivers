@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { UMD } from '@/brand/umd'
 import { Button } from '@/components/Button'
 import { FaqSection } from '@/components/FaqSection'
+import { MeasureLine } from '@/components/MeasureLine'
 import ui from '@/components/ui.module.css'
 import {
   DEVICE_CATALOG,
@@ -223,7 +224,7 @@ export function ConnectPage() {
   const omFeatured = getOpenMouseFeaturedEntries(8)
 
   return (
-    <div className={styles.page} data-brand="umd">
+    <div className={styles.page} data-brand="umd" id="top">
       <section className={styles.hero} aria-label={UMD.name}>
         <div className={styles.heroCopy}>
           <p className={styles.brandMark}>
@@ -358,20 +359,11 @@ export function ConnectPage() {
           {mounted && !webHidOk ? (
             <p className={styles.warn}>{tr('connect.noWebHid')}</p>
           ) : null}
-          <ol className={styles.steps}>
-            <li>
-              <span className={styles.stepNum}>1</span>
-              {tr('connect.step1')}
-            </li>
-            <li>
-              <span className={styles.stepNum}>2</span>
-              {tr('connect.step2')}
-            </li>
-            <li>
-              <span className={styles.stepNum}>3</span>
-              {tr('connect.step3')}
-            </li>
-          </ol>
+          <div className={styles.steps}>
+            <MeasureLine index={1} label={tr('connect.step1')} />
+            <MeasureLine index={2} label={tr('connect.step2')} />
+            <MeasureLine index={3} label={tr('connect.step3')} />
+          </div>
         </div>
         <HeroMiceSlider devices={nativeDevices} />
       </section>

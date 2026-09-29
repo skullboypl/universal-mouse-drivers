@@ -46,6 +46,13 @@ docs/**
 tools/
 old/
 
+# working notes, roadmaps, setup guides for us only - never committed anywhere
+.todo/
+
+# upstream OpenMouse repos cloned locally for reference (UI + protocol) -
+# not our source, never committed
+.ref/
+
 # OpenMouse scraped packshots (UI uses logos + OpenMouseProductMark instead)
 web/public/devices/openmouse/models/
 web/public/devices/openmouse/mice/*

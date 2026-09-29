@@ -8,6 +8,7 @@ import {
   checkHitsWriteGate,
   checkProfileGate,
   decodeButtonRecord,
+  decodeGamingSurfaceMode,
   decodeHitsCapabilities,
   decodeHitsButtonConfig,
   decodeOnboardProfilesInfo,
@@ -30,9 +31,11 @@ import {
   readProfileRates,
   resolveX3Variant,
   sectorCrcIsValid,
+  encodeGamingSurfaceWrite,
   type HitsButtonSetting,
   type OnboardProfilesInfo,
   type X3ButtonAction,
+  type X3GamingSurfaceMode,
   type X3Variant,
 } from './protocol'
 import { umdLog } from '../../../../debug/umdLog'
@@ -43,6 +46,8 @@ const HIDPP_FEATURE = {
   HITS: 0x1b0c,
   EXTENDED_DPI: 0x2202,
   EXTENDED_REPORT_RATE: 0x8061,
+  /** "Mode Status" - gaming surface + LightForce switch mode (live write, not onboard flash). */
+  MODE_STATUS: 0x8090,
 } as const
 
 const X3_DPI_PRESETS = [800, 1200, 1600, 2400, 3200] as const
@@ -72,6 +77,11 @@ const bytesEqual = (a: Uint8Array, b: Uint8Array) =>
 const HOST_MODE_HINT: X3Message = {
   en: 'The mouse stays in host mode (software control). Close Logitech G HUB and any other app using the mouse, then try again.',
   pl: 'Mysz pozostaje w trybie host (sterowanie z oprogramowania). Zamknij Logitech G HUB i inne programy używające myszy, po czym spróbuj ponownie.',
+}
+
+const ONBOARD_MODE_HINT: X3Message = {
+  en: 'The mouse stayed in onboard mode. Move it, then try switching back to host mode again.',
+  pl: 'Mysz pozostała w trybie wbudowanym. Poruszaj nią, po czym spróbuj ponownie przełączyć na tryb host.',
 }
 
 /**
@@ -350,6 +360,22 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
    * started. If G HUB owns the mouse and flips it back, the caller is told.
    */
   async ensureOnboardMode(): Promise<{ ok: boolean; switched: boolean; message: X3Message | null }> {
+    return this.ensureModeIs(1, HOST_MODE_HINT)
+  }
+
+  /**
+   * Same switch, other direction: back to host mode (G HUB owns the mouse).
+   * Onboard-only writes stop applying once this succeeds - use it to hand
+   * the mouse back, e.g. before closing UMD and opening G HUB.
+   */
+  async ensureHostMode(): Promise<{ ok: boolean; switched: boolean; message: X3Message | null }> {
+    return this.ensureModeIs(2, ONBOARD_MODE_HINT)
+  }
+
+  private async ensureModeIs(
+    target: 1 | 2,
+    failureHint: X3Message,
+  ): Promise<{ ok: boolean; switched: boolean; message: X3Message | null }> {
     const hidpp = this.hidpp
     if (!hidpp) {
       return {
@@ -367,9 +393,9 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
     let mode = await readMode()
     let switched = false
     let setError = ''
-    if (mode !== 1) {
+    if (mode !== target) {
       try {
-        await hidpp.setOnboardMode(1)
+        await hidpp.setOnboardMode(target)
         switched = true
       } catch (error) {
         setError = error instanceof Error ? error.message : String(error)
@@ -377,20 +403,20 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
       // The mouse may apply the switch slightly after acking (or after a lost ack).
       for (let attempt = 0; attempt < 6; attempt++) {
         mode = await readMode()
-        if (mode === 1) break
+        if (mode === target) break
         await new Promise((resolve) => setTimeout(resolve, 350))
       }
     }
     this.onboardMode = mode === 1 ? 'onboard' : mode === 2 ? 'host' : 'unknown'
     const detail = `mode read ${mode ?? 'failed'}${setError ? `, set failed: ${setError}` : ''}${readError ? `, read failed: ${readError}` : ''}`
-    this.protocolDiagnostics.push(`onboard mode switch: ${detail}`)
-    umdLog('x3', 'info', 'onboard mode switch', { attempted: switched || setError !== '', detail, finalMode: mode })
+    this.protocolDiagnostics.push(`mode switch to ${target}: ${detail}`)
+    umdLog('x3', 'info', 'mode switch', { target, attempted: switched || setError !== '', detail, finalMode: mode })
     if (switched || setError) void this.logSnapshot('after-mode-switch')
-    if (mode === 1) return { ok: true, switched, message: null }
+    if (mode === target) return { ok: true, switched, message: null }
     return {
       ok: false,
       switched,
-      message: { en: `${HOST_MODE_HINT.en} (${detail})`, pl: `${HOST_MODE_HINT.pl} (${detail})` },
+      message: { en: `${failureHint.en} (${detail})`, pl: `${failureHint.pl} (${detail})` },
     }
   }
 
@@ -442,6 +468,20 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
     const message = result.ok
       ? { en: 'The mouse is in onboard mode - settings from its profile apply.', pl: 'Mysz jest w trybie wbudowanym - działają ustawienia z jej profilu.' }
       : (result.message ?? HOST_MODE_HINT)
+    return { wrote: result.ok && result.switched, message: message.en, messagePl: message.pl }
+  }
+
+  /**
+   * UI action: hand the mouse back to host mode (G HUB / software control).
+   * Onboard-only writes (HITS, DPI, polling, BHOP, buttons) stop applying
+   * from here once this succeeds - the mouse now takes its settings from
+   * whatever host software is running, same as before UMD ever touched it.
+   */
+  async switchToHostMode(): Promise<X3WriteResult> {
+    const result = await this.ensureHostMode()
+    const message = result.ok
+      ? { en: 'The mouse is back in host mode - close UMD before opening G HUB.', pl: 'Mysz wróciła do trybu host - zamknij UMD przed otwarciem G HUB.' }
+      : (result.message ?? ONBOARD_MODE_HINT)
     return { wrote: result.ok && result.switched, message: message.en, messagePl: message.pl }
   }
 
@@ -641,6 +681,74 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
       return this.writeFailure({
         en: `Write failed: ${detail}${sectorTouched ? ' (the previous profile sector was restored)' : ''}`,
         pl: `Zapis nie powiódł się: ${detail}${sectorTouched ? ' (przywrócono poprzedni sektor profilu)' : ''}`,
+      })
+    }
+  }
+
+  /**
+   * Gaming surface (HID++ feature 0x8090) is a live device write, not part
+   * of the onboard profile flash - read-modify-write the shared modeStatus1
+   * byte, then read back and confirm, same as OpenMouse's setModeStatus.
+   */
+  commitGamingSurfaceMode(mode: X3GamingSurfaceMode): Promise<X3WriteResult> {
+    return this.queued(() => this.writeGamingSurfaceNow(mode))
+  }
+
+  private async writeGamingSurfaceNow(mode: X3GamingSurfaceMode): Promise<X3WriteResult> {
+    const hidpp = this.hidpp
+    if (!hidpp || !this.mouseReachable) {
+      return this.writeFailure({
+        en: 'Not connected over HID++.',
+        pl: 'Brak połączenia HID++.',
+      })
+    }
+    try {
+      const idx = await hidpp.getFeature(HIDPP_FEATURE.MODE_STATUS)
+      if (idx == null) {
+        return this.writeFailure({
+          en: 'This mouse does not expose gaming-surface controls.',
+          pl: 'Ta mysz nie udostępnia sterowania powierzchnią gamingową.',
+        })
+      }
+      // modeStatus1 (the byte gaming surface/LightForce live in) is payload
+      // byte index 1, not 4: OpenMouse's own reply[4] is measured against
+      // their *unsliced* report (header still at indices 0-2, so index 4 is
+      // payload byte 1), but our HidppClient.request() already strips the
+      // 3-byte header before resolving - copying their index literally read
+      // past the real payload and decoded as 0 (Auto) regardless of the
+      // mouse's actual state.
+      const before = await hidpp.request(idx, 0)
+      const currentByte = before[1] ?? 0
+      if (decodeGamingSurfaceMode(currentByte) === mode) {
+        this.state.sensor.gamingSurfaceMode = mode
+        this.lastWriteOk = true
+        this.lastWriteError = null
+        this.notify('ok')
+        return { wrote: false, message: 'Already set on the mouse.', messagePl: 'Ta wartość jest już ustawiona w myszy.' }
+      }
+      await hidpp.request(idx, 1, encodeGamingSurfaceWrite(currentByte, mode))
+      const after = await hidpp.request(idx, 0)
+      const confirmed = decodeGamingSurfaceMode(after[1] ?? 0)
+      if (confirmed !== mode) {
+        return this.writeFailure({
+          en: `The mouse kept ${confirmed ?? 'an unknown'} gaming surface mode instead of ${mode}.`,
+          pl: `Mysz zachowała tryb ${confirmed ?? 'nieznany'} zamiast ${mode}.`,
+        })
+      }
+      this.state.sensor.gamingSurfaceMode = mode
+      this.lastWriteOk = true
+      this.lastWriteError = null
+      this.notify('ok')
+      return {
+        wrote: true,
+        message: `Gaming surface set to ${mode} and verified by read-back.`,
+        messagePl: `Powierzchnia gamingowa ustawiona na ${mode} i potwierdzona odczytem zwrotnym.`,
+      }
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error)
+      return this.writeFailure({
+        en: `Gaming surface write failed: ${detail}`,
+        pl: `Zapis powierzchni gamingowej nie powiódł się: ${detail}`,
       })
     }
   }
@@ -904,6 +1012,22 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
       } else {
         this.state.sensor.reportRate = 0
         this.protocolDiagnostics.push('feature 0x8061 absent')
+      }
+
+      const modeStatusIndex = await hidpp.getFeature(HIDPP_FEATURE.MODE_STATUS)
+      if (modeStatusIndex != null) {
+        try {
+          const resp = await hidpp.request(modeStatusIndex, 0)
+          const mode = decodeGamingSurfaceMode(resp[1] ?? 0)
+          this.state.sensor.gamingSurfaceMode = mode ?? undefined
+          this.protocolDiagnostics.push(`feature 0x8090 index ${modeStatusIndex} gaming surface ${mode ?? 'unknown'}`)
+        } catch (error) {
+          this.state.sensor.gamingSurfaceMode = undefined
+          this.protocolDiagnostics.push(`feature 0x8090 read failed: ${error instanceof Error ? error.message : String(error)}`)
+        }
+      } else {
+        this.state.sensor.gamingSurfaceMode = undefined
+        this.protocolDiagnostics.push('feature 0x8090 absent')
       }
       this.sensorReadStatus = sensorFieldsRead > 0 ? 'verified' : 'unverified'
 

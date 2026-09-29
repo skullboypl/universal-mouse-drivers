@@ -102,7 +102,7 @@ export async function createOpenMouseClient(
 
     if (isFenrirMaxDevice(device.vendorId, device.productId)) {
       throw new Error(
-        'Fenrir Max is listed in OpenMouse but this hardware uses the old G-Wolves protocol. Use Native UMD (recommended in the stack chooser) — OpenMouse’s G-Wolves client is the newer HTX/VGN family.',
+        'Fenrir Max is listed in OpenMouse but this hardware uses the old G-Wolves protocol. Use Native UMD (recommended in the stack chooser) - OpenMouse’s G-Wolves client is the newer HTX/VGN family.',
       )
     }
 

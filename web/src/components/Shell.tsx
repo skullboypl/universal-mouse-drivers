@@ -6,7 +6,9 @@ import { UMD } from '@/brand/umd'
 import { useLocale } from '@/i18n/LocaleContext'
 import { useT } from '@/i18n/useT'
 import { useDeviceSession } from '@/session/DeviceSessionContext'
+import { DeviceSidebar } from './DeviceSidebar'
 import { SyncSpinner } from './SyncSpinner'
+import { TopLoadingBar } from './TopLoadingBar'
 import { TopNav } from './TopNav'
 import { WriteToast } from './WriteToast'
 import styles from './Shell.module.css'
@@ -33,6 +35,7 @@ export function Shell({ children }: { children: ReactNode }) {
     status,
     saveStatus,
     driver,
+    connected,
     deviceBusy,
     busyKind,
     connectError,
@@ -71,12 +74,21 @@ export function Shell({ children }: { children: ReactNode }) {
       ? `${statusText} · ${saveHint}`
       : statusText
 
+  // Wootility-style layout once a device is connected: a slim icon rail
+  // owns the tabs, TopNav shrinks to a top bar naming the device.
+  const sidebarMode = connected && onDeviceUi
+
   return (
     <div
-      className={`app-shell ${overlayOpen ? styles.deviceBusy : ''}`}
+      className={`app-shell ${overlayOpen ? styles.deviceBusy : ''} ${
+        sidebarMode ? styles.withSidebar : ''
+      }`}
       data-device={deviceSkin}
       aria-busy={deviceBusy || undefined}
     >
+      <TopLoadingBar />
+      {sidebarMode ? <DeviceSidebar /> : null}
+      <div className={styles.column}>
       <TopNav />
       <main className={`${styles.main} ${overlayOpen ? styles.busyMain : ''}`}>
         <div className={overlayOpen ? styles.blurContent : undefined}>
@@ -150,6 +162,7 @@ export function Shell({ children }: { children: ReactNode }) {
           </nav>
         </div>
       </footer>
+      </div>
     </div>
   )
 }

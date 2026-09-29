@@ -2,26 +2,35 @@
 
 import { useDeferredValue, useMemo, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import {
-  OPENMOUSE_CATALOG,
   type OpenMouseCatalogEntry,
 } from '@/devices/openmouse/catalog.generated'
 import {
   OPENMOUSE_HUB_PATH,
   describeOpenMouseDevice,
   formatVidPid,
-  getOpenMouseBrandCounts,
   openMouseBrandPath,
   openMouseDevicePath,
   openMouseLogoUrl,
 } from '@/devices/openmouse/catalog'
 import { OpenMouseProductMark } from '@/components/OpenMouseProductMark'
+import {
+  getOpenMouseCapabilityCopy,
+  visibleOpenMouseControls,
+} from '@/devices/openmouse/capabilityPresentation'
 import type { Locale } from '@/i18n/locale'
 import { localePath } from '@/lib/seo'
+import { OPENMOUSE_PAGINATION_COPY, openMousePagePath } from '@/devices/openmouse/pagination'
 import styles from './OpenMouseHub.module.css'
 
 type Props = {
   lang: Locale
+  entries: OpenMouseCatalogEntry[]
+  totalEntries: number
+  page: number
+  pageCount: number
+  brandCounts: ReturnType<typeof import('@/devices/openmouse/catalog').getOpenMouseBrandCounts>
   brandSlug?: string
   title: string
   subtitle: string
@@ -47,6 +56,11 @@ type Props = {
 
 export function OpenMouseHubClient({
   lang,
+  entries,
+  totalEntries,
+  page,
+  pageCount,
+  brandCounts,
   brandSlug,
   title,
   subtitle,
@@ -69,24 +83,20 @@ export function OpenMouseHubClient({
   legendOmHint,
   legendNamedHint,
 }: Props) {
+  const router = useRouter()
   const [q, setQ] = useState('')
-  const [brand, setBrand] = useState(brandSlug ?? '')
   const [namedOnly, setNamedOnly] = useState(false)
   const deferredQ = useDeferredValue(q.trim().toLowerCase())
 
-  const brandCounts = useMemo(() => getOpenMouseBrandCounts(), [])
-
   const filtered = useMemo(() => {
-    return OPENMOUSE_CATALOG.filter((e) => {
-      if (brandSlug && e.brandSlug !== brandSlug) return false
-      if (!brandSlug && brand && e.brandSlug !== brand) return false
+    return entries.filter((e) => {
       if (namedOnly && !e.hasProductName) return false
       if (!deferredQ) return true
       const hay =
         `${e.name} ${e.brand} ${formatVidPid(e.vendorId, e.productId)} ${e.slug}`.toLowerCase()
       return hay.includes(deferredQ)
     })
-  }, [brand, brandSlug, deferredQ, namedOnly])
+  }, [entries, deferredQ, namedOnly])
 
   const lp = (path: string) => localePath(lang, path)
 
@@ -139,26 +149,24 @@ export function OpenMouseHubClient({
           <div className={styles.brandsHead}>
             <h2 id="om-brands">{brandsTitle}</h2>
             <p className={styles.brandsMeta}>
-              {brandCounts.length} brands · {OPENMOUSE_CATALOG.length} HID ids
+              {brandCounts.length} brands · {totalEntries} HID ids
             </p>
           </div>
           <ul className={styles.brandChips}>
             <li>
-              <button
-                type="button"
-                className={`${styles.chip} ${!brand ? styles.chipActive : ''}`}
-                onClick={() => setBrand('')}
+              <Link
+                className={`${styles.chip} ${!brandSlug ? styles.chipActive : ''}`}
+                href={lp(OPENMOUSE_HUB_PATH)}
               >
                 {allBrandsLabel}
-                <span className={styles.chipCount}>{OPENMOUSE_CATALOG.length}</span>
-              </button>
+                <span className={styles.chipCount}>{totalEntries}</span>
+              </Link>
             </li>
             {brandCounts.map((b) => (
               <li key={b.brandSlug}>
                 <Link
                   href={lp(openMouseBrandPath(b.brandSlug))}
-                  className={`${styles.chip} ${brand === b.brandSlug ? styles.chipActive : ''}`}
-                  onClick={() => setBrand(b.brandSlug)}
+                  className={styles.chip}
                 >
                   <img
                     className={styles.chipArt}
@@ -166,6 +174,12 @@ export function OpenMouseHubClient({
                     alt=""
                     width={28}
                     height={28}
+                    onError={(event) => {
+                      const image = event.currentTarget
+                      const generic = '/devices/openmouse/mouse.svg'
+                      if (!image.src.endsWith(generic)) image.src = generic
+                      else image.hidden = true
+                    }}
                   />
                   <span>{b.brand}</span>
                   <span className={styles.chipCount}>{b.count}</span>
@@ -191,8 +205,8 @@ export function OpenMouseHubClient({
             {!brandSlug ? (
               <select
                 className={styles.select}
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
+                value=""
+                onChange={(e) => router.push(lp(e.target.value ? openMouseBrandPath(e.target.value) : OPENMOUSE_HUB_PATH))}
                 aria-label={allBrandsLabel}
               >
                 <option value="">{allBrandsLabel}</option>
@@ -213,7 +227,7 @@ export function OpenMouseHubClient({
             </label>
           </div>
           <p className={styles.count}>
-            {filtered.length} / {OPENMOUSE_CATALOG.length}
+            {filtered.length} / {entries.length} ({Math.min((page - 1) * 24 + 1, totalEntries)}-{Math.min(page * 24, totalEntries)} / {totalEntries})
           </p>
         </div>
 
@@ -225,6 +239,7 @@ export function OpenMouseHubClient({
               <li key={e.id}>
                 <CatalogCard
                   entry={e}
+                  lang={lang}
                   href={lp(openMouseDevicePath(e.brandSlug, e.slug))}
                   brandHref={lp(openMouseBrandPath(e.brandSlug))}
                   description={describeOpenMouseDevice(e, lang)}
@@ -236,6 +251,21 @@ export function OpenMouseHubClient({
             ))}
           </ul>
         )}
+        {pageCount > 1 ? (
+          <nav className={styles.pagination} aria-label={OPENMOUSE_PAGINATION_COPY[lang].navigation}>
+            {page > 1 ? <Link href={lp(openMousePagePath(page - 1, brandSlug))}>{OPENMOUSE_PAGINATION_COPY[lang].previous}</Link> : null}
+            {Array.from({ length: pageCount }, (_, index) => index + 1).map((number) => (
+              <Link
+                key={number}
+                href={lp(openMousePagePath(number, brandSlug))}
+                aria-current={number === page ? 'page' : undefined}
+              >
+                {number}
+              </Link>
+            ))}
+            {page < pageCount ? <Link href={lp(openMousePagePath(page + 1, brandSlug))}>{OPENMOUSE_PAGINATION_COPY[lang].next}</Link> : null}
+          </nav>
+        ) : null}
       </section>
     </div>
   )
@@ -243,6 +273,7 @@ export function OpenMouseHubClient({
 
 function CatalogCard({
   entry,
+  lang,
   href,
   brandHref,
   description,
@@ -251,6 +282,7 @@ function CatalogCard({
   badgeWebhid,
 }: {
   entry: OpenMouseCatalogEntry
+  lang: Locale
   href: string
   brandHref: string
   description: string
@@ -259,6 +291,8 @@ function CatalogCard({
   badgeWebhid: string
 }) {
   const vidPid = formatVidPid(entry.vendorId, entry.productId)
+  const capabilityCopy = getOpenMouseCapabilityCopy(lang)
+  const controls = visibleOpenMouseControls(entry)
   return (
     <article className={styles.card}>
       <Link href={href} className={styles.cardMain}>
@@ -267,6 +301,7 @@ function CatalogCard({
             brandSlug={entry.brandSlug}
             brand={entry.brand}
             model={entry.name}
+            slug={entry.slug}
             size="md"
           />
         </div>
@@ -282,6 +317,14 @@ function CatalogCard({
           <h2>{entry.name}</h2>
           <p className={styles.meta}>{vidPid}</p>
           <p className={styles.cardDesc}>{description}</p>
+          <div className={styles.cardCapabilities} aria-label={capabilityCopy.title}>
+            <span className={styles.capabilityCount}>
+              {capabilityCopy.availableCount(controls.length)}
+            </span>
+            {controls.slice(0, 4).map((control) => (
+              <span key={control.key}>{control.label}</span>
+            ))}
+          </div>
         </div>
       </Link>
       <Link href={brandHref} className={styles.brandLink}>

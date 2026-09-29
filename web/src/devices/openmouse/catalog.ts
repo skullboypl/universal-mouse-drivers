@@ -71,18 +71,46 @@ export function getOpenMouseNamedEntries(): OpenMouseCatalogEntry[] {
   return out
 }
 
-/** Featured named mice for homepage / hub preview strips. */
+/**
+ * Featured named mice for homepage / hub preview strips - round-robins
+ * across brands so the strip doesn't fill up with one brand's color (the
+ * catalog order groups everything by brand, so a plain first-N pick could
+ * surface eight G-Wolves tiles in a row and read as an unrelated green
+ * section next to the amber UI).
+ */
 export function getOpenMouseFeaturedEntries(
   limit = 12,
 ): OpenMouseCatalogEntry[] {
   const seen = new Set<string>()
-  const out: OpenMouseCatalogEntry[] = []
+  const byBrand = new Map<string, OpenMouseCatalogEntry[]>()
+  const brandOrder: string[] = []
   for (const e of getOpenMouseNamedEntries()) {
     const key = `${e.brandSlug}::${e.name.toLowerCase()}`
     if (seen.has(key)) continue
     seen.add(key)
-    out.push(e)
-    if (out.length >= limit) break
+    let bucket = byBrand.get(e.brandSlug)
+    if (!bucket) {
+      bucket = []
+      byBrand.set(e.brandSlug, bucket)
+      brandOrder.push(e.brandSlug)
+    }
+    bucket.push(e)
+  }
+
+  const out: OpenMouseCatalogEntry[] = []
+  let round = 0
+  while (out.length < limit) {
+    let addedThisRound = false
+    for (const brandSlug of brandOrder) {
+      const bucket = byBrand.get(brandSlug)
+      const entry = bucket?.[round]
+      if (!entry) continue
+      out.push(entry)
+      addedThisRound = true
+      if (out.length >= limit) break
+    }
+    if (!addedThisRound) break
+    round += 1
   }
   return out
 }
@@ -99,6 +127,8 @@ export const OPENMOUSE_HUB_PATH = '/mice/openmouse'
 
 /** OG / social preview: brand mark (UI cards use OpenMouseProductMark). */
 export function openMouseImageUrl(brandSlug?: string, _productName?: string, _slug?: string): string {
+  void _productName
+  void _slug
   if (brandSlug) return openMouseBrandLogoUrl(brandSlug)
   return '/devices/openmouse/logos/razer-icon.svg'
 }

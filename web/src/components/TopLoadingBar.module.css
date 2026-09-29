@@ -1,0 +1,44 @@
+.track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 60;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent),
+    var(--accent-hot),
+    var(--accent),
+    transparent
+  );
+  animation: umd-load-sweep 0.85s ease-in-out infinite;
+}
+
+@keyframes umd-load-sweep {
+  0% {
+    left: -40%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    animation: none;
+    left: 0;
+    width: 100%;
+    opacity: 0.6;
+  }
+}

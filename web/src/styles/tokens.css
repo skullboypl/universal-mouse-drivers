@@ -1,88 +1,34 @@
+/**
+ * One visual identity for the whole site (DESIGN_RESEARCH_2026.md, "Jedna
+ * tożsamość wizualna"). Previously each connected device swapped the entire
+ * palette (green/cyan/teal "OEM skins"); the brand/protocol now shows up as
+ * text and labels instead, so every device reads as the same UMD instrument.
+ */
 :root {
-  --bg: #0a0c10;
-  --bg-elevated: #12161d;
-  --bg-panel: #171c25;
-  --bg-hover: #1e2530;
-  --border: #2a3340;
-  --border-strong: #3d4a5c;
-  --fg: #eef1f5;
-  --fg-muted: #8b95a5;
-  --fg-dim: #5c6675;
-  --accent: #e8a23a;
-  --accent-hot: #f0b45a;
-  --accent-soft: rgba(232, 162, 58, 0.14);
-  --signal: #3ecf8e;
-  --success: #3ecf8e;
-  --warning: #e8a23a;
-  --danger: #e05a4a;
+  /* Warm-neutral graphite, not the doc's original #111615 (its green
+   * channel is the highest of the three, so it read as tinted green next
+   * to the black/white/amber logo - most visible in plain UI like modals). */
+  --bg: #121110;
+  --bg-elevated: #171513;
+  --bg-panel: #1c1a17;
+  --bg-hover: #242220;
+  --border: #2e2b27;
+  --border-strong: #3c3833;
+  --fg: #f2f0ec;
+  --fg-muted: #a8a29c;
+  --fg-dim: #6e6862;
+  --accent: #e6a348;
+  --accent-hot: #f0b666;
+  --accent-soft: rgba(230, 163, 72, 0.14);
+  --signal: #5cc59a;
+  --success: #5cc59a;
+  --warning: #e6a348;
+  --danger: #e0685a;
   --radius: 8px;
   --radius-sm: 4px;
-  --font: 'Ubuntu', 'Archivo', system-ui, sans-serif;
-  --display: 'Oxanium', 'delight', 'Ubuntu', sans-serif;
-  --mono: 'Ubuntu Mono', ui-monospace, monospace;
+  --font: 'IBM Plex Sans', system-ui, sans-serif;
+  --display: 'IBM Plex Sans Condensed', 'IBM Plex Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   --nav-h: 64px;
-}
-
-/* OEM G-Wolves DriverCore skin (Naive green) while Fenrir Max is connected */
-.app-shell[data-device='gwolves-fenrir-max'] {
-  --bg: #18181c;
-  --bg-elevated: #232324;
-  --bg-panel: #1c1c1f;
-  --bg-hover: #2a2a2e;
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --fg: #e8e8ed;
-  --fg-muted: #a3a3ad;
-  --fg-dim: #7a7a85;
-  --accent: #18a058;
-  --accent-hot: #36ad6a;
-  --accent-soft: rgba(24, 160, 88, 0.16);
-  --signal: #18a058;
-  --success: #18a058;
-  --radius: 3px;
-  --radius-sm: 3px;
-}
-
-/* OMM-like Logitech G cyan while SUPERLIGHT is connected */
-.app-shell[data-device='logitech-pro-x-superlight'] {
-  --bg: #0f0f0f;
-  --bg-elevated: #1a1a1a;
-  --bg-panel: #161616;
-  --bg-hover: #222;
-  --border: rgba(255, 255, 255, 0.1);
-  --border-strong: rgba(255, 255, 255, 0.18);
-  --fg: #f0f0f0;
-  --fg-muted: #9a9a9a;
-  --fg-dim: #6e6e6e;
-  --accent: #00a0e3;
-  --accent-hot: #33b5eb;
-  --accent-soft: rgba(0, 160, 227, 0.16);
-  --signal: #00a0e3;
-  --success: #00a0e3;
-  --radius: 10px;
-  --radius-sm: 8px;
-}
-
-/* OpenMouse community session - protocol-lab look, not UMD amber / OEM skins */
-.app-shell[data-device='openmouse-backed'] {
-  --bg: #07090c;
-  --bg-elevated: #0e1218;
-  --bg-panel: #0c1016;
-  --bg-hover: #141a22;
-  --border: rgba(45, 212, 191, 0.18);
-  --border-strong: rgba(45, 212, 191, 0.34);
-  --fg: #e8f5f2;
-  --fg-muted: #8aa39c;
-  --fg-dim: #5f746e;
-  --accent: #2dd4bf;
-  --accent-hot: #5eead4;
-  --accent-soft: rgba(45, 212, 191, 0.14);
-  --signal: #2dd4bf;
-  --success: #2dd4bf;
-  --radius: 0;
-  --radius-sm: 0;
-  --font: 'Ubuntu Mono', 'Ubuntu', ui-monospace, monospace;
-  --display: 'Oxanium', 'Ubuntu Mono', sans-serif;
-  --nav-h: 58px;
 }

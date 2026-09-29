@@ -50,7 +50,9 @@
 
 .choice {
   display: grid;
-  gap: 4px;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
   text-align: left;
   padding: 12px 14px;
   border-radius: 10px;
@@ -60,7 +62,29 @@
   cursor: pointer;
   transition:
     border-color 0.12s ease,
-    background 0.12s ease;
+    background 0.12s ease,
+    transform 0.12s ease;
+}
+
+.choice:hover {
+  transform: translateY(-1px);
+}
+
+.choiceIcon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.choiceText {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
 }
 
 .choice:hover {
@@ -96,6 +120,39 @@
   font-size: 0.78rem;
   line-height: 1.4;
   color: color-mix(in srgb, var(--fg) 62%, transparent);
+}
+
+.controlPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.controlPill {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 0.12rem 0.4rem;
+  border-radius: 3px;
+  border: 1px solid var(--border-strong);
+  color: var(--fg-muted);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.controlPill[data-state='driver'] {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: var(--accent-soft);
+}
+
+.choiceWarning {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--fg-dim);
 }
 
 .cancel {

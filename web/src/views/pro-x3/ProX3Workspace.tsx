@@ -63,7 +63,7 @@ const GAUGE_RECT = {
 } as const
 
 function hex(value: number | null | undefined): string {
-  return value == null ? '—' : `0x${value.toString(16).toUpperCase().padStart(2, '0')}`
+  return value == null ? '-' : `0x${value.toString(16).toUpperCase().padStart(2, '0')}`
 }
 
 function toHexDump(bytes: Uint8Array): string {
@@ -156,7 +156,7 @@ export function ProX3Workspace() {
   const hapticsMax = hitsUiMax(hits?.hapticsMax ?? 20)
   const rtMax = hitsUiMax(hits?.rapidTriggerMax ?? 20)
 
-  const battery = state.info.batteryPercent == null ? '—' : `${state.info.batteryPercent}%`
+  const battery = state.info.batteryPercent == null ? '-' : `${state.info.batteryPercent}%`
   const resolvedVariant: X3Variant =
     state.info.colorVariant && state.info.colorVariant !== 'unknown'
       ? state.info.colorVariant
@@ -341,6 +341,26 @@ export function ProX3Workspace() {
           </button>
         </div>
       ) : null}
+      {x3.onboardMode === 'onboard' ? (
+        <div className={css.modeNotice} role="status">
+          <span>
+            {pl
+              ? 'Mysz jest w trybie wbudowanym. Wróć do trybu host, jeśli chcesz otworzyć G HUB lub inne oprogramowanie producenta.'
+              : 'The mouse is in onboard mode. Switch back to host mode if you want to open G HUB or other manufacturer software.'}
+          </span>
+          <button
+            type="button"
+            className={css.toolBtn}
+            onClick={async () => {
+              const r = await x3.switchToHostMode()
+              setNotes((n) => ({ ...n, mode: pl ? r.messagePl : r.message }))
+              await apply(() => undefined, { autosave: false })
+            }}
+          >
+            {pl ? 'Przełącz na tryb host (G HUB)' : 'Switch to host mode (G HUB)'}
+          </button>
+        </div>
+      ) : null}
       {notes.mode ? <p className={css.lockNote}>{notes.mode}</p> : null}
 
       <div className={css.mainGrid}>
@@ -382,7 +402,7 @@ export function ProX3Workspace() {
                       step={X3_DPI_LIMITS.step}
                       disabled={!profileEditable || !stage.enabled}
                       value={draft ?? (stage.enabled ? String(stage.value) : '')}
-                      placeholder={stage.enabled ? undefined : '—'}
+                      placeholder={stage.enabled ? undefined : '-'}
                       onChange={(e) => setDpiDraft((d) => ({ ...d, [stage.index]: e.target.value }))}
                       onBlur={() => void commitDpiInput(stage.index)}
                       onKeyDown={(e) => {
@@ -452,7 +472,7 @@ export function ProX3Workspace() {
                   value={String(sensor.reportRateWireless ?? '')}
                   onChange={(e) => void editAndSave('rates', (d) => d.setPollingRate('wireless', Number(e.target.value)), () => x3.commitRates())}
                 >
-                  {sensor.reportRateWireless == null ? <option value="">—</option> : null}
+                  {sensor.reportRateWireless == null ? <option value="">-</option> : null}
                   {X3_POLL_RATES_HZ.map((hz) => (
                     <option key={hz} value={String(hz)}>{hz} Hz</option>
                   ))}
@@ -466,7 +486,7 @@ export function ProX3Workspace() {
                   value={String(sensor.reportRateWired ?? '')}
                   onChange={(e) => void editAndSave('rates', (d) => d.setPollingRate('wired', Number(e.target.value)), () => x3.commitRates())}
                 >
-                  {sensor.reportRateWired == null ? <option value="">—</option> : null}
+                  {sensor.reportRateWired == null ? <option value="">-</option> : null}
                   {X3_POLL_RATES_HZ.map((hz) => (
                     <option key={hz} value={String(hz)}>{hz} Hz</option>
                   ))}
@@ -474,6 +494,36 @@ export function ProX3Workspace() {
               </label>
             </div>
             {notes.rates ? <p className={css.writeNote}>{notes.rates}</p> : null}
+          </div>
+
+          <div className={css.group}>
+            <h3 className={css.groupTitle}>{pl ? 'Powierzchnia gamingowa' : 'Gaming surface'}</h3>
+            <p className={css.groupHint}>
+              {pl
+                ? 'Dostraja czujnik pod matę gamingową. Auto pozwala myszy zdecydować; wyłącz, jeśli tracking źle się zachowuje na powierzchni niegamingowej.'
+                : 'Tunes the sensor for gaming mouse pads. Auto lets the mouse decide; turn it off if tracking misbehaves on a non-gaming surface.'}
+            </p>
+            <label className={css.inlineLabel}>
+              <span>{pl ? 'Tryb' : 'Mode'}</span>
+              <select
+                className={css.select}
+                disabled={!x3.profileWritesEnabled}
+                value={sensor.gamingSurfaceMode ?? ''}
+                onChange={(e) =>
+                  void run('gamingSurface', () =>
+                    x3.commitGamingSurfaceMode(e.target.value as 'Auto' | 'On' | 'Off'),
+                  )
+                }
+              >
+                {sensor.gamingSurfaceMode == null ? (
+                  <option value="">{pl ? 'nieznane' : 'unknown'}</option>
+                ) : null}
+                <option value="Auto">Auto</option>
+                <option value="On">On</option>
+                <option value="Off">Off</option>
+              </select>
+            </label>
+            {notes.gamingSurface ? <p className={css.writeNote}>{notes.gamingSurface}</p> : null}
           </div>
 
           <div className={css.group}>
@@ -503,7 +553,7 @@ export function ProX3Workspace() {
                   step={X3_BHOP_LIMITS.stepMs}
                   disabled={!profileEditable || !sensor.bhopEnabled}
                   value={bhopDraft ?? (sensor.bhopEnabled ? String(sensor.bhopTimeoutMs ?? X3_BHOP_LIMITS.minMs) : '')}
-                  placeholder="—"
+                  placeholder="-"
                   onChange={(e) => setBhopDraft(e.target.value)}
                   onBlur={() => void commitBhopInput()}
                   onKeyDown={(e) => {
@@ -643,9 +693,9 @@ export function ProX3Workspace() {
             <div><dt>{pl ? 'Połączenie' : 'Connection'}</dt><dd>{state.info.connection}</dd></div>
             <div><dt>{pl ? 'Indeks HITS' : 'HITS index'}</dt><dd>{hex(hits?.featureIndex)}</dd></div>
             <div><dt>{pl ? 'Kod statusu baterii' : 'Battery status code'}</dt><dd>{hex(state.info.batteryStatusCode)}</dd></div>
-            <div><dt>Model ID</dt><dd>{state.info.modelIdHex || '—'}</dd></div>
+            <div><dt>Model ID</dt><dd>{state.info.modelIdHex || '-'}</dd></div>
             <div><dt>{pl ? 'Odczyt HITS' : 'HITS read'}</dt><dd>{x3.hitsReadStatus === 'verified' ? (pl ? 'z urządzenia' : 'from device') : x3.hitsReadStatus === 'demo' ? 'demo' : unresolved}</dd></div>
-            <div><dt>{pl ? 'Profil onboard' : 'Onboard profile'}</dt><dd>{x3.onboardProfileNote ?? '—'}</dd></div>
+            <div><dt>{pl ? 'Profil onboard' : 'Onboard profile'}</dt><dd>{x3.onboardProfileNote ?? '-'}</dd></div>
           </dl>
 
           <div className={css.log}>

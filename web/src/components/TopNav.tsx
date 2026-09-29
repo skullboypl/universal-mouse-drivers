@@ -4,9 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useId, useState } from 'react'
 import { UMD } from '@/brand/umd'
-import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
-import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
-import { PRO_X3_SUPERSTRIKE_IDENTITY } from '@/devices/mice/logitech/pro-x3-superstrike/identity'
 import { OPENMOUSE_BACKED_ID } from '@/devices/openmouse/constants'
 import {
   openMouseBrandLogoUrl,
@@ -19,24 +16,6 @@ import { useDeviceSession } from '@/session/DeviceSessionContext'
 import { Button } from './Button'
 import { LanguageMenu } from './LanguageMenu'
 import styles from './TopNav.module.css'
-
-const KING_TABS: { path: string; key: MessageKey; disabled?: boolean }[] = [
-  { path: '/device/buttons', key: 'nav.buttons' },
-  { path: '/device/sensor', key: 'nav.sensor' },
-  { path: '/device/settings', key: 'nav.settings' },
-]
-
-/** OpenMouse: sensor-first; buttons/settings only when capabilities allow. */
-const OPENMOUSE_TABS: { path: string; key: MessageKey }[] = [
-  { path: '/device/sensor', key: 'nav.sensor' },
-  { path: '/device/settings', key: 'nav.settings' },
-]
-
-/** OEM Fenrir / Superlight: one mouse page + settings. */
-const OEM_TABS: { path: string; key: MessageKey }[] = [
-  { path: '/device/buttons', key: 'nav.mouse' },
-  { path: '/device/settings', key: 'nav.settings' },
-]
 
 type MarketingLink = { href: string; key: MessageKey }
 
@@ -77,29 +56,19 @@ export function TopNav() {
   const tr = useT()
   const pathname = usePathname() || ''
   const onMarketing = !connected && isMarketingPath(pathname)
-  const oemSinglePage =
-    driver?.identity.id === FENRIR_MAX_IDENTITY.id ||
-    driver?.identity.id === SUPERLIGHT_IDENTITY.id ||
-    driver?.identity.id === PRO_X3_SUPERSTRIKE_IDENTITY.id
   const isOpenMouse = driver?.identity.id === OPENMOUSE_BACKED_ID
-  const omTabs = [
-    ...OPENMOUSE_TABS,
-    ...(driver?.capabilities?.buttons
-      ? [{ path: '/device/buttons', key: 'nav.buttons' as MessageKey }]
-      : []),
-  ]
-  const tabs = oemSinglePage ? OEM_TABS : isOpenMouse ? omTabs : KING_TABS
   const refreshing = deviceBusy && busyKind === 'refresh'
   const [menuOpen, setMenuOpen] = useState(false)
   const menuId = useId()
 
+  // One flat set of destinations, not six equal-weight links plus badges
+  // (DESIGN_RESEARCH_2026.md): "Myszy / OpenMouse / Battery Tray / Jak to
+  // działa" here, "Połącz mysz" as the separate primary action below.
   const marketingLinks: MarketingLink[] = [
     { href: `${lp('/')}#mice`, key: 'nav.mice' },
     { href: `${lp('/')}#openmouse`, key: 'nav.openMouse' },
     { href: lp('/tray'), key: 'nav.tray' },
     { href: lp('/why'), key: 'nav.why' },
-    { href: `${lp('/')}#faq`, key: 'nav.faq' },
-    { href: `${lp('/')}#contact`, key: 'nav.contact' },
   ]
 
   useEffect(() => {
@@ -171,35 +140,12 @@ export function TopNav() {
         </Link>
       )}
 
-      {connected ? (
-        <nav className={styles.tabs} aria-label={tr('nav.deviceNav')}>
-          {tabs.map((tab) => {
-            const href = lp(tab.path)
-            const active = pathname === href || pathname.startsWith(`${href}/`)
-            if ('disabled' in tab && tab.disabled) {
-              return (
-                <span
-                  key={tab.path}
-                  className={styles.tabDisabled}
-                  title={tr('nav.macroSoon')}
-                  aria-disabled="true"
-                >
-                  {tr(tab.key)}
-                  <span className={styles.soon}>{tr('nav.soon')}</span>
-                </span>
-              )
-            }
-            return (
-              <Link
-                key={tab.path}
-                href={href}
-                className={active ? styles.tabActive : styles.tab}
-              >
-                {tr(tab.key)}
-              </Link>
-            )
-          })}
-        </nav>
+      {connected && driver ? (
+        // Tabs live in DeviceSidebar now; this bar just names the current
+        // device, Wootility-style ("TYPING" mode label in its top bar).
+        <div className={styles.deviceLabel}>
+          <span className={styles.deviceLabelName}>{driver.identity.model}</span>
+        </div>
       ) : onMarketing ? (
         <nav className={styles.homeLinks} aria-label={tr('nav.siteNav')}>
           {marketingLinks.map((link) => (
@@ -303,6 +249,11 @@ export function TopNav() {
           >
             {tr('nav.disconnect')}
           </Button>
+        )}
+        {onMarketing && (
+          <Link href={`${lp('/')}#top`} className={styles.navCta}>
+            {tr('connect.webhid')}
+          </Link>
         )}
         <LanguageMenu />
         {onMarketing && (

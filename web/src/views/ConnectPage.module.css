@@ -1,20 +1,5 @@
-/* Homepage stays on UMD amber - never inherit Fenrir OEM green vars. */
+/* Same identity as every other page now (tokens.css) - no local overrides. */
 .page {
-  --accent: #e8a23a;
-  --accent-hot: #f0b45a;
-  --accent-soft: rgba(232, 162, 58, 0.14);
-  --warning: #e8a23a;
-  --signal: #3ecf8e;
-  --success: #3ecf8e;
-  --bg-panel: #171c25;
-  --bg-hover: #1e2530;
-  --border: #2a3340;
-  --fg: #eef1f5;
-  --fg-muted: #8b95a5;
-  --fg-dim: #5c6675;
-  --radius: 8px;
-  --radius-sm: 4px;
-
   width: min(1100px, calc(100% - 40px));
   margin: 0 auto;
   padding: 0 0 72px;
@@ -42,6 +27,7 @@
   letter-spacing: -0.04em;
   line-height: 0.9;
   color: var(--fg);
+  animation: umd-rise 0.5s 0.02s ease-out both;
 }
 
 .headline {
@@ -51,6 +37,7 @@
   font-weight: 650;
   letter-spacing: -0.02em;
   color: var(--accent-hot);
+  animation: umd-rise 0.5s 0.08s ease-out both;
 }
 
 .lede {
@@ -59,6 +46,7 @@
   font-size: 1.05rem;
   line-height: 1.5;
   max-width: 36ch;
+  animation: umd-rise 0.5s 0.14s ease-out both;
 }
 
 .ctaRow {
@@ -67,6 +55,7 @@
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
+  animation: umd-rise 0.5s 0.2s ease-out both;
 }
 
 .demoPanel {
@@ -152,10 +141,33 @@
   color: inherit;
   text-align: left;
   cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    background 0.15s ease;
+  animation: umd-rise 0.3s ease-out both;
+}
+
+.demoGrid > li:nth-child(1) .demoCard {
+  animation-delay: 0.02s;
+}
+.demoGrid > li:nth-child(2) .demoCard {
+  animation-delay: 0.06s;
+}
+.demoGrid > li:nth-child(3) .demoCard {
+  animation-delay: 0.1s;
+}
+.demoGrid > li:nth-child(4) .demoCard {
+  animation-delay: 0.14s;
+}
+.demoGrid > li:nth-child(5) .demoCard {
+  animation-delay: 0.18s;
 }
 
 .demoCard:hover:not(:disabled) {
-  border-color: rgba(232, 162, 58, 0.55);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: var(--bg-hover);
+  transform: translateY(-2px);
 }
 
 .demoCard:disabled {
@@ -212,37 +224,27 @@
 }
 
 .steps {
-  list-style: none;
-  margin: 28px 0 0;
-  padding: 0;
+  margin: 32px 0 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
+  max-width: 30rem;
 }
 
-.steps li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 0;
-  font-size: 0.92rem;
-  color: var(--fg-muted);
-  line-height: 1.35;
+.steps > * {
+  animation: umd-rise 0.4s ease-out both;
 }
 
-.stepNum {
-  flex-shrink: 0;
-  width: 1.5rem;
-  height: 1.5rem;
-  display: grid;
-  place-items: center;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--accent-hot);
-  border: 1px solid rgba(232, 162, 58, 0.4);
-  background: var(--accent-soft);
-  border-radius: 999px;
+.steps > *:nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.steps > *:nth-child(2) {
+  animation-delay: 0.36s;
+}
+
+.steps > *:nth-child(3) {
+  animation-delay: 0.42s;
 }
 
 .heroVisual {
@@ -254,6 +256,7 @@
   justify-content: center;
   isolation: isolate;
   outline: none;
+  animation: umd-rise 0.6s 0.1s ease-out both;
 }
 
 .glow {
@@ -391,25 +394,28 @@
   max-width: 48ch;
 }
 
+/* Compact square tiles, not full-width rows - this is a shortcut strip,
+   not a list to read line by line. */
 .savedList {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+  gap: 10px;
 }
 
 .savedRow {
   width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 14px;
+  height: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 14px 10px 12px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: rgba(18, 22, 29, 0.7);
-  text-align: left;
+  text-align: center;
   color: inherit;
   cursor: pointer;
   transition:
@@ -428,15 +434,15 @@
 }
 
 .savedThumb {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
   flex-shrink: 0;
 }
 
 .thumbPlaceholder {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.04);
@@ -446,17 +452,26 @@
 .listMain {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 2px;
   min-width: 0;
-  flex: 1;
+  width: 100%;
 }
 
 .listMain strong {
   font-weight: 600;
+  font-size: 0.78rem;
+  line-height: 1.25;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .metaMuted {
-  font-size: 0.8rem;
+  font-size: 0.68rem;
   color: var(--fg-dim);
 }
 
@@ -601,26 +616,26 @@
 }
 
 .badgeLive {
-  color: var(--signal);
-  border-color: rgba(62, 207, 142, 0.4);
-  background: rgba(62, 207, 142, 0.08);
-}
-
-.badgeWip {
-  color: var(--accent-hot);
-  border-color: rgba(232, 162, 58, 0.4);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
   background: var(--accent-soft);
 }
 
-.badgePlanned {
+.badgeWip {
   color: var(--fg-muted);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.badgePlanned {
+  color: var(--fg-dim);
   background: rgba(255, 255, 255, 0.03);
 }
 
 .badgeOm {
-  color: #7dd3fc;
-  border-color: rgba(14, 165, 233, 0.45);
-  background: rgba(14, 165, 233, 0.1);
+  color: var(--fg-muted);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .omSection {
@@ -629,7 +644,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background:
-    radial-gradient(ellipse 80% 60% at 10% 0%, rgba(14, 165, 233, 0.12), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 10% 0%, var(--accent-soft), transparent 55%),
     var(--bg-panel);
   scroll-margin-top: calc(var(--nav-h) + 16px);
   animation: umd-rise 0.5s 0.1s ease-out both;
@@ -694,8 +709,8 @@
 }
 
 .omChip:hover {
-  border-color: rgba(14, 165, 233, 0.5);
-  background: rgba(14, 165, 233, 0.08);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: var(--accent-soft);
 }
 
 .omChip img {
@@ -734,7 +749,7 @@
 }
 
 .omFeatureCard:hover {
-  border-color: rgba(14, 165, 233, 0.45);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
 .omFeatureMark {
@@ -768,10 +783,10 @@
   background:
     linear-gradient(
       120deg,
-      rgba(62, 207, 142, 0.07) 0%,
+      var(--accent-soft) 0%,
       transparent 42%
     ),
-    linear-gradient(165deg, #171c25 0%, #12161e 100%);
+    linear-gradient(165deg, var(--bg-panel) 0%, var(--bg-elevated) 100%);
 }
 
 .trayEyebrow {
@@ -780,7 +795,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--signal);
+  color: var(--accent);
 }
 
 .trayPanel h2 {
@@ -866,7 +881,7 @@
   width: 6px;
   height: 6px;
   border-radius: 1px;
-  background: var(--signal);
+  background: var(--accent);
 }
 
 .contact {

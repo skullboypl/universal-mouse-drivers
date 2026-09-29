@@ -1,0 +1,57 @@
+.line {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ticks {
+  height: 8px;
+  align-self: end;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--border-strong) 0,
+    var(--border-strong) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+  background-position: bottom left;
+  background-repeat: repeat-x;
+  background-size: 100% 1px;
+  min-width: 24px;
+}
+
+.index {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--fg-dim);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  padding: 0.15rem 0.4rem;
+  line-height: 1.3;
+}
+
+.line[data-active] .index {
+  color: var(--accent);
+}
+
+.label {
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+.line[data-active] .label {
+  color: var(--fg);
+}
+
+.value {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+}

@@ -350,7 +350,7 @@ export async function pickSupportedHidDevice(
       const d = picked[0]
       const id = `${d.vendorId.toString(16)}:${d.productId.toString(16)}`
       throw new Error(
-        `Wybrano inne urządzenie HID (${d.productName || 'bez nazwy'} · ${id}) — nie pasuje do tej karty. Wybierz właściwą mysz / interfejs.`,
+        `Wybrano inne urządzenie HID (${d.productName || 'bez nazwy'} · ${id}) - nie pasuje do tej karty. Wybierz właściwą mysz / interfejs.`,
       )
     }
   }

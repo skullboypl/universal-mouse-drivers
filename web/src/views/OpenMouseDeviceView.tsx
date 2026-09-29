@@ -9,6 +9,10 @@ import {
   openMouseBrandPath,
 } from '@/devices/openmouse/catalog'
 import { OpenMouseProductMark } from '@/components/OpenMouseProductMark'
+import {
+  getOpenMouseCapabilityCopy,
+  visibleOpenMouseControls,
+} from '@/devices/openmouse/capabilityPresentation'
 import type { Locale } from '@/i18n/locale'
 import { localePath } from '@/lib/seo'
 import styles from './OpenMouseHub.module.css'
@@ -41,6 +45,8 @@ export function OpenMouseDeviceView({
   const lp = (path: string) => localePath(lang, path)
   const vidPid = formatVidPid(entry.vendorId, entry.productId)
   const description = describeOpenMouseDevice(entry, lang)
+  const capabilityCopy = getOpenMouseCapabilityCopy(lang)
+  const controls = visibleOpenMouseControls(entry)
 
   return (
     <article className={styles.wrap}>
@@ -56,6 +62,7 @@ export function OpenMouseDeviceView({
             brandSlug={entry.brandSlug}
             brand={entry.brand}
             model={entry.name}
+            slug={entry.slug}
             size="lg"
             decorative={false}
           />
@@ -89,6 +96,41 @@ export function OpenMouseDeviceView({
           </div>
         </div>
       </div>
+
+      <section className={styles.capabilityPanel} aria-labelledby="openmouse-capabilities">
+        <div className={styles.capabilityHeader}>
+          <div>
+            <p className={styles.sectionIndex}>01 / DEVICE CONTROL</p>
+            <h2 id="openmouse-capabilities">{capabilityCopy.title}</h2>
+          </div>
+          <span className={styles.driverName}>
+            {capabilityCopy.driver}: {entry.capabilities.driver ?? capabilityCopy.unknown}
+          </span>
+        </div>
+
+        <dl className={styles.capabilityGrid}>
+          {controls.map((control) => (
+            <div key={control.key} className={styles.capabilityItem}>
+              <dt>{control.label}</dt>
+              <dd data-state={control.state}>
+                {control.state === 'driver' ? capabilityCopy.verified : capabilityCopy.runtime}
+              </dd>
+            </div>
+          ))}
+          {entry.capabilities.dpiRange ? (
+            <div className={styles.capabilityItem}>
+              <dt>{capabilityCopy.dpiRange}</dt>
+              <dd>{entry.capabilities.dpiRange.min.toLocaleString()}-{entry.capabilities.dpiRange.max.toLocaleString()} DPI</dd>
+            </div>
+          ) : null}
+          {entry.capabilities.pollingRatesHz ? (
+            <div className={styles.capabilityItem}>
+              <dt>{capabilityCopy.pollingRates}</dt>
+              <dd>{entry.capabilities.pollingRatesHz.map((rate) => `${rate.toLocaleString()} Hz`).join(' · ')}</dd>
+            </div>
+          ) : null}
+        </dl>
+      </section>
 
       <section className={styles.steps}>
         <h2>{stepsTitle}</h2>

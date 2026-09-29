@@ -1,7 +1,7 @@
 .mark {
-  --om-accent: #0ea5e9;
-  --om-soft: #0c1e2a;
-  --om-ink: #e0f2fe;
+  --om-accent: var(--accent);
+  --om-soft: var(--bg-elevated);
+  --om-ink: var(--fg);
   box-sizing: border-box;
   width: 100%;
   display: grid;

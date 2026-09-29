@@ -109,6 +109,12 @@ export interface SensorState {
   /** X3 bunny-hop (BHOP) timeout: profile byte 0x25 = ms / 10, 0 = off. */
   bhopEnabled?: boolean
   bhopTimeoutMs?: number
+  /**
+   * X3 SUPERSTRIKE gaming-surface tuning (Logitech HID++ feature 0x8090
+   * "Mode Status", modeStatus1 bits 1-2). A live device write, not part of
+   * the onboard profile flash. Undefined until read from the device.
+   */
+  gamingSurfaceMode?: 'Auto' | 'On' | 'Off'
   mode: 'lp' | 'hp' | 'corded'
   peakPerformance: boolean
   peakPerformanceTimeoutMin: number

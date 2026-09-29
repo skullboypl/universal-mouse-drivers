@@ -1,5 +1,5 @@
 .wrap {
-  --om-max: 1120px;
+  --om-max: 1240px;
   width: min(var(--om-max), calc(100% - 1.5rem));
   margin: 0 auto;
   padding: 1.25rem 0 3.5rem;
@@ -7,17 +7,29 @@
 }
 
 .head {
-  padding: 0.5rem 0 1.25rem;
+  position: relative;
+  padding: clamp(2rem, 7vw, 5.5rem) 0 clamp(1.75rem, 4vw, 3rem);
   border-bottom: 1px solid var(--border);
+}
+
+.head::after {
+  content: 'OPENMOUSE / DEVICE INDEX';
+  position: absolute;
+  right: 0;
+  top: 1.1rem;
+  font: 600 0.65rem/1 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--fg-dim);
 }
 
 .head h1 {
   font-family: var(--display);
-  font-size: clamp(1.65rem, 4.5vw, 2.45rem);
+  max-width: 15ch;
+  font-size: clamp(2rem, 7vw, 4.6rem);
   font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.12;
-  margin: 0.35rem 0 0.65rem;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+  margin: 0.75rem 0 1.1rem;
 }
 
 .eyebrow {
@@ -37,7 +49,7 @@
 
 .sub {
   margin: 0;
-  max-width: 40rem;
+  max-width: 46rem;
   color: var(--fg-muted);
   line-height: 1.55;
   font-size: 1.02rem;
@@ -83,12 +95,24 @@
   color: var(--accent-hot);
 }
 
+.cta:focus-visible,
+.ctaGhost:focus-visible,
+.chip:focus-visible,
+.cardMain:focus-visible,
+.brandLink:focus-visible,
+.search:focus-visible,
+.select:focus-visible {
+  outline: 2px solid var(--accent-hot);
+  outline-offset: 3px;
+}
+
 .how {
-  margin: 1.35rem 0 0;
-  padding: 1.1rem 1.15rem;
-  border-radius: var(--radius);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.7fr) minmax(16rem, 1.3fr);
+  gap: 1rem 2rem;
+  margin: 0;
+  padding: 1.35rem 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .how h2 {
@@ -106,7 +130,8 @@
 
 .legend {
   list-style: none;
-  margin: 0.9rem 0 0;
+  grid-column: 2;
+  margin: 0;
   padding: 0;
   display: grid;
   gap: 0.45rem;
@@ -136,20 +161,20 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   padding: 0.18rem 0.42rem;
-  border-radius: 999px;
+  border-radius: 2px;
   border: 1px solid transparent;
 }
 
 .pillLive {
-  background: rgba(62, 207, 142, 0.16);
-  color: var(--signal);
-  border-color: rgba(62, 207, 142, 0.35);
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
 .pillOm {
-  background: rgba(14, 165, 233, 0.16);
-  color: #7dd3fc;
-  border-color: rgba(14, 165, 233, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--fg-muted);
+  border-color: var(--border-strong);
 }
 
 .pillNamed {
@@ -195,7 +220,8 @@
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0;
+  border: 1px solid var(--border);
 }
 
 .chip {
@@ -204,8 +230,9 @@
   gap: 0.4rem;
   min-height: 2.4rem;
   padding: 0.25rem 0.65rem 0.25rem 0.35rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
+  border-radius: 0;
+  border: 0;
+  border-right: 1px solid var(--border);
   background: var(--bg-panel);
   color: var(--fg);
   text-decoration: none;
@@ -303,15 +330,17 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr));
-  gap: 0.9rem;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
 }
 
 .card {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--border);
-  border-radius: calc(var(--radius) + 2px);
+  border: 0;
+  border-radius: 0;
   overflow: hidden;
   background: var(--bg-elevated);
   min-height: 100%;
@@ -333,7 +362,7 @@
   position: relative;
   display: block;
   overflow: hidden;
-  border-radius: calc(var(--radius) + 2px) calc(var(--radius) + 2px) 0 0;
+  border-radius: 0;
   background: #0a0c10;
 }
 
@@ -383,6 +412,22 @@
   overflow: hidden;
 }
 
+.cardCapabilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.7rem;
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--border);
+  color: var(--fg-dim);
+  font: 600 0.67rem/1.25 var(--mono);
+  letter-spacing: 0.02em;
+}
+
+.capabilityCount {
+  color: var(--accent);
+}
+
 .brandLink {
   display: block;
   padding: 0.55rem 0.9rem 0.8rem;
@@ -399,29 +444,33 @@
 /* Device detail */
 .deviceHero {
   display: grid;
-  gap: 1.25rem;
-  margin-top: 0.75rem;
+  grid-template-columns: minmax(18rem, 1.2fr) minmax(18rem, 0.8fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  margin-top: 1rem;
+  padding: 1rem 0 2rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .deviceHeroArt {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  border-radius: var(--radius);
+  border-radius: 0;
   border: 1px solid var(--border);
   background: #0a0c10;
 }
 
 .deviceHeroArt > * {
   border-radius: 0;
-  min-height: 14rem;
+  min-height: clamp(19rem, 40vw, 31rem);
 }
 
 .deviceCopy h1 {
   font-family: var(--display);
-  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  font-size: clamp(2rem, 5vw, 4rem);
   margin: 0.35rem 0 0.5rem;
-  line-height: 1.15;
+  letter-spacing: -0.05em;
+  line-height: 1;
 }
 
 .deviceLead {
@@ -442,8 +491,86 @@
   margin: 1.35rem 0 0;
   padding: 1rem 1.1rem;
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--bg-panel);
+  border-radius: 0;
+  background: transparent;
+}
+
+.capabilityPanel {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.capabilityHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-end;
+  padding: 1rem 0;
+}
+
+.capabilityHeader h2 {
+  margin: 0.25rem 0 0;
+  font: 700 clamp(1.25rem, 3vw, 2rem)/1 var(--display);
+}
+
+.sectionIndex,
+.driverName {
+  margin: 0;
+  color: var(--fg-dim);
+  font: 600 0.68rem/1.35 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.driverName {
+  text-align: right;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.capabilityGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
+
+.capabilityItem {
+  min-height: 5.4rem;
+  padding: 0.85rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.capabilityItem dt {
+  color: var(--fg-dim);
+  font: 600 0.68rem/1.2 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.capabilityItem dd {
+  margin: 0.65rem 0 0;
+  color: var(--fg);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.capabilityItem dd[data-state='driver']::before,
+.capabilityItem dd[data-state='runtime']::before {
+  content: '';
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.45rem;
+  background: var(--signal);
+  border-radius: 50%;
+}
+
+.capabilityItem dd[data-state='runtime']::before {
+  background: var(--accent);
 }
 
 .steps h2 {
@@ -461,7 +588,6 @@
 
 @media (min-width: 720px) {
   .deviceHero {
-    grid-template-columns: minmax(12rem, 16rem) 1fr;
     align-items: start;
   }
 
@@ -478,6 +604,36 @@
 
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .head::after {
+    display: none;
+  }
+
+  .how {
+    grid-template-columns: 1fr;
+  }
+
+  .legend {
+    grid-column: 1;
+  }
+
+  .deviceHero {
+    grid-template-columns: 1fr;
+  }
+
+  .capabilityHeader {
+    display: block;
+  }
+
+  .driverName {
+    display: block;
+    margin-top: 0.65rem;
+    text-align: left;
+  }
+
+  .capabilityGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .cardMain {
@@ -507,5 +663,16 @@
 
   .chip {
     flex: 0 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap *,
+  .wrap *::before,
+  .wrap *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

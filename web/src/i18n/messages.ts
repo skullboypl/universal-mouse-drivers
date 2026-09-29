@@ -21,6 +21,9 @@ export type MessageKey =
   | 'nav.disconnect'
   | 'nav.soon'
   | 'nav.macroSoon'
+  | 'nav.home'
+  | 'nav.performance'
+  | 'nav.advanced'
   | 'nav.mice'
   | 'nav.contact'
   | 'nav.why'
@@ -65,6 +68,7 @@ export type MessageKey =
   | 'connect.stackNativeHint'
   | 'connect.stackOpenMouse'
   | 'connect.stackOpenMouseHint'
+  | 'connect.stackOpenMouseUnverified'
   | 'connect.stackRecommended'
   | 'connect.stackCancel'
   | 'connect.webhid'
@@ -328,6 +332,9 @@ const en: Dict = {
   'nav.disconnect': 'Disconnect',
   'nav.soon': 'Soon',
   'nav.macroSoon': 'Macro editor coming soon',
+  'nav.home': 'Home',
+  'nav.performance': 'Performance',
+  'nav.advanced': 'Advanced',
   'nav.mice': 'Supported mice',
   'nav.contact': 'Contact',
   'nav.why': 'Why UMD',
@@ -379,6 +386,8 @@ const en: Dict = {
   'connect.stackOpenMouse': 'OpenMouse',
   'connect.stackOpenMouseHint':
     'Shared community sensor surface (capability-gated)',
+  'connect.stackOpenMouseUnverified':
+    "Matched by brand only - OpenMouse detects Logitech mice by live HID++ features, not a static model list, so this isn't a rejection, just no preview before you connect",
   'connect.stackRecommended': 'Recommended',
   'connect.stackCancel': 'Cancel',
   'connect.webhid': 'Connect any mouse',
@@ -510,7 +519,7 @@ const en: Dict = {
     'OpenMouse: controls appear when the HID client can read them; edits stay disabled unless that client exposes a setter. Depth varies by brand.',
   'sensor.omChromeLabel': 'OpenMouse session',
   'sensor.omSupportBlurb':
-    'Community OpenMouse protocol — not a UMD-native driver. Bugs, missing features, and bad writes belong with OpenMouse / the brand HID client. UMD only hosts this shared surface.',
+    'Community OpenMouse protocol - not a UMD-native driver. Bugs, missing features, and bad writes belong with OpenMouse / the brand HID client. UMD only hosts this shared surface.',
   'sensor.omSupportCta': 'OpenMouse issues',
   'sensor.omCapsLabel': 'Client capabilities',
   'sensor.omCapWritable': 'Readable and writable on this client',
@@ -649,7 +658,7 @@ const en: Dict = {
   'status.omProbing': 'OpenMouse · probing protocol drivers…',
   'status.omReading': 'OpenMouse · reading device status…',
   'status.omTimeout':
-    'OpenMouse timed out probing this HID interface — try another collection or the native driver',
+    'OpenMouse timed out probing this HID interface - try another collection or the native driver',
   'status.omCancelled': 'Connect cancelled',
   'status.cancelConnect': 'Cancel',
   'status.dismissError': 'Close',
@@ -676,6 +685,9 @@ const pl: Dict = {
   'nav.disconnect': 'Rozłącz',
   'nav.soon': 'Wkrótce',
   'nav.macroSoon': 'Edytor makr wkrótce',
+  'nav.home': 'Strona główna',
+  'nav.performance': 'Wydajność',
+  'nav.advanced': 'Zaawansowane',
   'nav.mice': 'Wspierane myszy',
   'nav.contact': 'Kontakt',
   'nav.why': 'Dlaczego UMD',
@@ -721,12 +733,14 @@ const pl: Dict = {
   'connect.demoOmDpiHint': 'Minimalny klient',
   'connect.stackTitle': 'Który sterownik?',
   'connect.stackBody':
-    'Ta mysz pasuje do natywnego UMD oraz do OpenMouse. Natywny jest zalecany — pełne UI i sprawdzone zapisy.',
+    'Ta mysz pasuje do natywnego UMD oraz do OpenMouse. Natywny jest zalecany - pełne UI i sprawdzone zapisy.',
   'connect.stackNative': 'Natywny UMD',
   'connect.stackNativeHint': 'Pełne UI UMD dla {device}',
   'connect.stackOpenMouse': 'OpenMouse',
   'connect.stackOpenMouseHint':
     'Wspólna karta społecznościowa (kontrola wg możliwości klienta)',
+  'connect.stackOpenMouseUnverified':
+    'Dopasowanie tylko po marce - OpenMouse wykrywa myszy Logitech po funkcjach HID++ na żywo, nie po statycznej liście modeli, więc to nie jest odrzucenie, tylko brak podglądu przed połączeniem',
   'connect.stackRecommended': 'Zalecane',
   'connect.stackCancel': 'Anuluj',
   'connect.webhid': 'Połącz dowolną mysz',
@@ -861,7 +875,7 @@ const pl: Dict = {
     'OpenMouse: kontrolki widać przy odczycie z klienta HID; edycja jest zablokowana, dopóki driver nie ma settera. Głębokość zależy od marki.',
   'sensor.omChromeLabel': 'Sesja OpenMouse',
   'sensor.omSupportBlurb':
-    'Protokół społecznościowy OpenMouse — to nie natywny driver UMD. Błędy, braki funkcji i złe zapisy zgłaszaj do OpenMouse / klienta HID marki. UMD tylko hostuje wspólną powierzchnię.',
+    'Protokół społecznościowy OpenMouse - to nie natywny driver UMD. Błędy, braki funkcji i złe zapisy zgłaszaj do OpenMouse / klienta HID marki. UMD tylko hostuje wspólną powierzchnię.',
   'sensor.omSupportCta': 'Issues OpenMouse',
   'sensor.omCapsLabel': 'Możliwości klienta',
   'sensor.omCapWritable': 'Odczyt i zapis na tym kliencie',
@@ -1000,7 +1014,7 @@ const pl: Dict = {
   'status.omProbing': 'OpenMouse · szukam protokołu wśród driverów…',
   'status.omReading': 'OpenMouse · odczyt statusu urządzenia…',
   'status.omTimeout':
-    'OpenMouse: timeout przy sondowaniu HID — spróbuj innej kolekcji albo natywnego drivera',
+    'OpenMouse: timeout przy sondowaniu HID - spróbuj innej kolekcji albo natywnego drivera',
   'status.omCancelled': 'Anulowano łączenie',
   'status.cancelConnect': 'Anuluj',
   'status.dismissError': 'Zamknij',

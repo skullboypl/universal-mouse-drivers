@@ -18,6 +18,8 @@ import {
 import { umdLog } from '../debug/umdLog'
 import type { DeviceDriver } from '../devices/DeviceDriver'
 import { createDriver, DEVICE_CATALOG, findCatalogDevice } from '../devices/registry'
+import { findOpenMouseCatalogEntry } from '../devices/openmouse/catalog'
+import { visibleOpenMouseControls } from '../devices/openmouse/capabilityPresentation'
 import { FENRIR_MAX_IDENTITY } from '../devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/identity'
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from '../devices/mice/logitech/pro-x3-superstrike/identity'
@@ -357,10 +359,25 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         )
         const omSoft =
           !looksLikeNonMouseHid(picked) && openMouseSupports(picked)
+        // The OpenMouse catalog only lists devices matched by an exact
+        // VID:PID (Logitech is matched by usage page at connect time - it
+        // structurally never gets a catalog entry, see filters.ts). Without
+        // an entry there is no honest per-device capability list to show -
+        // and pre-opening the device to probe breaks some Logitech/G-Wolves
+        // clients before the real connect (see attachNative's comment), so
+        // that is not an option either. The dialog still offers OpenMouse
+        // in that case, but says plainly it is a brand-only guess (see
+        // DriverStackDialog's isVendorOnlyMatch).
+        const omEntry = findOpenMouseCatalogEntry(
+          picked.vendorId,
+          picked.productId,
+        )
+        const omControls = omEntry ? visibleOpenMouseControls(omEntry) : []
 
-        // Native Superlight / Fenrir / King / Blitz path is unchanged when the
-        // user already chose a stack, or when OpenMouse does not soft-match.
-        // When BOTH match, ask: Native (recommended) vs OpenMouse.
+        // Native Superlight / Fenrir / King / Blitz path is unchanged when
+        // the user already chose a stack, or when OpenMouse does not even
+        // soft-match. When both match, ask: Native (recommended) vs
+        // OpenMouse - honestly labelled as verified or brand-only.
         let stack: DriverStackChoice
         if (opts?.driverStack === 'native' || opts?.driverStack === 'openmouse') {
           stack = opts.driverStack
@@ -369,6 +386,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
             nativeBrand: catalogFromPick.brand,
             nativeModel: catalogFromPick.model,
             productHint: `${catalogFromPick.brand} ${catalogFromPick.model}`,
+            openMouseControls: omControls,
           })
           if (!choice) throw new DriverStackCancelledError()
           stack = choice
@@ -382,7 +400,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         if (stack === 'openmouse') {
           if (looksLikeNonMouseHid(picked)) {
             throw new Error(
-              'Selected HID looks like a headset/keyboard — OpenMouse only accepts mice',
+              'Selected HID looks like a headset/keyboard - OpenMouse only accepts mice',
             )
           }
           openMouse = createOpenMouseDriver(picked)
