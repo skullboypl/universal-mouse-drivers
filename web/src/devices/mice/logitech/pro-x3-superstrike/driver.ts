@@ -8,6 +8,7 @@ import {
   checkHitsWriteGate,
   checkProfileGate,
   decodeButtonRecord,
+  decodeGamingSurfaceMode,
   decodeHitsCapabilities,
   decodeHitsButtonConfig,
   decodeOnboardProfilesInfo,
@@ -30,9 +31,11 @@ import {
   readProfileRates,
   resolveX3Variant,
   sectorCrcIsValid,
+  encodeGamingSurfaceWrite,
   type HitsButtonSetting,
   type OnboardProfilesInfo,
   type X3ButtonAction,
+  type X3GamingSurfaceMode,
   type X3Variant,
 } from './protocol'
 import { umdLog } from '../../../../debug/umdLog'
@@ -43,6 +46,8 @@ const HIDPP_FEATURE = {
   HITS: 0x1b0c,
   EXTENDED_DPI: 0x2202,
   EXTENDED_REPORT_RATE: 0x8061,
+  /** "Mode Status" - gaming surface + LightForce switch mode (live write, not onboard flash). */
+  MODE_STATUS: 0x8090,
 } as const
 
 const X3_DPI_PRESETS = [800, 1200, 1600, 2400, 3200] as const
@@ -646,6 +651,67 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
   }
 
   /**
+   * Gaming surface (HID++ feature 0x8090) is a live device write, not part
+   * of the onboard profile flash - read-modify-write the shared modeStatus1
+   * byte, then read back and confirm, same as OpenMouse's setModeStatus.
+   */
+  commitGamingSurfaceMode(mode: X3GamingSurfaceMode): Promise<X3WriteResult> {
+    return this.queued(() => this.writeGamingSurfaceNow(mode))
+  }
+
+  private async writeGamingSurfaceNow(mode: X3GamingSurfaceMode): Promise<X3WriteResult> {
+    const hidpp = this.hidpp
+    if (!hidpp || !this.mouseReachable) {
+      return this.writeFailure({
+        en: 'Not connected over HID++.',
+        pl: 'Brak połączenia HID++.',
+      })
+    }
+    try {
+      const idx = await hidpp.getFeature(HIDPP_FEATURE.MODE_STATUS)
+      if (idx == null) {
+        return this.writeFailure({
+          en: 'This mouse does not expose gaming-surface controls.',
+          pl: 'Ta mysz nie udostępnia sterowania powierzchnią gamingową.',
+        })
+      }
+      const before = await hidpp.request(idx, 0)
+      const currentByte = before[4] ?? 0
+      if (decodeGamingSurfaceMode(currentByte) === mode) {
+        this.state.sensor.gamingSurfaceMode = mode
+        this.lastWriteOk = true
+        this.lastWriteError = null
+        this.notify('ok')
+        return { wrote: false, message: 'Already set on the mouse.', messagePl: 'Ta wartość jest już ustawiona w myszy.' }
+      }
+      await hidpp.request(idx, 1, encodeGamingSurfaceWrite(currentByte, mode))
+      const after = await hidpp.request(idx, 0)
+      const confirmed = decodeGamingSurfaceMode(after[4] ?? 0)
+      if (confirmed !== mode) {
+        return this.writeFailure({
+          en: `The mouse kept ${confirmed ?? 'an unknown'} gaming surface mode instead of ${mode}.`,
+          pl: `Mysz zachowała tryb ${confirmed ?? 'nieznany'} zamiast ${mode}.`,
+        })
+      }
+      this.state.sensor.gamingSurfaceMode = mode
+      this.lastWriteOk = true
+      this.lastWriteError = null
+      this.notify('ok')
+      return {
+        wrote: true,
+        message: `Gaming surface set to ${mode} and verified by read-back.`,
+        messagePl: `Powierzchnia gamingowa ustawiona na ${mode} i potwierdzona odczytem zwrotnym.`,
+      }
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error)
+      return this.writeFailure({
+        en: `Gaming surface write failed: ${detail}`,
+        pl: `Zapis powierzchni gamingowej nie powiódł się: ${detail}`,
+      })
+    }
+  }
+
+  /**
    * Persists one analog button's HITS settings into component 0x19 of the
    * active onboard profile (offset fixed by profile format 8 - see
    * protocol.ts); the value must also match the mouse's live report.
@@ -904,6 +970,22 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
       } else {
         this.state.sensor.reportRate = 0
         this.protocolDiagnostics.push('feature 0x8061 absent')
+      }
+
+      const modeStatusIndex = await hidpp.getFeature(HIDPP_FEATURE.MODE_STATUS)
+      if (modeStatusIndex != null) {
+        try {
+          const resp = await hidpp.request(modeStatusIndex, 0)
+          const mode = decodeGamingSurfaceMode(resp[4] ?? 0)
+          this.state.sensor.gamingSurfaceMode = mode ?? undefined
+          this.protocolDiagnostics.push(`feature 0x8090 index ${modeStatusIndex} gaming surface ${mode ?? 'unknown'}`)
+        } catch (error) {
+          this.state.sensor.gamingSurfaceMode = undefined
+          this.protocolDiagnostics.push(`feature 0x8090 read failed: ${error instanceof Error ? error.message : String(error)}`)
+        }
+      } else {
+        this.state.sensor.gamingSurfaceMode = undefined
+        this.protocolDiagnostics.push('feature 0x8090 absent')
       }
       this.sensorReadStatus = sensorFieldsRead > 0 ? 'verified' : 'unverified'
 

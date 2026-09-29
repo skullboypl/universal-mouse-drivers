@@ -477,6 +477,36 @@ export function ProX3Workspace() {
           </div>
 
           <div className={css.group}>
+            <h3 className={css.groupTitle}>{pl ? 'Powierzchnia gamingowa' : 'Gaming surface'}</h3>
+            <p className={css.groupHint}>
+              {pl
+                ? 'Dostraja czujnik pod matę gamingową. Auto pozwala myszy zdecydować; wyłącz, jeśli tracking źle się zachowuje na powierzchni niegamingowej.'
+                : 'Tunes the sensor for gaming mouse pads. Auto lets the mouse decide; turn it off if tracking misbehaves on a non-gaming surface.'}
+            </p>
+            <label className={css.inlineLabel}>
+              <span>{pl ? 'Tryb' : 'Mode'}</span>
+              <select
+                className={css.select}
+                disabled={!x3.profileWritesEnabled}
+                value={sensor.gamingSurfaceMode ?? ''}
+                onChange={(e) =>
+                  void run('gamingSurface', () =>
+                    x3.commitGamingSurfaceMode(e.target.value as 'Auto' | 'On' | 'Off'),
+                  )
+                }
+              >
+                {sensor.gamingSurfaceMode == null ? (
+                  <option value="">{pl ? 'nieznane' : 'unknown'}</option>
+                ) : null}
+                <option value="Auto">Auto</option>
+                <option value="On">On</option>
+                <option value="Off">Off</option>
+              </select>
+            </label>
+            {notes.gamingSurface ? <p className={css.writeNote}>{notes.gamingSurface}</p> : null}
+          </div>
+
+          <div className={css.group}>
             <h3 className={css.groupTitle}>{pl ? 'Tryb BHOP' : 'BHOP mode'}</h3>
             <div className={css.inlineRow}>
               <label className={css.checkboxRow}>

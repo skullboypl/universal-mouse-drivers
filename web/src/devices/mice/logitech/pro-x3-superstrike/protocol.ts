@@ -671,3 +671,35 @@ export function checkProfileGate(info: OnboardProfilesInfo, sector: Uint8Array):
   }
   return { ok: true }
 }
+
+// --- Gaming surface (HID++ feature 0x8090, "Mode Status") ---------------
+// Ported from the OpenMouse project's mode-status.js (AGPL-3.0, same
+// license as this repo): modeStatus1 bits 1-2 carry the gaming-surface
+// tuning; a bare value/mask write is rejected, the wire form is
+// [0x00, newByte, 0x00, changeMask].
+export type X3GamingSurfaceMode = 'Auto' | 'On' | 'Off'
+
+const GAMING_SURFACE_FIELD = {
+  mask: 0b0000_0110,
+  shift: 1,
+  values: { Auto: 0, On: 1, Off: 2 } as const,
+}
+
+export function decodeGamingSurfaceMode(modeStatus1: number): X3GamingSurfaceMode | null {
+  const encoded = (modeStatus1 & GAMING_SURFACE_FIELD.mask) >> GAMING_SURFACE_FIELD.shift
+  const entry = (Object.entries(GAMING_SURFACE_FIELD.values) as [X3GamingSurfaceMode, number][]).find(
+    ([, value]) => value === encoded,
+  )
+  return entry?.[0] ?? null
+}
+
+/** [modeStatus0, modeStatus1, changeMask0, changeMask1] for feature fn 0x10 (set). */
+export function encodeGamingSurfaceWrite(
+  currentModeStatus1: number,
+  mode: X3GamingSurfaceMode,
+): Uint8Array {
+  const encoded =
+    (currentModeStatus1 & ~GAMING_SURFACE_FIELD.mask) |
+    (GAMING_SURFACE_FIELD.values[mode] << GAMING_SURFACE_FIELD.shift)
+  return new Uint8Array([0x00, encoded, 0x00, GAMING_SURFACE_FIELD.mask])
+}

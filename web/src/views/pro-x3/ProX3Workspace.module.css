@@ -172,6 +172,13 @@
   font-size: 0.72rem;
 }
 
+.groupHint {
+  margin: 0 0 0.5rem;
+  color: var(--fg-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
 /* Sensor panel groups (DPI / polling / BHOP) */
 
 .group {
