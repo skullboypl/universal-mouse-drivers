@@ -1,6 +1,7 @@
 'use client'
 
-import { useLocale } from '../i18n/LocaleContext'
+import { useLocaleOptional } from '../i18n/LocaleContext'
+import { readStoredLocale } from '../i18n/locale'
 import { useT } from '../i18n/useT'
 import { getOpenMouseCapabilityCopy } from '../devices/openmouse/capabilityPresentation'
 import styles from './DriverStackDialog.module.css'
@@ -61,7 +62,11 @@ type Props = {
 
 export function DriverStackDialog({ prompt, onChoose, onCancel }: Props) {
   const tr = useT()
-  const { locale } = useLocale()
+  // Rendered by DeviceSessionProvider outside LocaleProvider (see
+  // src/app/[lang]/layout.tsx), so this mirrors useT's own locale fallback
+  // instead of useLocale(), which throws here.
+  const localeCtx = useLocaleOptional()
+  const locale = localeCtx?.locale ?? readStoredLocale() ?? 'pl'
   const omCopy = getOpenMouseCapabilityCopy(locale)
   const deviceLine =
     prompt.productHint?.trim() ||
