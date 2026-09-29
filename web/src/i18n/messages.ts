@@ -381,7 +381,7 @@ const en: Dict = {
   'connect.stackOpenMouseHint':
     'Shared community sensor surface (capability-gated)',
   'connect.stackOpenMouseUnverified':
-    'Matched by brand only - no confirmed protocol support for this exact model, likely nothing will work',
+    "Matched by brand only - OpenMouse detects Logitech mice by live HID++ features, not a static model list, so this isn't a rejection, just no preview before you connect",
   'connect.stackRecommended': 'Recommended',
   'connect.stackCancel': 'Cancel',
   'connect.webhid': 'Connect any mouse',
@@ -731,7 +731,7 @@ const pl: Dict = {
   'connect.stackOpenMouseHint':
     'Wspólna karta społecznościowa (kontrola wg możliwości klienta)',
   'connect.stackOpenMouseUnverified':
-    'Dopasowanie tylko po marce - brak potwierdzonego wsparcia protokołu dla tego dokładnego modelu, prawdopodobnie nic nie zadziała',
+    'Dopasowanie tylko po marce - OpenMouse wykrywa myszy Logitech po funkcjach HID++ na żywo, nie po statycznej liście modeli, więc to nie jest odrzucenie, tylko brak podglądu przed połączeniem',
   'connect.stackRecommended': 'Zalecane',
   'connect.stackCancel': 'Anuluj',
   'connect.webhid': 'Połącz dowolną mysz',
