@@ -46,6 +46,9 @@ docs/**
 tools/
 old/
 
+# working notes, roadmaps, setup guides for us only - never committed anywhere
+.todo/
+
 # OpenMouse scraped packshots (UI uses logos + OpenMouseProductMark instead)
 web/public/devices/openmouse/models/
 web/public/devices/openmouse/mice/*
