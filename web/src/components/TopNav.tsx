@@ -93,13 +93,14 @@ export function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuId = useId()
 
+  // One flat set of destinations, not six equal-weight links plus badges
+  // (DESIGN_RESEARCH_2026.md): "Myszy / OpenMouse / Battery Tray / Jak to
+  // działa" here, "Połącz mysz" as the separate primary action below.
   const marketingLinks: MarketingLink[] = [
     { href: `${lp('/')}#mice`, key: 'nav.mice' },
     { href: `${lp('/')}#openmouse`, key: 'nav.openMouse' },
     { href: lp('/tray'), key: 'nav.tray' },
     { href: lp('/why'), key: 'nav.why' },
-    { href: `${lp('/')}#faq`, key: 'nav.faq' },
-    { href: `${lp('/')}#contact`, key: 'nav.contact' },
   ]
 
   useEffect(() => {
@@ -303,6 +304,11 @@ export function TopNav() {
           >
             {tr('nav.disconnect')}
           </Button>
+        )}
+        {onMarketing && (
+          <Link href={`${lp('/')}#top`} className={styles.navCta}>
+            {tr('connect.webhid')}
+          </Link>
         )}
         <LanguageMenu />
         {onMarketing && (

@@ -223,7 +223,7 @@ export function ConnectPage() {
   const omFeatured = getOpenMouseFeaturedEntries(8)
 
   return (
-    <div className={styles.page} data-brand="umd">
+    <div className={styles.page} data-brand="umd" id="top">
       <section className={styles.hero} aria-label={UMD.name}>
         <div className={styles.heroCopy}>
           <p className={styles.brandMark}>
