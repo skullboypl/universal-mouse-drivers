@@ -160,7 +160,7 @@ export function ConnectPage() {
           </div>
         </header>
         <ul className={styles.deviceGrid}>
-          {nativeDevices.slice(0, 4).map((d) => (
+          {nativeDevices.map((d) => (
             <li key={d.id}>
               <a className={styles.deviceCard} href={lp(`/mice/${d.id}`)}>
                 <div className={styles.deviceArt}>

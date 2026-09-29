@@ -17,6 +17,7 @@ export type SeoPageId =
   | 'mouse-rampage-blitz-ultimate'
   | 'mouse-gwolves-fenrir-max'
   | 'mouse-logitech-pro-x-superlight'
+  | 'mouse-logitech-pro-x3-superstrike'
 
 export interface SeoPage {
   id: SeoPageId
@@ -77,17 +78,17 @@ export const SEO_PAGES: Record<SeoPageId, SeoPage> = {
       ru: 'Universal Mouse Drivers (UMD) - WebHID-драйверы мыши | umdrivers.com',
     },
     description: {
-      pl: 'Oficjalna strona umdrivers.com: darmowe sterowniki WebHID (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, przyciski, profile + opcjonalny Battery Tray.',
-      en: 'Official site umdrivers.com: free WebHID drivers (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, buttons, profiles + optional Battery Tray.',
-      de: 'Offizielle Seite umdrivers.com: kostenlose WebHID-Treiber (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, Tasten, Profile + optional Battery Tray.',
-      fr: 'Site officiel umdrivers.com : pilotes WebHID gratuits (Chrome/Edge). Live : Redragon King Ultra, Rampage Blitz Ultimate. WIP : Fenrir Max 8K, PRO X SUPERLIGHT. DPI, boutons, profils + Battery Tray optionnel.',
-      es: 'Sitio oficial umdrivers.com: drivers WebHID gratis (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, botones, perfiles + Battery Tray opcional.',
-      pt: 'Site oficial umdrivers.com: drivers WebHID grátis (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, botões, perfis + Battery Tray opcional.',
-      it: 'Sito ufficiale umdrivers.com: driver WebHID gratis (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, pulsanti, profili + Battery Tray opzionale.',
-      zh: '官网 umdrivers.com：免费 WebHID 驱动（Chrome/Edge）。Live：Redragon King Ultra、Rampage Blitz Ultimate。WIP：Fenrir Max 8K、PRO X SUPERLIGHT。DPI、按键、配置 + 可选 Battery Tray。',
-      ja: '公式サイト umdrivers.com：無料 WebHID ドライバー（Chrome/Edge）。Live：Redragon King Ultra、Rampage Blitz Ultimate。WIP：Fenrir Max 8K、PRO X SUPERLIGHT。DPI・ボタン・プロファイル + 任意の Battery Tray。',
-      ko: '공식 사이트 umdrivers.com: 무료 WebHID 드라이버(Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, 버튼, 프로필 + 선택적 Battery Tray.',
-      ru: 'Официальный сайт umdrivers.com: бесплатные WebHID-драйверы (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT. DPI, кнопки, профили + опциональный Battery Tray.',
+      pl: 'Oficjalna strona umdrivers.com: darmowe sterowniki WebHID (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT, PRO X3 SUPERSTRIKE. DPI, przyciski, profile + opcjonalny Battery Tray.',
+      en: 'Official site umdrivers.com: free WebHID drivers (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT, PRO X3 SUPERSTRIKE. DPI, buttons, profiles + optional Battery Tray.',
+      de: 'Offizielle Seite umdrivers.com: kostenlose WebHID-Treiber (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT, PRO X3 SUPERSTRIKE. DPI, Tasten, Profile + optional Battery Tray.',
+      fr: 'Site officiel umdrivers.com : pilotes WebHID gratuits (Chrome/Edge). Live : Redragon King Ultra, Rampage Blitz Ultimate. WIP : Fenrir Max 8K, PRO X SUPERLIGHT, PRO X3 SUPERSTRIKE. DPI, boutons, profils + Battery Tray optionnel.',
+      es: 'Sitio oficial umdrivers.com: drivers WebHID gratis (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT, PRO X3 SUPERSTRIKE. DPI, botones, perfiles + Battery Tray opcional.',
+      pt: 'Site oficial umdrivers.com: drivers WebHID grátis (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT, PRO X3 SUPERSTRIKE. DPI, botões, perfis + Battery Tray opcional.',
+      it: 'Sito ufficiale umdrivers.com: driver WebHID gratis (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT, PRO X3 SUPERSTRIKE. DPI, pulsanti, profili + Battery Tray opzionale.',
+      zh: '官网 umdrivers.com：免费 WebHID 驱动（Chrome/Edge）。Live：Redragon King Ultra、Rampage Blitz Ultimate。WIP：Fenrir Max 8K、PRO X SUPERLIGHT、PRO X3 SUPERSTRIKE。DPI、按键、配置 + 可选 Battery Tray。',
+      ja: '公式サイト umdrivers.com：無料 WebHID ドライバー（Chrome/Edge）。Live：Redragon King Ultra、Rampage Blitz Ultimate。WIP：Fenrir Max 8K、PRO X SUPERLIGHT、PRO X3 SUPERSTRIKE。DPI・ボタン・プロファイル + 任意の Battery Tray。',
+      ko: '공식 사이트 umdrivers.com: 무료 WebHID 드라이버(Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT, PRO X3 SUPERSTRIKE. DPI, 버튼, 프로필 + 선택적 Battery Tray.',
+      ru: 'Официальный сайт umdrivers.com: бесплатные WebHID-драйверы (Chrome/Edge). Live: Redragon King Ultra, Rampage Blitz Ultimate. WIP: Fenrir Max 8K, PRO X SUPERLIGHT, PRO X3 SUPERSTRIKE. DPI, кнопки, профили + опциональный Battery Tray.',
     },
   },
   why: {
@@ -115,6 +116,9 @@ export const SEO_PAGES: Record<SeoPageId, SeoPage> = {
   )![1],
   'mouse-logitech-pro-x-superlight': mousePageEntries.find(
     ([id]) => id === 'mouse-logitech-pro-x-superlight',
+  )![1],
+  'mouse-logitech-pro-x3-superstrike': mousePageEntries.find(
+    ([id]) => id === 'mouse-logitech-pro-x3-superstrike',
   )![1],
   settings: {
     id: 'settings',

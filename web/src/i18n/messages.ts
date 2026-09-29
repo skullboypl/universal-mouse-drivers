@@ -418,7 +418,7 @@ const en: Dict = {
   'connect.browseNative': 'Browse native mice',
   'connect.supportedTitle': 'UMD native mice',
   'connect.supportedSub':
-    'Full UMD UI - King Ultra, Blitz Ultimate, Fenrir, Superlight. Click a card to connect.',
+    'Full UMD UI - King Ultra, Blitz Ultimate, Fenrir, SUPERLIGHT, PRO X3 SUPERSTRIKE. Click a card to connect.',
   'connect.statusLive': 'Ready',
   'connect.statusWip': 'Beta',
   'connect.statusPlanned': 'Soon',
@@ -779,7 +779,7 @@ const pl: Dict = {
   'connect.browseNative': 'Przeglądaj myszy native',
   'connect.supportedTitle': 'Myszy native UMD',
   'connect.supportedSub':
-    'Pełny UI UMD - King Ultra, Blitz Ultimate, Fenrir, Superlight. Kliknij kartę, żeby połączyć.',
+    'Pełny UI UMD - King Ultra, Blitz Ultimate, Fenrir, SUPERLIGHT, PRO X3 SUPERSTRIKE. Kliknij kartę, żeby połączyć.',
   'connect.statusLive': 'Gotowe',
   'connect.statusWip': 'Beta',
   'connect.statusPlanned': 'Wkrótce',
