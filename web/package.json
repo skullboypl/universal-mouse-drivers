@@ -6,6 +6,7 @@
     "postinstall": "node -e \"const fs=require('fs');const p='scripts/patch-openmouse-exports.js';if(!fs.existsSync(p)){console.warn('[postinstall] skip missing '+p);process.exit(0)}\" && node scripts/patch-openmouse-exports.js",
     "generate:openmouse-catalog": "node scripts/generate-openmouse-catalog.mjs",
     "fetch:openmouse-images": "node scripts/fetch-openmouse-product-images.mjs",
+    "test:openmouse-catalog": "node --test scripts/openmouse-capabilities.test.mjs",
     "prebuild": "npm run generate:openmouse-catalog",
     "dev": "next dev",
     "build": "next build",

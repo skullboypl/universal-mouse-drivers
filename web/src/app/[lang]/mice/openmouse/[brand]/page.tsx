@@ -8,8 +8,11 @@ import {
   openMouseBrandPath,
   openMouseImageUrl,
 } from '@/devices/openmouse/catalog'
-import { absoluteUrl, localePath } from '@/lib/seo'
+import { absoluteUrl, localePath, localizedAlternates } from '@/lib/seo'
 import { OpenMouseHubClient } from '@/views/OpenMouseHub'
+import { getOpenMouseCopy } from '@/devices/openmouse/i18n'
+import { openMouseCatalogPage } from '@/devices/openmouse/pagination'
+import { getOpenMouseBrandCounts } from '@/devices/openmouse/catalog'
 
 export function generateStaticParams() {
   return LOCALES.flatMap((lang) =>
@@ -31,9 +34,12 @@ export async function generateMetadata({
   const title = `${brandName} (OpenMouse) | UMD · umdrivers.com`
   const path = localePath(lang as Locale, openMouseBrandPath(brand))
   return {
-    title,
+    title: { absolute: title },
     description,
-    alternates: { canonical: absoluteUrl(path) },
+    alternates: {
+      canonical: absoluteUrl(path),
+      languages: localizedAlternates(openMouseBrandPath(brand)),
+    },
     openGraph: {
       title,
       description,
@@ -54,43 +60,37 @@ export default async function OpenMouseBrandPage({
   if (!entries.length) notFound()
   const brandName = entries[0].brand
   const l = lang as Locale
-  const pl = l === 'pl'
+  const c = getOpenMouseCopy(l)
+  const catalogPage = openMouseCatalogPage(1, brand)
   return (
     <OpenMouseHubClient
       lang={l}
+      entries={catalogPage.entries}
+      totalEntries={catalogPage.total}
+      page={1}
+      pageCount={catalogPage.pageCount}
+      brandCounts={getOpenMouseBrandCounts()}
       brandSlug={brand}
       title={`${brandName} · OpenMouse`}
       subtitle={describeOpenMouseBrand(brand, l)}
-      searchPlaceholder={pl ? 'Szukaj w tej marce…' : 'Search in this brand…'}
-      namedOnlyLabel={pl ? 'Tylko z nazwą modelu' : 'Named models only'}
+      searchPlaceholder={c.searchBrand}
+      namedOnlyLabel={c.namedOnly}
       allBrandsLabel={brandName}
       openMouseCredit="OpenMouse protocol"
       connectHref="/"
-      connectLabel={pl ? 'Połącz mysz w UMD' : 'Connect mouse in UMD'}
-      howTitle={pl ? 'Ta marka w UMD' : 'This brand in UMD'}
-      howBody={
-        pl
-          ? `${brandName} jest obsługiwana przez protokoły OpenMouse w UMD. Wybierz model z listy i połącz WebHID.`
-          : `${brandName} is driven by OpenMouse protocols inside UMD. Pick a model from the list and connect via WebHID.`
-      }
-      brandsTitle={pl ? 'Marki' : 'Brands'}
-      listTitle={pl ? `Myszy ${brandName}` : `${brandName} mice`}
-      badgeNamed={pl ? 'Nazwa' : 'Named'}
+      connectLabel={c.connect}
+      howTitle={c.brandHowTitle}
+      howBody={c.brandHowBody(brandName)}
+      brandsTitle={c.brands}
+      listTitle={c.brandMouseList(brandName)}
+      badgeNamed={c.named}
       badgeCommunity="OpenMouse"
       badgeWebhid="WebHID"
-      emptyLabel={pl ? 'Brak wyników.' : 'No matches.'}
-      legendNative="UMD native"
+      emptyLabel={c.empty}
+      legendNative={c.native}
       legendNativeHint="King Ultra · Blitz · Fenrir · Superlight"
-      legendOmHint={
-        pl
-          ? 'Protokoły OpenMouse w UMD WebHID'
-          : 'OpenMouse protocols in UMD WebHID'
-      }
-      legendNamedHint={
-        pl
-          ? 'Nazwa modelu z map OpenMouse'
-          : 'Model name from OpenMouse maps'
-      }
+      legendOmHint={c.openMouseHint}
+      legendNamedHint={c.namedHint}
     />
   )
 }

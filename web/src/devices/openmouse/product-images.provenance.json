@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "https://github.com/OpenMouse-Project/openmouse",
+    "revision": "02d7b178664f6fb6799977375003b5a5c9b69417",
+    "mappingFile": "https://github.com/OpenMouse-Project/openmouse/blob/02d7b178664f6fb6799977375003b5a5c9b69417/src/ui/device-images.ts",
+    "mappingMethod": "device-reported display name rules; image bytes are hosted in the upstream Cloudflare R2 bucket, outside the repository",
+    "license": "AGPL-3.0 applies to the upstream program; the upstream artwork README identifies model renders as third-party assets with separate, often unconfirmed redistribution terms",
+    "artworkReadme": "https://github.com/OpenMouse-Project/openmouse/blob/02d7b178664f6fb6799977375003b5a5c9b69417/public/devices/README.md",
+    "importedUpstreamAssets": 0,
+    "note": "Only assets with explicit redistribution approval are emitted into the local product-image map. Upstream-listed renders are not automatically redistributable."
+  },
+  "catalogEntryCount": 388,
+  "mappedModelCount": 0,
+  "assets": []
+}
