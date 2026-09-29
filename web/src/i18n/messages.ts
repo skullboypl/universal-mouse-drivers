@@ -22,6 +22,8 @@ export type MessageKey =
   | 'nav.soon'
   | 'nav.macroSoon'
   | 'nav.home'
+  | 'nav.recent'
+  | 'nav.native'
   | 'nav.performance'
   | 'nav.advanced'
   | 'nav.mice'
@@ -86,6 +88,7 @@ export type MessageKey =
   | 'connect.savedTitle'
   | 'connect.savedSub'
   | 'connect.savedEmpty'
+  | 'connect.browseNative'
   | 'connect.supportedTitle'
   | 'connect.supportedSub'
   | 'connect.statusLive'
@@ -333,6 +336,8 @@ const en: Dict = {
   'nav.soon': 'Soon',
   'nav.macroSoon': 'Macro editor coming soon',
   'nav.home': 'Home',
+  'nav.recent': 'Recent',
+  'nav.native': 'Native',
   'nav.performance': 'Performance',
   'nav.advanced': 'Advanced',
   'nav.mice': 'Supported mice',
@@ -406,6 +411,7 @@ const en: Dict = {
   'connect.savedTitle': 'Your mice',
   'connect.savedSub': 'Already connected on this computer - click to reopen.',
   'connect.savedEmpty': 'Connect a mouse once and it will show up here.',
+  'connect.browseNative': 'Browse native mice',
   'connect.supportedTitle': 'UMD native mice',
   'connect.supportedSub':
     'Full UMD UI - King Ultra, Blitz Ultimate, Fenrir, Superlight. Click a card to connect.',
@@ -686,6 +692,8 @@ const pl: Dict = {
   'nav.soon': 'Wkrótce',
   'nav.macroSoon': 'Edytor makr wkrótce',
   'nav.home': 'Strona główna',
+  'nav.recent': 'Ostatnie',
+  'nav.native': 'Native',
   'nav.performance': 'Wydajność',
   'nav.advanced': 'Zaawansowane',
   'nav.mice': 'Wspierane myszy',
@@ -762,6 +770,7 @@ const pl: Dict = {
   'connect.savedSub': 'Już łączone na tym komputerze - kliknij, żeby otworzyć ponownie.',
   'connect.savedEmpty':
     'Po pierwszym połączeniu mysz pojawi się tutaj.',
+  'connect.browseNative': 'Przeglądaj myszy native',
   'connect.supportedTitle': 'Myszy native UMD',
   'connect.supportedSub':
     'Pełny UI UMD - King Ultra, Blitz Ultimate, Fenrir, Superlight. Kliknij kartę, żeby połączyć.',
