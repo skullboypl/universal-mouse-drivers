@@ -77,6 +77,8 @@ export type MessageKey =
   | 'connect.webhidOm'
   | 'connect.otherDevice'
   | 'connect.otherDeviceTip'
+  | 'connect.addDevice'
+  | 'connect.removeSaved'
   | 'connect.open'
   | 'connect.soon'
   | 'connect.pcOnly'
@@ -400,6 +402,8 @@ const en: Dict = {
   'connect.otherDevice': 'Use a different device',
   'connect.otherDeviceTip':
     'Opens the browser picker for any supported mouse - not only the ones remembered below.',
+  'connect.addDevice': 'Add mouse',
+  'connect.removeSaved': 'Remove from list',
   'connect.open': 'Open',
   'connect.soon': 'Soon',
   'connect.pcOnly': 'PC only',
@@ -756,6 +760,8 @@ const pl: Dict = {
   'connect.otherDevice': 'Użyj innego urządzenia',
   'connect.otherDeviceTip':
     'Otwiera picker przeglądarki dla dowolnej wspieranej myszy - nie tylko tych zapamiętanych poniżej.',
+  'connect.addDevice': 'Dodaj mysz',
+  'connect.removeSaved': 'Usuń z listy',
   'connect.open': 'Otwórz',
   'connect.soon': 'Wkrótce',
   'connect.pcOnly': 'Tylko PC',

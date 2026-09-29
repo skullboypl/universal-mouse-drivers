@@ -6,14 +6,15 @@
   gap: 16px;
   padding: 0 24px;
   border-bottom: 1px solid var(--border);
-  background: rgba(10, 12, 16, 0.88);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
   z-index: 20;
 }
 
-.brand {
+.brand,
+.deviceBrand {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -160,7 +161,9 @@
 
 .deviceLabel {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
   min-width: 0;
   flex: 1;
 }
@@ -172,6 +175,15 @@
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.deviceLabelBrand {
+  font-size: 0.72rem;
+  color: var(--fg-dim);
+  letter-spacing: 0.02em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -1,8 +1,7 @@
 .siteFooter {
   margin-top: auto;
   border-top: 1px solid var(--border);
-  background:
-    linear-gradient(180deg, rgba(18, 22, 29, 0.92), rgba(10, 12, 16, 0.98));
+  background: color-mix(in srgb, var(--bg) 96%, #000);
   padding: 18px 24px 20px;
 }
 
