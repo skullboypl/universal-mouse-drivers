@@ -1,0 +1,88 @@
+name: OpenMouse daily sync
+
+# No `schedule:` trigger: the running Next.js app schedules this itself (see
+# web/instrumentation.ts + web/src/lib/openmouseSyncScheduler.ts) by calling
+# the dispatch below once every ~24h, so nothing needs to be configured here.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: openmouse-daily-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out the current main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Save the previous generated catalog
+        run: cp web/src/devices/openmouse/catalog.generated.ts "$RUNNER_TEMP/openmouse-catalog.before.ts"
+
+      - name: Resolve the latest tested OpenMouse source
+        working-directory: web
+        run: npm install --package-lock-only --ignore-scripts --save-exact 'git+https://github.com/OpenMouse-Project/mouse-protocol.git#main'
+
+      - name: Install dependencies and regenerate data
+        working-directory: web
+        run: |
+          npm ci
+          npm run generate:openmouse-catalog
+          npm run fetch:openmouse-images
+          npm run test:openmouse-catalog
+
+      - name: Detect whether upstream data changed
+        id: changes
+        shell: bash
+        run: |
+          if git diff --quiet -- web/package.json web/package-lock.json web/src/devices/openmouse/catalog.generated.ts web/src/devices/openmouse/productImages.generated.ts web/src/devices/openmouse/product-images.provenance.json tray-battery/UmdBatteryTray/Protocol/OpenMouse/OpenMouseCatalog.g.cs; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build a human-readable change report
+        if: steps.changes.outputs.changed == 'true'
+        working-directory: web
+        run: node scripts/report-openmouse-catalog-diff.mjs --before="$RUNNER_TEMP/openmouse-catalog.before.ts" --after=src/devices/openmouse/catalog.generated.ts --output=../OPENMOUSE_SYNC_REPORT.md
+
+      - name: Notify Google's Indexing API for changed model pages
+        if: steps.changes.outputs.changed == 'true'
+        working-directory: web
+        env:
+          GOOGLE_INDEXING_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_INDEXING_SERVICE_ACCOUNT_JSON }}
+        run: node scripts/notify-openmouse-indexing.mjs --before="$RUNNER_TEMP/openmouse-catalog.before.ts" --after=src/devices/openmouse/catalog.generated.ts
+
+      - name: Validate the generated application
+        if: steps.changes.outputs.changed == 'true'
+        working-directory: web
+        run: npm run build
+
+      - name: Publish the validated catalog update
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "umd-openmouse-sync[bot]"
+          git config user.email "umd-openmouse-sync[bot]@users.noreply.github.com"
+          git add web/package.json web/package-lock.json web/src/devices/openmouse/catalog.generated.ts web/src/devices/openmouse/productImages.generated.ts web/src/devices/openmouse/product-images.provenance.json tray-battery/UmdBatteryTray/Protocol/OpenMouse/OpenMouseCatalog.g.cs OPENMOUSE_SYNC_REPORT.md
+          git commit -m "Update OpenMouse device catalog"
+          git push origin HEAD:main
+
+      - name: Record no-change result
+        if: steps.changes.outputs.changed != 'true'
+        run: echo "OpenMouse upstream is unchanged."
+

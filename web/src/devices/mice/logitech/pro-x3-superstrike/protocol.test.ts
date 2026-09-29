@@ -30,7 +30,7 @@ import {
   packHitsButton,
   resolveX3Variant,
   unpackHitsButton,
-} from './protocol.ts'
+} from './protocol'
 
 test('decodes X3 extended DPI and LOD without inventing missing fields', () => {
   assert.deepEqual(

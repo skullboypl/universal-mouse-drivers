@@ -40,6 +40,32 @@ CapRover → App → **App Configs** → **Environmental Variables** → wklej w
 | `PORT` | `3000` | CapRover HTTP |
 | `NODE_ENV` | `production` | Next production |
 | `HOSTNAME` | `0.0.0.0` | listen all interfaces |
+| `GITHUB_ACTIONS_TOKEN` | *(fine-grained PAT, `Actions: write`)* | Pozwala aplikacji samodzielnie odpalać `openmouse-daily-sync.yml` co ~24h (patrz niżej). Puste = wyłączony auto-sync, workflow wciąż można odpalić ręcznie z GitHuba. |
+| `GITHUB_SYNC_REPO` | `skullboypl/universal-mouse-drivers` | Repo, w którym żyje workflow. |
+| `GITHUB_SYNC_REF` | `main` | Branch do dispatchu. |
+
+### OpenMouse daily sync bez crona
+
+Ciężka robota (npm install, generowanie katalogu, build, `git push`) zostaje na
+runnerze GitHuba - **nie** w kontenerze produkcyjnym, bo obraz `runner` z
+`Dockerfile` celowo nie ma npm/git/curl/wget (patrz komentarz w Dockerfile o
+incydencie 2026-08-18). Zamiast `schedule:` w YAML-u, żywa aplikacja Next.js
+(`web/instrumentation.ts`) sama woła co ~24h GitHub API
+(`workflows/openmouse-daily-sync.yml/dispatches`), więc nie trzeba nigdzie
+konfigurować crona. Stan ostatniego wywołania: `/app/data/openmouse-sync-state.json`.
+
+### Google Indexing API (opcjonalnie)
+
+Krok `notify-openmouse-indexing.mjs` w workflow woła Indexing API dla
+zmienionych/nowych stron modeli OpenMouse. Dodaj sekret **repo** (nie app env)
+`GOOGLE_INDEXING_SERVICE_ACCOUNT_JSON` = cała treść pliku JSON klucza konta
+serwisowego (Google Cloud Console → Service Accounts → klucz JSON, z dostępem
+"Owner" do właściwości w Search Console jako Indexing API). Bez tego sekretu
+krok jest pomijany (exit 0), nic się nie psuje. Google dokumentuje, że ten
+API gwarantuje przetworzenie tylko dla stron `JobPosting`/`BroadcastEvent` -
+dla zwykłych stron modeli myszy wywołanie jest niegroźne, ale może zostać
+zignorowane. Realny mechanizm indeksacji dla katalogu to sitemap +
+Search Console URL Inspection - patrz `OPENMOUSE_SEO_ROADMAP.md`.
 
 Container HTTP Port: **3000**
 
