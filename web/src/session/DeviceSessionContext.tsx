@@ -362,25 +362,26 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         // The OpenMouse catalog only lists devices matched by an exact
         // VID:PID (Logitech is matched by usage page at connect time - it
         // structurally never gets a catalog entry, see filters.ts). Without
-        // an entry we have no honest per-device capability list, and
-        // pre-opening the device to probe breaks some Logitech/G-Wolves
-        // clients before the real connect (see attachNative's comment) -
-        // so "no catalog entry" means "don't offer OpenMouse as a choice"
-        // rather than showing an empty/unverified option.
+        // an entry there is no honest per-device capability list to show -
+        // and pre-opening the device to probe breaks some Logitech/G-Wolves
+        // clients before the real connect (see attachNative's comment), so
+        // that is not an option either. The dialog still offers OpenMouse
+        // in that case, but says plainly it is a brand-only guess (see
+        // DriverStackDialog's isVendorOnlyMatch).
         const omEntry = findOpenMouseCatalogEntry(
           picked.vendorId,
           picked.productId,
         )
         const omControls = omEntry ? visibleOpenMouseControls(omEntry) : []
 
-        // Native Superlight / Fenrir / King / Blitz path is unchanged when the
-        // user already chose a stack, or when OpenMouse has nothing confirmed
-        // to offer. When BOTH match with real capabilities, ask: Native
-        // (recommended) vs OpenMouse.
+        // Native Superlight / Fenrir / King / Blitz path is unchanged when
+        // the user already chose a stack, or when OpenMouse does not even
+        // soft-match. When both match, ask: Native (recommended) vs
+        // OpenMouse - honestly labelled as verified or brand-only.
         let stack: DriverStackChoice
         if (opts?.driverStack === 'native' || opts?.driverStack === 'openmouse') {
           stack = opts.driverStack
-        } else if (catalogFromPick && omSoft && omControls.length > 0) {
+        } else if (catalogFromPick && omSoft) {
           const choice = await askDriverStack({
             nativeBrand: catalogFromPick.brand,
             nativeModel: catalogFromPick.model,

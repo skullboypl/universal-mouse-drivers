@@ -147,6 +147,14 @@
   background: var(--accent-soft);
 }
 
+.choiceWarning {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--warning);
+}
+
 .cancel {
   justify-self: start;
   margin-top: 2px;

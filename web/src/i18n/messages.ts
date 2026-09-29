@@ -65,6 +65,7 @@ export type MessageKey =
   | 'connect.stackNativeHint'
   | 'connect.stackOpenMouse'
   | 'connect.stackOpenMouseHint'
+  | 'connect.stackOpenMouseUnverified'
   | 'connect.stackRecommended'
   | 'connect.stackCancel'
   | 'connect.webhid'
@@ -379,6 +380,8 @@ const en: Dict = {
   'connect.stackOpenMouse': 'OpenMouse',
   'connect.stackOpenMouseHint':
     'Shared community sensor surface (capability-gated)',
+  'connect.stackOpenMouseUnverified':
+    'Matched by brand only - no confirmed protocol support for this exact model, likely nothing will work',
   'connect.stackRecommended': 'Recommended',
   'connect.stackCancel': 'Cancel',
   'connect.webhid': 'Connect any mouse',
@@ -727,6 +730,8 @@ const pl: Dict = {
   'connect.stackOpenMouse': 'OpenMouse',
   'connect.stackOpenMouseHint':
     'Wspólna karta społecznościowa (kontrola wg możliwości klienta)',
+  'connect.stackOpenMouseUnverified':
+    'Dopasowanie tylko po marce - brak potwierdzonego wsparcia protokołu dla tego dokładnego modelu, prawdopodobnie nic nie zadziała',
   'connect.stackRecommended': 'Zalecane',
   'connect.stackCancel': 'Anuluj',
   'connect.webhid': 'Połącz dowolną mysz',

@@ -141,7 +141,15 @@ export function DriverStackDialog({ prompt, onChoose, onCancel }: Props) {
                     </span>
                   ))}
                 </span>
-              ) : null}
+              ) : (
+                // No catalog entry for this exact VID:PID (Logitech is
+                // matched by usage page at connect time, not statically) -
+                // say plainly this is a brand-only guess, not a confirmed
+                // capability list.
+                <span className={styles.choiceWarning}>
+                  {tr('connect.stackOpenMouseUnverified')}
+                </span>
+              )}
             </span>
           </button>
         </div>
