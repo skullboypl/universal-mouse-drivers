@@ -79,6 +79,11 @@ const HOST_MODE_HINT: X3Message = {
   pl: 'Mysz pozostaje w trybie host (sterowanie z oprogramowania). Zamknij Logitech G HUB i inne programy używające myszy, po czym spróbuj ponownie.',
 }
 
+const ONBOARD_MODE_HINT: X3Message = {
+  en: 'The mouse stayed in onboard mode. Move it, then try switching back to host mode again.',
+  pl: 'Mysz pozostała w trybie wbudowanym. Poruszaj nią, po czym spróbuj ponownie przełączyć na tryb host.',
+}
+
 /**
  * Clean-room driver. HID++ reads (identity, battery, sensors and HITS
  * capabilities) run freely. HITS settings are persisted into component 0x19
@@ -355,6 +360,22 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
    * started. If G HUB owns the mouse and flips it back, the caller is told.
    */
   async ensureOnboardMode(): Promise<{ ok: boolean; switched: boolean; message: X3Message | null }> {
+    return this.ensureModeIs(1, HOST_MODE_HINT)
+  }
+
+  /**
+   * Same switch, other direction: back to host mode (G HUB owns the mouse).
+   * Onboard-only writes stop applying once this succeeds - use it to hand
+   * the mouse back, e.g. before closing UMD and opening G HUB.
+   */
+  async ensureHostMode(): Promise<{ ok: boolean; switched: boolean; message: X3Message | null }> {
+    return this.ensureModeIs(2, ONBOARD_MODE_HINT)
+  }
+
+  private async ensureModeIs(
+    target: 1 | 2,
+    failureHint: X3Message,
+  ): Promise<{ ok: boolean; switched: boolean; message: X3Message | null }> {
     const hidpp = this.hidpp
     if (!hidpp) {
       return {
@@ -372,9 +393,9 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
     let mode = await readMode()
     let switched = false
     let setError = ''
-    if (mode !== 1) {
+    if (mode !== target) {
       try {
-        await hidpp.setOnboardMode(1)
+        await hidpp.setOnboardMode(target)
         switched = true
       } catch (error) {
         setError = error instanceof Error ? error.message : String(error)
@@ -382,20 +403,20 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
       // The mouse may apply the switch slightly after acking (or after a lost ack).
       for (let attempt = 0; attempt < 6; attempt++) {
         mode = await readMode()
-        if (mode === 1) break
+        if (mode === target) break
         await new Promise((resolve) => setTimeout(resolve, 350))
       }
     }
     this.onboardMode = mode === 1 ? 'onboard' : mode === 2 ? 'host' : 'unknown'
     const detail = `mode read ${mode ?? 'failed'}${setError ? `, set failed: ${setError}` : ''}${readError ? `, read failed: ${readError}` : ''}`
-    this.protocolDiagnostics.push(`onboard mode switch: ${detail}`)
-    umdLog('x3', 'info', 'onboard mode switch', { attempted: switched || setError !== '', detail, finalMode: mode })
+    this.protocolDiagnostics.push(`mode switch to ${target}: ${detail}`)
+    umdLog('x3', 'info', 'mode switch', { target, attempted: switched || setError !== '', detail, finalMode: mode })
     if (switched || setError) void this.logSnapshot('after-mode-switch')
-    if (mode === 1) return { ok: true, switched, message: null }
+    if (mode === target) return { ok: true, switched, message: null }
     return {
       ok: false,
       switched,
-      message: { en: `${HOST_MODE_HINT.en} (${detail})`, pl: `${HOST_MODE_HINT.pl} (${detail})` },
+      message: { en: `${failureHint.en} (${detail})`, pl: `${failureHint.pl} (${detail})` },
     }
   }
 
@@ -447,6 +468,20 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
     const message = result.ok
       ? { en: 'The mouse is in onboard mode - settings from its profile apply.', pl: 'Mysz jest w trybie wbudowanym - działają ustawienia z jej profilu.' }
       : (result.message ?? HOST_MODE_HINT)
+    return { wrote: result.ok && result.switched, message: message.en, messagePl: message.pl }
+  }
+
+  /**
+   * UI action: hand the mouse back to host mode (G HUB / software control).
+   * Onboard-only writes (HITS, DPI, polling, BHOP, buttons) stop applying
+   * from here once this succeeds - the mouse now takes its settings from
+   * whatever host software is running, same as before UMD ever touched it.
+   */
+  async switchToHostMode(): Promise<X3WriteResult> {
+    const result = await this.ensureHostMode()
+    const message = result.ok
+      ? { en: 'The mouse is back in host mode - close UMD before opening G HUB.', pl: 'Mysz wróciła do trybu host - zamknij UMD przed otwarciem G HUB.' }
+      : (result.message ?? ONBOARD_MODE_HINT)
     return { wrote: result.ok && result.switched, message: message.en, messagePl: message.pl }
   }
 

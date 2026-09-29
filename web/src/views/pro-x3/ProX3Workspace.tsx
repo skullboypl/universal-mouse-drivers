@@ -341,6 +341,26 @@ export function ProX3Workspace() {
           </button>
         </div>
       ) : null}
+      {x3.onboardMode === 'onboard' ? (
+        <div className={css.modeNotice} role="status">
+          <span>
+            {pl
+              ? 'Mysz jest w trybie wbudowanym. Wróć do trybu host, jeśli chcesz otworzyć G HUB lub inne oprogramowanie producenta.'
+              : 'The mouse is in onboard mode. Switch back to host mode if you want to open G HUB or other manufacturer software.'}
+          </span>
+          <button
+            type="button"
+            className={css.toolBtn}
+            onClick={async () => {
+              const r = await x3.switchToHostMode()
+              setNotes((n) => ({ ...n, mode: pl ? r.messagePl : r.message }))
+              await apply(() => undefined, { autosave: false })
+            }}
+          >
+            {pl ? 'Przełącz na tryb host (G HUB)' : 'Switch to host mode (G HUB)'}
+          </button>
+        </div>
+      ) : null}
       {notes.mode ? <p className={css.lockNote}>{notes.mode}</p> : null}
 
       <div className={css.mainGrid}>
