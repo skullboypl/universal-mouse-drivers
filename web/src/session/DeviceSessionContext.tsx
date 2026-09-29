@@ -359,25 +359,33 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         )
         const omSoft =
           !looksLikeNonMouseHid(picked) && openMouseSupports(picked)
+        // The OpenMouse catalog only lists devices matched by an exact
+        // VID:PID (Logitech is matched by usage page at connect time - it
+        // structurally never gets a catalog entry, see filters.ts). Without
+        // an entry we have no honest per-device capability list, and
+        // pre-opening the device to probe breaks some Logitech/G-Wolves
+        // clients before the real connect (see attachNative's comment) -
+        // so "no catalog entry" means "don't offer OpenMouse as a choice"
+        // rather than showing an empty/unverified option.
+        const omEntry = findOpenMouseCatalogEntry(
+          picked.vendorId,
+          picked.productId,
+        )
+        const omControls = omEntry ? visibleOpenMouseControls(omEntry) : []
 
         // Native Superlight / Fenrir / King / Blitz path is unchanged when the
-        // user already chose a stack, or when OpenMouse does not soft-match.
-        // When BOTH match, ask: Native (recommended) vs OpenMouse.
+        // user already chose a stack, or when OpenMouse has nothing confirmed
+        // to offer. When BOTH match with real capabilities, ask: Native
+        // (recommended) vs OpenMouse.
         let stack: DriverStackChoice
         if (opts?.driverStack === 'native' || opts?.driverStack === 'openmouse') {
           stack = opts.driverStack
-        } else if (catalogFromPick && omSoft) {
-          const omEntry = findOpenMouseCatalogEntry(
-            picked.vendorId,
-            picked.productId,
-          )
+        } else if (catalogFromPick && omSoft && omControls.length > 0) {
           const choice = await askDriverStack({
             nativeBrand: catalogFromPick.brand,
             nativeModel: catalogFromPick.model,
             productHint: `${catalogFromPick.brand} ${catalogFromPick.model}`,
-            openMouseControls: omEntry
-              ? visibleOpenMouseControls(omEntry)
-              : undefined,
+            openMouseControls: omControls,
           })
           if (!choice) throw new DriverStackCancelledError()
           stack = choice
