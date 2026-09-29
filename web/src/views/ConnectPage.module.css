@@ -560,26 +560,26 @@
 }
 
 .badgeLive {
-  color: var(--signal);
-  border-color: rgba(62, 207, 142, 0.4);
-  background: rgba(62, 207, 142, 0.08);
-}
-
-.badgeWip {
-  color: var(--accent-hot);
-  border-color: rgba(232, 162, 58, 0.4);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
   background: var(--accent-soft);
 }
 
-.badgePlanned {
+.badgeWip {
   color: var(--fg-muted);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.badgePlanned {
+  color: var(--fg-dim);
   background: rgba(255, 255, 255, 0.03);
 }
 
 .badgeOm {
-  color: #7dd3fc;
-  border-color: rgba(14, 165, 233, 0.45);
-  background: rgba(14, 165, 233, 0.1);
+  color: var(--fg-muted);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .omSection {
@@ -588,7 +588,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background:
-    radial-gradient(ellipse 80% 60% at 10% 0%, rgba(14, 165, 233, 0.12), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 10% 0%, var(--accent-soft), transparent 55%),
     var(--bg-panel);
   scroll-margin-top: calc(var(--nav-h) + 16px);
   animation: umd-rise 0.5s 0.1s ease-out both;
@@ -653,8 +653,8 @@
 }
 
 .omChip:hover {
-  border-color: rgba(14, 165, 233, 0.5);
-  background: rgba(14, 165, 233, 0.08);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: var(--accent-soft);
 }
 
 .omChip img {
@@ -693,7 +693,7 @@
 }
 
 .omFeatureCard:hover {
-  border-color: rgba(14, 165, 233, 0.45);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
 .omFeatureMark {
@@ -727,10 +727,10 @@
   background:
     linear-gradient(
       120deg,
-      rgba(62, 207, 142, 0.07) 0%,
+      var(--accent-soft) 0%,
       transparent 42%
     ),
-    linear-gradient(165deg, #171c25 0%, #12161e 100%);
+    linear-gradient(165deg, var(--bg-panel) 0%, var(--bg-elevated) 100%);
 }
 
 .trayEyebrow {
@@ -739,7 +739,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--signal);
+  color: var(--accent);
 }
 
 .trayPanel h2 {
@@ -825,7 +825,7 @@
   width: 6px;
   height: 6px;
   border-radius: 1px;
-  background: var(--signal);
+  background: var(--accent);
 }
 
 .contact {

@@ -23,11 +23,11 @@ export function MeasureLine({
 
   return (
     <div className={styles.line} data-active={active || undefined}>
-      <span className={styles.ticks} aria-hidden />
       {indexLabel != null ? (
         <span className={styles.index}>{indexLabel}</span>
       ) : null}
       <span className={styles.label}>{label}</span>
+      <span className={styles.ticks} aria-hidden />
       {value ? <span className={styles.value}>{value}</span> : null}
     </div>
   )
