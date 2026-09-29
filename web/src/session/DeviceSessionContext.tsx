@@ -18,6 +18,8 @@ import {
 import { umdLog } from '../debug/umdLog'
 import type { DeviceDriver } from '../devices/DeviceDriver'
 import { createDriver, DEVICE_CATALOG, findCatalogDevice } from '../devices/registry'
+import { findOpenMouseCatalogEntry } from '../devices/openmouse/catalog'
+import { visibleOpenMouseControls } from '../devices/openmouse/capabilityPresentation'
 import { FENRIR_MAX_IDENTITY } from '../devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/identity'
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from '../devices/mice/logitech/pro-x3-superstrike/identity'
@@ -365,10 +367,17 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         if (opts?.driverStack === 'native' || opts?.driverStack === 'openmouse') {
           stack = opts.driverStack
         } else if (catalogFromPick && omSoft) {
+          const omEntry = findOpenMouseCatalogEntry(
+            picked.vendorId,
+            picked.productId,
+          )
           const choice = await askDriverStack({
             nativeBrand: catalogFromPick.brand,
             nativeModel: catalogFromPick.model,
             productHint: `${catalogFromPick.brand} ${catalogFromPick.model}`,
+            openMouseControls: omEntry
+              ? visibleOpenMouseControls(omEntry)
+              : undefined,
           })
           if (!choice) throw new DriverStackCancelledError()
           stack = choice

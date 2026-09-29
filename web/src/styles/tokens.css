@@ -5,15 +5,18 @@
  * text and labels instead, so every device reads as the same UMD instrument.
  */
 :root {
-  --bg: #111615;
-  --bg-elevated: #161b19;
-  --bg-panel: #1c2321;
-  --bg-hover: #232b28;
-  --border: #2c3532;
-  --border-strong: #3d4844;
-  --fg: #f0f1ec;
-  --fg-muted: #aeb9b2;
-  --fg-dim: #6f7b75;
+  /* Warm-neutral graphite, not the doc's original #111615 (its green
+   * channel is the highest of the three, so it read as tinted green next
+   * to the black/white/amber logo - most visible in plain UI like modals). */
+  --bg: #121110;
+  --bg-elevated: #171513;
+  --bg-panel: #1c1a17;
+  --bg-hover: #242220;
+  --border: #2e2b27;
+  --border-strong: #3c3833;
+  --fg: #f2f0ec;
+  --fg-muted: #a8a29c;
+  --fg-dim: #6e6862;
   --accent: #e6a348;
   --accent-hot: #f0b666;
   --accent-soft: rgba(230, 163, 72, 0.14);
