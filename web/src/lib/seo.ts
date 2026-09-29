@@ -181,6 +181,16 @@ export function absoluteUrl(path: string): string {
   return `${base}${path.startsWith('/') ? path : `/${path}`}`
 }
 
+/** The same absolute, reciprocal language URLs in HTML metadata and sitemap. */
+export function localizedAlternates(path: string): Record<string, string> {
+  const languages: Record<string, string> = {}
+  for (const locale of LOCALES) {
+    languages[LOCALE_HTML_LANG[locale]] = absoluteUrl(localePath(locale, path))
+  }
+  languages['x-default'] = absoluteUrl(localePath('en', path))
+  return languages
+}
+
 export function ogImageUrl(page: SeoPageId, lang: Locale): string {
   // Static PNGs in /public/og - CapRover next/og ImageResponse 502s; Discord needs a real .png.
   // ?v= busts Discord/CDN cache after regenerating assets.
@@ -204,19 +214,12 @@ export function buildPageMetadata(
   const og = ogImageUrl(pageId, lang)
   const index = page.index !== false
 
-  const languages: Record<string, string> = {}
-  for (const loc of LOCALES) {
-    const hrefLang = loc === 'zh' ? 'zh-CN' : loc
-    languages[hrefLang] = localePath(loc, page.path)
-  }
-  languages['x-default'] = localePath('en', page.path)
-
   return {
     title,
     description,
     alternates: {
       canonical: canonicalPath,
-      languages,
+      languages: localizedAlternates(page.path),
     },
     openGraph: {
       title,

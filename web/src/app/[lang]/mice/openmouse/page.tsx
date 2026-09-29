@@ -2,45 +2,36 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { LOCALES, isLocale, type Locale } from '@/i18n/locale'
 import { OPENMOUSE_CATALOG } from '@/devices/openmouse/catalog.generated'
-import { absoluteUrl, localePath } from '@/lib/seo'
+import { absoluteUrl, localePath, localizedAlternates } from '@/lib/seo'
 import { OpenMouseHubClient } from '@/views/OpenMouseHub'
+import { getOpenMouseCopy } from '@/devices/openmouse/i18n'
+import { openMouseCatalogPage } from '@/devices/openmouse/pagination'
+import { getOpenMouseBrandCounts } from '@/devices/openmouse/catalog'
 
 function copy(lang: Locale) {
-  const pl = lang === 'pl'
+  const c = getOpenMouseCopy(lang)
   return {
-    title: pl
-      ? 'Community mice (OpenMouse) | UMD · umdrivers.com'
-      : 'Community mice (OpenMouse) | UMD · umdrivers.com',
-    description: pl
-      ? `Katalog ${OPENMOUSE_CATALOG.length} urządzeń OpenMouse w Universal Mouse Drivers - wyszukiwanie, marki, WebHID. Bez ciężkiego OEM.`
-      : `Browse ${OPENMOUSE_CATALOG.length} OpenMouse devices in Universal Mouse Drivers - search, brands, WebHID. No heavy OEM installer.`,
-    pageTitle: pl ? 'Community devices (OpenMouse)' : 'Community devices (OpenMouse)',
-    subtitle: pl
-      ? 'To nie są native UMD (King / Blitz). To myszy z protokołów OpenMouse - wybierz markę, znajdź model i połącz w Chrome/Edge.'
-      : 'These are not UMD-native SKUs (King / Blitz). They use OpenMouse protocols - pick a brand, find your model, connect in Chrome/Edge.',
-    searchPlaceholder: pl ? 'Szukaj nazwy, marki, VID:PID…' : 'Search name, brand, VID:PID…',
-    namedOnlyLabel: pl ? 'Tylko z nazwą modelu' : 'Named models only',
-    allBrandsLabel: pl ? 'Wszystkie marki' : 'All brands',
+    title: `${c.hubTitle} | UMD · umdrivers.com`,
+    description: c.hubDescription(OPENMOUSE_CATALOG.length),
+    pageTitle: c.hubTitle,
+    subtitle: c.hubSubtitle,
+    searchPlaceholder: c.searchAll,
+    namedOnlyLabel: c.namedOnly,
+    allBrandsLabel: c.allBrands,
     openMouseCredit: 'OpenMouse protocol',
-    connectLabel: pl ? 'Połącz mysz w UMD' : 'Connect mouse in UMD',
-    howTitle: pl ? 'Jak to działa?' : 'How does this work?',
-    howBody: pl
-      ? 'UMD native = pełny UI dla King Ultra, Blitz Ultimate, Fenrir, Superlight. Community = urządzenia wykrywane przez OpenMouse - wspólna karta WebHID z badge’ami marki.'
-      : 'UMD native = full UI for King Ultra, Blitz Ultimate, Fenrir, Superlight. Community = devices detected via OpenMouse - shared WebHID surface with brand badges.',
-    brandsTitle: pl ? 'Marki' : 'Brands',
-    listTitle: pl ? 'Lista myszek' : 'Mouse list',
-    badgeNamed: pl ? 'Nazwa' : 'Named',
+    connectLabel: c.connect,
+    howTitle: c.howTitle,
+    howBody: c.howBody,
+    brandsTitle: c.brands,
+    listTitle: c.mouseList,
+    badgeNamed: c.named,
     badgeCommunity: 'OpenMouse',
     badgeWebhid: 'WebHID',
-    emptyLabel: pl ? 'Brak wyników - zmień filtr lub wyszukiwanie.' : 'No matches - change filters or search.',
-    legendNative: pl ? 'UMD native' : 'UMD native',
+    emptyLabel: c.empty,
+    legendNative: c.native,
     legendNativeHint: 'King Ultra · Blitz · Fenrir · Superlight',
-    legendOmHint: pl
-      ? 'Protokoły OpenMouse w UMD WebHID'
-      : 'OpenMouse protocols in UMD WebHID',
-    legendNamedHint: pl
-      ? 'Nazwa modelu z map OpenMouse'
-      : 'Model name from OpenMouse maps',
+    legendOmHint: c.openMouseHint,
+    legendNamedHint: c.namedHint,
   }
 }
 
@@ -58,9 +49,12 @@ export async function generateMetadata({
   const c = copy(lang as Locale)
   const path = localePath(lang as Locale, '/mice/openmouse')
   return {
-    title: c.title,
+    title: { absolute: c.title },
     description: c.description,
-    alternates: { canonical: absoluteUrl(path) },
+    alternates: {
+      canonical: absoluteUrl(path),
+      languages: localizedAlternates('/mice/openmouse'),
+    },
     openGraph: {
       title: c.title,
       description: c.description,
@@ -79,9 +73,15 @@ export default async function OpenMouseHubPage({
   if (!isLocale(lang)) notFound()
   const l = lang as Locale
   const c = copy(l)
+  const catalogPage = openMouseCatalogPage(1)
   return (
     <OpenMouseHubClient
       lang={l}
+      entries={catalogPage.entries}
+      totalEntries={catalogPage.total}
+      page={1}
+      pageCount={catalogPage.pageCount}
+      brandCounts={getOpenMouseBrandCounts()}
       title={c.pageTitle}
       subtitle={c.subtitle}
       searchPlaceholder={c.searchPlaceholder}

@@ -1,6 +1,8 @@
 /** Brand accents + asset URLs for OpenMouse community catalog. */
 
 import { OPENMOUSE_LOGO_RASTER } from './logoAssets.generated'
+import { isLocale } from '@/i18n/locale'
+import { getOpenMouseCopy } from './i18n'
 
 export type OpenMouseBrandVisual = {
   brandSlug: string
@@ -170,10 +172,8 @@ export function openMouseDeviceDescription(
   vidPid: string,
   locale: string,
 ): string {
-  if (locale === 'pl') {
-    return `${name} (${brand}) - sterownik społecznościowy OpenMouse w Universal Mouse Drivers (WebHID) na umdrivers.com. Identyfikator HID ${vidPid}. Połącz w Chrome lub Edge, aby ustawić DPI i podstawowe opcje sensora (zakres zależy od klienta OpenMouse).`
-  }
-  return `${name} (${brand}) - OpenMouse community driver in Universal Mouse Drivers (WebHID) at umdrivers.com. HID id ${vidPid}. Connect in Chrome or Edge to adjust DPI and basic sensor options (depth follows the OpenMouse client).`
+  return getOpenMouseCopy(isLocale(locale) ? locale : 'en')
+    .deviceDescription(name, brand, vidPid)
 }
 
 export function openMouseBrandDescription(
@@ -181,8 +181,6 @@ export function openMouseBrandDescription(
   count: number,
   locale: string,
 ): string {
-  if (locale === 'pl') {
-    return `${brand}: ${count} urządzeń w katalogu OpenMouse × UMD. Przeglądaj modele, filtruj i łącz przez WebHID w przeglądarce - bez ciężkiego instalatora OEM.`
-  }
-  return `${brand}: ${count} devices in the OpenMouse × UMD catalog. Browse models, filter, and connect over WebHID in the browser - no heavy OEM installer.`
+  return getOpenMouseCopy(isLocale(locale) ? locale : 'en')
+    .brandDescription(brand, count)
 }

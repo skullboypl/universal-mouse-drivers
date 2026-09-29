@@ -8,8 +8,9 @@ import {
   openMouseDevicePath,
   openMouseImageUrl,
 } from '@/devices/openmouse/catalog'
-import { absoluteUrl, localePath } from '@/lib/seo'
+import { absoluteUrl, localePath, localizedAlternates } from '@/lib/seo'
 import { OpenMouseDeviceView } from '@/views/OpenMouseDeviceView'
+import { getOpenMouseCopy } from '@/devices/openmouse/i18n'
 
 export function generateStaticParams() {
   return LOCALES.flatMap((lang) =>
@@ -34,10 +35,13 @@ export async function generateMetadata({
   const title = `${entry.name} (${entry.brand}) · OpenMouse | UMD`
   const path = localePath(lang as Locale, openMouseDevicePath(brand, slug))
   return {
-    title,
+    title: { absolute: title },
     description,
     robots: entry.hasProductName ? undefined : { index: false, follow: true },
-    alternates: { canonical: absoluteUrl(path) },
+    alternates: {
+      canonical: absoluteUrl(path),
+      languages: localizedAlternates(openMouseDevicePath(brand, slug)),
+    },
     openGraph: {
       title,
       description,
@@ -57,31 +61,19 @@ export default async function OpenMouseDevicePage({
   const entry = getOpenMouseEntry(brand, slug)
   if (!entry) notFound()
   const l = lang as Locale
-  const pl = l === 'pl'
+  const c = getOpenMouseCopy(l)
   return (
     <OpenMouseDeviceView
       lang={l}
       entry={entry}
       hubLabel="Community (OpenMouse)"
-      connectLabel={pl ? 'Połącz w UMD' : 'Connect in UMD'}
+      connectLabel={c.connectShort}
       credit="OpenMouse protocol"
-      badgeNamed={pl ? 'Nazwa' : 'Named'}
+      badgeNamed={c.named}
       badgeCommunity="OpenMouse"
       badgeWebhid="WebHID"
-      stepsTitle={pl ? 'Jak połączyć' : 'How to connect'}
-      steps={
-        pl
-          ? [
-              'Otwórz umdrivers.com w Chrome lub Edge (desktop).',
-              'Zamknij OEM / G HUB / inne apki blokujące HID.',
-              'Kliknij „Połącz” i wybierz tę mysz na liście WebHID.',
-            ]
-          : [
-              'Open umdrivers.com in Chrome or Edge (desktop).',
-              'Close OEM / G HUB / other apps that lock HID.',
-              'Click Connect and pick this mouse in the WebHID prompt.',
-            ]
-      }
+      stepsTitle={c.stepsTitle}
+      steps={c.steps}
     />
   )
 }
