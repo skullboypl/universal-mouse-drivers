@@ -14,17 +14,15 @@
   align-self: flex-start;
 }
 
-.home {
+.brandLink {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--radius-sm);
-  background: var(--bg-panel);
-  border: 1px solid var(--border);
 }
 
-.home img {
+.brandLink img {
   border-radius: 6px;
   display: block;
 }

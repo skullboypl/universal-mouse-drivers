@@ -21,6 +21,9 @@ export type MessageKey =
   | 'nav.disconnect'
   | 'nav.soon'
   | 'nav.macroSoon'
+  | 'nav.home'
+  | 'nav.performance'
+  | 'nav.advanced'
   | 'nav.mice'
   | 'nav.contact'
   | 'nav.why'
@@ -329,6 +332,9 @@ const en: Dict = {
   'nav.disconnect': 'Disconnect',
   'nav.soon': 'Soon',
   'nav.macroSoon': 'Macro editor coming soon',
+  'nav.home': 'Home',
+  'nav.performance': 'Performance',
+  'nav.advanced': 'Advanced',
   'nav.mice': 'Supported mice',
   'nav.contact': 'Contact',
   'nav.why': 'Why UMD',
@@ -679,6 +685,9 @@ const pl: Dict = {
   'nav.disconnect': 'Rozłącz',
   'nav.soon': 'Wkrótce',
   'nav.macroSoon': 'Edytor makr wkrótce',
+  'nav.home': 'Strona główna',
+  'nav.performance': 'Wydajność',
+  'nav.advanced': 'Zaawansowane',
   'nav.mice': 'Wspierane myszy',
   'nav.contact': 'Kontakt',
   'nav.why': 'Dlaczego UMD',

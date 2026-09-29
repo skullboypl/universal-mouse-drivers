@@ -19,9 +19,14 @@ const KING_TABS: { path: string; key: MessageKey }[] = [
   { path: '/device/settings', key: 'nav.settings' },
 ]
 
+// OpenMouse-Project's own app calls these tabs Performance and Advanced
+// (control.openmouse.app: Overview / Performance / Buttons / Advanced) -
+// matching the naming here, even though the content behind them is still
+// ours. An Overview tab is the next phase; nothing here should promise one
+// that doesn't exist yet.
 const OPENMOUSE_TABS: { path: string; key: MessageKey }[] = [
-  { path: '/device/sensor', key: 'nav.sensor' },
-  { path: '/device/settings', key: 'nav.settings' },
+  { path: '/device/sensor', key: 'nav.performance' },
+  { path: '/device/settings', key: 'nav.advanced' },
 ]
 
 const OEM_TABS: { path: string; key: MessageKey }[] = [
@@ -72,6 +77,20 @@ function icon(kind: 'mouse' | 'sensor' | 'settings') {
   )
 }
 
+function homeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden>
+      <path
+        d="M4 11.5 12 4l8 7.5M6 10v9.5a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1V10"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 function iconFor(path: string) {
   if (path.endsWith('/sensor')) return icon('sensor')
   if (path.endsWith('/settings')) return icon('settings')
@@ -104,10 +123,14 @@ export function DeviceSidebar() {
 
   return (
     <aside className={styles.rail} aria-label={tr('nav.deviceNav')}>
-      <Link href={lp('/')} className={styles.home} aria-label={UMD.name}>
-        <img src={UMD.logoMarkUrl} alt="" width={28} height={28} draggable={false} />
+      <Link href={lp('/')} className={styles.brandLink} aria-label={UMD.name}>
+        <img src={UMD.logoMarkUrl} alt="" width={24} height={24} draggable={false} />
       </Link>
       <nav className={styles.tabs}>
+        <Link href={lp('/')} className={styles.tab}>
+          {homeIcon()}
+          <span>{tr('nav.home')}</span>
+        </Link>
         {tabs.map((tab) => {
           const href = lp(tab.path)
           const active = pathname === href || pathname.startsWith(`${href}/`)
