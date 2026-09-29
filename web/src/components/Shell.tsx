@@ -8,6 +8,7 @@ import { useT } from '@/i18n/useT'
 import { useDeviceSession } from '@/session/DeviceSessionContext'
 import { DeviceSidebar } from './DeviceSidebar'
 import { SyncSpinner } from './SyncSpinner'
+import { TopLoadingBar } from './TopLoadingBar'
 import { TopNav } from './TopNav'
 import { WriteToast } from './WriteToast'
 import styles from './Shell.module.css'
@@ -85,6 +86,7 @@ export function Shell({ children }: { children: ReactNode }) {
       data-device={deviceSkin}
       aria-busy={deviceBusy || undefined}
     >
+      <TopLoadingBar />
       {sidebarMode ? <DeviceSidebar /> : null}
       <div className={styles.column}>
       <TopNav />

@@ -510,7 +510,7 @@ const en: Dict = {
     'OpenMouse: controls appear when the HID client can read them; edits stay disabled unless that client exposes a setter. Depth varies by brand.',
   'sensor.omChromeLabel': 'OpenMouse session',
   'sensor.omSupportBlurb':
-    'Community OpenMouse protocol — not a UMD-native driver. Bugs, missing features, and bad writes belong with OpenMouse / the brand HID client. UMD only hosts this shared surface.',
+    'Community OpenMouse protocol - not a UMD-native driver. Bugs, missing features, and bad writes belong with OpenMouse / the brand HID client. UMD only hosts this shared surface.',
   'sensor.omSupportCta': 'OpenMouse issues',
   'sensor.omCapsLabel': 'Client capabilities',
   'sensor.omCapWritable': 'Readable and writable on this client',
@@ -649,7 +649,7 @@ const en: Dict = {
   'status.omProbing': 'OpenMouse · probing protocol drivers…',
   'status.omReading': 'OpenMouse · reading device status…',
   'status.omTimeout':
-    'OpenMouse timed out probing this HID interface — try another collection or the native driver',
+    'OpenMouse timed out probing this HID interface - try another collection or the native driver',
   'status.omCancelled': 'Connect cancelled',
   'status.cancelConnect': 'Cancel',
   'status.dismissError': 'Close',
@@ -721,7 +721,7 @@ const pl: Dict = {
   'connect.demoOmDpiHint': 'Minimalny klient',
   'connect.stackTitle': 'Który sterownik?',
   'connect.stackBody':
-    'Ta mysz pasuje do natywnego UMD oraz do OpenMouse. Natywny jest zalecany — pełne UI i sprawdzone zapisy.',
+    'Ta mysz pasuje do natywnego UMD oraz do OpenMouse. Natywny jest zalecany - pełne UI i sprawdzone zapisy.',
   'connect.stackNative': 'Natywny UMD',
   'connect.stackNativeHint': 'Pełne UI UMD dla {device}',
   'connect.stackOpenMouse': 'OpenMouse',
@@ -861,7 +861,7 @@ const pl: Dict = {
     'OpenMouse: kontrolki widać przy odczycie z klienta HID; edycja jest zablokowana, dopóki driver nie ma settera. Głębokość zależy od marki.',
   'sensor.omChromeLabel': 'Sesja OpenMouse',
   'sensor.omSupportBlurb':
-    'Protokół społecznościowy OpenMouse — to nie natywny driver UMD. Błędy, braki funkcji i złe zapisy zgłaszaj do OpenMouse / klienta HID marki. UMD tylko hostuje wspólną powierzchnię.',
+    'Protokół społecznościowy OpenMouse - to nie natywny driver UMD. Błędy, braki funkcji i złe zapisy zgłaszaj do OpenMouse / klienta HID marki. UMD tylko hostuje wspólną powierzchnię.',
   'sensor.omSupportCta': 'Issues OpenMouse',
   'sensor.omCapsLabel': 'Możliwości klienta',
   'sensor.omCapWritable': 'Odczyt i zapis na tym kliencie',
@@ -1000,7 +1000,7 @@ const pl: Dict = {
   'status.omProbing': 'OpenMouse · szukam protokołu wśród driverów…',
   'status.omReading': 'OpenMouse · odczyt statusu urządzenia…',
   'status.omTimeout':
-    'OpenMouse: timeout przy sondowaniu HID — spróbuj innej kolekcji albo natywnego drivera',
+    'OpenMouse: timeout przy sondowaniu HID - spróbuj innej kolekcji albo natywnego drivera',
   'status.omCancelled': 'Anulowano łączenie',
   'status.cancelConnect': 'Anuluj',
   'status.dismissError': 'Zamknij',

@@ -63,7 +63,7 @@ const GAUGE_RECT = {
 } as const
 
 function hex(value: number | null | undefined): string {
-  return value == null ? '—' : `0x${value.toString(16).toUpperCase().padStart(2, '0')}`
+  return value == null ? '-' : `0x${value.toString(16).toUpperCase().padStart(2, '0')}`
 }
 
 function toHexDump(bytes: Uint8Array): string {
@@ -156,7 +156,7 @@ export function ProX3Workspace() {
   const hapticsMax = hitsUiMax(hits?.hapticsMax ?? 20)
   const rtMax = hitsUiMax(hits?.rapidTriggerMax ?? 20)
 
-  const battery = state.info.batteryPercent == null ? '—' : `${state.info.batteryPercent}%`
+  const battery = state.info.batteryPercent == null ? '-' : `${state.info.batteryPercent}%`
   const resolvedVariant: X3Variant =
     state.info.colorVariant && state.info.colorVariant !== 'unknown'
       ? state.info.colorVariant
@@ -382,7 +382,7 @@ export function ProX3Workspace() {
                       step={X3_DPI_LIMITS.step}
                       disabled={!profileEditable || !stage.enabled}
                       value={draft ?? (stage.enabled ? String(stage.value) : '')}
-                      placeholder={stage.enabled ? undefined : '—'}
+                      placeholder={stage.enabled ? undefined : '-'}
                       onChange={(e) => setDpiDraft((d) => ({ ...d, [stage.index]: e.target.value }))}
                       onBlur={() => void commitDpiInput(stage.index)}
                       onKeyDown={(e) => {
@@ -452,7 +452,7 @@ export function ProX3Workspace() {
                   value={String(sensor.reportRateWireless ?? '')}
                   onChange={(e) => void editAndSave('rates', (d) => d.setPollingRate('wireless', Number(e.target.value)), () => x3.commitRates())}
                 >
-                  {sensor.reportRateWireless == null ? <option value="">—</option> : null}
+                  {sensor.reportRateWireless == null ? <option value="">-</option> : null}
                   {X3_POLL_RATES_HZ.map((hz) => (
                     <option key={hz} value={String(hz)}>{hz} Hz</option>
                   ))}
@@ -466,7 +466,7 @@ export function ProX3Workspace() {
                   value={String(sensor.reportRateWired ?? '')}
                   onChange={(e) => void editAndSave('rates', (d) => d.setPollingRate('wired', Number(e.target.value)), () => x3.commitRates())}
                 >
-                  {sensor.reportRateWired == null ? <option value="">—</option> : null}
+                  {sensor.reportRateWired == null ? <option value="">-</option> : null}
                   {X3_POLL_RATES_HZ.map((hz) => (
                     <option key={hz} value={String(hz)}>{hz} Hz</option>
                   ))}
@@ -503,7 +503,7 @@ export function ProX3Workspace() {
                   step={X3_BHOP_LIMITS.stepMs}
                   disabled={!profileEditable || !sensor.bhopEnabled}
                   value={bhopDraft ?? (sensor.bhopEnabled ? String(sensor.bhopTimeoutMs ?? X3_BHOP_LIMITS.minMs) : '')}
-                  placeholder="—"
+                  placeholder="-"
                   onChange={(e) => setBhopDraft(e.target.value)}
                   onBlur={() => void commitBhopInput()}
                   onKeyDown={(e) => {
@@ -643,9 +643,9 @@ export function ProX3Workspace() {
             <div><dt>{pl ? 'Połączenie' : 'Connection'}</dt><dd>{state.info.connection}</dd></div>
             <div><dt>{pl ? 'Indeks HITS' : 'HITS index'}</dt><dd>{hex(hits?.featureIndex)}</dd></div>
             <div><dt>{pl ? 'Kod statusu baterii' : 'Battery status code'}</dt><dd>{hex(state.info.batteryStatusCode)}</dd></div>
-            <div><dt>Model ID</dt><dd>{state.info.modelIdHex || '—'}</dd></div>
+            <div><dt>Model ID</dt><dd>{state.info.modelIdHex || '-'}</dd></div>
             <div><dt>{pl ? 'Odczyt HITS' : 'HITS read'}</dt><dd>{x3.hitsReadStatus === 'verified' ? (pl ? 'z urządzenia' : 'from device') : x3.hitsReadStatus === 'demo' ? 'demo' : unresolved}</dd></div>
-            <div><dt>{pl ? 'Profil onboard' : 'Onboard profile'}</dt><dd>{x3.onboardProfileNote ?? '—'}</dd></div>
+            <div><dt>{pl ? 'Profil onboard' : 'Onboard profile'}</dt><dd>{x3.onboardProfileNote ?? '-'}</dd></div>
           </dl>
 
           <div className={css.log}>

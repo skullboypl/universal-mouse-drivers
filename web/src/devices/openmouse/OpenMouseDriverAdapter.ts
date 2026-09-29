@@ -298,7 +298,7 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
     const bundle = await createOpenMouseClient(device)
     if (!bundle) {
       throw new Error(
-        'OpenMouse: no protocol driver matched this HID interface (try another collection in the picker — Superlight needs HID++ / Fenrir the vendor feature report)',
+        'OpenMouse: no protocol driver matched this HID interface (try another collection in the picker - Superlight needs HID++ / Fenrir the vendor feature report)',
       )
     }
     this.client = bundle.client as OmClient

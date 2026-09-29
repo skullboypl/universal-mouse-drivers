@@ -382,7 +382,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
         if (stack === 'openmouse') {
           if (looksLikeNonMouseHid(picked)) {
             throw new Error(
-              'Selected HID looks like a headset/keyboard — OpenMouse only accepts mice',
+              'Selected HID looks like a headset/keyboard - OpenMouse only accepts mice',
             )
           }
           openMouse = createOpenMouseDriver(picked)
