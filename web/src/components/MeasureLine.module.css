@@ -1,0 +1,53 @@
+.line {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ticks {
+  height: 9px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--border-strong) 0,
+    var(--border-strong) 1px,
+    transparent 1px,
+    transparent 8px
+  );
+  background-position: bottom;
+  background-repeat: repeat-x;
+  background-size: 100% 1px;
+  border-bottom: 1px solid var(--border-strong);
+  min-width: 0;
+}
+
+.index {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--fg-dim);
+}
+
+.line[data-active] .index {
+  color: var(--accent);
+}
+
+.label {
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+.line[data-active] .label {
+  color: var(--fg);
+}
+
+.value {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+}
