@@ -161,7 +161,7 @@
   height: auto;
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: #0e1218;
+  background: var(--bg-elevated);
   display: block;
 }
 

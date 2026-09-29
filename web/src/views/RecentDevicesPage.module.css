@@ -30,24 +30,32 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: 268px;
   gap: 16px;
+  align-items: stretch;
+}
+
+.grid > li {
+  min-height: 0;
+  height: 100%;
 }
 
 .cardWrap {
   position: relative;
+  height: 100%;
 }
 
-.card {
-  position: relative;
+.card,
+.addCard {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  width: 100%;
-  min-height: 220px;
   padding: 0;
-  border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: var(--bg-panel);
   color: inherit;
   text-align: left;
   cursor: pointer;
@@ -55,7 +63,13 @@
   transition:
     border-color 0.18s,
     background 0.18s,
-    transform 0.18s;
+    transform 0.18s,
+    color 0.18s;
+}
+
+.card {
+  border: 1px solid var(--border);
+  background: var(--bg-panel);
 }
 
 .card:hover:not(:disabled) {
@@ -64,7 +78,8 @@
   transform: translateY(-2px);
 }
 
-.card:disabled {
+.card:disabled,
+.addCard:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }
@@ -73,12 +88,14 @@
   border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
 }
 
-.art {
+.art,
+.addArt {
+  flex: 0 0 148px;
+  height: 148px;
   display: grid;
   place-items: center;
-  flex: 1;
-  min-height: 140px;
-  padding: 20px 16px 8px;
+  padding: 16px 16px 8px;
+  overflow: hidden;
   background:
     radial-gradient(
       ellipse 70% 60% at 50% 20%,
@@ -88,8 +105,11 @@
 }
 
 .art img {
-  width: min(120px, 70%);
-  height: 96px;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 120px;
+  max-height: 112px;
   object-fit: contain;
 }
 
@@ -101,10 +121,13 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-.body {
+.body,
+.addBody {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-height: 0;
   padding: 12px 16px 16px;
   border-top: 1px solid var(--border);
 }
@@ -115,6 +138,9 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--fg-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .model {
@@ -122,11 +148,16 @@
   font-size: 1.05rem;
   font-weight: 650;
   letter-spacing: -0.02em;
-  line-height: 1.2;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.5em;
 }
 
 .cue {
-  margin-top: 4px;
+  margin-top: auto;
   font-size: 0.82rem;
   color: var(--accent-hot);
 }
@@ -158,22 +189,9 @@
 }
 
 .addCard {
-  min-height: 220px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 24px 16px;
   border: 1px dashed var(--border-strong);
-  border-radius: var(--radius);
   background: transparent;
   color: var(--fg-muted);
-  cursor: pointer;
-  transition:
-    border-color 0.18s,
-    color 0.18s,
-    background 0.18s;
 }
 
 .addCard:hover:not(:disabled) {
@@ -182,9 +200,8 @@
   background: var(--accent-soft);
 }
 
-.addCard:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
+.addArt {
+  background: transparent;
 }
 
 .addIcon {
@@ -199,6 +216,13 @@
   line-height: 1;
 }
 
+.addBody {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-top-color: color-mix(in srgb, var(--border) 70%, transparent);
+}
+
 .addLabel {
   font-family: var(--display);
   font-size: 1rem;
@@ -210,7 +234,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 4px;
+  margin-top: auto;
   font-size: 0.82rem;
   color: var(--accent-hot);
 }
@@ -231,7 +255,7 @@
 }
 
 .empty {
-  margin: 0;
+  margin: 16px 0 0;
   color: var(--fg-muted);
   font-size: 0.95rem;
 }
@@ -245,15 +269,18 @@
 @media (max-width: 560px) {
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 240px;
     gap: 12px;
   }
 
-  .card,
-  .addCard {
-    min-height: 180px;
+  .art,
+  .addArt {
+    flex-basis: 120px;
+    height: 120px;
   }
 
-  .art {
-    min-height: 100px;
+  .art img {
+    max-width: 96px;
+    max-height: 88px;
   }
 }

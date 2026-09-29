@@ -176,8 +176,9 @@ export function DeviceSidebar() {
   const pathname = usePathname() || ''
   const pathNoLocale = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, '') || '/'
 
-  const onDeviceUi = pathNoLocale === '/device' || pathNoLocale.startsWith('/device/')
-  const showDeviceTabs = connected && Boolean(driver) && onDeviceUi
+  // Keep device tabs while a mouse is connected, even on Home / Recent / etc.,
+  // so leaving the configurator does not hide the way back in.
+  const showDeviceTabs = connected && Boolean(driver)
 
   const oemSinglePage =
     driver?.identity.id === FENRIR_MAX_IDENTITY.id ||

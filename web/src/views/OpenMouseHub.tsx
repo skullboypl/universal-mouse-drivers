@@ -253,17 +253,32 @@ export function OpenMouseHubClient({
         )}
         {pageCount > 1 ? (
           <nav className={styles.pagination} aria-label={OPENMOUSE_PAGINATION_COPY[lang].navigation}>
-            {page > 1 ? <Link href={lp(openMousePagePath(page - 1, brandSlug))}>{OPENMOUSE_PAGINATION_COPY[lang].previous}</Link> : null}
+            {page > 1 ? (
+              <Link
+                className={styles.pageLink}
+                href={lp(openMousePagePath(page - 1, brandSlug))}
+              >
+                {OPENMOUSE_PAGINATION_COPY[lang].previous}
+              </Link>
+            ) : null}
             {Array.from({ length: pageCount }, (_, index) => index + 1).map((number) => (
               <Link
                 key={number}
+                className={number === page ? styles.pageCurrent : styles.pageLink}
                 href={lp(openMousePagePath(number, brandSlug))}
                 aria-current={number === page ? 'page' : undefined}
               >
                 {number}
               </Link>
             ))}
-            {page < pageCount ? <Link href={lp(openMousePagePath(page + 1, brandSlug))}>{OPENMOUSE_PAGINATION_COPY[lang].next}</Link> : null}
+            {page < pageCount ? (
+              <Link
+                className={styles.pageLink}
+                href={lp(openMousePagePath(page + 1, brandSlug))}
+              >
+                {OPENMOUSE_PAGINATION_COPY[lang].next}
+              </Link>
+            ) : null}
           </nav>
         ) : null}
       </section>

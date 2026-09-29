@@ -257,7 +257,7 @@
   object-fit: contain;
   border-radius: 0.45rem;
   flex-shrink: 0;
-  background: #0c0e12;
+  background: var(--bg);
 }
 
 .chipCount {
@@ -584,6 +584,52 @@
   padding-left: 1.15rem;
   color: var(--fg-muted);
   line-height: 1.55;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.pageLink,
+.pageCurrent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--fg-muted);
+  background: var(--bg-panel);
+  transition:
+    color 0.15s,
+    border-color 0.15s,
+    background 0.15s;
+}
+
+.pageLink:hover {
+  color: var(--accent-hot);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  background: var(--bg-hover);
+}
+
+.pageCurrent {
+  color: var(--bg);
+  border-color: var(--accent);
+  background: var(--accent);
+  font-weight: 700;
+  pointer-events: none;
 }
 
 @media (min-width: 720px) {
