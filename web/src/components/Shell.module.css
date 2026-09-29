@@ -118,6 +118,19 @@
   flex: 1;
 }
 
+/* Device configurator: slim icon rail + a normal column beside it. */
+.withSidebar {
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
 .busyMain {
   /* overlay hosts skeleton; content is blurred underneath */
 }
