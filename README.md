@@ -40,6 +40,7 @@ Network users of umdrivers.com can obtain corresponding source via this public G
 | Rampage Blitz Ultimate | Live |
 | G-Wolves Fenrir Max 8K | WIP |
 | Logitech PRO X SUPERLIGHT (gen1) | WIP |
+| Logitech PRO X3 SUPERSTRIKE | WIP |
 
 ### OpenMouse community
 
