@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Button } from '@/components/Button'
 import {
   DEVICE_CATALOG,
   findCatalogDevice,
@@ -13,8 +12,9 @@ import { BLITZ_ULTIMATE_IDENTITY } from '@/devices/mice/rampage/blitz-ultimate/i
 import { KING_ULTRA_IDENTITY } from '@/devices/mice/redragon/king-ultra/identity'
 import { useT } from '@/i18n/useT'
 import { useDeviceSession } from '@/session/DeviceSessionContext'
+import { removeSavedDevice, type SavedDevice } from '@/session/savedDevices'
 import { useConnectNavigation } from '@/session/useConnectNavigation'
-import styles from './ConnectPage.module.css'
+import styles from './RecentDevicesPage.module.css'
 
 function resolveCatalogImage(
   catalogId: string,
@@ -37,7 +37,7 @@ function connectingLabel(catalogId: string | undefined, syncing: string): string
 }
 
 export function RecentDevicesPage() {
-  const { savedDevices } = useDeviceSession()
+  const { savedDevices, refreshSavedDevices } = useDeviceSession()
   const tr = useT()
   const { webHidOk, connectingKey, busyAny, goHid, goSaved } =
     useConnectNavigation()
@@ -45,91 +45,116 @@ export function RecentDevicesPage() {
 
   useEffect(() => {
     setMounted(true)
-  }, [])
+    refreshSavedDevices()
+  }, [refreshSavedDevices])
 
-  const showSaved = mounted && savedDevices.length > 0
+  function onRemove(d: SavedDevice) {
+    removeSavedDevice(d)
+    refreshSavedDevices()
+  }
+
+  const list = mounted ? savedDevices : []
 
   return (
     <div className={styles.page} data-brand="umd">
-      <section className={styles.section}>
-        <header className={styles.sectionHead}>
-          <h1>{tr('connect.savedTitle')}</h1>
-          <p>{tr('connect.savedSub')}</p>
-          <div className={styles.savedActions}>
-            <Button
-              variant="ghost"
+      <header className={styles.head}>
+        <h1>{tr('connect.savedTitle')}</h1>
+        <p>{tr('connect.savedSub')}</p>
+      </header>
+
+      {!mounted ? null : (
+        <ul className={styles.grid}>
+          <li>
+            <button
+              type="button"
+              className={styles.addCard}
               disabled={!webHidOk || busyAny}
+              aria-label={tr('connect.addDevice')}
+              title={tr('connect.otherDeviceTip')}
               onClick={() => void goHid({ forcePicker: true }, 'other')}
             >
               {connectingKey === 'other' ? (
-                <span className={styles.rowBusy}>
-                  <span className={styles.rowSpin} aria-hidden />
+                <span className={styles.busy}>
+                  <span className={styles.spin} aria-hidden />
                   {tr('status.syncing')}
                 </span>
               ) : (
-                tr('connect.otherDevice')
+                <>
+                  <span className={styles.addIcon} aria-hidden>
+                    +
+                  </span>
+                  <span className={styles.addLabel}>{tr('connect.addDevice')}</span>
+                </>
               )}
-            </Button>
-            <p className={styles.savedOtherTip}>{tr('connect.otherDeviceTip')}</p>
-          </div>
-        </header>
+            </button>
+          </li>
 
-        {!mounted ? null : showSaved ? (
-          <ul className={styles.savedList}>
-            {savedDevices.map((d) => {
-              const imageUrl = resolveCatalogImage(
-                d.catalogId,
-                d.vendorId,
-                d.productId,
-              )
-              const key = `saved:${d.vendorId}:${d.productId}`
-              const rowBusy = connectingKey === key
-              return (
-                <li key={key}>
-                  <button
-                    type="button"
-                    className={`${styles.savedRow} ${
-                      rowBusy ? styles.listRowBusy : ''
-                    }`}
-                    disabled={!webHidOk || busyAny}
-                    onClick={() => void goSaved(d)}
-                  >
+          {list.map((d) => {
+            const imageUrl = resolveCatalogImage(
+              d.catalogId,
+              d.vendorId,
+              d.productId,
+            )
+            const key = `saved:${d.catalogId}:${d.vendorId}:${d.productId}`
+            const rowBusy = connectingKey === `saved:${d.vendorId}:${d.productId}`
+            return (
+              <li key={key} className={styles.cardWrap}>
+                <button
+                  type="button"
+                  className={styles.remove}
+                  aria-label={tr('connect.removeSaved')}
+                  disabled={busyAny}
+                  onClick={() => onRemove(d)}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden>
+                    <path
+                      d="M6 6l12 12M18 6 6 18"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.card} ${rowBusy ? styles.cardBusy : ''}`}
+                  disabled={!webHidOk || busyAny}
+                  onClick={() => void goSaved(d)}
+                >
+                  <div className={styles.art}>
                     {imageUrl ? (
-                      <img
-                        className={styles.savedThumb}
-                        src={imageUrl}
-                        alt=""
-                        width={48}
-                        height={48}
-                      />
+                      <img src={imageUrl} alt="" draggable={false} />
                     ) : (
-                      <span className={styles.thumbPlaceholder} aria-hidden />
+                      <span className={styles.artPlaceholder} aria-hidden />
                     )}
-                    <span className={styles.listMain}>
-                      <strong>
-                        {d.brand} {d.model}
-                      </strong>
-                      <span className={styles.metaMuted}>{tr('connect.open')}</span>
-                    </span>
+                  </div>
+                  <div className={styles.body}>
+                    <span className={styles.brand}>{d.brand}</span>
+                    <strong className={styles.model}>{d.model}</strong>
                     {rowBusy ? (
-                      <span className={styles.rowBusy}>
-                        <span className={styles.rowSpin} aria-hidden />
+                      <span className={styles.busy}>
+                        <span className={styles.spin} aria-hidden />
                         {connectingLabel(d.catalogId, tr('status.syncing'))}
                       </span>
-                    ) : null}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-        ) : (
-          <p className={styles.warn}>{tr('connect.savedEmpty')}</p>
-        )}
+                    ) : (
+                      <span className={styles.cue}>{tr('connect.open')} →</span>
+                    )}
+                  </div>
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      )}
 
-        {mounted && !webHidOk ? (
-          <p className={styles.warn}>{tr('connect.noWebHid')}</p>
-        ) : null}
-      </section>
+      {mounted && list.length === 0 ? (
+        <p className={styles.empty}>{tr('connect.savedEmpty')}</p>
+      ) : null}
+
+      {mounted && !webHidOk ? (
+        <p className={styles.warn}>{tr('connect.noWebHid')}</p>
+      ) : null}
     </div>
   )
 }

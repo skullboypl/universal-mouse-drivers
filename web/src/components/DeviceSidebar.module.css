@@ -7,11 +7,12 @@
   align-items: center;
   gap: 18px;
   padding: 14px 0 20px;
-  background: var(--bg-elevated);
+  background: var(--bg);
   border-right: 1px solid var(--border);
   position: sticky;
   top: 0;
   align-self: flex-start;
+  z-index: 21;
 }
 
 .brandLink {

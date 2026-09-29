@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useId, useState } from 'react'
-import { UMD } from '@/brand/umd'
 import { OPENMOUSE_BACKED_ID } from '@/devices/openmouse/constants'
 import {
   openMouseBrandLogoUrl,
@@ -17,14 +16,12 @@ import { Button } from './Button'
 import { LanguageMenu } from './LanguageMenu'
 import styles from './TopNav.module.css'
 
-type MarketingLink = { href: string; key: MessageKey }
+type ExtraLink = { href: string; key: MessageKey }
 
-function isMarketingPath(pathname: string): boolean {
+function isAppShellPath(pathname: string): boolean {
   const p = pathname.replace(/\/+$/, '') || '/'
   if (p === '/' || /^\/[a-z]{2}$/.test(p)) return true
-  if (/^\/[a-z]{2}\/why$/.test(p)) return true
-  if (/^\/[a-z]{2}\/tray$/.test(p)) return true
-  if (/^\/[a-z]{2}\/recent$/.test(p)) return true
+  if (/^\/[a-z]{2}\/(why|tray|recent)$/.test(p)) return true
   if (/^\/[a-z]{2}\/mice(\/|$)/.test(p)) return true
   return false
 }
@@ -41,6 +38,10 @@ function batteryTone(percent: number | null): string {
   return styles.batteryOk
 }
 
+/**
+ * Top bar beside the always-visible left rail. Logo lives in the rail —
+ * this header only shows the connected device (when any) plus actions.
+ */
 export function TopNav() {
   const {
     connected,
@@ -56,19 +57,14 @@ export function TopNav() {
   const { lp } = useLocale()
   const tr = useT()
   const pathname = usePathname() || ''
-  const onMarketing = !connected && isMarketingPath(pathname)
+  const onAppShell = !connected && isAppShellPath(pathname)
   const isOpenMouse = driver?.identity.id === OPENMOUSE_BACKED_ID
   const refreshing = deviceBusy && busyKind === 'refresh'
   const [menuOpen, setMenuOpen] = useState(false)
   const menuId = useId()
 
-  // One flat set of destinations, not six equal-weight links plus badges
-  // (DESIGN_RESEARCH_2026.md): "Myszy / OpenMouse / Battery Tray / Jak to
-  // działa" here, "Połącz mysz" as the separate primary action below.
-  const marketingLinks: MarketingLink[] = [
-    { href: lp('/mice'), key: 'nav.native' },
-    { href: lp('/mice/openmouse'), key: 'nav.openMouse' },
-    { href: lp('/recent'), key: 'nav.recent' },
+  // Secondary destinations not in the slim rail (tray / why).
+  const extraLinks: ExtraLink[] = [
     { href: lp('/tray'), key: 'nav.tray' },
     { href: lp('/why'), key: 'nav.why' },
   ]
@@ -98,71 +94,54 @@ export function TopNav() {
 
   return (
     <header className={styles.nav} data-om={isOpenMouse || undefined}>
-      {isOpenMouse && driver ? (
-        <Link
-          href={lp('/')}
-          className={`${styles.brand} ${styles.omBrand}`}
-          aria-label={`OpenMouse · ${driver.identity.brand} ${driver.identity.model}`}
-        >
-          <img
-            className={styles.omLogo}
-            src={
-              driver.identity.logoUrl ||
-              openMouseBrandLogoUrl(
-                openMouseBrandSlugFromLabel(driver.identity.brand),
-              )
-            }
-            alt=""
-            width={36}
-            height={36}
-            draggable={false}
-          />
-          <span className={styles.brandText}>
-            <span className={styles.omStack}>
-              <span className={styles.omBadge}>OpenMouse</span>
-              <span className={styles.omBrandName}>{driver.identity.brand}</span>
+      {connected && driver ? (
+        isOpenMouse ? (
+          <div
+            className={`${styles.deviceBrand} ${styles.omBrand}`}
+            aria-label={`OpenMouse · ${driver.identity.brand} ${driver.identity.model}`}
+          >
+            <img
+              className={styles.omLogo}
+              src={
+                driver.identity.logoUrl ||
+                openMouseBrandLogoUrl(
+                  openMouseBrandSlugFromLabel(driver.identity.brand),
+                )
+              }
+              alt=""
+              width={32}
+              height={32}
+              draggable={false}
+            />
+            <span className={styles.brandText}>
+              <span className={styles.omStack}>
+                <span className={styles.omBadge}>OpenMouse</span>
+                <span className={styles.omBrandName}>{driver.identity.brand}</span>
+              </span>
+              <span className={styles.brandSub}>{driver.identity.model}</span>
             </span>
-            <span className={styles.brandSub}>{driver.identity.model}</span>
-          </span>
-        </Link>
+          </div>
+        ) : (
+          <div className={styles.deviceLabel}>
+            <span className={styles.deviceLabelName}>{driver.identity.model}</span>
+            <span className={styles.deviceLabelBrand}>{driver.identity.brand}</span>
+          </div>
+        )
       ) : (
-        <Link href={lp('/')} className={styles.brand} aria-label={UMD.name}>
-          <img
-            className={styles.logo}
-            src={UMD.logoMarkUrl}
-            alt=""
-            width={36}
-            height={36}
-            draggable={false}
-          />
-          <span className={styles.brandText}>
-            <span className={styles.brandMain}>{UMD.shortName}</span>
-            <span className={styles.brandSub}>{UMD.name}</span>
-          </span>
-        </Link>
+        <div className={styles.navSpacer} aria-hidden />
       )}
 
-      {connected && driver ? (
-        // Tabs live in DeviceSidebar now; this bar just names the current
-        // device, Wootility-style ("TYPING" mode label in its top bar).
-        <div className={styles.deviceLabel}>
-          <span className={styles.deviceLabelName}>{driver.identity.model}</span>
-        </div>
-      ) : onMarketing ? (
+      {onAppShell ? (
         <nav className={styles.homeLinks} aria-label={tr('nav.siteNav')}>
-          {marketingLinks.map((link) => (
-            <Link
-              key={link.key}
-              className={styles.homeLink}
-              href={link.href}
-            >
+          {extraLinks.map((link) => (
+            <Link key={link.key} className={styles.homeLink} href={link.href}>
               {tr(link.key)}
             </Link>
           ))}
         </nav>
-      ) : (
+      ) : !connected ? (
         <div className={styles.navSpacer} />
-      )}
+      ) : null}
 
       <div className={styles.meta}>
         {connected && (
@@ -252,13 +231,8 @@ export function TopNav() {
             {tr('nav.disconnect')}
           </Button>
         )}
-        {onMarketing && (
-          <Link href={`${lp('/')}#top`} className={styles.navCta}>
-            {tr('connect.webhid')}
-          </Link>
-        )}
         <LanguageMenu />
-        {onMarketing && (
+        {onAppShell && (
           <button
             type="button"
             className={styles.menuBtn}
@@ -276,7 +250,7 @@ export function TopNav() {
         )}
       </div>
 
-      {onMarketing && menuOpen ? (
+      {onAppShell && menuOpen ? (
         <>
           <button
             type="button"
@@ -289,7 +263,7 @@ export function TopNav() {
             className={styles.mobileMenu}
             aria-label={tr('nav.siteNav')}
           >
-            {marketingLinks.map((link) => (
+            {extraLinks.map((link) => (
               <Link
                 key={link.key}
                 className={styles.mobileLink}
