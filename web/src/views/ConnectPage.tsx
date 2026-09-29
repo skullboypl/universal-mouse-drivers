@@ -1,66 +1,25 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { UMD } from '@/brand/umd'
 import { Button } from '@/components/Button'
 import { FaqSection } from '@/components/FaqSection'
 import { MeasureLine } from '@/components/MeasureLine'
 import ui from '@/components/ui.module.css'
-import {
-  DEVICE_CATALOG,
-  findCatalogDevice,
-  OPENMOUSE_BACKED_ID,
-} from '@/devices/registry'
+import { DEVICE_CATALOG, OPENMOUSE_BACKED_ID } from '@/devices/registry'
 import {
   OPENMOUSE_HUB_PATH,
   getOpenMouseBrandCounts,
-  getOpenMouseFeaturedEntries,
-  openMouseBrandPath,
-  openMouseDevicePath,
-  openMouseLogoUrl,
 } from '@/devices/openmouse/catalog'
 import { OPENMOUSE_CATALOG } from '@/devices/openmouse/catalog.generated'
-import type { OpenMouseDemoProfile } from '@/devices/openmouse/capabilities'
-import { OpenMouseProductMark } from '@/components/OpenMouseProductMark'
-import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
-import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
-import { PRO_X3_SUPERSTRIKE_IDENTITY } from '@/devices/mice/logitech/pro-x3-superstrike/identity'
-import { BLITZ_ULTIMATE_IDENTITY } from '@/devices/mice/rampage/blitz-ultimate/identity'
-import { KING_ULTRA_IDENTITY } from '@/devices/mice/redragon/king-ultra/identity'
-import type { DeviceIdentity, DeviceSupportStatus } from '@/devices/types'
+import type { DeviceIdentity } from '@/devices/types'
 import { useLocale } from '@/i18n/LocaleContext'
 import { useT } from '@/i18n/useT'
 import { faqForPage } from '@/lib/seoContent'
-import { useDeviceSession } from '@/session/DeviceSessionContext'
-import type { SavedDevice } from '@/session/savedDevices'
-import type { HidPickTarget } from '@/transport/webhid'
+import { useConnectNavigation } from '@/session/useConnectNavigation'
 import styles from './ConnectPage.module.css'
 
 const HERO_SLIDE_MS = 4200
-
-function resolveCatalogImage(
-  catalogId: string,
-  vendorId: number,
-  productId: number,
-): string | undefined {
-  return (
-    DEVICE_CATALOG.find((d) => d.id === catalogId)?.imageUrl ??
-    findCatalogDevice(vendorId, productId)?.imageUrl
-  )
-}
-
-function connectingLabel(
-  catalogId: string | undefined,
-  syncing: string,
-): string {
-  if (catalogId === FENRIR_MAX_IDENTITY.id) return 'Fenrir…'
-  if (catalogId === KING_ULTRA_IDENTITY.id) return 'King Ultra…'
-  if (catalogId === BLITZ_ULTIMATE_IDENTITY.id) return 'Blitz Ultimate…'
-  if (catalogId === SUPERLIGHT_IDENTITY.id) return 'SUPERLIGHT…'
-  if (catalogId === PRO_X3_SUPERSTRIKE_IDENTITY.id) return 'PRO X3 SUPERSTRIKE…'
-  return syncing
-}
 
 function HeroMiceSlider({ devices }: { devices: DeviceIdentity[] }) {
   const [index, setIndex] = useState(0)
@@ -130,98 +89,19 @@ function HeroMiceSlider({ devices }: { devices: DeviceIdentity[] }) {
   )
 }
 
+/** Marketing / SEO landing. Device pickers live under Recent / Native / OpenMouse. */
 export function ConnectPage() {
-  const nav = useRouter()
   const { lp, locale } = useLocale()
-  const { connectMock, connectWebHid, webHidOk, savedDevices } =
-    useDeviceSession()
   const tr = useT()
-  const [connectingKey, setConnectingKey] = useState<string | null>(null)
+  const { webHidOk, connectingKey, busyAny, goHid } = useConnectNavigation()
   const [mounted, setMounted] = useState(false)
-  const [demoOpen, setDemoOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  async function goHid(target?: HidPickTarget, key?: string) {
-    setConnectingKey(key ?? target?.catalogId ?? 'any')
-    try {
-      const catalogId = await connectWebHid(target)
-      nav.push(
-        lp(
-            catalogId === FENRIR_MAX_IDENTITY.id ||
-            catalogId === SUPERLIGHT_IDENTITY.id ||
-            catalogId === PRO_X3_SUPERSTRIKE_IDENTITY.id
-            ? '/device/buttons'
-            : '/device/sensor',
-        ),
-      )
-    } catch {
-      /* status bar already updated */
-    } finally {
-      setConnectingKey(null)
-    }
-  }
-
-  async function goSaved(d: SavedDevice) {
-    await goHid(
-      {
-        productId: d.productId,
-        vendorId: d.vendorId,
-        catalogId: d.catalogId,
-      },
-      `saved:${d.vendorId}:${d.productId}`,
-    )
-  }
-
-  async function goCatalog(d: DeviceIdentity) {
-    await goHid(
-      {
-        productId: d.productIds[0],
-        vendorId: d.vendorId,
-        catalogId: d.id,
-      },
-      `catalog:${d.id}`,
-    )
-  }
-
-  async function goDemo(
-    catalogId: string,
-    opts?: { openMouseProfile?: OpenMouseDemoProfile },
-  ) {
-    setConnectingKey(
-      `demo:${catalogId}${opts?.openMouseProfile ? `:${opts.openMouseProfile}` : ''}`,
-    )
-    setDemoOpen(false)
-    try {
-      await connectMock(catalogId, opts)
-      nav.push(
-        lp(
-          catalogId === FENRIR_MAX_IDENTITY.id ||
-            catalogId === SUPERLIGHT_IDENTITY.id ||
-            catalogId === PRO_X3_SUPERSTRIKE_IDENTITY.id
-            ? '/device/buttons'
-            : '/device/sensor',
-        ),
-      )
-    } finally {
-      setConnectingKey(null)
-    }
-  }
-
-  function statusText(status: DeviceSupportStatus) {
-    if (status === 'live') return tr('connect.statusLive')
-    if (status === 'wip') return tr('connect.statusWip')
-    if (status === 'openmouse') return tr('connect.statusOpenMouse')
-    return tr('connect.statusPlanned')
-  }
-
-  const busyAny = connectingKey != null
-  const showSaved = mounted && savedDevices.length > 0
   const nativeDevices = DEVICE_CATALOG.filter((d) => d.id !== OPENMOUSE_BACKED_ID)
-  const omBrands = getOpenMouseBrandCounts().slice(0, 14)
-  const omFeatured = getOpenMouseFeaturedEntries(8)
+  const omBrandCount = getOpenMouseBrandCounts().length
 
   return (
     <div className={styles.page} data-brand="umd" id="top">
@@ -247,115 +127,13 @@ export function ConnectPage() {
                 tr('connect.webhid')
               )}
             </Button>
-            <Button
-              variant="ghost"
-              disabled={!webHidOk || busyAny}
-              onClick={() =>
-                void goHid(
-                  { catalogId: OPENMOUSE_BACKED_ID, forcePicker: true },
-                  `catalog:${OPENMOUSE_BACKED_ID}`,
-                )
-              }
-            >
-              {connectingKey === `catalog:${OPENMOUSE_BACKED_ID}` ? (
-                <span className={styles.rowBusy}>
-                  <span className={styles.rowSpin} aria-hidden />
-                  {tr('status.syncing')}
-                </span>
-              ) : (
-                tr('connect.webhidOm')
-              )}
-            </Button>
-            <Button
-              disabled={busyAny}
-              variant="ghost"
-              onClick={() => setDemoOpen((v) => !v)}
-              aria-expanded={demoOpen}
-            >
-              {tr('connect.demo')}
-            </Button>
+            <a className={ui.btnGhost} href={lp('/mice')}>
+              {tr('nav.native')}
+            </a>
+            <a className={ui.btnGhost} href={lp(OPENMOUSE_HUB_PATH)}>
+              {tr('nav.openMouse')}
+            </a>
           </div>
-          {demoOpen ? (
-            <div className={styles.demoPanel} role="region" aria-label={tr('connect.demoTitle')}>
-              <header className={styles.demoHead}>
-                <div>
-                  <h2>{tr('connect.demoTitle')}</h2>
-                  <p>{tr('connect.demoSub')}</p>
-                </div>
-                <button
-                  type="button"
-                  className={styles.demoClose}
-                  onClick={() => setDemoOpen(false)}
-                >
-                  {tr('connect.demoClose')}
-                </button>
-              </header>
-              <p className={styles.demoLabel}>{tr('connect.demoNative')}</p>
-              <ul className={styles.demoGrid}>
-                {nativeDevices.map((d) => (
-                  <li key={d.id}>
-                    <button
-                      type="button"
-                      className={styles.demoCard}
-                      disabled={busyAny}
-                      onClick={() => void goDemo(d.id)}
-                    >
-                      {d.imageUrl ? (
-                        <img src={d.imageUrl} alt="" width={72} height={72} />
-                      ) : null}
-                      <span className={styles.demoBrand}>{d.brand}</span>
-                      <strong>{d.model}</strong>
-                      <span className={`${styles.badge} ${styles.badgeLive}`}>
-                        {tr('connect.badgeNative')}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              <p className={styles.demoLabel}>{tr('connect.demoOpenMouse')}</p>
-              <ul className={styles.demoGrid}>
-                {(
-                  [
-                    ['full', 'connect.demoOmFull', 'connect.demoOmFullHint'],
-                    ['sensor', 'connect.demoOmSensor', 'connect.demoOmSensorHint'],
-                    ['dpi', 'connect.demoOmDpi', 'connect.demoOmDpiHint'],
-                  ] as const
-                ).map(([profile, titleKey, hintKey]) => (
-                  <li key={profile}>
-                    <button
-                      type="button"
-                      className={styles.demoCard}
-                      disabled={busyAny}
-                      onClick={() =>
-                        void goDemo(OPENMOUSE_BACKED_ID, {
-                          openMouseProfile: profile,
-                        })
-                      }
-                    >
-                      <img
-                        src={openMouseLogoUrl(
-                          profile === 'full'
-                            ? 'razer'
-                            : profile === 'sensor'
-                              ? 'steelseries'
-                              : 'glorious',
-                        )}
-                        alt=""
-                        width={48}
-                        height={48}
-                      />
-                      <span className={styles.demoBrand}>OpenMouse</span>
-                      <strong>{tr(titleKey)}</strong>
-                      <span className={styles.demoHint}>{tr(hintKey)}</span>
-                      <span className={`${styles.badge} ${styles.badgeOm}`}>
-                        {tr('connect.statusOpenMouse')}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
           {mounted && !webHidOk ? (
             <p className={styles.warn}>{tr('connect.noWebHid')}</p>
           ) : null}
@@ -368,168 +146,43 @@ export function ConnectPage() {
         <HeroMiceSlider devices={nativeDevices} />
       </section>
 
-      {showSaved ? (
-        <section className={styles.section}>
-          <header className={styles.sectionHead}>
-            <h2>{tr('connect.savedTitle')}</h2>
-            <p>{tr('connect.savedSub')}</p>
-            <div className={styles.savedActions}>
-              <Button
-                variant="ghost"
-                disabled={!webHidOk || busyAny}
-                onClick={() => void goHid({ forcePicker: true }, 'other')}
-              >
-                {connectingKey === 'other' ? (
-                  <span className={styles.rowBusy}>
-                    <span className={styles.rowSpin} aria-hidden />
-                    {tr('status.syncing')}
-                  </span>
-                ) : (
-                  tr('connect.otherDevice')
-                )}
-              </Button>
-              <p className={styles.savedOtherTip}>{tr('connect.otherDeviceTip')}</p>
-            </div>
-          </header>
-          <ul className={styles.savedList}>
-            {savedDevices.map((d) => {
-              const imageUrl = resolveCatalogImage(
-                d.catalogId,
-                d.vendorId,
-                d.productId,
-              )
-              const key = `saved:${d.vendorId}:${d.productId}`
-              const rowBusy = connectingKey === key
-              return (
-                <li key={key}>
-                  <button
-                    type="button"
-                    className={`${styles.savedRow} ${
-                      rowBusy ? styles.listRowBusy : ''
-                    }`}
-                    disabled={!webHidOk || busyAny}
-                    onClick={() => void goSaved(d)}
-                  >
-                    {imageUrl ? (
-                      <img
-                        className={styles.savedThumb}
-                        src={imageUrl}
-                        alt=""
-                        width={48}
-                        height={48}
-                      />
-                    ) : (
-                      <span className={styles.thumbPlaceholder} aria-hidden />
-                    )}
-                    <span className={styles.listMain}>
-                      <strong>
-                        {d.brand} {d.model}
-                      </strong>
-                      <span className={styles.metaMuted}>
-                        {tr('connect.open')}
-                      </span>
-                    </span>
-                    {rowBusy ? (
-                      <span className={styles.rowBusy}>
-                        <span className={styles.rowSpin} aria-hidden />
-                        {connectingLabel(d.catalogId, tr('status.syncing'))}
-                      </span>
-                    ) : null}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-        </section>
-      ) : null}
-
       <section className={styles.section} id="mice">
         <header className={styles.sectionHead}>
           <h2>{tr('connect.supportedTitle')}</h2>
           <p>{tr('connect.supportedSub')}</p>
+          <div className={styles.savedActions}>
+            <a className={ui.btnPrimary} href={lp('/mice')}>
+              {tr('connect.browseNative')}
+            </a>
+            <a className={ui.btnGhost} href={lp('/recent')}>
+              {tr('nav.recent')}
+            </a>
+          </div>
         </header>
         <ul className={styles.deviceGrid}>
-          {nativeDevices.map((d: DeviceIdentity) => {
-            const hidReady = webHidOk
-            const planned = d.status === 'planned'
-            const canConnect = hidReady && !planned
-            const key = `catalog:${d.id}`
-            const rowBusy = connectingKey === key
-            return (
-              <li key={d.id}>
-                <button
-                  type="button"
-                  className={`${styles.deviceCard} ${
-                    rowBusy ? styles.listRowBusy : ''
-                  } ${!canConnect ? styles.deviceCardMuted : ''}`}
-                  disabled={!canConnect || busyAny}
-                  onClick={() => {
-                    if (!canConnect) return
-                    void goCatalog(d)
-                  }}
-                >
-                  <div className={styles.deviceArt}>
-                    {d.imageUrl ? (
-                      <img
-                        src={d.imageUrl}
-                        alt=""
-                        className={styles.deviceImg}
-                        draggable={false}
-                      />
-                    ) : (
-                      <span className={styles.thumbPlaceholder} aria-hidden />
-                    )}
-                  </div>
-                  <div className={styles.deviceBody}>
-                    <span className={styles.deviceBrand}>{d.brand}</span>
-                    <strong className={styles.deviceModel}>{d.model}</strong>
-                    <div className={styles.deviceFooter}>
-                      <span
-                        className={[
-                          styles.badge,
-                          d.status === 'live'
-                            ? styles.badgeLive
-                            : d.status === 'wip'
-                              ? styles.badgeWip
-                              : styles.badgePlanned,
-                        ].join(' ')}
-                      >
-                        {statusText(d.status)}
-                      </span>
-                      {rowBusy ? (
-                        <span className={styles.rowBusy}>
-                          <span className={styles.rowSpin} aria-hidden />
-                          {connectingLabel(d.id, tr('status.syncing'))}
-                        </span>
-                      ) : canConnect ? (
-                        <span className={styles.openCue}>
-                          {tr('connect.open')} →
-                        </span>
-                      ) : !hidReady ? (
-                        <span
-                          className={`${styles.badge} ${styles.badgePcOnly}`}
-                          title={tr('connect.pcOnlyTip')}
-                        >
-                          {tr('connect.pcOnly')}
-                        </span>
-                      ) : (
-                        <span className={styles.openCueMuted}>
-                          {tr('connect.soon')}
-                        </span>
-                      )}
-                    </div>
-                    <a
-                      className={styles.deviceSeoLink}
-                      href={lp(`/mice/${d.id}`)}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {tr('connect.learnMore')}
-                    </a>
-                  </div>
-                </button>
-              </li>
-            )
-          })}
+          {nativeDevices.slice(0, 4).map((d) => (
+            <li key={d.id}>
+              <a className={styles.deviceCard} href={lp(`/mice/${d.id}`)}>
+                <div className={styles.deviceArt}>
+                  {d.imageUrl ? (
+                    <img
+                      src={d.imageUrl}
+                      alt=""
+                      className={styles.deviceImg}
+                      draggable={false}
+                    />
+                  ) : (
+                    <span className={styles.thumbPlaceholder} aria-hidden />
+                  )}
+                </div>
+                <div className={styles.deviceBody}>
+                  <span className={styles.deviceBrand}>{d.brand}</span>
+                  <strong className={styles.deviceModel}>{d.model}</strong>
+                  <span className={styles.openCue}>{tr('connect.learnMore')} →</span>
+                </div>
+              </a>
+            </li>
+          ))}
         </ul>
       </section>
 
@@ -538,76 +191,14 @@ export function ConnectPage() {
           <h2 id="om-home">{tr('connect.omTitle')}</h2>
           <p>{tr('connect.omSub')}</p>
           <div className={styles.omActions}>
-            <Button
-              variant="primary"
-              disabled={!webHidOk || busyAny}
-              onClick={() =>
-                void goHid(
-                  { catalogId: OPENMOUSE_BACKED_ID, forcePicker: true },
-                  `catalog:${OPENMOUSE_BACKED_ID}`,
-                )
-              }
-            >
-              {connectingKey === `catalog:${OPENMOUSE_BACKED_ID}` ? (
-                <span className={styles.rowBusy}>
-                  <span className={styles.rowSpin} aria-hidden />
-                  {tr('status.syncing')}
-                </span>
-              ) : (
-                tr('connect.omConnect')
-              )}
-            </Button>
-            <a className={ui.btnGhost} href={lp(OPENMOUSE_HUB_PATH)}>
+            <a className={ui.btnPrimary} href={lp(OPENMOUSE_HUB_PATH)}>
               {tr('connect.omBrowseAll')} ({OPENMOUSE_CATALOG.length})
             </a>
+            <p className={styles.savedOtherTip}>
+              {omBrandCount} {tr('connect.omBrands').toLowerCase()}
+            </p>
           </div>
         </header>
-
-        <p className={styles.omBrandsTitle}>{tr('connect.omBrands')}</p>
-        <ul className={styles.omBrandChips}>
-          {omBrands.map((b) => (
-            <li key={b.brandSlug}>
-              <a
-                className={styles.omChip}
-                href={lp(openMouseBrandPath(b.brandSlug))}
-              >
-                <img
-                  src={openMouseLogoUrl(b.brandSlug)}
-                  alt=""
-                  width={22}
-                  height={22}
-                />
-                <span>{b.brand}</span>
-                <span className={styles.omChipCount}>{b.count}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <p className={styles.omFeaturedTitle}>{tr('connect.omFeatured')}</p>
-        <ul className={styles.omFeatured}>
-          {omFeatured.map((e) => (
-            <li key={e.id}>
-              <a
-                className={styles.omFeatureCard}
-                href={lp(openMouseDevicePath(e.brandSlug, e.slug))}
-                aria-label={`${e.brand} ${e.name}`}
-              >
-                <OpenMouseProductMark
-                  brandSlug={e.brandSlug}
-                  brand={e.brand}
-                  model={e.name}
-                  size="sm"
-                  className={styles.omFeatureMark}
-                />
-                <p className={styles.omFeatureBrand}>{e.brand}</p>
-                <span className={`${styles.badge} ${styles.badgeOm}`}>
-                  {tr('connect.statusOpenMouse')}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
       </section>
 
       <section className={styles.tray} id="tray">

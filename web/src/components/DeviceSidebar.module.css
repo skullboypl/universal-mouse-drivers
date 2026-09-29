@@ -35,6 +35,14 @@
   padding: 0 8px;
 }
 
+.divider {
+  width: 28px;
+  height: 1px;
+  margin: 4px 0;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
 .tab,
 .tabActive {
   display: flex;

@@ -34,6 +34,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
+  for (const lang of SITE.locales) {
+    const path = localePath(lang, '/mice')
+    entries.push({
+      url: absoluteUrl(path),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+      alternates: {
+        languages: localizedAlternates('/mice'),
+      },
+    })
+  }
+
   const omPaths = [
     OPENMOUSE_HUB_PATH,
     ...getOpenMouseBrands().map(openMouseBrandPath),

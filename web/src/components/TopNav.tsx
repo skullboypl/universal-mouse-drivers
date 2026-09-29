@@ -24,6 +24,7 @@ function isMarketingPath(pathname: string): boolean {
   if (p === '/' || /^\/[a-z]{2}$/.test(p)) return true
   if (/^\/[a-z]{2}\/why$/.test(p)) return true
   if (/^\/[a-z]{2}\/tray$/.test(p)) return true
+  if (/^\/[a-z]{2}\/recent$/.test(p)) return true
   if (/^\/[a-z]{2}\/mice(\/|$)/.test(p)) return true
   return false
 }
@@ -65,8 +66,9 @@ export function TopNav() {
   // (DESIGN_RESEARCH_2026.md): "Myszy / OpenMouse / Battery Tray / Jak to
   // działa" here, "Połącz mysz" as the separate primary action below.
   const marketingLinks: MarketingLink[] = [
-    { href: `${lp('/')}#mice`, key: 'nav.mice' },
-    { href: `${lp('/')}#openmouse`, key: 'nav.openMouse' },
+    { href: lp('/mice'), key: 'nav.native' },
+    { href: lp('/mice/openmouse'), key: 'nav.openMouse' },
+    { href: lp('/recent'), key: 'nav.recent' },
     { href: lp('/tray'), key: 'nav.tray' },
     { href: lp('/why'), key: 'nav.why' },
   ]

@@ -35,7 +35,6 @@ export function Shell({ children }: { children: ReactNode }) {
     status,
     saveStatus,
     driver,
-    connected,
     deviceBusy,
     busyKind,
     connectError,
@@ -74,20 +73,16 @@ export function Shell({ children }: { children: ReactNode }) {
       ? `${statusText} · ${saveHint}`
       : statusText
 
-  // Wootility-style layout once a device is connected: a slim icon rail
-  // owns the tabs, TopNav shrinks to a top bar naming the device.
-  const sidebarMode = connected && onDeviceUi
-
+  // Slim icon rail is always visible: Home / Recent / Native / OpenMouse,
+  // plus device tabs when a mouse is connected.
   return (
     <div
-      className={`app-shell ${overlayOpen ? styles.deviceBusy : ''} ${
-        sidebarMode ? styles.withSidebar : ''
-      }`}
+      className={`app-shell ${overlayOpen ? styles.deviceBusy : ''} ${styles.withSidebar}`}
       data-device={deviceSkin}
       aria-busy={deviceBusy || undefined}
     >
       <TopLoadingBar />
-      {sidebarMode ? <DeviceSidebar /> : null}
+      <DeviceSidebar />
       <div className={styles.column}>
       <TopNav />
       <main className={`${styles.main} ${overlayOpen ? styles.busyMain : ''}`}>
@@ -141,7 +136,7 @@ export function Shell({ children }: { children: ReactNode }) {
           </div>
 
           <nav className={styles.footerLinks} aria-label={tr('footer.links')}>
-            <a href={`${lp('/')}#mice`}>{tr('nav.mice')}</a>
+            <a href={lp('/mice')}>{tr('nav.mice')}</a>
             <a href={lp('/tray')}>{tr('nav.tray')}</a>
             <a href={lp('/why')}>{tr('nav.why')}</a>
             <a href={`${lp('/')}#faq`}>{tr('nav.faq')}</a>
