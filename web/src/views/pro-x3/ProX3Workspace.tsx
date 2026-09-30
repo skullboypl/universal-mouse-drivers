@@ -527,6 +527,35 @@ export function ProX3Workspace() {
           </div>
 
           <div className={css.group}>
+            <h3 className={css.groupTitle}>LightForce</h3>
+            <p className={css.groupHint}>
+              {pl
+                ? 'Hybrid oszczędza baterię, budząc czujnik optyczny tylko gdy trzeba. Optical only jest bardziej spójny, ale zużywa więcej baterii.'
+                : 'Hybrid saves power by waking the optical sensor only when needed. Optical only is more consistent but uses more battery.'}
+            </p>
+            <label className={css.inlineLabel}>
+              <span>{pl ? 'Tryb przełączników' : 'Switch mode'}</span>
+              <select
+                className={css.select}
+                disabled={!x3.profileWritesEnabled}
+                value={sensor.lightforceMode ?? ''}
+                onChange={(e) =>
+                  void run('lightforce', () =>
+                    x3.commitLightforceMode(e.target.value as 'Optical' | 'Hybrid'),
+                  )
+                }
+              >
+                {sensor.lightforceMode == null ? (
+                  <option value="">{pl ? 'nieznane' : 'unknown'}</option>
+                ) : null}
+                <option value="Hybrid">Hybrid</option>
+                <option value="Optical">Optical only</option>
+              </select>
+            </label>
+            {notes.lightforce ? <p className={css.writeNote}>{notes.lightforce}</p> : null}
+          </div>
+
+          <div className={css.group}>
             <h3 className={css.groupTitle}>{pl ? 'Tryb BHOP' : 'BHOP mode'}</h3>
             <div className={css.inlineRow}>
               <label className={css.checkboxRow}>

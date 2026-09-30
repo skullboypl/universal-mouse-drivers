@@ -9,6 +9,7 @@ import {
   checkProfileGate,
   decodeButtonRecord,
   decodeGamingSurfaceMode,
+  decodeLightforceMode,
   decodeHitsCapabilities,
   decodeHitsButtonConfig,
   decodeOnboardProfilesInfo,
@@ -32,10 +33,12 @@ import {
   resolveX3Variant,
   sectorCrcIsValid,
   encodeGamingSurfaceWrite,
+  encodeLightforceWrite,
   type HitsButtonSetting,
   type OnboardProfilesInfo,
   type X3ButtonAction,
   type X3GamingSurfaceMode,
+  type X3LightforceMode,
   type X3Variant,
 } from './protocol'
 import { umdLog } from '../../../../debug/umdLog'
@@ -753,6 +756,63 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
     }
   }
 
+  /** Same feature/byte/pattern as gaming surface - bit 0 instead of bits 1-2. */
+  commitLightforceMode(mode: X3LightforceMode): Promise<X3WriteResult> {
+    return this.queued(() => this.writeLightforceNow(mode))
+  }
+
+  private async writeLightforceNow(mode: X3LightforceMode): Promise<X3WriteResult> {
+    const hidpp = this.hidpp
+    if (!hidpp || !this.mouseReachable) {
+      return this.writeFailure({
+        en: 'Not connected over HID++.',
+        pl: 'Brak połączenia HID++.',
+      })
+    }
+    try {
+      const idx = await hidpp.getFeature(HIDPP_FEATURE.MODE_STATUS)
+      if (idx == null) {
+        return this.writeFailure({
+          en: 'This mouse does not expose LightForce switch controls.',
+          pl: 'Ta mysz nie udostępnia sterowania przełącznikami LightForce.',
+        })
+      }
+      const before = await hidpp.request(idx, 0)
+      const currentByte = before[1] ?? 0
+      if (decodeLightforceMode(currentByte) === mode) {
+        this.state.sensor.lightforceMode = mode
+        this.lastWriteOk = true
+        this.lastWriteError = null
+        this.notify('ok')
+        return { wrote: false, message: 'Already set on the mouse.', messagePl: 'Ta wartość jest już ustawiona w myszy.' }
+      }
+      await hidpp.request(idx, 1, encodeLightforceWrite(currentByte, mode))
+      const after = await hidpp.request(idx, 0)
+      const confirmed = decodeLightforceMode(after[1] ?? 0)
+      if (confirmed !== mode) {
+        return this.writeFailure({
+          en: `The mouse kept ${confirmed ?? 'an unknown'} LightForce mode instead of ${mode}.`,
+          pl: `Mysz zachowała tryb ${confirmed ?? 'nieznany'} zamiast ${mode}.`,
+        })
+      }
+      this.state.sensor.lightforceMode = mode
+      this.lastWriteOk = true
+      this.lastWriteError = null
+      this.notify('ok')
+      return {
+        wrote: true,
+        message: `LightForce set to ${mode} and verified by read-back.`,
+        messagePl: `LightForce ustawiony na ${mode} i potwierdzony odczytem zwrotnym.`,
+      }
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error)
+      return this.writeFailure({
+        en: `LightForce write failed: ${detail}`,
+        pl: `Zapis LightForce nie powiódł się: ${detail}`,
+      })
+    }
+  }
+
   /**
    * Persists one analog button's HITS settings into component 0x19 of the
    * active onboard profile (offset fixed by profile format 8 - see
@@ -1018,15 +1078,20 @@ export class ProX3SuperstrikeDriver implements DeviceDriver {
       if (modeStatusIndex != null) {
         try {
           const resp = await hidpp.request(modeStatusIndex, 0)
-          const mode = decodeGamingSurfaceMode(resp[1] ?? 0)
+          const modeStatus1 = resp[1] ?? 0
+          const mode = decodeGamingSurfaceMode(modeStatus1)
+          const lightforce = decodeLightforceMode(modeStatus1)
           this.state.sensor.gamingSurfaceMode = mode ?? undefined
-          this.protocolDiagnostics.push(`feature 0x8090 index ${modeStatusIndex} gaming surface ${mode ?? 'unknown'}`)
+          this.state.sensor.lightforceMode = lightforce ?? undefined
+          this.protocolDiagnostics.push(`feature 0x8090 index ${modeStatusIndex} gaming surface ${mode ?? 'unknown'} lightforce ${lightforce ?? 'unknown'}`)
         } catch (error) {
           this.state.sensor.gamingSurfaceMode = undefined
+          this.state.sensor.lightforceMode = undefined
           this.protocolDiagnostics.push(`feature 0x8090 read failed: ${error instanceof Error ? error.message : String(error)}`)
         }
       } else {
         this.state.sensor.gamingSurfaceMode = undefined
+        this.state.sensor.lightforceMode = undefined
         this.protocolDiagnostics.push('feature 0x8090 absent')
       }
       this.sensorReadStatus = sensorFieldsRead > 0 ? 'verified' : 'unverified'

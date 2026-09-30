@@ -526,6 +526,23 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
             await d.probeFlashAndSync()
             if (!stillThisConnect()) return
             setState(cloneState(d.getState()))
+            if (isOpenMouse) {
+              // The pre-probe rememberDevice() above only had the generic
+              // "OpenMouse"/raw-hex placeholder (catalog.brand/model come
+              // from DEVICE_CATALOG before the mouse itself was ever read).
+              // probeFlashAndSync just resolved the real identity - re-save
+              // with that so Recent shows the actual brand/model.
+              setSavedDevices(
+                rememberDevice({
+                  catalogId: catalog.id,
+                  brand: d.identity.brand,
+                  model: d.identity.model,
+                  vendorId: picked.vendorId,
+                  productId: picked.productId,
+                  productName: picked.productName,
+                }),
+              )
+            }
             const bat = d.getState().info.batteryPercent
             const langSync = uiLocale(d.getState().settings.language)
             setStatus(

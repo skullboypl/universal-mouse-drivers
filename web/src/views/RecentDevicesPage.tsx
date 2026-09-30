@@ -10,6 +10,12 @@ import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/id
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from '@/devices/mice/logitech/pro-x3-superstrike/identity'
 import { BLITZ_ULTIMATE_IDENTITY } from '@/devices/mice/rampage/blitz-ultimate/identity'
 import { KING_ULTRA_IDENTITY } from '@/devices/mice/redragon/king-ultra/identity'
+import { OPENMOUSE_BACKED_ID } from '@/devices/openmouse/constants'
+import {
+  findOpenMouseCatalogEntry,
+  openMouseBrandSlugFromLabel,
+} from '@/devices/openmouse/catalog'
+import { OpenMouseProductMark } from '@/components/OpenMouseProductMark'
 import { useT } from '@/i18n/useT'
 import { useDeviceSession } from '@/session/DeviceSessionContext'
 import { removeSavedDevice, type SavedDevice } from '@/session/savedDevices'
@@ -94,11 +100,13 @@ export function RecentDevicesPage() {
           </li>
 
           {list.map((d) => {
-            const imageUrl = resolveCatalogImage(
-              d.catalogId,
-              d.vendorId,
-              d.productId,
-            )
+            const isOm = d.catalogId === OPENMOUSE_BACKED_ID
+            const omEntry = isOm
+              ? findOpenMouseCatalogEntry(d.vendorId, d.productId)
+              : undefined
+            const imageUrl = isOm
+              ? undefined
+              : resolveCatalogImage(d.catalogId, d.vendorId, d.productId)
             const key = `saved:${d.catalogId}:${d.vendorId}:${d.productId}`
             const rowBusy = connectingKey === `saved:${d.vendorId}:${d.productId}`
             return (
@@ -127,15 +135,22 @@ export function RecentDevicesPage() {
                   onClick={() => void goSaved(d)}
                 >
                   <div className={styles.art}>
-                    {imageUrl ? (
+                    {isOm ? (
+                      <OpenMouseProductMark
+                        brandSlug={omEntry?.brandSlug ?? openMouseBrandSlugFromLabel(d.brand)}
+                        brand={omEntry?.brand ?? d.brand}
+                        model={omEntry?.name ?? d.model}
+                        size="sm"
+                      />
+                    ) : imageUrl ? (
                       <img src={imageUrl} alt="" draggable={false} />
                     ) : (
                       <span className={styles.artPlaceholder} aria-hidden />
                     )}
                   </div>
                   <div className={styles.body}>
-                    <span className={styles.brand}>{d.brand}</span>
-                    <strong className={styles.model}>{d.model}</strong>
+                    <span className={styles.brand}>{omEntry?.brand ?? d.brand}</span>
+                    <strong className={styles.model}>{omEntry?.name ?? d.model}</strong>
                     {rowBusy ? (
                       <span className={styles.busy}>
                         <span className={styles.spin} aria-hidden />

@@ -115,6 +115,8 @@ export interface SensorState {
    * the onboard profile flash. Undefined until read from the device.
    */
   gamingSurfaceMode?: 'Auto' | 'On' | 'Off'
+  /** X3 SUPERSTRIKE LightForce switch mode - same feature 0x8090 byte, bit 0. */
+  lightforceMode?: 'Optical' | 'Hybrid'
   mode: 'lp' | 'hp' | 'corded'
   peakPerformance: boolean
   peakPerformanceTimeoutMin: number
