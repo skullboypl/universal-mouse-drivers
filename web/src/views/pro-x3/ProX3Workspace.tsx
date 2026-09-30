@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { ClientRedirect } from '../../components/ClientRedirect'
+import { Segmented } from '../../components/Segmented'
+import { SettingCard } from '../../components/SettingCard'
 import type { DeviceDriver } from '../../devices/DeviceDriver'
 import type { ButtonAction } from '../../devices/types'
 import type {
@@ -461,99 +463,72 @@ export function ProX3Workspace() {
             {notes.dpi ? <p className={css.writeNote}>{notes.dpi}</p> : null}
           </div>
 
-          <div className={css.group}>
-            <h3 className={css.groupTitle}>{pl ? 'Częstotliwość odpytywania' : 'Polling rate'}</h3>
-            <div className={css.inlineRow}>
-              <label className={css.inlineLabel}>
-                <span>{pl ? 'Bezprzewodowo' : 'Wireless'}</span>
-                <select
-                  className={css.select}
-                  disabled={!profileEditable}
-                  value={String(sensor.reportRateWireless ?? '')}
-                  onChange={(e) => void editAndSave('rates', (d) => d.setPollingRate('wireless', Number(e.target.value)), () => x3.commitRates())}
-                >
-                  {sensor.reportRateWireless == null ? <option value="">-</option> : null}
-                  {X3_POLL_RATES_HZ.map((hz) => (
-                    <option key={hz} value={String(hz)}>{hz} Hz</option>
-                  ))}
-                </select>
-              </label>
-              <label className={css.inlineLabel}>
-                <span>{pl ? 'Kablem' : 'Cable'}</span>
-                <select
-                  className={css.select}
-                  disabled={!profileEditable}
-                  value={String(sensor.reportRateWired ?? '')}
-                  onChange={(e) => void editAndSave('rates', (d) => d.setPollingRate('wired', Number(e.target.value)), () => x3.commitRates())}
-                >
-                  {sensor.reportRateWired == null ? <option value="">-</option> : null}
-                  {X3_POLL_RATES_HZ.map((hz) => (
-                    <option key={hz} value={String(hz)}>{hz} Hz</option>
-                  ))}
-                </select>
-              </label>
-            </div>
-            {notes.rates ? <p className={css.writeNote}>{notes.rates}</p> : null}
-          </div>
+          <SettingCard
+            title={pl ? 'Częstotliwość odpytywania' : 'Report frequency'}
+            overline="POLLING RATE"
+            note={notes.rates}
+          >
+            <p className={css.groupHint}>{pl ? 'Bezprzewodowo' : 'Wireless'}</p>
+            <Segmented
+              ariaLabel={pl ? 'Częstotliwość - bezprzewodowo' : 'Report frequency - wireless'}
+              disabled={!profileEditable}
+              value={sensor.reportRateWireless ?? null}
+              onChange={(hz) => void editAndSave('rates', (d) => d.setPollingRate('wireless', hz), () => x3.commitRates())}
+              options={X3_POLL_RATES_HZ.map((hz) => ({ value: hz, label: hz >= 1000 ? `${hz / 1000}K` : String(hz) }))}
+            />
+            <p className={css.groupHint} style={{ marginTop: '0.9rem' }}>{pl ? 'Kablem' : 'Wired'}</p>
+            <Segmented
+              ariaLabel={pl ? 'Częstotliwość - kablem' : 'Report frequency - wired'}
+              disabled={!profileEditable}
+              value={sensor.reportRateWired ?? null}
+              onChange={(hz) => void editAndSave('rates', (d) => d.setPollingRate('wired', hz), () => x3.commitRates())}
+              options={X3_POLL_RATES_HZ.map((hz) => ({ value: hz, label: hz >= 1000 ? `${hz / 1000}K` : String(hz) }))}
+            />
+          </SettingCard>
 
-          <div className={css.group}>
-            <h3 className={css.groupTitle}>{pl ? 'Powierzchnia gamingowa' : 'Gaming surface'}</h3>
-            <p className={css.groupHint}>
-              {pl
+          <SettingCard
+            title={pl ? 'Powierzchnia gamingowa' : 'Gaming surface'}
+            note={
+              notes.gamingSurface ??
+              (pl
                 ? 'Dostraja czujnik pod matę gamingową. Auto pozwala myszy zdecydować; wyłącz, jeśli tracking źle się zachowuje na powierzchni niegamingowej.'
-                : 'Tunes the sensor for gaming mouse pads. Auto lets the mouse decide; turn it off if tracking misbehaves on a non-gaming surface.'}
-            </p>
-            <label className={css.inlineLabel}>
-              <span>{pl ? 'Tryb' : 'Mode'}</span>
-              <select
-                className={css.select}
-                disabled={!x3.profileWritesEnabled}
-                value={sensor.gamingSurfaceMode ?? ''}
-                onChange={(e) =>
-                  void run('gamingSurface', () =>
-                    x3.commitGamingSurfaceMode(e.target.value as 'Auto' | 'On' | 'Off'),
-                  )
-                }
-              >
-                {sensor.gamingSurfaceMode == null ? (
-                  <option value="">{pl ? 'nieznane' : 'unknown'}</option>
-                ) : null}
-                <option value="Auto">Auto</option>
-                <option value="On">On</option>
-                <option value="Off">Off</option>
-              </select>
-            </label>
-            {notes.gamingSurface ? <p className={css.writeNote}>{notes.gamingSurface}</p> : null}
-          </div>
+                : 'Tunes the sensor for gaming mouse pads. Auto lets the mouse decide; turn it off if tracking misbehaves on a non-gaming surface.')
+            }
+          >
+            <Segmented
+              ariaLabel={pl ? 'Powierzchnia gamingowa' : 'Gaming surface'}
+              disabled={!x3.profileWritesEnabled}
+              value={sensor.gamingSurfaceMode ?? null}
+              onChange={(mode) => void run('gamingSurface', () => x3.commitGamingSurfaceMode(mode))}
+              options={[
+                { value: 'On' as const, label: 'On' },
+                { value: 'Off' as const, label: 'Off' },
+                { value: 'Auto' as const, label: 'Auto' },
+              ]}
+            />
+          </SettingCard>
 
-          <div className={css.group}>
-            <h3 className={css.groupTitle}>LightForce</h3>
-            <p className={css.groupHint}>
-              {pl
+          <SettingCard
+            title="LightForce"
+            overline="SWITCHES"
+            note={
+              notes.lightforce ??
+              (pl
                 ? 'Hybrid oszczędza baterię, budząc czujnik optyczny tylko gdy trzeba. Optical only jest bardziej spójny, ale zużywa więcej baterii.'
-                : 'Hybrid saves power by waking the optical sensor only when needed. Optical only is more consistent but uses more battery.'}
-            </p>
-            <label className={css.inlineLabel}>
-              <span>{pl ? 'Tryb przełączników' : 'Switch mode'}</span>
-              <select
-                className={css.select}
-                disabled={!x3.profileWritesEnabled}
-                value={sensor.lightforceMode ?? ''}
-                onChange={(e) =>
-                  void run('lightforce', () =>
-                    x3.commitLightforceMode(e.target.value as 'Optical' | 'Hybrid'),
-                  )
-                }
-              >
-                {sensor.lightforceMode == null ? (
-                  <option value="">{pl ? 'nieznane' : 'unknown'}</option>
-                ) : null}
-                <option value="Hybrid">Hybrid</option>
-                <option value="Optical">Optical only</option>
-              </select>
-            </label>
-            {notes.lightforce ? <p className={css.writeNote}>{notes.lightforce}</p> : null}
-          </div>
+                : 'Hybrid saves power by waking the optical sensor only when needed. Optical only is more consistent but uses more battery.')
+            }
+          >
+            <Segmented
+              ariaLabel="LightForce"
+              disabled={!x3.profileWritesEnabled}
+              value={sensor.lightforceMode ?? null}
+              onChange={(mode) => void run('lightforce', () => x3.commitLightforceMode(mode))}
+              options={[
+                { value: 'Hybrid' as const, label: 'Hybrid' },
+                { value: 'Optical' as const, label: 'Optical only' },
+              ]}
+            />
+          </SettingCard>
 
           <div className={css.group}>
             <h3 className={css.groupTitle}>{pl ? 'Tryb BHOP' : 'BHOP mode'}</h3>

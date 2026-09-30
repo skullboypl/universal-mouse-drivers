@@ -1,0 +1,53 @@
+.card {
+  padding: 1.15rem 1.25rem 1.3rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-panel);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.card + .card {
+  margin-top: 0.85rem;
+}
+
+.heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.overline {
+  margin: 0 0 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--fg);
+}
+
+.value {
+  flex-shrink: 0;
+  padding: 0.38rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.note {
+  margin: 1rem 0 0;
+  color: var(--fg-muted);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
