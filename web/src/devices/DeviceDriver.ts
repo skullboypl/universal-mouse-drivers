@@ -46,6 +46,16 @@ export interface DeviceDriver {
     /** When action is macro - library id copied into this button’s flash slot. */
     macroId?: string,
   ): void | Promise<void>
+  /**
+   * OpenMouse-only: raw per-device button contract (free-text action names,
+   * not the fixed ButtonAction enum above). Present only on
+   * OpenMouseDriverAdapter, and only meaningful when capabilities.buttons
+   * is true. rawButtonOptions is what the device itself reported as valid;
+   * null means "not read yet", not "none available".
+   */
+  rawButtonMappings?: Record<string, string> | null
+  rawButtonOptions?: string[] | null
+  setRawButtonMapping?(button: string, action: string): void
   /** May return a Promise when the write is flushed immediately (e.g. Axis Sync). */
   patchSensor(patch: Partial<SensorState>): void | Promise<void>
   setDpiStageCount(count: number): void

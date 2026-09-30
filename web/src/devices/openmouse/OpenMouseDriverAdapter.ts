@@ -52,6 +52,15 @@ type OmStatus = {
   activeDpiStage?: number
   sensor?: string
   ui?: OpenMouseUiHints | null
+  /**
+   * OpenMouse's brand-agnostic button contract (mouse-types.ts): current
+   * per-physical-button assignment, and every action name the device
+   * accepts. Free text, not our fixed ButtonAction enum - kept as raw
+   * strings on this adapter (rawButtonMappings/rawButtonOptions), not on
+   * DeviceState.buttons.
+   */
+  buttonMappings?: Record<string, string>
+  buttonOptions?: string[]
 }
 
 type OmClient = {
@@ -69,6 +78,8 @@ type OmClient = {
   setAngleSnapping?: (on: boolean) => Promise<unknown>
   setRippleControl?: (on: boolean) => Promise<unknown>
   setMotionSync?: (on: boolean) => Promise<unknown>
+  setButtonMapping?: (button: string, action: string) => Promise<unknown>
+  setButtonsMapping?: (mapping: Record<string, string>) => Promise<unknown>
 }
 
 function createOpenMouseDefaultState(): DeviceState {
@@ -180,6 +191,15 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   private writePhaseListeners = new Set<(p: DeviceWritePhase) => void>()
   private demoProfile: OpenMouseDemoProfile | null = null
   private allowedPollRates: number[] | null = null
+  /**
+   * Raw OpenMouse button contract - free-text per device, so it lives here
+   * rather than on DeviceState.buttons (typed to the fixed ButtonAction
+   * enum shared with native drivers). rawButtonOptions is what the device
+   * itself reported as valid actions; null means "unknown", not "none".
+   */
+  rawButtonMappings: Record<string, string> | null = null
+  rawButtonOptions: string[] | null = null
+  private syncedButtonMappings: Record<string, string> = {}
   /** Last values known on the mouse — flush only writes diffs (avoids LOD fail on DPI-only edits). */
   private synced: {
     dpiX: number | null
@@ -429,6 +449,14 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
         activeDpiIndex = 0
       }
 
+      if (st.buttonMappings) {
+        this.rawButtonMappings = { ...st.buttonMappings }
+        this.syncedButtonMappings = { ...st.buttonMappings }
+      }
+      if (st.buttonOptions) {
+        this.rawButtonOptions = [...st.buttonOptions]
+      }
+
       const charging = chargingFromState(st.batteryState)
       const methodCaps = capabilitiesFromOmClient(this.client)
       this.capabilities = applyOpenMouseUiHints(methodCaps, st)
@@ -643,6 +671,33 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
         }
       }
 
+      if (this.capabilities.buttons && this.rawButtonMappings) {
+        const changed = Object.entries(this.rawButtonMappings).filter(
+          ([button, action]) => this.syncedButtonMappings[button] !== action,
+        )
+        if (changed.length > 0) {
+          if (typeof this.client.setButtonMapping === 'function') {
+            for (const [button, action] of changed) {
+              try {
+                await this.client.setButtonMapping(button, action)
+                this.syncedButtonMappings[button] = action
+                wrote = true
+              } catch (e) {
+                errors.push(`Button ${button}: ${e instanceof Error ? e.message : String(e)}`)
+              }
+            }
+          } else if (typeof this.client.setButtonsMapping === 'function') {
+            try {
+              await this.client.setButtonsMapping(this.rawButtonMappings)
+              this.syncedButtonMappings = { ...this.rawButtonMappings }
+              wrote = true
+            } catch (e) {
+              errors.push(`Buttons: ${e instanceof Error ? e.message : String(e)}`)
+            }
+          }
+        }
+      }
+
       if (errors.length) {
         this.lastWriteOk = false
         this.lastWriteError = errors.join(' · ')
@@ -675,6 +730,12 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
     this.state = { ...this.state, profileIndex: index }
   }
 
+  /**
+   * UMD's fixed-enum button API - not meaningful for a generic OpenMouse
+   * client (its actions are per-device free text, see rawButtonOptions).
+   * Kept as a no-op to satisfy DeviceDriver; real editing goes through
+   * setRawButtonMapping.
+   */
   setButtonAction(
     buttonId: number,
     action: ButtonAction,
@@ -683,6 +744,12 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
     void buttonId
     void action
     void macroId
+  }
+
+  /** Stages one physical button's assignment; flushToDevice writes the diff. */
+  setRawButtonMapping(button: string, action: string): void {
+    if (!this.capabilities.buttons) return
+    this.rawButtonMappings = { ...(this.rawButtonMappings ?? {}), [button]: action }
   }
 
   patchSensor(patch: Partial<SensorState>): void {
