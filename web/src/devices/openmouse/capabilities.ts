@@ -146,6 +146,8 @@ export function capabilitiesFromOmClient(client: {
   setAngleSnapping?: unknown
   setRippleControl?: unknown
   setMotionSync?: unknown
+  setButtonMapping?: unknown
+  setButtonsMapping?: unknown
 } | null): OpenMouseCapabilityFlags {
   if (!client) return { ...OPENMOUSE_CAPS_NONE }
   const canRead =
@@ -169,7 +171,13 @@ export function capabilitiesFromOmClient(client: {
     rippleControl: typeof client.setRippleControl === 'function',
     motionSync: typeof client.setMotionSync === 'function',
     powerModes: false,
-    buttons: false,
+    // OpenMouse's own brand-agnostic contract (mouse-types.ts): a client
+    // exposing setButtonMapping(button, action) or the SteelSeries-shaped
+    // setButtonsMapping(mapping) is how "the shared button remapper
+    // appears" in their own app, regardless of brand.
+    buttons:
+      typeof client.setButtonMapping === 'function' ||
+      typeof client.setButtonsMapping === 'function',
     deviceSettings: false,
   }
 }

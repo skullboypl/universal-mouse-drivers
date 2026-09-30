@@ -111,6 +111,51 @@ export function ButtonsPage() {
     )
   }
 
+  // OpenMouse's button contract is per-device free text (rawButtonOptions),
+  // not our fixed ButtonAction enum - the native layout/position UI below
+  // doesn't apply, so this device gets its own simple list instead.
+  if (catalogId === OPENMOUSE_BACKED_ID && driver.capabilities?.buttons === true) {
+    const mappings = driver.rawButtonMappings ?? {}
+    const options = driver.rawButtonOptions ?? []
+    const buttonNames = Object.keys(mappings)
+    return (
+      <div className="page">
+        <h1 className="page-title">{tr('buttons.title')}</h1>
+        <p className="page-sub">{tr('buttons.sub')}</p>
+        <div className="panel">
+          {buttonNames.length === 0 ? (
+            <p className="muted">{tr('buttons.omUnavailable')}</p>
+          ) : (
+            <div className={page.bindList}>
+              {buttonNames.map((button) => (
+                <label key={button} className="row" style={{ justifyContent: 'space-between' }}>
+                  <span>{button}</span>
+                  <Select
+                    style={{ maxWidth: '16rem' }}
+                    value={mappings[button] ?? ''}
+                    disabled={options.length === 0}
+                    onChange={(e) => {
+                      const action = e.target.value
+                      void apply((d) => d.setRawButtonMapping?.(button, action))
+                    }}
+                  >
+                    {options.length === 0 ? (
+                      <option value={mappings[button] ?? ''}>{mappings[button] ?? '-'}</option>
+                    ) : (
+                      options.map((opt) => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))
+                    )}
+                  </Select>
+                </label>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   const mouseSrc = isDemo
     ? '/devices/demo/mouse.png'
     : (driver.identity.imageUrl ?? '/devices/king-ultra/mouse.png')
