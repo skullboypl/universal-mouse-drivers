@@ -703,3 +703,30 @@ export function encodeGamingSurfaceWrite(
     (GAMING_SURFACE_FIELD.values[mode] << GAMING_SURFACE_FIELD.shift)
   return new Uint8Array([0x00, encoded, 0x00, GAMING_SURFACE_FIELD.mask])
 }
+
+// LightForce switch mode: same modeStatus1 byte, bit 0.
+export type X3LightforceMode = 'Optical' | 'Hybrid'
+
+const LIGHTFORCE_FIELD = {
+  mask: 0b0000_0001,
+  shift: 0,
+  values: { Optical: 0, Hybrid: 1 } as const,
+}
+
+export function decodeLightforceMode(modeStatus1: number): X3LightforceMode | null {
+  const encoded = (modeStatus1 & LIGHTFORCE_FIELD.mask) >> LIGHTFORCE_FIELD.shift
+  const entry = (Object.entries(LIGHTFORCE_FIELD.values) as [X3LightforceMode, number][]).find(
+    ([, value]) => value === encoded,
+  )
+  return entry?.[0] ?? null
+}
+
+export function encodeLightforceWrite(
+  currentModeStatus1: number,
+  mode: X3LightforceMode,
+): Uint8Array {
+  const encoded =
+    (currentModeStatus1 & ~LIGHTFORCE_FIELD.mask) |
+    (LIGHTFORCE_FIELD.values[mode] << LIGHTFORCE_FIELD.shift)
+  return new Uint8Array([0x00, encoded, 0x00, LIGHTFORCE_FIELD.mask])
+}
