@@ -1,29 +1,20 @@
+/*
+ * Same identity as everywhere else (tokens.css) - the earlier per-brand
+ * --om-accent tint (blue for Logitech, teal by default...) turned this into
+ * exactly the "full re-theme" the design pass elsewhere removed. The brand
+ * still shows up as text (the OpenMouse/brand labels below), not as a
+ * different color for the whole banner.
+ */
 .chrome {
-  --om-accent: #2dd4bf;
-  --om-soft: #0f1c1a;
-  --om-ink: #ecfdf8;
   position: relative;
   display: grid;
   gap: 12px;
   margin: 0 0 1.35rem;
   padding: 14px 16px 13px;
-  border: 1px solid color-mix(in srgb, var(--om-accent) 35%, var(--border));
-  border-left: 4px solid var(--om-accent);
-  border-radius: 0;
-  background:
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--om-accent) 10%, transparent),
-      transparent 42%
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 11px,
-      color-mix(in srgb, var(--om-accent) 6%, transparent) 11px,
-      color-mix(in srgb, var(--om-accent) 6%, transparent) 12px
-    ),
-    color-mix(in srgb, var(--om-soft) 88%, #07090c);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
   box-shadow: none;
 }
 
@@ -49,7 +40,7 @@
   display: grid;
   place-items: center;
   background: #050607;
-  border: 1px solid color-mix(in srgb, var(--om-accent) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
 .brandLogo {
@@ -79,17 +70,17 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--om-accent);
+  color: var(--accent);
   padding: 3px 7px 2px;
-  border: 1px solid color-mix(in srgb, var(--om-accent) 55%, transparent);
-  background: color-mix(in srgb, var(--om-accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 .dot {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--om-accent) 70%, transparent);
+  background: color-mix(in srgb, var(--accent) 70%, transparent);
 }
 
 .brandName {
@@ -122,8 +113,8 @@
   text-transform: uppercase;
   text-decoration: none;
   color: #04110e;
-  background: var(--om-accent);
-  border: 1px solid color-mix(in srgb, var(--om-accent) 80%, #fff);
+  background: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 80%, #fff);
   padding: 8px 11px;
 }
 
@@ -137,7 +128,7 @@
   font-size: 0.84rem;
   line-height: 1.45;
   color: var(--fg-muted);
-  border-top: 1px dashed color-mix(in srgb, var(--om-accent) 28%, transparent);
+  border-top: 1px dashed color-mix(in srgb, var(--accent) 28%, transparent);
   padding-top: 10px;
 }
 
@@ -164,9 +155,9 @@
 }
 
 .capRw {
-  color: var(--om-ink);
-  border-color: color-mix(in srgb, var(--om-accent) 50%, transparent);
-  background: color-mix(in srgb, var(--om-accent) 16%, transparent);
+  color: var(--fg);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
 .capRo {
