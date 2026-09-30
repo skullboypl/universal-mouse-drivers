@@ -1,11 +1,9 @@
 'use client'
 
-import type { CSSProperties } from 'react'
 import { UMD } from '@/brand/umd'
 import {
   openMouseBrandLogoUrl,
   openMouseBrandSlugFromLabel,
-  openMouseBrandVisual,
 } from '@/devices/openmouse/brandVisuals'
 import type { OpenMouseCapabilityFlags } from '@/devices/openmouse/capabilities'
 import { useT } from '@/i18n/useT'
@@ -55,22 +53,11 @@ export function OpenMouseSessionChrome({
 }: Props) {
   const tr = useT()
   const slug = brandSlug || openMouseBrandSlugFromLabel(brand)
-  const visual = openMouseBrandVisual(slug)
   const mark = logoUrl || openMouseBrandLogoUrl(slug)
   const chips = buildChips(caps)
 
   return (
-    <aside
-      className={styles.chrome}
-      style={
-        {
-          '--om-accent': visual.accent,
-          '--om-soft': visual.accentSoft,
-          '--om-ink': visual.ink,
-        } as CSSProperties
-      }
-      aria-label={tr('sensor.omChromeLabel')}
-    >
+    <aside className={styles.chrome} aria-label={tr('sensor.omChromeLabel')}>
       <div className={styles.top}>
         <div className={styles.identity}>
           <div className={styles.brandMark}>
