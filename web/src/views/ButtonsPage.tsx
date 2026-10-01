@@ -8,6 +8,9 @@ import { Select } from '../components/Select'
 import styles from '../components/ui.module.css'
 import { MOUSE_ART } from '../devices/mice/redragon/king-ultra/buttons'
 import { OPENMOUSE_BACKED_ID } from '../devices/openmouse/constants'
+import { openMouseBrandSlugFromLabel } from '../devices/openmouse/brandVisuals'
+import { OpenMouseDeviceShowcase } from '../components/OpenMouseDeviceShowcase'
+import omLayout from '../components/OpenMouseLayout.module.css'
 import type { ButtonAction } from '../devices/types'
 import { useLocale } from '../i18n/LocaleContext'
 import type { MessageKey } from '../i18n/messages'
@@ -118,8 +121,8 @@ export function ButtonsPage() {
     const mappings = driver.rawButtonMappings ?? {}
     const options = driver.rawButtonOptions ?? []
     const buttonNames = Object.keys(mappings)
-    return (
-      <div className="page">
+    const body = (
+      <>
         <h1 className="page-title">{tr('buttons.title')}</h1>
         <p className="page-sub">{tr('buttons.sub')}</p>
         <div className="panel">
@@ -151,6 +154,22 @@ export function ButtonsPage() {
               ))}
             </div>
           )}
+        </div>
+      </>
+    )
+    return (
+      <div className="page">
+        <div className={omLayout.layout}>
+          <aside className={omLayout.sidebar}>
+            <OpenMouseDeviceShowcase
+              brand={driver.identity.brand}
+              model={driver.identity.model}
+              brandSlug={openMouseBrandSlugFromLabel(driver.identity.brand)}
+              connection={state.info.connection}
+              batteryPercent={state.info.batteryPercent}
+            />
+          </aside>
+          <div className={omLayout.content}>{body}</div>
         </div>
       </div>
     )

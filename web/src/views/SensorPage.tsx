@@ -33,7 +33,9 @@ import {
   dpiStageColor as kingDpiStageColor,
 } from '../devices/mice/redragon/king-ultra/defaults'
 import { OPENMOUSE_BACKED_ID } from '../devices/openmouse/constants'
-import { OpenMouseSessionChrome } from '../components/OpenMouseSessionChrome'
+import { openMouseBrandSlugFromLabel } from '../devices/openmouse/brandVisuals'
+import { OpenMouseDeviceShowcase } from '../components/OpenMouseDeviceShowcase'
+import layout from '../components/OpenMouseLayout.module.css'
 import type { MessageKey } from '../i18n/messages'
 import { useT } from '../i18n/useT'
 import { useDeviceSession } from '../session/DeviceSessionContext'
@@ -181,18 +183,8 @@ export function SensorPage() {
   const cordedModeOk =
     state.sensor.reportRate >= 2000 || state.info.connection === 'corded'
 
-  return (
-    <div className="page">
-      {isOpenMouse && driver ? (
-        <OpenMouseSessionChrome
-          brand={driver.identity.brand}
-          model={driver.identity.model}
-          logoUrl={driver.identity.logoUrl}
-          caps={caps}
-          note={driver.lastVerifyNote}
-          pollingNote={caps?.pollingNote}
-        />
-      ) : null}
+  const body = (
+    <>
       <h1 className="page-title">{tr('sensor.title')}</h1>
       <p className="page-sub">
         {isOpenMouse ? tr('sensor.omCapsNote') : tr('sensor.sub')}
@@ -537,8 +529,29 @@ export function SensorPage() {
         </div>
       </div>
       ) : null}
-    </div>
+    </>
   )
+
+  if (isOpenMouse && driver) {
+    return (
+      <div className="page">
+        <div className={layout.layout}>
+          <aside className={layout.sidebar}>
+            <OpenMouseDeviceShowcase
+              brand={driver.identity.brand}
+              model={driver.identity.model}
+              brandSlug={openMouseBrandSlugFromLabel(driver.identity.brand)}
+              connection={state.info.connection}
+              batteryPercent={state.info.batteryPercent}
+            />
+          </aside>
+          <div className={layout.content}>{body}</div>
+        </div>
+      </div>
+    )
+  }
+
+  return <div className="page">{body}</div>
 }
 
 function ButtonIcon({

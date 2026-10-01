@@ -9,7 +9,6 @@ import { FENRIR_MAX_IDENTITY } from '../devices/mice/gwolves/fenrir-max/identity
 import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/identity'
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from '../devices/mice/logitech/pro-x3-superstrike/identity'
 import { OPENMOUSE_BACKED_ID } from '../devices/openmouse/constants'
-import { OpenMouseSessionChrome } from '../components/OpenMouseSessionChrome'
 import {
   clampFenrirSleepSec,
   FENRIR_SLEEP_MAX_SEC,
@@ -105,15 +104,6 @@ export function SettingsPage() {
 
   return (
     <div className="page">
-      {isOpenMouse && driver ? (
-        <OpenMouseSessionChrome
-          brand={driver.identity.brand}
-          model={driver.identity.model}
-          logoUrl={driver.identity.logoUrl}
-          caps={driver.capabilities}
-          note={driver.lastVerifyNote}
-        />
-      ) : null}
       <h1 className="page-title">{tr('settings.title')}</h1>
       <p className="page-sub">
         {isOpenMouse

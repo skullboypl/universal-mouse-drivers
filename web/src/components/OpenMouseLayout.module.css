@@ -1,0 +1,31 @@
+/* Two-column device dashboard layout, ported from OpenMouse's own
+   `.performance-layout` / `.performance-sidebar` (.ref/app/src/control.css,
+   AGPL-3.0, same license as this repo): a sticky identity sidebar beside the
+   setting cards, used only on OpenMouse-protocol session pages. */
+.layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0.75rem;
+  min-width: 0;
+}
+
+.content {
+  min-width: 0;
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sidebar {
+    position: static;
+  }
+}
