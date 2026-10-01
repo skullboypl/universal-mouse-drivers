@@ -32,6 +32,9 @@ internal static class BatteryIconRenderer
         };
     }
 
+    /// <summary>Shared with BatteryWidgetForm so the tray icon and the desktop widget agree on color.</summary>
+    internal static Color LevelColorFor(int percent, bool charging) => LevelColor(percent, charging);
+
     private static Color LevelColor(int percent, bool charging)
     {
         if (charging)
