@@ -38,9 +38,9 @@
       "id": "trayBattery",
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
-      "version": "1.10.0",
+      "version": "1.11.0",
       "signed": true,
-      "notes": "EV-signed; PRO X3 SUPERSTRIKE battery (corded C0A9 + LIGHTSPEED receiver C54F) over HID++ 0x1004"
+      "notes": "EV-signed; OpenMouse-protocol battery bridge updated (G-Wolves xvi family), desktop widget gets an animated battery bar + instant reconnect on HID arrival"
     }
   }
 }
