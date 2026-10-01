@@ -58,12 +58,9 @@ export type MessageKey =
   | 'connect.demoNative'
   | 'connect.demoOpenMouse'
   | 'connect.demoClose'
-  | 'connect.demoOmFull'
-  | 'connect.demoOmFullHint'
-  | 'connect.demoOmSensor'
-  | 'connect.demoOmSensorHint'
-  | 'connect.demoOmDpi'
-  | 'connect.demoOmDpiHint'
+  | 'connect.demoOmPickBrand'
+  | 'connect.demoOmPickModel'
+  | 'connect.demoOmConnect'
   | 'connect.stackTitle'
   | 'connect.stackBody'
   | 'connect.stackNative'
@@ -376,14 +373,11 @@ const en: Dict = {
   'connect.demoSub':
     'Native SKUs open their full UMD UI. OpenMouse demos emulate different HID capability levels on the shared community surface (not separate Razer/SteelSeries OEM UIs).',
   'connect.demoNative': 'UMD native UI',
-  'connect.demoOpenMouse': 'OpenMouse community UI (by capability)',
+  'connect.demoOpenMouse': 'Any OpenMouse-listed mouse',
   'connect.demoClose': 'Close',
-  'connect.demoOmFull': 'Full sensor surface',
-  'connect.demoOmFullHint': 'DPI + poll + LOD + toggles',
-  'connect.demoOmSensor': 'Sensor basic',
-  'connect.demoOmSensorHint': 'DPI + poll + LOD',
-  'connect.demoOmDpi': 'DPI only',
-  'connect.demoOmDpiHint': 'Minimal client',
+  'connect.demoOmPickBrand': 'Pick a brand…',
+  'connect.demoOmPickModel': 'Pick a model…',
+  'connect.demoOmConnect': 'Connect demo',
   'connect.stackTitle': 'Which driver stack?',
   'connect.stackBody':
     'This mouse matches a UMD native driver and OpenMouse community support. Native is recommended for full UI and verified writes.',
@@ -732,14 +726,11 @@ const pl: Dict = {
   'connect.demoSub':
     'Native SKU otwierają pełny UI UMD. Demo OpenMouse emuluje różne poziomy capabilities HID na wspólnej powierzchni community (to nie osobny OEM UI Razer/SteelSeries).',
   'connect.demoNative': 'UI native UMD',
-  'connect.demoOpenMouse': 'UI OpenMouse community (wg capabilities)',
+  'connect.demoOpenMouse': 'Dowolna mysz z listy OpenMouse',
   'connect.demoClose': 'Zamknij',
-  'connect.demoOmFull': 'Pełny sensor',
-  'connect.demoOmFullHint': 'DPI + poll + LOD + przełączniki',
-  'connect.demoOmSensor': 'Sensor basic',
-  'connect.demoOmSensorHint': 'DPI + poll + LOD',
-  'connect.demoOmDpi': 'Tylko DPI',
-  'connect.demoOmDpiHint': 'Minimalny klient',
+  'connect.demoOmPickBrand': 'Wybierz markę…',
+  'connect.demoOmPickModel': 'Wybierz model…',
+  'connect.demoOmConnect': 'Połącz demo',
   'connect.stackTitle': 'Który sterownik?',
   'connect.stackBody':
     'Ta mysz pasuje do natywnego UMD oraz do OpenMouse. Natywny jest zalecany - pełne UI i sprawdzone zapisy.',

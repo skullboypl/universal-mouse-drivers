@@ -1,4 +1,4 @@
-import { OpenMouseProductMark } from './OpenMouseProductMark'
+import { OpenMouseProductImage } from './OpenMouseProductMark'
 import { useT } from '../i18n/useT'
 import type { MessageKey } from '../i18n/messages'
 import type { ConnectionMode } from '../devices/types'
@@ -8,6 +8,8 @@ type Props = {
   brand: string
   model: string
   brandSlug: string
+  /** Catalog slug for the exact per-model photo, when known. */
+  slug?: string
   connection: ConnectionMode
   batteryPercent: number | null
 }
@@ -23,6 +25,7 @@ export function OpenMouseDeviceShowcase({
   brand,
   model,
   brandSlug,
+  slug,
   connection,
   batteryPercent,
 }: Props) {
@@ -38,11 +41,14 @@ export function OpenMouseDeviceShowcase({
   return (
     <div className={styles.showcase}>
       <div className={styles.visual}>
-        <OpenMouseProductMark
+        <OpenMouseProductImage
+          key={`${brandSlug}/${slug ?? ''}`}
           brandSlug={brandSlug}
           brand={brand}
           model={model}
-          size="lg"
+          slug={slug}
+          logoPx={320}
+          decorative={false}
           className={styles.art}
         />
       </div>

@@ -17,6 +17,7 @@ import type {
 import {
   resolveOpenMouseIdentityLabels,
 } from './catalog'
+import type { OpenMouseCatalogEntry } from './catalog.generated'
 import { openMouseBrandLogoUrl, openMouseDeviceImageUrl } from './brandVisuals'
 import { OPENMOUSE_BACKED_ID } from './constants'
 import { createOpenMouseClient } from './detect'
@@ -190,6 +191,7 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
   writePhase: DeviceWritePhase = 'idle'
   private writePhaseListeners = new Set<(p: DeviceWritePhase) => void>()
   private demoProfile: OpenMouseDemoProfile | null = null
+  private demoEntry: OpenMouseCatalogEntry | null = null
   private allowedPollRates: number[] | null = null
   /**
    * Raw OpenMouse button contract - free-text per device, so it lives here
@@ -219,10 +221,15 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
     motionSync: null,
   }
 
-  constructor(seedDevice?: HIDDevice, demoProfile?: OpenMouseDemoProfile) {
+  constructor(
+    seedDevice?: HIDDevice,
+    demoProfile?: OpenMouseDemoProfile,
+    demoEntry?: OpenMouseCatalogEntry,
+  ) {
     this.state = createOpenMouseDefaultState()
     this.pendingDevice = seedDevice ?? null
     this.demoProfile = demoProfile ?? null
+    this.demoEntry = demoEntry ?? null
     if (demoProfile) {
       this.capabilities = { ...OPENMOUSE_DEMO_PROFILES[demoProfile].caps }
     }
@@ -274,18 +281,33 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
       const profile = this.demoProfile ?? 'full'
       const preset = OPENMOUSE_DEMO_PROFILES[profile]
       this.capabilities = { ...preset.caps }
-      this.identity = {
-        id: OPENMOUSE_BACKED_ID,
-        brand: 'OpenMouse',
-        model: preset.model,
-        tagline: 'Shared OpenMouse surface (mock)',
-        vendorId: 0,
-        productIds: [],
-        hidIds: [`demo:${profile}`],
-        status: 'openmouse',
-        sensor: 'Varies by OpenMouse driver',
-        imageUrl: '/devices/openmouse/mouse.svg',
-      }
+      const entry = this.demoEntry
+      this.identity = entry
+        ? {
+            id: OPENMOUSE_BACKED_ID,
+            brand: entry.brand,
+            model: entry.name,
+            tagline: 'Shared OpenMouse surface (mock)',
+            vendorId: entry.vendorId,
+            productIds: [entry.productId],
+            hidIds: [`demo:${profile}:${entry.id}`],
+            status: 'openmouse',
+            sensor: 'Varies by OpenMouse driver',
+            imageUrl: openMouseDeviceImageUrl(entry.brandSlug, entry.name),
+            logoUrl: openMouseBrandLogoUrl(entry.brandSlug),
+          }
+        : {
+            id: OPENMOUSE_BACKED_ID,
+            brand: 'OpenMouse',
+            model: preset.model,
+            tagline: 'Shared OpenMouse surface (mock)',
+            vendorId: 0,
+            productIds: [],
+            hidIds: [`demo:${profile}`],
+            status: 'openmouse',
+            sensor: 'Varies by OpenMouse driver',
+            imageUrl: '/devices/openmouse/mouse.svg',
+          }
       this.state = {
         ...createOpenMouseDefaultState(),
         info: {
@@ -843,6 +865,7 @@ export class OpenMouseDriverAdapter implements DeviceDriver {
 export function createOpenMouseDriver(
   seedDevice?: HIDDevice,
   demoProfile?: OpenMouseDemoProfile,
+  demoEntry?: OpenMouseCatalogEntry,
 ): OpenMouseDriverAdapter {
-  return new OpenMouseDriverAdapter(seedDevice, demoProfile)
+  return new OpenMouseDriverAdapter(seedDevice, demoProfile, demoEntry)
 }

@@ -7,11 +7,19 @@
 
 .visual {
   width: 100%;
-  max-width: 220px;
+  padding: 0.5rem 0;
 }
 
+/* Fully blended artwork - no box, no tile, no gradient rectangle, matching
+   OpenMouse's own `.showcase-sidebar-image`: the photo floats directly on
+   the page with only a subtle accent glow behind it. */
 .art {
-  aspect-ratio: 1 / 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 320px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--accent) 18%, transparent));
 }
 
 .info {

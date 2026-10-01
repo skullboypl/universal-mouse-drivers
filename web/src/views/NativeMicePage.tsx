@@ -1,13 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/Button'
+import { Select } from '@/components/Select'
 import { DEVICE_CATALOG, OPENMOUSE_BACKED_ID } from '@/devices/registry'
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from '@/devices/mice/logitech/pro-x3-superstrike/identity'
 import { BLITZ_ULTIMATE_IDENTITY } from '@/devices/mice/rampage/blitz-ultimate/identity'
 import { KING_ULTRA_IDENTITY } from '@/devices/mice/redragon/king-ultra/identity'
+import {
+  getOpenMouseBrandCounts,
+  getOpenMouseEntriesForBrand,
+} from '@/devices/openmouse/catalog'
 import type { DeviceIdentity, DeviceSupportStatus } from '@/devices/types'
 import { useLocale } from '@/i18n/LocaleContext'
 import { useT } from '@/i18n/useT'
@@ -30,10 +35,21 @@ export function NativeMicePage() {
     useConnectNavigation()
   const [mounted, setMounted] = useState(false)
   const [demoOpen, setDemoOpen] = useState(false)
+  const omBrands = useMemo(() => getOpenMouseBrandCounts(), [])
+  const [omBrandSlug, setOmBrandSlug] = useState('')
+  const omEntries = useMemo(
+    () => (omBrandSlug ? getOpenMouseEntriesForBrand(omBrandSlug) : []),
+    [omBrandSlug],
+  )
+  const [omEntryId, setOmEntryId] = useState('')
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  useEffect(() => {
+    setOmEntryId('')
+  }, [omBrandSlug])
 
   const nativeDevices = DEVICE_CATALOG.filter((d) => d.id !== OPENMOUSE_BACKED_ID)
 
@@ -113,6 +129,53 @@ export function NativeMicePage() {
                 </li>
               ))}
             </ul>
+
+            <p className={styles.demoLabel}>{tr('connect.demoOpenMouse')}</p>
+            <div className={styles.demoOpenMouseRow}>
+              <Select
+                value={omBrandSlug}
+                onChange={(e) => setOmBrandSlug(e.target.value)}
+              >
+                <option value="">{tr('connect.demoOmPickBrand')}</option>
+                {omBrands.map((b) => (
+                  <option key={b.brandSlug} value={b.brandSlug}>
+                    {b.brand} ({b.count})
+                  </option>
+                ))}
+              </Select>
+              <Select
+                value={omEntryId}
+                disabled={!omBrandSlug}
+                onChange={(e) => setOmEntryId(e.target.value)}
+              >
+                <option value="">{tr('connect.demoOmPickModel')}</option>
+                {omEntries.map((e) => (
+                  <option key={e.id} value={e.id}>
+                    {e.name}
+                  </option>
+                ))}
+              </Select>
+              <Button
+                disabled={!omEntryId || busyAny}
+                onClick={() => {
+                  const entry = omEntries.find((e) => e.id === omEntryId)
+                  if (!entry) return
+                  void goDemo(OPENMOUSE_BACKED_ID, {
+                    openMouseProfile: 'full',
+                    openMouseEntry: entry,
+                  })
+                }}
+              >
+                {connectingKey?.startsWith(`demo:${OPENMOUSE_BACKED_ID}:${omEntryId}`) ? (
+                  <span className={styles.rowBusy}>
+                    <span className={styles.rowSpin} aria-hidden />
+                    {tr('status.syncing')}
+                  </span>
+                ) : (
+                  tr('connect.demoOmConnect')
+                )}
+              </Button>
+            </div>
           </div>
         ) : null}
 

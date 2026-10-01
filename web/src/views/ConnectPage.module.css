@@ -194,6 +194,17 @@
   line-height: 1.25;
 }
 
+.demoOpenMouseRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.demoOpenMouseRow select {
+  min-width: 11rem;
+}
+
 .demoHint {
   font-size: 0.72rem;
   line-height: 1.35;

@@ -9,6 +9,7 @@ import styles from '../components/ui.module.css'
 import { MOUSE_ART } from '../devices/mice/redragon/king-ultra/buttons'
 import { OPENMOUSE_BACKED_ID } from '../devices/openmouse/constants'
 import { openMouseBrandSlugFromLabel } from '../devices/openmouse/brandVisuals'
+import { findOpenMouseCatalogEntry } from '../devices/openmouse/catalog'
 import { OpenMouseDeviceShowcase } from '../components/OpenMouseDeviceShowcase'
 import omLayout from '../components/OpenMouseLayout.module.css'
 import type { ButtonAction } from '../devices/types'
@@ -157,6 +158,10 @@ export function ButtonsPage() {
         </div>
       </>
     )
+    const omEntry = findOpenMouseCatalogEntry(
+      driver.identity.vendorId,
+      driver.identity.productIds[0] ?? -1,
+    )
     return (
       <div className="page">
         <div className={omLayout.layout}>
@@ -164,7 +169,11 @@ export function ButtonsPage() {
             <OpenMouseDeviceShowcase
               brand={driver.identity.brand}
               model={driver.identity.model}
-              brandSlug={openMouseBrandSlugFromLabel(driver.identity.brand)}
+              brandSlug={
+                omEntry?.brandSlug ??
+                openMouseBrandSlugFromLabel(driver.identity.brand)
+              }
+              slug={omEntry?.slug}
               connection={state.info.connection}
               batteryPercent={state.info.batteryPercent}
             />

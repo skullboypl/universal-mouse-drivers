@@ -4,7 +4,6 @@
  */
 
 import { findOpenMouseCatalogEntry } from './catalog'
-import { isFenrirMaxDevice } from '../mice/gwolves/fenrir-max/identity'
 
 export type OpenMouseMatch = {
   brandLabel: string
@@ -100,12 +99,6 @@ export async function createOpenMouseClient(
       }
     }
 
-    if (isFenrirMaxDevice(device.vendorId, device.productId)) {
-      throw new Error(
-        'Fenrir Max is listed in OpenMouse but this hardware uses the old G-Wolves protocol. Use Native UMD (recommended in the stack chooser) - OpenMouse’s G-Wolves client is the newer HTX/VGN family.',
-      )
-    }
-
     const entry = findOpenMouseCatalogEntry(device.vendorId, device.productId)
     if (entry) {
       throw new Error(
@@ -115,11 +108,7 @@ export async function createOpenMouseClient(
 
     return null
   } catch (err) {
-    if (
-      err instanceof Error &&
-      (err.message.startsWith('Fenrir Max') ||
-        err.message.startsWith('OpenMouse lists'))
-    ) {
+    if (err instanceof Error && err.message.startsWith('OpenMouse lists')) {
       throw err
     }
     const msg = err instanceof Error ? err.message : String(err)
