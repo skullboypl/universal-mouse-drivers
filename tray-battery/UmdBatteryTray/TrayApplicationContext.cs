@@ -10,6 +10,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private readonly ContextMenuStrip _menu;
     private readonly ToolStripMenuItem _widgetMenuItem;
     private readonly ToolStripMenuItem _deviceMenuItem;
+    private readonly ToolStripMenuItem _batteryMenuItem;
     private readonly System.Windows.Forms.Timer _pollTimer;
     private readonly UmdBatteryReader _reader = new();
     private readonly BatteryWidgetForm _widget = new();
@@ -18,6 +19,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private readonly Icon _appIcon;
 
     private Icon? _currentIcon;
+    private Image? _batteryMenuIcon;
     private BatteryReading? _lastReading;
     private SettingsForm? _settingsForm;
     private UpdatePromptForm? _updateForm;
@@ -39,6 +41,15 @@ internal sealed class TrayApplicationContext : ApplicationContext
             Enabled = false,
         };
         _menu.Items.Add(versionItem);
+
+        // Non-interactive battery readout - icon + percent + status, so a right-click
+        // shows the state at a glance instead of only the tray icon's small glyph.
+        _batteryMenuItem = new ToolStripMenuItem(UiText.T(_settings.UiLanguage, "tray.noData"))
+        {
+            Enabled = false,
+            Font = new Font(Control.DefaultFont, FontStyle.Bold),
+        };
+        _menu.Items.Add(_batteryMenuItem);
         _menu.Items.Add(new ToolStripSeparator());
         _menu.Items.Add(UiText.T(_settings.UiLanguage, "tray.refreshNow"), null, (_, _) => _ = RefreshBatteryAsync());
 
@@ -84,6 +95,10 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _trayIcon.DoubleClick += (_, _) => _ = RefreshBatteryAsync();
 
         _widget.SetPositionChangedHandler(OnWidgetMoved);
+        _widget.SetDeviceArrivedHandler(() => _ = RefreshBatteryAsync());
+        // Forces the widget's HWND to exist even when WidgetVisible is off, so HID
+        // arrival notifications (debounced reconnect refresh) still work either way.
+        _ = _widget.Handle;
         ApplySettings(_settings, initial: true);
 
         _bridge = new BridgeServer(
@@ -474,11 +489,14 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private void UpdateUi(BatteryReading? reading, string? error)
     {
         _currentIcon?.Dispose();
+        _batteryMenuIcon?.Dispose();
+        _batteryMenuIcon = null;
         if (reading is not null)
         {
+            var charging = reading.Value.Status is BatteryStatus.Charging or BatteryStatus.Full;
             _currentIcon = BatteryIconRenderer.Create(
                 reading.Value.Percent,
-                reading.Value.Status is BatteryStatus.Charging or BatteryStatus.Full,
+                charging,
                 _settings.TrayDisplay,
                 _settings.TrayFontScalePercent,
                 _settings.TrayIconScalePercent);
@@ -496,6 +514,13 @@ internal sealed class TrayApplicationContext : ApplicationContext
             _trayIcon.Text = reading.Value.Status == BatteryStatus.Unknown
                 ? TrimTip($"UMD: n/a · {device}")
                 : $"UMD: {reading.Value.Percent}% ({status}) · {TrimTip(device)}";
+
+            using var menuIcon = BatteryIconRenderer.Create(reading.Value.Percent, charging, TrayDisplayMode.BatteryIcon);
+            _batteryMenuIcon = menuIcon.ToBitmap();
+            _batteryMenuItem.Image = _batteryMenuIcon;
+            _batteryMenuItem.Text = reading.Value.Status == BatteryStatus.Unknown
+                ? $"n/a · {device}"
+                : $"{reading.Value.Percent}% · {status} · {device}";
         }
         else
         {
@@ -503,6 +528,8 @@ internal sealed class TrayApplicationContext : ApplicationContext
             _trayIcon.Text = error is null
                 ? "UMD Battery - no device"
                 : TrimTip($"UMD Battery - {error}");
+            _batteryMenuItem.Image = null;
+            _batteryMenuItem.Text = UiText.T(_settings.UiLanguage, "tray.noData");
         }
 
         if (_widget.Visible)
@@ -534,6 +561,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _trayIcon.Visible = false;
         _trayIcon.Dispose();
         _currentIcon?.Dispose();
+        _batteryMenuIcon?.Dispose();
         _appIcon.Dispose();
         _reader.Dispose();
         _widget.Dispose();
