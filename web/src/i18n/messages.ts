@@ -190,12 +190,11 @@ export type MessageKey =
   | 'sensor.title'
   | 'sensor.sub'
   | 'sensor.omCapsNote'
-  | 'sensor.omChromeLabel'
-  | 'sensor.omSupportBlurb'
-  | 'sensor.omSupportCta'
-  | 'sensor.omCapsLabel'
-  | 'sensor.omCapWritable'
-  | 'sensor.omCapReadOnly'
+  | 'sensor.omConnected'
+  | 'sensor.omConnWireless'
+  | 'sensor.omConnBluetooth'
+  | 'sensor.omConnCorded'
+  | 'sensor.omConnUnknown'
   | 'sensor.dpiStages'
   | 'sensor.stageCount'
   | 'sensor.stageCountTip'
@@ -527,13 +526,11 @@ const en: Dict = {
     'DPI and flags update in the UI instantly; the mouse is written after a short debounce.',
   'sensor.omCapsNote':
     'OpenMouse: controls appear when the HID client can read them; edits stay disabled unless that client exposes a setter. Depth varies by brand.',
-  'sensor.omChromeLabel': 'OpenMouse session',
-  'sensor.omSupportBlurb':
-    'Community OpenMouse protocol - not a UMD-native driver. Bugs, missing features, and bad writes belong with OpenMouse / the brand HID client. UMD only hosts this shared surface.',
-  'sensor.omSupportCta': 'OpenMouse issues',
-  'sensor.omCapsLabel': 'Client capabilities',
-  'sensor.omCapWritable': 'Readable and writable on this client',
-  'sensor.omCapReadOnly': 'Shown from status; no setter on this client',
+  'sensor.omConnected': 'Connected',
+  'sensor.omConnWireless': 'Wireless',
+  'sensor.omConnBluetooth': 'Bluetooth',
+  'sensor.omConnCorded': 'Wired',
+  'sensor.omConnUnknown': 'Unknown link',
   'sensor.dpiStages': 'DPI stages',
   'sensor.stageCount': 'Number of stages',
   'sensor.stageCountTip':
@@ -888,13 +885,11 @@ const pl: Dict = {
     'DPI i flagi od razu w UI; zapis na mysz dopiero po krótkim debounce.',
   'sensor.omCapsNote':
     'OpenMouse: kontrolki widać przy odczycie z klienta HID; edycja jest zablokowana, dopóki driver nie ma settera. Głębokość zależy od marki.',
-  'sensor.omChromeLabel': 'Sesja OpenMouse',
-  'sensor.omSupportBlurb':
-    'Protokół społecznościowy OpenMouse - to nie natywny driver UMD. Błędy, braki funkcji i złe zapisy zgłaszaj do OpenMouse / klienta HID marki. UMD tylko hostuje wspólną powierzchnię.',
-  'sensor.omSupportCta': 'Issues OpenMouse',
-  'sensor.omCapsLabel': 'Możliwości klienta',
-  'sensor.omCapWritable': 'Odczyt i zapis na tym kliencie',
-  'sensor.omCapReadOnly': 'Z statusu; brak settera na tym kliencie',
+  'sensor.omConnected': 'Połączono',
+  'sensor.omConnWireless': 'Bezprzewodowo',
+  'sensor.omConnBluetooth': 'Bluetooth',
+  'sensor.omConnCorded': 'Przewodowo',
+  'sensor.omConnUnknown': 'Nieznane łącze',
   'sensor.dpiStages': 'Poziomy DPI',
   'sensor.stageCount': 'Liczba poziomów',
   'sensor.stageCountTip':
