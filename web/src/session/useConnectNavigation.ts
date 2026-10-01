@@ -6,6 +6,7 @@ import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from '@/devices/mice/logitech/pro-x3-superstrike/identity'
 import type { OpenMouseDemoProfile } from '@/devices/openmouse/capabilities'
+import type { OpenMouseCatalogEntry } from '@/devices/openmouse/catalog.generated'
 import type { DeviceIdentity } from '@/devices/types'
 import { useLocale } from '@/i18n/LocaleContext'
 import { useDeviceSession } from '@/session/DeviceSessionContext'
@@ -75,10 +76,13 @@ export function useConnectNavigation() {
   const goDemo = useCallback(
     async (
       catalogId: string,
-      opts?: { openMouseProfile?: OpenMouseDemoProfile },
+      opts?: {
+        openMouseProfile?: OpenMouseDemoProfile
+        openMouseEntry?: OpenMouseCatalogEntry
+      },
     ) => {
       setConnectingKey(
-        `demo:${catalogId}${opts?.openMouseProfile ? `:${opts.openMouseProfile}` : ''}`,
+        `demo:${catalogId}${opts?.openMouseEntry ? `:${opts.openMouseEntry.id}` : opts?.openMouseProfile ? `:${opts.openMouseProfile}` : ''}`,
       )
       try {
         await connectMock(catalogId, opts)

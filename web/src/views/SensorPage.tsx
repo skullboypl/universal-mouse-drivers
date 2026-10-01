@@ -34,6 +34,7 @@ import {
 } from '../devices/mice/redragon/king-ultra/defaults'
 import { OPENMOUSE_BACKED_ID } from '../devices/openmouse/constants'
 import { openMouseBrandSlugFromLabel } from '../devices/openmouse/brandVisuals'
+import { findOpenMouseCatalogEntry } from '../devices/openmouse/catalog'
 import { OpenMouseDeviceShowcase } from '../components/OpenMouseDeviceShowcase'
 import layout from '../components/OpenMouseLayout.module.css'
 import type { MessageKey } from '../i18n/messages'
@@ -533,6 +534,10 @@ export function SensorPage() {
   )
 
   if (isOpenMouse && driver) {
+    const omEntry = findOpenMouseCatalogEntry(
+      driver.identity.vendorId,
+      driver.identity.productIds[0] ?? -1,
+    )
     return (
       <div className="page">
         <div className={layout.layout}>
@@ -540,7 +545,11 @@ export function SensorPage() {
             <OpenMouseDeviceShowcase
               brand={driver.identity.brand}
               model={driver.identity.model}
-              brandSlug={openMouseBrandSlugFromLabel(driver.identity.brand)}
+              brandSlug={
+                omEntry?.brandSlug ??
+                openMouseBrandSlugFromLabel(driver.identity.brand)
+              }
+              slug={omEntry?.slug}
               connection={state.info.connection}
               batteryPercent={state.info.batteryPercent}
             />

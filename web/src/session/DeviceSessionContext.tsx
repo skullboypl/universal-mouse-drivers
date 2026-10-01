@@ -31,6 +31,7 @@ import {
   openMouseSupports,
   type OpenMouseDemoProfile,
 } from '../devices/openmouse'
+import type { OpenMouseCatalogEntry } from '../devices/openmouse/catalog.generated'
 import type { DeviceState } from '../devices/types'
 import { t } from '../i18n/messages'
 import { normalizeLocale, readStoredLocale, type Locale } from '../i18n/locale'
@@ -80,7 +81,10 @@ interface SessionValue {
   savedDevices: SavedDevice[]
   connectMock: (
     catalogId?: string,
-    opts?: { openMouseProfile?: OpenMouseDemoProfile },
+    opts?: {
+      openMouseProfile?: OpenMouseDemoProfile
+      openMouseEntry?: OpenMouseCatalogEntry
+    },
   ) => Promise<void>
   connectWebHid: (target?: number | HidPickTarget) => Promise<string>
   /** Abort in-flight HID / OpenMouse connect+sync (busy overlay Cancel). */
@@ -319,7 +323,10 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
   const connectMock = useCallback(
     async (
       catalogId?: string,
-      opts?: { openMouseProfile?: OpenMouseDemoProfile },
+      opts?: {
+        openMouseProfile?: OpenMouseDemoProfile
+        openMouseEntry?: OpenMouseCatalogEntry
+      },
     ) => {
     const lang0 = uiLocale()
     setStatus(t(lang0, 'status.connectingDemo'))
@@ -327,7 +334,11 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
     setConnectingCatalogId(id)
     const d =
       id === OPENMOUSE_BACKED_ID
-        ? createOpenMouseDriver(undefined, opts?.openMouseProfile ?? 'full')
+        ? createOpenMouseDriver(
+            undefined,
+            opts?.openMouseProfile ?? 'full',
+            opts?.openMouseEntry,
+          )
         : createDriver(id)
     const transport = createMockTransport()
     await d.attach(transport)

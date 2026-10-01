@@ -75,13 +75,14 @@ export function OpenMouseProductMark({
   )
 }
 
-function OpenMouseProductImage({
+export function OpenMouseProductImage({
   brandSlug,
   brand,
   model,
   slug,
   logoPx,
   decorative,
+  className,
 }: {
   brandSlug: string
   brand: string
@@ -89,6 +90,7 @@ function OpenMouseProductImage({
   slug?: string
   logoPx: number
   decorative: boolean
+  className?: string
 }) {
   const candidates = [
     openMouseProductImagePath(brandSlug, slug),
@@ -97,11 +99,12 @@ function OpenMouseProductImage({
   ].filter((candidate, index, all): candidate is string => Boolean(candidate) && all.indexOf(candidate) === index)
   const [candidateIndex, setCandidateIndex] = useState(0)
   const src = candidates[candidateIndex]
+  const imgClass = [styles.logo, className].filter(Boolean).join(' ')
 
   if (src) {
     return (
       <img
-        className={styles.logo}
+        className={imgClass}
         src={src}
         alt={decorative ? '' : `${brand} ${model}`}
         width={logoPx}
@@ -114,7 +117,7 @@ function OpenMouseProductImage({
 
   return (
     <svg
-      className={styles.logo}
+      className={imgClass}
       viewBox="0 0 128 128"
       role={decorative ? undefined : 'img'}
       aria-label={decorative ? undefined : `${brand} ${model}`}
