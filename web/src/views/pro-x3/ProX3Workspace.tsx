@@ -508,28 +508,6 @@ export function ProX3Workspace() {
             />
           </SettingCard>
 
-          <SettingCard
-            title="LightForce"
-            overline="SWITCHES"
-            note={
-              notes.lightforce ??
-              (pl
-                ? 'Hybrid oszczędza baterię, budząc czujnik optyczny tylko gdy trzeba. Optical only jest bardziej spójny, ale zużywa więcej baterii.'
-                : 'Hybrid saves power by waking the optical sensor only when needed. Optical only is more consistent but uses more battery.')
-            }
-          >
-            <Segmented
-              ariaLabel="LightForce"
-              disabled={!x3.profileWritesEnabled}
-              value={sensor.lightforceMode ?? null}
-              onChange={(mode) => void run('lightforce', () => x3.commitLightforceMode(mode))}
-              options={[
-                { value: 'Hybrid' as const, label: 'Hybrid' },
-                { value: 'Optical' as const, label: 'Optical only' },
-              ]}
-            />
-          </SettingCard>
-
           <div className={css.group}>
             <h3 className={css.groupTitle}>{pl ? 'Tryb BHOP' : 'BHOP mode'}</h3>
             <div className={css.inlineRow}>
