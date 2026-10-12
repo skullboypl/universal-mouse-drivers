@@ -264,7 +264,7 @@ internal sealed class OmPortedBatteryReader : IDisposable
             var bat = RazerExchange(txn, commandClass: 0x07, commandId: 0x80, dataSize: 0x02);
             if (bat is null || bat.Length < 10) continue;
             if (bat[0] is not 0x02) continue;
-            var raw = bat[9];
+            var raw = bat[9] != 0 ? bat[9] : bat[8];
             var percent = (int)Math.Round(raw * 100.0 / 255.0);
             if (percent is < 1 or > 100) continue;
             var chg = RazerExchange(txn, commandClass: 0x07, commandId: 0x84, dataSize: 0x02);
@@ -274,22 +274,25 @@ internal sealed class OmPortedBatteryReader : IDisposable
         return null;
     }
 
+    /// <summary>
+    /// Logical 90-byte Razer V4 body; OmHid.FeatureReportRaw adds Windows report-id 0 if needed.
+    /// </summary>
     private byte[]? RazerExchange(byte txn, byte commandClass, byte commandId, byte dataSize)
     {
         if (_stream is null) return null;
-        var report = new byte[90];
-        report[1] = txn;
-        report[5] = dataSize;
-        report[6] = commandClass;
-        report[7] = commandId;
+        var body = new byte[90];
+        body[1] = txn;
+        body[5] = dataSize;
+        body[6] = commandClass;
+        body[7] = commandId;
         byte xor = 0;
         for (var i = 2; i <= 87; i++)
-            xor ^= report[i];
-        report[88] = xor;
+            xor ^= body[i];
+        body[88] = xor;
 
         for (var attempt = 0; attempt < 6; attempt++)
         {
-            var reply = OmHid.FeatureReportRaw(_stream, report, attempts: 1);
+            var reply = OmHid.FeatureReportRaw(_stream, body, attempts: 1);
             if (reply is null || reply.Length < 90) continue;
             if (reply[0] == 0x02) return reply;
             if (reply[0] is 0x01 or 0x00)

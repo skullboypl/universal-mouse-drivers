@@ -15,7 +15,10 @@ internal static class ViperV4ProConstants
     public const string DefaultLabel = "Razer Viper V4 Pro";
 
     public const byte ReportId = 0x00;
+    /** Logical Razer V4 body (WebHID / OpenRazer). */
     public const int ReportLength = 90;
+    /** Windows HidSharp feature buffer = report-id byte + body. */
+    public const int WireReportLength = 91;
 
     public const byte StatusBusy = 0x01;
     public const byte StatusOk = 0x02;

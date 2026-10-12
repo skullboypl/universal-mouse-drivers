@@ -154,33 +154,47 @@ internal static class OmHid
     }
 
     /// <summary>
-    /// Feature exchange for report-id-0 devices where the buffer IS the full report
-    /// (e.g. Razer 90-byte V4: status@0, no extra leading report-id byte).
-    /// Returns the full reply buffer (not stripped).
+    /// Feature exchange for logical report-id-0 bodies (WebHID-shaped: status/cmd @ [0]).
+    /// Windows HidSharp often needs wire = [reportId=0] + body (maxFeat = bodyLen+1),
+    /// same bug that broke Viper 90→91. Tries bare body first, then prefixed;
+    /// always returns the logical body (leading id stripped when we prefixed).
     /// </summary>
-    public static byte[]? FeatureReportRaw(HidStream stream, byte[] report, int attempts = 8)
+    public static byte[]? FeatureReportRaw(HidStream stream, byte[] logicalBody, int attempts = 8)
     {
-        for (var attempt = 0; attempt < attempts; attempt++)
+        var prefixed = new byte[logicalBody.Length + 1];
+        prefixed[0] = 0x00;
+        Buffer.BlockCopy(logicalBody, 0, prefixed, 1, logicalBody.Length);
+
+        // Prefer prefixed on Windows (matches GetMaxFeatureReportLength = body+1),
+        // fall back to bare body for stacks that expect unnumbered exact length.
+        foreach (var wire in new[] { prefixed, logicalBody })
         {
-            try
+            var usedPrefix = ReferenceEquals(wire, prefixed);
+            for (var attempt = 0; attempt < attempts; attempt++)
             {
-                stream.SetFeature(report);
-                Thread.Sleep(45);
-                var reply = new byte[report.Length];
-                stream.GetFeature(reply);
-                return reply;
-            }
-            catch (TimeoutException)
-            {
-                Thread.Sleep(40);
-            }
-            catch (IOException)
-            {
-                break;
-            }
-            catch
-            {
-                Thread.Sleep(40);
+                try
+                {
+                    stream.SetFeature(wire);
+                    Thread.Sleep(45);
+                    var reply = new byte[wire.Length];
+                    reply[0] = wire[0];
+                    stream.GetFeature(reply);
+                    if (usedPrefix && reply.Length > 1 && reply[0] == 0x00)
+                        return reply.AsSpan(1).ToArray();
+                    return reply;
+                }
+                catch (TimeoutException)
+                {
+                    Thread.Sleep(40);
+                }
+                catch (IOException)
+                {
+                    break; // try other wire shape
+                }
+                catch
+                {
+                    Thread.Sleep(40);
+                }
             }
         }
 

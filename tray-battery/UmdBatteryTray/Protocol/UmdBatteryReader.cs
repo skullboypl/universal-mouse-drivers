@@ -138,25 +138,26 @@ internal sealed class UmdBatteryReader : IDisposable
         try
         {
             ConnectNative(target);
-            // Viper: open alone is not enough — verify battery answers before claiming native.
-            if (target.Kind == UmdDeviceKind.ViperV4Pro)
-                _ = ReadBatteryViaActiveBackend();
             _active = target;
             _usingOpenMouseFallback = false;
+            // Viper Connect already smoke-reads; extra check uses _active + _viper.
+            if (target.Kind == UmdDeviceKind.ViperV4Pro)
+                _ = ReadBatteryViaActiveBackend();
             return;
         }
         catch (Exception ex)
         {
             nativeErr = ex;
             ClearNativeReaders();
+            _active = null;
         }
 
         try
         {
             ConnectOpenMouse(target);
-            _ = ReadBatteryViaActiveBackend();
             _active = target;
             _usingOpenMouseFallback = true;
+            _ = ReadBatteryViaActiveBackend();
         }
         catch (Exception omErr)
         {

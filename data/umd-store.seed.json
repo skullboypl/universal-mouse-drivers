@@ -38,9 +38,9 @@
       "id": "trayBattery",
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
-      "version": "1.12.4",
+      "version": "1.12.5",
       "signed": true,
-      "notes": "EV-signed; native-first battery with OpenMouse fallback, Viper V4 Pro reader hardened"
+      "notes": "EV-signed; Viper/Windows HidSharp report-id fix + WebHID tray relay + OM FeatureReportRaw harden"
     }
   }
 }

@@ -5,9 +5,8 @@ namespace UmdBatteryTray.Protocol.Mice.Razer.ViperV4Pro;
 
 /// <summary>
 /// Native Razer V4 control-channel battery reader for Viper V4 Pro (1532:00E5 / 00E6).
-/// Mirrors web protocol.ts: 90-byte feature report id 0, CRC XOR bytes 2..87 @88,
-/// battery 07/80 → 0..255 %, charging 07/84.
-/// Tries every HID interface (Synapse/WebHID often lock only the vendor page).
+/// Logical report is 90 bytes (WebHID / OpenRazer). On Windows HidSharp the
+/// feature buffer is 91 = report-id 0 + 90-byte body — SetFeature(90) fails.
 /// </summary>
 internal sealed class ViperV4ProBatteryReader : IDisposable
 {
@@ -15,7 +14,7 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
     private HidDevice? _device;
     private string? _deviceLabel;
     private byte _txn = ViperV4ProConstants.DefaultTxn;
-    private int _reportLength = ViperV4ProConstants.ReportLength;
+    private int _wireLength = ViperV4ProConstants.WireReportLength;
 
     public bool IsConnected => _stream is { CanWrite: true };
 
@@ -51,18 +50,17 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
             try
             {
                 var max = device.GetMaxFeatureReportLength();
-                _reportLength = Math.Max(ViperV4ProConstants.ReportLength, max);
+                _wireLength = Math.Max(ViperV4ProConstants.WireReportLength, max);
             }
             catch
             {
-                _reportLength = ViperV4ProConstants.ReportLength;
+                _wireLength = ViperV4ProConstants.WireReportLength;
             }
 
             _deviceLabel =
                 $"{device.GetProductName() ?? ViperV4ProConstants.DefaultLabel} ({device.VendorID:X4}:{device.ProductID:X4})";
             _txn = ViperV4ProConstants.DefaultTxn;
 
-            // Prefer an interface that actually answers battery (skip mouse/keyboard pages).
             try
             {
                 _ = ReadBattery();
@@ -101,6 +99,7 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
                     dataSize: 0x02);
                 if (bat is null || bat.Length < 10) continue;
 
+                // Logical 90-byte body: args[1] @ index 9 (verified live: F0 → ~94%).
                 var percent = DecodePercent(bat[9]);
                 if (percent is null) percent = DecodePercent(bat[8]);
                 if (percent is null) continue;
@@ -144,7 +143,7 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
         _stream = null;
         _device = null;
         _deviceLabel = null;
-        _reportLength = ViperV4ProConstants.ReportLength;
+        _wireLength = ViperV4ProConstants.WireReportLength;
     }
 
     public void Dispose() => Disconnect();
@@ -153,22 +152,27 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
     {
         if (_stream is null) return null;
 
-        var report = BuildReport(commandClass, commandId, dataSize, _txn, _reportLength);
+        var body = BuildBody(commandClass, commandId, dataSize, _txn);
         _txn = (byte)((_txn + 1) & 0xff);
         if (_txn == 0) _txn = 1;
+
+        var wire = ToWire(body, _wireLength);
 
         for (var attempt = 0; attempt < 10; attempt++)
         {
             try
             {
-                _stream.SetFeature(report);
+                _stream.SetFeature(wire);
                 Thread.Sleep(45);
-                var reply = new byte[_reportLength];
-                _stream.GetFeature(reply);
+                var replyWire = new byte[wire.Length];
+                replyWire[0] = 0; // report id for GetFeature
+                _stream.GetFeature(replyWire);
+                var bodyOut = FromWire(replyWire);
+                if (bodyOut is null) continue;
 
-                var status = reply[0];
+                var status = bodyOut[0];
                 if (status == ViperV4ProConstants.StatusOk)
-                    return reply;
+                    return bodyOut;
                 if (status == ViperV4ProConstants.StatusBusy || status == 0x00)
                 {
                     Thread.Sleep(40);
@@ -192,15 +196,10 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
         return null;
     }
 
-    internal static byte[] BuildReport(
-        byte commandClass,
-        byte commandId,
-        byte dataSize,
-        byte txn,
-        int reportLength = ViperV4ProConstants.ReportLength)
+    /// <summary>90-byte Razer V4 body (no Windows report-id byte).</summary>
+    internal static byte[] BuildBody(byte commandClass, byte commandId, byte dataSize, byte txn)
     {
-        var len = Math.Max(ViperV4ProConstants.ReportLength, reportLength);
-        var report = new byte[len];
+        var report = new byte[ViperV4ProConstants.ReportLength];
         report[1] = txn;
         report[5] = dataSize;
         report[6] = commandClass;
@@ -210,6 +209,25 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
             xor ^= report[i];
         report[88] = xor;
         return report;
+    }
+
+    /// <summary>HidSharp wire: report-id 0 + 90-byte body (typically 91 bytes).</summary>
+    internal static byte[] ToWire(byte[] body90, int wireLength = ViperV4ProConstants.WireReportLength)
+    {
+        var len = Math.Max(ViperV4ProConstants.WireReportLength, wireLength);
+        var wire = new byte[len];
+        wire[0] = ViperV4ProConstants.ReportId;
+        Buffer.BlockCopy(body90, 0, wire, 1, Math.Min(body90.Length, len - 1));
+        return wire;
+    }
+
+    internal static byte[]? FromWire(byte[] replyWire)
+    {
+        if (replyWire.Length >= ViperV4ProConstants.WireReportLength && replyWire[0] == 0)
+            return replyWire.AsSpan(1, ViperV4ProConstants.ReportLength).ToArray();
+        if (replyWire.Length >= ViperV4ProConstants.ReportLength)
+            return replyWire.AsSpan(0, ViperV4ProConstants.ReportLength).ToArray();
+        return null;
     }
 
     private static List<HidDevice> ListCandidates(int? preferredProductId)
@@ -241,13 +259,14 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
         try
         {
             var feat = device.GetMaxFeatureReportLength();
-            if (feat >= ViperV4ProConstants.ReportLength) score += 80;
+            // Control iface is 91 on Windows (id + 90). Accept >= 90.
+            if (feat >= ViperV4ProConstants.WireReportLength) score += 100;
+            else if (feat >= ViperV4ProConstants.ReportLength) score += 80;
             else if (feat >= 64) score += 20;
             score += Math.Min(feat, 120);
         }
         catch { /* ignore */ }
 
-        // Prefer Razer vendor usage page 0xFF00 (control channel), not mouse/keyboard.
         try
         {
             var raw = device.GetRawReportDescriptor();
@@ -255,7 +274,6 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
             {
                 for (var i = 0; i + 2 < raw.Length; i++)
                 {
-                    // Usage Page (Vendor) 0xFF00 → 06 00 FF
                     if (raw[i] == 0x06 && raw[i + 1] == 0x00 && raw[i + 2] == 0xFF)
                     {
                         score += 200;

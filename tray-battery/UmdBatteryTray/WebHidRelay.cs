@@ -3,27 +3,46 @@ using UmdBatteryTray.Protocol;
 namespace UmdBatteryTray;
 
 /// <summary>
-/// When the browser holds exclusive WebHID, it POSTs battery here so the tray
-/// keeps showing %. After the feed goes stale, the tray reclaims native HID.
+/// Browser WebHID handoff: brief pause after /hid/yield so Chrome can open,
+/// then live % via /battery/push. Native HID resumes when the push feed goes stale
+/// or /hid/release is called — Yield alone must NOT block native forever.
 /// </summary>
 internal sealed class WebHidRelay
 {
-    private static readonly TimeSpan StaleAfter = TimeSpan.FromSeconds(10);
-    private static readonly TimeSpan YieldGrace = TimeSpan.FromSeconds(20);
+    private static readonly TimeSpan PushStaleAfter = TimeSpan.FromSeconds(10);
+    private static readonly TimeSpan YieldPause = TimeSpan.FromSeconds(4);
 
     private readonly object _gate = new();
-    private DateTimeOffset _webOwnsUntil = DateTimeOffset.MinValue;
+    private DateTimeOffset _pauseNativeUntil = DateTimeOffset.MinValue;
+    private DateTimeOffset _pushFreshUntil = DateTimeOffset.MinValue;
     private BatteryReading? _reading;
     private string? _deviceLabel;
     private string? _deviceKey;
 
-    public bool WebOwnsHid
+    /// <summary>True only while we have a fresh browser battery push.</summary>
+    public bool HasFreshPush
     {
         get
         {
-            lock (_gate) return DateTimeOffset.UtcNow < _webOwnsUntil;
+            lock (_gate) return _reading is not null && DateTimeOffset.UtcNow < _pushFreshUntil;
         }
     }
+
+    /// <summary>Skip native open briefly after yield, or while a push feed is alive.</summary>
+    public bool ShouldSkipNative
+    {
+        get
+        {
+            lock (_gate)
+            {
+                var now = DateTimeOffset.UtcNow;
+                if (_reading is not null && now < _pushFreshUntil) return true;
+                return now < _pauseNativeUntil;
+            }
+        }
+    }
+
+    public bool WebOwnsHid => HasFreshPush;
 
     public BatteryReading? Reading
     {
@@ -31,7 +50,7 @@ internal sealed class WebHidRelay
         {
             lock (_gate)
             {
-                if (DateTimeOffset.UtcNow >= _webOwnsUntil) return null;
+                if (_reading is null || DateTimeOffset.UtcNow >= _pushFreshUntil) return null;
                 return _reading;
             }
         }
@@ -43,7 +62,7 @@ internal sealed class WebHidRelay
         {
             lock (_gate)
             {
-                if (DateTimeOffset.UtcNow >= _webOwnsUntil) return null;
+                if (_reading is null || DateTimeOffset.UtcNow >= _pushFreshUntil) return null;
                 return _deviceLabel;
             }
         }
@@ -55,18 +74,18 @@ internal sealed class WebHidRelay
         {
             lock (_gate)
             {
-                if (DateTimeOffset.UtcNow >= _webOwnsUntil) return null;
+                if (_reading is null || DateTimeOffset.UtcNow >= _pushFreshUntil) return null;
                 return _deviceKey;
             }
         }
     }
 
-    /// <summary>Browser is about to open WebHID — release native handles.</summary>
+    /// <summary>Browser is about to open WebHID — pause native briefly (does not invent battery data).</summary>
     public void Yield()
     {
         lock (_gate)
         {
-            _webOwnsUntil = DateTimeOffset.UtcNow + YieldGrace;
+            _pauseNativeUntil = DateTimeOffset.UtcNow + YieldPause;
         }
     }
 
@@ -84,7 +103,8 @@ internal sealed class WebHidRelay
                 _deviceKey = deviceKey.Trim();
             if (!string.IsNullOrWhiteSpace(deviceLabel))
                 _deviceLabel = deviceLabel.Trim();
-            _webOwnsUntil = DateTimeOffset.UtcNow + StaleAfter;
+            _pushFreshUntil = DateTimeOffset.UtcNow + PushStaleAfter;
+            _pauseNativeUntil = DateTimeOffset.MinValue;
         }
     }
 
@@ -92,9 +112,9 @@ internal sealed class WebHidRelay
     {
         lock (_gate)
         {
-            _webOwnsUntil = DateTimeOffset.MinValue;
+            _pushFreshUntil = DateTimeOffset.MinValue;
+            _pauseNativeUntil = DateTimeOffset.MinValue;
             _reading = null;
-            // Keep last label briefly? Clear so UI falls back to native.
             _deviceLabel = null;
             _deviceKey = null;
         }

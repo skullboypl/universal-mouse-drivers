@@ -487,26 +487,25 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
     private async Task RefreshBatteryAsync()
     {
-        // Browser holds exclusive WebHID — use pushed % instead of fighting for the handle.
-        if (_webHidRelay.WebOwnsHid)
+        // Fresh WebHID push → show that % (browser owns the control iface).
+        if (_webHidRelay.HasFreshPush && _webHidRelay.Reading is BatteryReading relayed)
         {
-            var relayed = _webHidRelay.Reading;
-            if (relayed is BatteryReading r)
-            {
-                _lastReading = r;
-                RunOnUi(() =>
-                {
-                    UpdateUi(r, null);
-                    RebuildDeviceMenu();
-                });
-                return;
-            }
-
-            // Yielded but no push yet — keep UI calm, don't spam exclusive errors.
+            _lastReading = relayed;
             RunOnUi(() =>
             {
-                if (_lastReading is null)
-                    UpdateUi(null, null);
+                UpdateUi(relayed, null);
+                RebuildDeviceMenu();
+            });
+            return;
+        }
+
+        // Brief pause after /hid/yield so Chrome can open — then fall through to native.
+        if (_webHidRelay.ShouldSkipNative && !_webHidRelay.HasFreshPush)
+        {
+            RunOnUi(() =>
+            {
+                if (_lastReading is BatteryReading keep)
+                    UpdateUi(keep, null);
             });
             return;
         }
@@ -530,25 +529,19 @@ internal sealed class TrayApplicationContext : ApplicationContext
         catch (Exception ex)
         {
             _reader.Disconnect();
-            // Soft: if this looks like exclusive lock, wait for web relay instead of angry toast.
+            // Keep last good reading on exclusive conflicts; do NOT auto-Yield
+            // (that blocked native forever without a browser push).
             var msg = ex.Message ?? "";
             var exclusive = msg.Contains("exclusive", StringComparison.OrdinalIgnoreCase)
                 || msg.Contains("Could not open", StringComparison.OrdinalIgnoreCase)
                 || msg.Contains("Synapse", StringComparison.OrdinalIgnoreCase);
-            if (exclusive)
+            if (exclusive && _lastReading is BatteryReading keep)
             {
-                _webHidRelay.Yield(); // grace window for browser push
-                RunOnUi(() =>
-                {
-                    if (_lastReading is BatteryReading keep)
-                        UpdateUi(keep, null);
-                    else
-                        UpdateUi(null, null);
-                });
+                RunOnUi(() => UpdateUi(keep, null));
                 return;
             }
 
-            RunOnUi(() => UpdateUi(null, ex.Message));
+            RunOnUi(() => UpdateUi(null, exclusive ? null : ex.Message));
         }
     }
 
