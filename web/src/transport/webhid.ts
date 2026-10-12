@@ -12,6 +12,10 @@ import {
   proX3SuperstrikeHidFilters,
 } from '../devices/mice/logitech/pro-x3-superstrike/identity'
 import {
+  isViperV4ProDevice,
+  razerViperV4ProHidFilters,
+} from '../devices/mice/razer/viper-v4-pro/identity'
+import {
   blitzUltimateHidFilters,
   isBlitzUltimateDevice,
 } from '../devices/mice/rampage/blitz-ultimate/identity'
@@ -121,6 +125,7 @@ function scoreDevice(device: HIDDevice): number {
   if (isFenrirMaxDevice(device.vendorId, device.productId)) score += 100
   if (isSuperlightDevice(device.vendorId, device.productId)) score += 100
   if (isProX3SuperstrikeDevice(device.vendorId, device.productId)) score += 100
+  if (isViperV4ProDevice(device.vendorId, device.productId)) score += 100
   // OpenMouse-backed (lower than native UMD so King/Blitz/Fenrir/SL win ties)
   if (openMouseSupports(device)) score += 40 + Math.min(40, openMouseScore(device))
   const outs = collectReports(device, 'output')
@@ -155,6 +160,7 @@ export function allSupportedHidFilters(): Array<{
     ...fenrirMaxHidFilters(),
     ...superlightHidFilters(),
     ...proX3SuperstrikeHidFilters(),
+    ...razerViperV4ProHidFilters(),
     ...openMouseHidFilters(),
   ]
 }
@@ -168,6 +174,7 @@ export function isSupportedUmdDevice(
     isFenrirMaxDevice(vendorId, productId) ||
     isSuperlightDevice(vendorId, productId) ||
     isProX3SuperstrikeDevice(vendorId, productId) ||
+    isViperV4ProDevice(vendorId, productId) ||
     matchesOpenMouseVendor(vendorId)
   )
 }
@@ -207,6 +214,9 @@ function filtersForTarget(target?: HidPickTarget): Array<{
   if (target?.catalogId === 'logitech-pro-x3-superstrike') {
     return proX3SuperstrikeHidFilters()
   }
+  if (target?.catalogId === 'razer-viper-v4-pro') {
+    return razerViperV4ProHidFilters()
+  }
   if (target?.catalogId === OPENMOUSE_BACKED_ID) {
     // Sync fallback; pickSupportedHidDevice replaces with protocol filters.
     return openMouseHidFilters()
@@ -242,6 +252,9 @@ function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
   if (target.catalogId === 'logitech-pro-x3-superstrike') {
     return isProX3SuperstrikeDevice(device.vendorId, device.productId)
   }
+  if (target.catalogId === 'razer-viper-v4-pro') {
+    return isViperV4ProDevice(device.vendorId, device.productId)
+  }
   if (target.catalogId === OPENMOUSE_BACKED_ID) {
     // Protocol filters already narrowed the chooser; accept the user's pick and
     // let createSupportedClient decide support (do not re-block by catalog PID).
@@ -265,6 +278,9 @@ function matchesTarget(device: HIDDevice, target?: HidPickTarget): boolean {
       }
       if (isProX3SuperstrikeDevice(target.vendorId, target.productId)) {
         return isProX3SuperstrikeDevice(device.vendorId, device.productId)
+      }
+      if (isViperV4ProDevice(target.vendorId, target.productId)) {
+        return isViperV4ProDevice(device.vendorId, device.productId)
       }
     }
     return false

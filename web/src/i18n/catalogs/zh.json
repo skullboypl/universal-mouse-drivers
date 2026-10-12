@@ -251,5 +251,11 @@
   "write.queued": "写入已排队…",
   "write.writing": "正在写入鼠标…",
   "write.ok": "已写入鼠标",
-  "write.error": "写入失败"
+  "write.error": "写入失败",
+  "viper.hypershift.standard": "标准",
+  "viper.hypershift.name": "Hypershift",
+  "viper.hypershift.tooltip": "Hypershift 是第二层按键映射（类似键盘上的 Fn）。按住鼠标上设为 Hypershift 的按键，即可使用其他按键的备用功能。此开关用于编辑该第二层。",
+  "viper.hypershift.hint": "在鼠标上按住 Hypershift 可使用备用层 — 选中此模式时在此编辑映射。",
+  "viper.buttons.descStandard": "标准层重映射（02/0c）。鼠标 / DPI / 禁用。",
+  "viper.buttons.descHypershift": "Hypershift 层重映射（02/0c，mode=1）。在鼠标上按住 Hypershift 时生效。"
 }

@@ -8,6 +8,7 @@ import styles from '../components/ui.module.css'
 import { FENRIR_MAX_IDENTITY } from '../devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/identity'
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from '../devices/mice/logitech/pro-x3-superstrike/identity'
+import { VIPER_V4_PRO_IDENTITY } from '../devices/mice/razer/viper-v4-pro/identity'
 import { OPENMOUSE_BACKED_ID } from '../devices/openmouse/constants'
 import {
   clampFenrirSleepSec,
@@ -59,6 +60,7 @@ export function SettingsPage() {
   const isFenrir = driver?.identity.id === FENRIR_MAX_IDENTITY.id
   const isSuperlight = driver?.identity.id === SUPERLIGHT_IDENTITY.id
   const isX3 = driver?.identity.id === PRO_X3_SUPERSTRIKE_IDENTITY.id
+  const isViperV4 = driver?.identity.id === VIPER_V4_PRO_IDENTITY.id
   const isBlitz = driver?.identity.id === 'rampage-blitz-ultimate'
   const isOpenMouse = driver?.identity.id === OPENMOUSE_BACKED_ID
   const omDeviceSettings = isOpenMouse && driver?.capabilities?.deviceSettings === true
@@ -208,7 +210,7 @@ export function SettingsPage() {
         ) : null}
       </div>
 
-      {showNativeDevicePanels && !isFenrir && !isSuperlight && !isX3 ? (
+      {showNativeDevicePanels && !isFenrir && !isSuperlight && !isX3 && !isViperV4 ? (
         <div className="panel">
           <h2 className="panel-label">{tr('settings.pairing')}</h2>
           <Button
@@ -221,7 +223,7 @@ export function SettingsPage() {
         </div>
       ) : null}
 
-      {showNativeDevicePanels && !isSuperlight && !isX3 ? (
+      {showNativeDevicePanels && !isSuperlight && !isX3 && !isViperV4 ? (
       <div className="panel">
         <h2 className="panel-label">{tr('settings.sleep')}</h2>
         <p className="muted" style={{ marginTop: 0 }}>
@@ -348,7 +350,7 @@ export function SettingsPage() {
         </p>
       </div>
 
-      {showNativeDevicePanels && !isFenrir && !isSuperlight && !isX3 ? (
+      {showNativeDevicePanels && !isFenrir && !isSuperlight && !isX3 && !isViperV4 ? (
         <div className="panel">
           <h2 className="panel-label">{tr('settings.advanced')}</h2>
           <label className={styles.check}>

@@ -251,5 +251,11 @@
   "write.queued": "Escritura en cola…",
   "write.writing": "Escribiendo en el ratón…",
   "write.ok": "Escrito en el ratón",
-  "write.error": "Error de escritura"
+  "write.error": "Error de escritura",
+  "viper.hypershift.standard": "Estándar",
+  "viper.hypershift.name": "Hypershift",
+  "viper.hypershift.tooltip": "Hypershift es una segunda capa de asignación (como Fn en un teclado). Mantén un botón asignado a Hypershift en el ratón para usar acciones alternativas. Este interruptor edita esa capa secundaria.",
+  "viper.hypershift.hint": "Mantén Hypershift en el ratón para la capa alternativa — edita los mapeos aquí con este modo seleccionado.",
+  "viper.buttons.descStandard": "Remap capa Estándar (02/0c). Ratón / DPI / Desactivar.",
+  "viper.buttons.descHypershift": "Remap capa Hypershift (02/0c, mode=1). Activo mientras Hypershift se mantiene en el ratón."
 }

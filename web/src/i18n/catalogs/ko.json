@@ -251,5 +251,11 @@
   "write.queued": "쓰기 대기 중…",
   "write.writing": "마우스에 쓰는 중…",
   "write.ok": "마우스에 기록됨",
-  "write.error": "쓰기 실패"
+  "write.error": "쓰기 실패",
+  "viper.hypershift.standard": "표준",
+  "viper.hypershift.name": "Hypershift",
+  "viper.hypershift.tooltip": "Hypershift는 두 번째 매핑 레이어입니다(키보드 Fn과 유사). 마우스에서 Hypershift로 지정된 버튼을 누른 채 다른 버튼의 대체 동작을 사용합니다. 이 전환으로 해당 보조 레이어를 편집합니다.",
+  "viper.hypershift.hint": "마우스에서 Hypershift를 누른 채 대체 레이어를 사용합니다 — 이 모드가 선택된 동안 여기서 매핑을 편집하세요.",
+  "viper.buttons.descStandard": "표준 레이어 리맵(02/0c). 마우스 / DPI / 비활성.",
+  "viper.buttons.descHypershift": "Hypershift 레이어 리맵(02/0c, mode=1). 마우스에서 Hypershift를 누르는 동안 활성."
 }

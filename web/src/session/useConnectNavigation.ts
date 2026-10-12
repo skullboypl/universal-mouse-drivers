@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from '@/devices/mice/logitech/pro-x3-superstrike/identity'
+import { VIPER_V4_PRO_IDENTITY } from '@/devices/mice/razer/viper-v4-pro/identity'
 import type { OpenMouseDemoProfile } from '@/devices/openmouse/capabilities'
 import type { OpenMouseCatalogEntry } from '@/devices/openmouse/catalog.generated'
 import type { DeviceIdentity } from '@/devices/types'
@@ -17,7 +18,8 @@ function deviceLandingPath(catalogId: string): '/device/buttons' | '/device/sens
   if (
     catalogId === FENRIR_MAX_IDENTITY.id ||
     catalogId === SUPERLIGHT_IDENTITY.id ||
-    catalogId === PRO_X3_SUPERSTRIKE_IDENTITY.id
+    catalogId === PRO_X3_SUPERSTRIKE_IDENTITY.id ||
+    catalogId === VIPER_V4_PRO_IDENTITY.id
   ) {
     return '/device/buttons'
   }

@@ -251,5 +251,11 @@
   "write.queued": "Écriture en attente…",
   "write.writing": "Écriture sur la souris…",
   "write.ok": "Écrit sur la souris",
-  "write.error": "Échec de l'écriture"
+  "write.error": "Échec de l'écriture",
+  "viper.hypershift.standard": "Standard",
+  "viper.hypershift.name": "Hypershift",
+  "viper.hypershift.tooltip": "Hypershift est une seconde couche de mapping (comme Fn sur un clavier). Maintenez un bouton assigné à Hypershift sur la souris pour utiliser des actions alternatives. Ce basculeur sert à éditer cette couche secondaire.",
+  "viper.hypershift.hint": "Maintenez Hypershift sur la souris pour la couche alternative — éditez les mappings ici lorsque ce mode est sélectionné.",
+  "viper.buttons.descStandard": "Remap couche Standard (02/0c). Souris / DPI / Désactiver.",
+  "viper.buttons.descHypershift": "Remap couche Hypershift (02/0c, mode=1). Actif tant que Hypershift est maintenu sur la souris."
 }

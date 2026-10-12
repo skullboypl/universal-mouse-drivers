@@ -251,5 +251,11 @@
   "write.queued": "Gravação em fila…",
   "write.writing": "A gravar no rato…",
   "write.ok": "Gravado no rato",
-  "write.error": "Falha na gravação"
+  "write.error": "Falha na gravação",
+  "viper.hypershift.standard": "Padrão",
+  "viper.hypershift.name": "Hypershift",
+  "viper.hypershift.tooltip": "Hypershift é uma segunda camada de mapeamento (como Fn num teclado). Segure um botão atribuído a Hypershift no rato para usar ações alternativas. Este interruptor edita essa camada secundária.",
+  "viper.hypershift.hint": "Segure Hypershift no rato para a camada alternativa — edite os mapeamentos aqui com este modo selecionado.",
+  "viper.buttons.descStandard": "Remap camada Padrão (02/0c). Rato / DPI / Desativar.",
+  "viper.buttons.descHypershift": "Remap camada Hypershift (02/0c, mode=1). Ativo enquanto Hypershift é mantido no rato."
 }

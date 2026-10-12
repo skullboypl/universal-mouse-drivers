@@ -251,5 +251,11 @@
   "write.queued": "Запись поставлена в очередь…",
   "write.writing": "Запись в мышь…",
   "write.ok": "Записано в мышь",
-  "write.error": "Ошибка записи"
+  "write.error": "Ошибка записи",
+  "viper.hypershift.standard": "Стандарт",
+  "viper.hypershift.name": "Hypershift",
+  "viper.hypershift.tooltip": "Hypershift — второй слой назначений (как Fn на клавиатуре). Удерживайте кнопку Hypershift на мыши, чтобы использовать альтернативные действия остальных кнопок. Этот переключатель редактирует второй слой.",
+  "viper.hypershift.hint": "Удерживайте Hypershift на мыши для второго слоя — редактируйте назначения здесь, пока выбран этот режим.",
+  "viper.buttons.descStandard": "Ремап слоя Standard (02/0c). Мышь / DPI / Откл.",
+  "viper.buttons.descHypershift": "Ремап слоя Hypershift (02/0c, mode=1). Активен, пока Hypershift удерживается на мыши."
 }

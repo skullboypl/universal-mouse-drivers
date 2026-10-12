@@ -6,6 +6,7 @@ import { UMD } from '@/brand/umd'
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from '@/devices/mice/logitech/pro-x3-superstrike/identity'
+import { VIPER_V4_PRO_IDENTITY } from '@/devices/mice/razer/viper-v4-pro/identity'
 import { OPENMOUSE_BACKED_ID } from '@/devices/openmouse/constants'
 import { OPENMOUSE_HUB_PATH } from '@/devices/openmouse/catalog'
 import { useLocale } from '@/i18n/LocaleContext'
@@ -28,6 +29,15 @@ const OPENMOUSE_TABS: { path: string; key: MessageKey }[] = [
 const OEM_TABS: { path: string; key: MessageKey }[] = [
   { path: '/device/buttons', key: 'nav.mouse' },
   { path: '/device/settings', key: 'nav.settings' },
+]
+
+/** Synapse-shaped Viper workspace tabs in the left rail. */
+const VIPER_TABS: { path: string; key: MessageKey }[] = [
+  { path: '/device/buttons', key: 'nav.customize' },
+  { path: '/device/sensor', key: 'nav.performance' },
+  { path: '/device/settings', key: 'nav.power' },
+  { path: '/device/calibration', key: 'nav.calibration' },
+  { path: '/device/advanced', key: 'nav.advanced' },
 ]
 
 type AppLink = { path: string; key: MessageKey; match: (p: string) => boolean }
@@ -160,8 +170,14 @@ function appIcon(path: string) {
 }
 
 function deviceIconFor(path: string) {
-  if (path.endsWith('/sensor')) return icon('sensor')
-  if (path.endsWith('/settings')) return icon('settings')
+  if (path.endsWith('/sensor') || path.endsWith('/calibration')) return icon('sensor')
+  if (
+    path.endsWith('/settings') ||
+    path.endsWith('/advanced') ||
+    path.endsWith('/power')
+  ) {
+    return icon('settings')
+  }
   return icon('mouse')
 }
 
@@ -180,6 +196,7 @@ export function DeviceSidebar() {
   // so leaving the configurator does not hide the way back in.
   const showDeviceTabs = connected && Boolean(driver)
 
+  const isViper = driver?.identity.id === VIPER_V4_PRO_IDENTITY.id
   const oemSinglePage =
     driver?.identity.id === FENRIR_MAX_IDENTITY.id ||
     driver?.identity.id === SUPERLIGHT_IDENTITY.id ||
@@ -191,7 +208,13 @@ export function DeviceSidebar() {
       ? [{ path: '/device/buttons', key: 'nav.buttons' as MessageKey }]
       : []),
   ]
-  const deviceTabs = oemSinglePage ? OEM_TABS : isOpenMouse ? omTabs : KING_TABS
+  const deviceTabs = isViper
+    ? VIPER_TABS
+    : oemSinglePage
+      ? OEM_TABS
+      : isOpenMouse
+        ? omTabs
+        : KING_TABS
 
   return (
     <aside className={styles.rail} aria-label={tr('nav.siteNav')}>

@@ -72,8 +72,26 @@ internal static class OmHid
         return null;
     }
 
-    /// <summary>Feature SetFeature then GetFeature (report id as first byte).</summary>
+    /// <summary>
+    /// Feature SetFeature then GetFeature (report id as first byte).
+    /// Returns the payload with the leading report-id byte stripped (WebHID-shaped).
+    /// </summary>
     public static byte[]? FeatureExchange(HidStream stream, byte reportId, byte[] body, int reportLen, int attempts = 6)
+    {
+        var full = FeatureExchangeKeepId(stream, reportId, body, reportLen, attempts);
+        return full is null || full.Length < 2 ? full : full.AsSpan(1).ToArray();
+    }
+
+    /// <summary>
+    /// Same as FeatureExchange but keeps the leading report-id byte
+    /// (needed by Ninjutso / some Windows GetFeature layouts).
+    /// </summary>
+    public static byte[]? FeatureExchangeKeepId(
+        HidStream stream,
+        byte reportId,
+        byte[] body,
+        int reportLen,
+        int attempts = 6)
     {
         var wire = new byte[reportLen];
         wire[0] = reportId;
@@ -88,7 +106,41 @@ internal static class OmHid
                 var reply = new byte[reportLen];
                 reply[0] = reportId;
                 stream.GetFeature(reply);
-                return reply.AsSpan(1).ToArray();
+                return reply;
+            }
+            catch
+            {
+                Thread.Sleep(40);
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Feature exchange for report-id-0 devices where the buffer IS the full report
+    /// (e.g. Razer 90-byte V4: status@0, no extra leading report-id byte).
+    /// Returns the full reply buffer (not stripped).
+    /// </summary>
+    public static byte[]? FeatureReportRaw(HidStream stream, byte[] report, int attempts = 8)
+    {
+        for (var attempt = 0; attempt < attempts; attempt++)
+        {
+            try
+            {
+                stream.SetFeature(report);
+                Thread.Sleep(45);
+                var reply = new byte[report.Length];
+                stream.GetFeature(reply);
+                return reply;
+            }
+            catch (TimeoutException)
+            {
+                Thread.Sleep(40);
+            }
+            catch (IOException)
+            {
+                break;
             }
             catch
             {

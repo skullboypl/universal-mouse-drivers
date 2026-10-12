@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-label="Razer Viper V4 Pro">
+  <defs>
+    <linearGradient id="shell" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a2a2a"/>
+      <stop offset="55%" stop-color="#151515"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="640" fill="#111"/>
+  <ellipse cx="320" cy="330" rx="150" ry="220" fill="url(#shell)" stroke="#44d62c" stroke-width="3"/>
+  <path d="M320 140 L320 300" stroke="#333" stroke-width="4"/>
+  <circle cx="320" cy="210" r="18" fill="#222" stroke="#44d62c" stroke-width="2"/>
+  <text x="320" y="580" text-anchor="middle" fill="#44d62c" font-family="Segoe UI, sans-serif" font-size="28" font-weight="600">VIPER V4 PRO</text>
+</svg>

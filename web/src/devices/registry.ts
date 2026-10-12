@@ -4,6 +4,8 @@ import { SuperlightDriver } from './mice/logitech/pro-x-superlight/driver'
 import { SUPERLIGHT_IDENTITY } from './mice/logitech/pro-x-superlight/identity'
 import { ProX3SuperstrikeDriver } from './mice/logitech/pro-x3-superstrike/driver'
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from './mice/logitech/pro-x3-superstrike/identity'
+import { ViperV4ProDriver } from './mice/razer/viper-v4-pro/driver'
+import { VIPER_V4_PRO_IDENTITY } from './mice/razer/viper-v4-pro/identity'
 import { BlitzUltimateDriver } from './mice/rampage/blitz-ultimate/driver'
 import { BLITZ_ULTIMATE_IDENTITY } from './mice/rampage/blitz-ultimate/identity'
 import { KING_ULTRA_IDENTITY } from './mice/redragon/king-ultra/identity'
@@ -39,6 +41,7 @@ export const DEVICE_CATALOG: DeviceIdentity[] = [
   FENRIR_MAX_IDENTITY,
   SUPERLIGHT_IDENTITY,
   PRO_X3_SUPERSTRIKE_IDENTITY,
+  VIPER_V4_PRO_IDENTITY,
   OPENMOUSE_BACKED_IDENTITY,
 ]
 
@@ -60,6 +63,7 @@ export function createDriver(deviceId: string): DeviceDriver {
   if (deviceId === FENRIR_MAX_IDENTITY.id) return new FenrirMaxDriver()
   if (deviceId === SUPERLIGHT_IDENTITY.id) return new SuperlightDriver()
   if (deviceId === PRO_X3_SUPERSTRIKE_IDENTITY.id) return new ProX3SuperstrikeDriver()
+  if (deviceId === VIPER_V4_PRO_IDENTITY.id) return new ViperV4ProDriver()
   if (deviceId === OPENMOUSE_BACKED_ID) return createOpenMouseDriver()
   throw new Error(`Unknown device: ${deviceId}`)
 }

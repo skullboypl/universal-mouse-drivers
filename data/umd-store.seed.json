@@ -38,9 +38,9 @@
       "id": "trayBattery",
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
-      "version": "1.11.0",
+      "version": "1.12.1",
       "signed": true,
-      "notes": "EV-signed; OpenMouse-protocol battery bridge updated (G-Wolves xvi family), desktop widget gets an animated battery bar + instant reconnect on HID arrival"
+      "notes": "EV-signed; Viper V4 Pro battery reader, OpenMouse Razer/codec battery fixes, tray 1.12.1"
     }
   }
 }

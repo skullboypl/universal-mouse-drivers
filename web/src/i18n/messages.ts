@@ -26,6 +26,9 @@ export type MessageKey =
   | 'nav.native'
   | 'nav.performance'
   | 'nav.advanced'
+  | 'nav.customize'
+  | 'nav.power'
+  | 'nav.calibration'
   | 'nav.mice'
   | 'nav.contact'
   | 'nav.why'
@@ -321,6 +324,12 @@ export type MessageKey =
   | 'write.writing'
   | 'write.ok'
   | 'write.error'
+  | 'viper.hypershift.standard'
+  | 'viper.hypershift.name'
+  | 'viper.hypershift.tooltip'
+  | 'viper.hypershift.hint'
+  | 'viper.buttons.descStandard'
+  | 'viper.buttons.descHypershift'
 
 type Dict = Record<MessageKey, string>
 
@@ -338,6 +347,9 @@ const en: Dict = {
   'nav.native': 'Native',
   'nav.performance': 'Performance',
   'nav.advanced': 'Advanced',
+  'nav.customize': 'Customize',
+  'nav.power': 'Power',
+  'nav.calibration': 'Calibration',
   'nav.mice': 'Supported mice',
   'nav.contact': 'Contact',
   'nav.why': 'Why UMD',
@@ -411,7 +423,7 @@ const en: Dict = {
   'connect.browseNative': 'Browse native mice',
   'connect.supportedTitle': 'UMD native mice',
   'connect.supportedSub':
-    'Full UMD UI - King Ultra, Blitz Ultimate, Fenrir, SUPERLIGHT, PRO X3 SUPERSTRIKE. Click a card to connect.',
+    'Full UMD UI - King Ultra, Blitz Ultimate, Fenrir, SUPERLIGHT, PRO X3 SUPERSTRIKE, Viper V4 Pro. Click a card to connect.',
   'connect.statusLive': 'Ready',
   'connect.statusWip': 'Beta',
   'connect.statusPlanned': 'Soon',
@@ -675,6 +687,16 @@ const en: Dict = {
   'write.writing': 'Writing to mouse…',
   'write.ok': 'Written to mouse',
   'write.error': 'Write failed',
+  'viper.hypershift.standard': 'Standard',
+  'viper.hypershift.name': 'Hypershift',
+  'viper.hypershift.tooltip':
+    'Hypershift is a second mapping layer (like Fn on a keyboard). Hold a button assigned to Hypershift on the mouse to use alternate actions for every other button. Use this toggle to edit that secondary layer.',
+  'viper.hypershift.hint':
+    'Hold Hypershift on the mouse for the alternate layer — edit mappings here while this mode is selected.',
+  'viper.buttons.descStandard':
+    'Standard layer remap (02/0c). Mouse / DPI / Disable.',
+  'viper.buttons.descHypershift':
+    'Hypershift layer remap (02/0c, mode=1). Active while Hypershift is held on the mouse.',
 }
 
 const pl: Dict = {
@@ -691,6 +713,9 @@ const pl: Dict = {
   'nav.native': 'Native',
   'nav.performance': 'Wydajność',
   'nav.advanced': 'Zaawansowane',
+  'nav.customize': 'Dostosuj',
+  'nav.power': 'Zasilanie',
+  'nav.calibration': 'Kalibracja',
   'nav.mice': 'Wspierane myszy',
   'nav.contact': 'Kontakt',
   'nav.why': 'Dlaczego UMD',
@@ -767,7 +792,7 @@ const pl: Dict = {
   'connect.browseNative': 'Przeglądaj myszy native',
   'connect.supportedTitle': 'Myszy native UMD',
   'connect.supportedSub':
-    'Pełny UI UMD - King Ultra, Blitz Ultimate, Fenrir, SUPERLIGHT, PRO X3 SUPERSTRIKE. Kliknij kartę, żeby połączyć.',
+    'Pełny UI UMD - King Ultra, Blitz Ultimate, Fenrir, SUPERLIGHT, PRO X3 SUPERSTRIKE, Viper V4 Pro. Kliknij kartę, żeby połączyć.',
   'connect.statusLive': 'Gotowe',
   'connect.statusWip': 'Beta',
   'connect.statusPlanned': 'Wkrótce',
@@ -1031,6 +1056,16 @@ const pl: Dict = {
   'write.writing': 'Zapisuję na mysz…',
   'write.ok': 'Zapisano na myszy',
   'write.error': 'Zapis nieudany',
+  'viper.hypershift.standard': 'Standard',
+  'viper.hypershift.name': 'Hypershift',
+  'viper.hypershift.tooltip':
+    'Hypershift to druga warstwa mapowań (jak Fn na klawiaturze). Przytrzymaj przycisk przypisany do Hypershift na myszy, aby użyć alternatywnych akcji pozostałych przycisków. Ten przełącznik służy do edycji tej drugiej warstwy.',
+  'viper.hypershift.hint':
+    'Przytrzymaj Hypershift na myszy dla drugiej warstwy — mapowania edytujesz tutaj, gdy ten tryb jest wybrany.',
+  'viper.buttons.descStandard':
+    'Remap warstwy Standard (02/0c). Mouse / DPI / Disable.',
+  'viper.buttons.descHypershift':
+    'Remap warstwy Hypershift (02/0c, mode=1). Działa, gdy Hypershift jest przytrzymany na myszy.',
 }
 
 const dictionaries: Record<Locale, Dict> = {

@@ -251,5 +251,11 @@
   "write.queued": "Scrittura in coda…",
   "write.writing": "Scrittura sul mouse…",
   "write.ok": "Scritto sul mouse",
-  "write.error": "Scrittura non riuscita"
+  "write.error": "Scrittura non riuscita",
+  "viper.hypershift.standard": "Standard",
+  "viper.hypershift.name": "Hypershift",
+  "viper.hypershift.tooltip": "Hypershift è un secondo livello di mapping (come Fn su una tastiera). Tieni premuto un pulsante assegnato a Hypershift sul mouse per usare azioni alternative. Questo interruttore modifica quel livello secondario.",
+  "viper.hypershift.hint": "Tieni Hypershift sul mouse per il livello alternativo — modifica i mapping qui con questa modalità selezionata.",
+  "viper.buttons.descStandard": "Remap livello Standard (02/0c). Mouse / DPI / Disattiva.",
+  "viper.buttons.descHypershift": "Remap livello Hypershift (02/0c, mode=1). Attivo mentre Hypershift è tenuto sul mouse."
 }

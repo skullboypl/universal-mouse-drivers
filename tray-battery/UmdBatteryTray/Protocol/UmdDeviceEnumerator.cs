@@ -3,6 +3,7 @@ using UmdBatteryTray.Protocol.Mice.Gwolves.FenrirMax;
 using UmdBatteryTray.Protocol.Mice.Logitech.ProX3Superstrike;
 using UmdBatteryTray.Protocol.Mice.Logitech.ProXSuperlight;
 using UmdBatteryTray.Protocol.Mice.Rampage.BlitzUltimate;
+using UmdBatteryTray.Protocol.Mice.Razer.ViperV4Pro;
 using UmdBatteryTray.Protocol.Mice.Redragon.KingUltra;
 using UmdBatteryTray.Protocol.OpenMouse;
 
@@ -55,6 +56,13 @@ internal static class UmdDeviceEnumerator
             ProX3SuperstrikeConstants.DefaultLabel,
             alwaysUseFallbackName: true); // the receiver reports itself as "USB Receiver"
 
+        AddSku(
+            byKey,
+            ViperV4ProConstants.VendorId,
+            ViperV4ProConstants.ProductIds,
+            UmdDeviceKind.ViperV4Pro,
+            ViperV4ProConstants.DefaultLabel);
+
         AddOpenMouseCatalog(byKey);
 
         return byKey.Values
@@ -65,8 +73,9 @@ internal static class UmdDeviceEnumerator
                 UmdDeviceKind.FenrirMax => 2,
                 UmdDeviceKind.Superlight => 3,
                 UmdDeviceKind.ProX3Superstrike => 4,
-                UmdDeviceKind.OpenMouseCommunity => 5,
-                _ => 6,
+                UmdDeviceKind.ViperV4Pro => 5,
+                UmdDeviceKind.OpenMouseCommunity => 6,
+                _ => 7,
             })
             .ThenByDescending(d => IsWirelessPid(d) ? 1 : 0)
             .ThenBy(d => d.ProductId)
@@ -125,6 +134,7 @@ internal static class UmdDeviceEnumerator
             UmdDeviceKind.FenrirMax => d.ProductId == GwolvesConstants.FenrirMaxWirelessPid,
             UmdDeviceKind.Superlight => true,
             UmdDeviceKind.ProX3Superstrike => ProX3SuperstrikeConstants.IsWirelessReceiver(d.ProductId),
+            UmdDeviceKind.ViperV4Pro => ViperV4ProConstants.IsWirelessDongle(d.ProductId),
             UmdDeviceKind.OpenMouseCommunity => true,
             _ => false,
         };

@@ -251,5 +251,11 @@
   "write.queued": "Schreibvorgang eingereiht…",
   "write.writing": "Wird auf die Maus geschrieben…",
   "write.ok": "Auf die Maus geschrieben",
-  "write.error": "Schreiben fehlgeschlagen"
+  "write.error": "Schreiben fehlgeschlagen",
+  "viper.hypershift.standard": "Standard",
+  "viper.hypershift.name": "Hypershift",
+  "viper.hypershift.tooltip": "Hypershift ist eine zweite Belegungsebene (wie Fn auf einer Tastatur). Halte eine Hypershift-Taste an der Maus, um Alternativaktionen der übrigen Tasten zu nutzen. Mit diesem Schalter bearbeitest du diese zweite Ebene.",
+  "viper.hypershift.hint": "Hypershift an der Maus halten für die zweite Ebene — Belegungen hier bearbeiten, solange dieser Modus aktiv ist.",
+  "viper.buttons.descStandard": "Standard-Ebene neu belegen (02/0c). Maus / DPI / Aus.",
+  "viper.buttons.descHypershift": "Hypershift-Ebene neu belegen (02/0c, mode=1). Aktiv, solange Hypershift an der Maus gehalten wird."
 }

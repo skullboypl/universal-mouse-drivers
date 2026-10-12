@@ -8,6 +8,7 @@ import {
 import { FENRIR_MAX_IDENTITY } from '@/devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '@/devices/mice/logitech/pro-x-superlight/identity'
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from '@/devices/mice/logitech/pro-x3-superstrike/identity'
+import { VIPER_V4_PRO_IDENTITY } from '@/devices/mice/razer/viper-v4-pro/identity'
 import { BLITZ_ULTIMATE_IDENTITY } from '@/devices/mice/rampage/blitz-ultimate/identity'
 import { KING_ULTRA_IDENTITY } from '@/devices/mice/redragon/king-ultra/identity'
 import { OPENMOUSE_BACKED_ID } from '@/devices/openmouse/constants'
@@ -39,6 +40,7 @@ function connectingLabel(catalogId: string | undefined, syncing: string): string
   if (catalogId === BLITZ_ULTIMATE_IDENTITY.id) return 'Blitz Ultimate…'
   if (catalogId === SUPERLIGHT_IDENTITY.id) return 'SUPERLIGHT…'
   if (catalogId === PRO_X3_SUPERSTRIKE_IDENTITY.id) return 'PRO X3 SUPERSTRIKE…'
+  if (catalogId === VIPER_V4_PRO_IDENTITY.id) return 'Viper V4 Pro…'
   return syncing
 }
 

@@ -716,6 +716,128 @@ export const DEVICE_SEO_ARTICLES: DeviceSeoArticle[] = [
       },
     ],
   },
+  {
+    slug: 'razer-viper-v4-pro',
+    catalogId: 'razer-viper-v4-pro',
+    path: '/mice/razer-viper-v4-pro',
+    eyebrow: { pl: 'Razer', en: 'Razer' },
+    title: {
+      pl: 'Razer Viper V4 Pro - sterownik WebHID (WIP) | umdrivers.com',
+      en: 'Razer Viper V4 Pro - WebHID driver (WIP) | umdrivers.com',
+    },
+    description: {
+      pl: 'UMD na umdrivers.com: native WebHID dla Razer Viper V4 Pro (WIP) - Focus Pro 35K, DPI, polling do 8 kHz, remap, Hypershift, Low Power, LED dongle, Smart Tracking i Rotation bez Synapse.',
+      en: 'UMD at umdrivers.com: native WebHID for Razer Viper V4 Pro (WIP) - Focus Pro 35K, DPI, polling up to 8 kHz, remap, Hypershift, Low Power, dongle LEDs, Smart Tracking and Rotation without Synapse.',
+    },
+    h1: {
+      pl: 'Sterownik WebHID dla Razer Viper V4 Pro',
+      en: 'WebHID driver for Razer Viper V4 Pro',
+    },
+    intro: {
+      pl: 'Viper V4 Pro (Focus Pro 35K, HyperSpeed) działa w UMD przez 90-bajtowy kanał Razer V4 (MI_03) - wired 1532:00E5 i dongle 1532:00E6. UI w stylu Synapse 4. Zamknij Synapse przed połączeniem. Status: WIP.',
+      en: 'Viper V4 Pro (Focus Pro 35K, HyperSpeed) runs in UMD on the 90-byte Razer V4 control channel (MI_03) - wired 1532:00E5 and dongle 1532:00E6. Synapse 4-inspired UI. Close Synapse before connecting. Status: WIP.',
+    },
+    blocks: [
+      {
+        heading: { pl: 'Funkcje', en: 'Features' },
+        paragraphs: {
+          pl: [
+            'Konfigurator native UMD (osobny od OpenMouse) z protokołem z capture Synapse / OpenRazer #2760:',
+          ],
+          en: [
+            'Native UMD configurator (separate from OpenMouse) using Synapse / OpenRazer #2760 protocol captures:',
+          ],
+        },
+        bullets: {
+          pl: [
+            'DPI 100–50 000 (X/Y, do 5 stopni) · Focus Pro 35K',
+            'Polling 125–8000 Hz (HyperSpeed)',
+            'Remap przycisków + warstwa Hypershift (02/0c)',
+            'Sleep, Low Power Mode, bateria / ładowanie',
+            'LED Indicator dongle HyperSpeed (07/15)',
+            'Smart Tracking / LOD, Dynamic Sensitivity, obrót sensora (±44°)',
+          ],
+          en: [
+            'DPI 100–50,000 (X/Y, up to 5 stages) · Focus Pro 35K',
+            'Polling 125–8000 Hz (HyperSpeed)',
+            'Button remap + Hypershift layer (02/0c)',
+            'Sleep, Low Power Mode, battery / charging',
+            'HyperSpeed dongle LED Indicator (07/15)',
+            'Smart Tracking / LOD, Dynamic Sensitivity, sensor rotation (±44°)',
+          ],
+        },
+      },
+      {
+        heading: { pl: 'Jak połączyć', en: 'How to connect' },
+        paragraphs: {
+          pl: [
+            'Zamknij Razer Synapse. Na https://umdrivers.com otwórz Native → Viper V4 Pro albo Połącz dowolną mysz. W WebHID wybierz interfejs konfiguracyjny MI_03 (feature report), nie sam tracking myszy.',
+          ],
+          en: [
+            'Close Razer Synapse. On https://umdrivers.com open Native → Viper V4 Pro or Connect any mouse. In WebHID pick the MI_03 config interface (feature report), not mouse tracking alone.',
+          ],
+        },
+      },
+    ],
+    faqExtra: [
+      {
+        question: {
+          pl: 'Jakie VID:PID ma Viper V4 Pro?',
+          en: 'What VID:PID does Viper V4 Pro use?',
+          de: 'Welche VID:PID verwendet Viper V4 Pro?',
+          fr: 'Quels VID:PID utilise Viper V4 Pro ?',
+          es: '¿Qué VID:PID utiliza Viper V4 Pro?',
+          pt: 'Que VID:PID utiliza o Viper V4 Pro?',
+          it: 'Quali VID:PID usa Viper V4 Pro?',
+          zh: 'Viper V4 Pro 使用哪些 VID:PID？',
+          ja: 'Viper V4 Pro が使用する VID:PID は？',
+          ko: 'Viper V4 Pro는 어떤 VID:PID를 사용하나요?',
+          ru: 'Какие VID:PID использует Viper V4 Pro?',
+        },
+        answer: {
+          pl: 'Whitelist UMD: 1532:00E5 (USB) i 1532:00E6 (HyperSpeed).',
+          en: 'UMD whitelist: 1532:00E5 (USB) and 1532:00E6 (HyperSpeed).',
+          de: 'UMD-Freigabeliste: 1532:00E5 (USB) und 1532:00E6 (HyperSpeed).',
+          fr: 'Liste blanche UMD : 1532:00E5 (USB) et 1532:00E6 (HyperSpeed).',
+          es: 'Lista autorizada de UMD: 1532:00E5 (USB) y 1532:00E6 (HyperSpeed).',
+          pt: 'Lista autorizada do UMD: 1532:00E5 (USB) e 1532:00E6 (HyperSpeed).',
+          it: 'Elenco autorizzato UMD: 1532:00E5 (USB) e 1532:00E6 (HyperSpeed).',
+          zh: 'UMD 白名单：1532:00E5（USB）和 1532:00E6（HyperSpeed）。',
+          ja: 'UMD 許可リスト：1532:00E5（USB）、1532:00E6（HyperSpeed）。',
+          ko: 'UMD 허용 목록: 1532:00E5(USB), 1532:00E6(HyperSpeed).',
+          ru: 'Список разрешённых UMD: 1532:00E5 (USB) и 1532:00E6 (HyperSpeed).',
+        },
+      },
+      {
+        question: {
+          pl: 'Czy muszę zamykać Synapse?',
+          en: 'Do I need to close Synapse?',
+          de: 'Muss ich Synapse schließen?',
+          fr: 'Faut-il fermer Synapse ?',
+          es: '¿Hay que cerrar Synapse?',
+          pt: 'É preciso fechar o Synapse?',
+          it: 'Devo chiudere Synapse?',
+          zh: '需要关闭 Synapse 吗？',
+          ja: 'Synapse を終了する必要がありますか？',
+          ko: 'Synapse를 종료해야 하나요?',
+          ru: 'Нужно ли закрывать Synapse?',
+        },
+        answer: {
+          pl: 'Tak. Synapse zajmuje ten sam interfejs feature report (MI_03) - WebHID nie otworzy myszy, dopóki Synapse działa.',
+          en: 'Yes. Synapse holds the same feature-report interface (MI_03) - WebHID cannot open the mouse while Synapse is running.',
+          de: 'Ja. Synapse belegt dieselbe Feature-Report-Schnittstelle (MI_03) - WebHID kann die Maus nicht öffnen, solange Synapse läuft.',
+          fr: 'Oui. Synapse occupe la même interface feature report (MI_03) - WebHID ne peut pas ouvrir la souris tant que Synapse tourne.',
+          es: 'Sí. Synapse ocupa la misma interfaz de feature report (MI_03); WebHID no puede abrir el ratón mientras Synapse esté activo.',
+          pt: 'Sim. O Synapse ocupa a mesma interface de feature report (MI_03) - o WebHID não consegue abrir o rato enquanto o Synapse estiver a correr.',
+          it: 'Sì. Synapse occupa la stessa interfaccia feature report (MI_03): WebHID non può aprire il mouse finché Synapse è in esecuzione.',
+          zh: '需要。Synapse 占用同一 feature report 接口（MI_03）——在 Synapse 运行时 WebHID 无法打开鼠标。',
+          ja: 'はい。Synapse が同じフィーチャーレポート I/F（MI_03）を占有するため、Synapse 稼働中は WebHID でマウスを開けません。',
+          ko: '네. Synapse가 동일한 feature report 인터페이스(MI_03)를 점유하므로 Synapse가 실행 중이면 WebHID로 마우스를 열 수 없습니다.',
+          ru: 'Да. Synapse занимает тот же feature-report интерфейс (MI_03) — WebHID не откроет мышь, пока Synapse запущен.',
+        },
+      },
+    ],
+  },
 ]
 
 export const WHY_UMD = {

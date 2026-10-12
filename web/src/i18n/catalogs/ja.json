@@ -251,5 +251,11 @@
   "write.queued": "書き込み待機中…",
   "write.writing": "マウスに書き込み中…",
   "write.ok": "マウスに書き込みました",
-  "write.error": "書き込みに失敗しました"
+  "write.error": "書き込みに失敗しました",
+  "viper.hypershift.standard": "スタンダード",
+  "viper.hypershift.name": "Hypershift",
+  "viper.hypershift.tooltip": "Hypershift は第2の割り当てレイヤーです（キーボードの Fn のようなもの）。マウスで Hypershift に割り当てたボタンを押し続けると、他のボタンの代替アクションが使えます。この切替でその第2レイヤーを編集します。",
+  "viper.hypershift.hint": "マウスで Hypershift を押し続けると代替レイヤーになります — このモード選択中にここでマッピングを編集します。",
+  "viper.buttons.descStandard": "スタンダード層のリマップ（02/0c）。マウス / DPI / 無効。",
+  "viper.buttons.descHypershift": "Hypershift 層のリマップ（02/0c、mode=1）。マウスで Hypershift を押している間有効。"
 }

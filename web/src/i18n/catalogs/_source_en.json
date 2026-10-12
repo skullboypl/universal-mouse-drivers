@@ -251,5 +251,11 @@
   "write.queued": "Write queued…",
   "write.writing": "Writing to mouse…",
   "write.ok": "Written to mouse",
-  "write.error": "Write failed"
+  "write.error": "Write failed",
+  "viper.hypershift.standard": "Standard",
+  "viper.hypershift.name": "Hypershift",
+  "viper.hypershift.tooltip": "Hypershift is a second mapping layer (like Fn on a keyboard). Hold a button assigned to Hypershift on the mouse to use alternate actions for every other button. Use this toggle to edit that secondary layer.",
+  "viper.hypershift.hint": "Hold Hypershift on the mouse for the alternate layer — edit mappings here while this mode is selected.",
+  "viper.buttons.descStandard": "Standard layer remap (02/0c). Mouse / DPI / Disable.",
+  "viper.buttons.descHypershift": "Hypershift layer remap (02/0c, mode=1). Active while Hypershift is held on the mouse."
 }

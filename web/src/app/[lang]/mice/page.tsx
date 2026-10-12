@@ -19,8 +19,8 @@ const TITLE = {
 }
 
 const DESCRIPTION = {
-  pl: 'Pełne sterowniki WebHID UMD: Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max, Logitech PRO X SUPERLIGHT i PRO X3 SUPERSTRIKE.',
-  en: 'Full UMD WebHID drivers: Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max, Logitech PRO X SUPERLIGHT and PRO X3 SUPERSTRIKE.',
+  pl: 'Pełne sterowniki WebHID UMD: Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max, Logitech PRO X SUPERLIGHT, PRO X3 SUPERSTRIKE i Razer Viper V4 Pro.',
+  en: 'Full UMD WebHID drivers: Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max, Logitech PRO X SUPERLIGHT, PRO X3 SUPERSTRIKE and Razer Viper V4 Pro.',
   de: 'Volle UMD-WebHID-Treiber: Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max, Logitech PRO X SUPERLIGHT und PRO X3 SUPERSTRIKE.',
   fr: 'Pilotes WebHID UMD complets : Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max, Logitech PRO X SUPERLIGHT et PRO X3 SUPERSTRIKE.',
   es: 'Drivers WebHID UMD completos: Redragon King Ultra, Rampage Blitz Ultimate, G-Wolves Fenrir Max, Logitech PRO X SUPERLIGHT y PRO X3 SUPERSTRIKE.',

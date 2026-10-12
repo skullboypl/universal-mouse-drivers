@@ -23,6 +23,7 @@ import { visibleOpenMouseControls } from '../devices/openmouse/capabilityPresent
 import { FENRIR_MAX_IDENTITY } from '../devices/mice/gwolves/fenrir-max/identity'
 import { SUPERLIGHT_IDENTITY } from '../devices/mice/logitech/pro-x-superlight/identity'
 import { PRO_X3_SUPERSTRIKE_IDENTITY } from '../devices/mice/logitech/pro-x3-superstrike/identity'
+import { VIPER_V4_PRO_IDENTITY } from '../devices/mice/razer/viper-v4-pro/identity'
 import { KING_ULTRA_IDENTITY } from '../devices/mice/redragon/king-ultra/identity'
 import {
   OPENMOUSE_BACKED_ID,
@@ -446,6 +447,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
           catalog.id === FENRIR_MAX_IDENTITY.id ||
           catalog.id === SUPERLIGHT_IDENTITY.id ||
           catalog.id === PRO_X3_SUPERSTRIKE_IDENTITY.id ||
+          catalog.id === VIPER_V4_PRO_IDENTITY.id ||
           isOpenMouse
 
         // Show device UI immediately (defaults) → SyncSpinner → attach + probe.

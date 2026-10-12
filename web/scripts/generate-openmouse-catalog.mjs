@@ -80,6 +80,27 @@ try {
   )
 }
 
+// Viper V4 Pro lives in razer-v4 (separate from RAZER_PRODUCTS) and only
+// carries { wireless } — pin the public model name so the catalog is searchable.
+try {
+  const razerV4 = await import('@openmouse/protocol/razer-v4')
+  if (razerV4.RAZER_V4_PRODUCTS instanceof Map) {
+    ingestProductMap(razerV4.RAZER_V4_PRODUCTS, 'Razer', (v) => {
+      if (!v || typeof v !== 'object') return null
+      if (typeof v.model === 'string') return v.model
+      if (typeof v.name === 'string') return v.name
+      // Upstream map is PID-only flags; both 0x00e5 (wired) and 0x00e6 (dongle)
+      // are Viper V4 Pro (OpenRazer #2760 / live PnP "Razer Viper V4 Pro").
+      return 'Viper V4 Pro'
+    })
+  }
+} catch (err) {
+  console.warn(
+    '[generate-openmouse-catalog] razer-v4 unavailable:',
+    err?.message ?? err,
+  )
+}
+
 // Optional richer names / PID brand hints (not always re-exported from /drivers).
 for (const spec of [
   {
