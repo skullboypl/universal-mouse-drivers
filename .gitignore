@@ -62,3 +62,8 @@ web/public/devices/openmouse/mice/*
 # local publish
 tray-battery/**/publish/
 
+
+# local HID probe harnesses
+tray-battery/_probe/
+tray-battery/_probe-reader/
+
