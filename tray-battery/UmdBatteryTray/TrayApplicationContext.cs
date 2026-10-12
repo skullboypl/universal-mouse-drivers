@@ -16,6 +16,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private readonly BatteryWidgetForm _widget = new();
     private readonly AppSettings _settings;
     private readonly BridgeServer _bridge;
+    private readonly WebHidRelay _webHidRelay = new();
     private readonly Icon _appIcon;
 
     private Icon? _currentIcon;
@@ -104,11 +105,15 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _bridge = new BridgeServer(
             _settings,
             () => _lastReading,
-            () => _reader.DeviceLabel,
+            () => _webHidRelay.DeviceLabel ?? _reader.DeviceLabel,
             BuildDevicesPayload,
             SetPreferredDeviceFromBridgeAsync,
             s => ApplySettings(s),
-            RequestOpenSettings);
+            RequestOpenSettings,
+            OnWebHidYield,
+            OnBatteryPushFromWeb,
+            OnWebHidRelease,
+            () => _webHidRelay.WebOwnsHid);
         _bridge.Start();
 
         _pollTimer = new System.Windows.Forms.Timer { Interval = _settings.PollIntervalSeconds * 1000 };
@@ -446,8 +451,66 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _settings.Save();
     }
 
+    private void OnWebHidYield()
+    {
+        _webHidRelay.Yield();
+        try { _reader.Disconnect(); } catch { /* ignore */ }
+        RunOnUi(() =>
+        {
+            if (_webHidRelay.Reading is BatteryReading relayed)
+            {
+                _lastReading = relayed;
+                UpdateUi(relayed, null);
+            }
+        });
+    }
+
+    private void OnBatteryPushFromWeb(int percent, bool charging, string? deviceKey, string? deviceLabel)
+    {
+        _webHidRelay.Push(percent, charging, deviceKey, deviceLabel);
+        try { _reader.Disconnect(); } catch { /* ignore */ }
+        var reading = _webHidRelay.Reading;
+        if (reading is null) return;
+        _lastReading = reading;
+        RunOnUi(() =>
+        {
+            UpdateUi(reading.Value, null);
+            RebuildDeviceMenu();
+        });
+    }
+
+    private void OnWebHidRelease()
+    {
+        _webHidRelay.Release();
+        _ = RefreshBatteryAsync();
+    }
+
     private async Task RefreshBatteryAsync()
     {
+        // Browser holds exclusive WebHID — use pushed % instead of fighting for the handle.
+        if (_webHidRelay.WebOwnsHid)
+        {
+            var relayed = _webHidRelay.Reading;
+            if (relayed is BatteryReading r)
+            {
+                _lastReading = r;
+                RunOnUi(() =>
+                {
+                    UpdateUi(r, null);
+                    RebuildDeviceMenu();
+                });
+                return;
+            }
+
+            // Yielded but no push yet — keep UI calm, don't spam exclusive errors.
+            RunOnUi(() =>
+            {
+                if (_lastReading is null)
+                    UpdateUi(null, null);
+            });
+            return;
+        }
+
         try
         {
             var reading = await Task.Run(() =>
@@ -467,6 +530,24 @@ internal sealed class TrayApplicationContext : ApplicationContext
         catch (Exception ex)
         {
             _reader.Disconnect();
+            // Soft: if this looks like exclusive lock, wait for web relay instead of angry toast.
+            var msg = ex.Message ?? "";
+            var exclusive = msg.Contains("exclusive", StringComparison.OrdinalIgnoreCase)
+                || msg.Contains("Could not open", StringComparison.OrdinalIgnoreCase)
+                || msg.Contains("Synapse", StringComparison.OrdinalIgnoreCase);
+            if (exclusive)
+            {
+                _webHidRelay.Yield(); // grace window for browser push
+                RunOnUi(() =>
+                {
+                    if (_lastReading is BatteryReading keep)
+                        UpdateUi(keep, null);
+                    else
+                        UpdateUi(null, null);
+                });
+                return;
+            }
+
             RunOnUi(() => UpdateUi(null, ex.Message));
         }
     }

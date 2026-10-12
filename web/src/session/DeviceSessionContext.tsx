@@ -44,6 +44,11 @@ import {
   type HidPickTarget,
 } from '../transport/webhid'
 import type { TransportKind } from '../transport/types'
+import {
+  pushTrayBattery,
+  releaseTrayHid,
+  yieldTrayHid,
+} from '../lib/trayBridge'
 import { loadSavedDraft, persistDraft } from './autoSave'
 import {
   loadSavedDevices,
@@ -486,6 +491,10 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
 
         void (async () => {
           try {
+            // Free exclusive HID in UmdBatteryTray so WebHID can open the control iface.
+            await yieldTrayHid()
+            if (!stillThisConnect()) return
+
             if (useNative) {
               if (!d.attachNative) {
                 throw new Error(`${catalog.model} driver missing attachNative`)
@@ -521,6 +530,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
               })
               transport.onDisconnect(() => {
                 umdLog('session', 'warn', 'device disconnected')
+                void releaseTrayHid()
                 publish(null)
                 setTransportKind(null)
                 setConnectingCatalogId(null)
@@ -648,6 +658,7 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
       } catch {
         /* ignore */
       }
+      void releaseTrayHid()
       publish(null)
       setTransportKind(null)
       setSaveStatus('idle')
@@ -660,11 +671,60 @@ export function DeviceSessionProvider({ children }: { children: ReactNode }) {
     cancelConnect()
   }, [cancelConnect])
 
+  // Mirror WebHID battery into the local tray while the browser holds exclusive HID.
+  useEffect(() => {
+    if (transportKind !== 'webhid' || !state || !driver) return
+    const percent = state.info.batteryPercent
+    if (percent == null) return
+
+    const vendorId = driver.identity.vendorId
+    const productId =
+      state.info.connection === 'wireless'
+        ? (driver.identity.productIds[1] ?? driver.identity.productIds[0])
+        : driver.identity.productIds[0]
+    const deviceKey =
+      vendorId != null && productId != null
+        ? `${vendorId.toString(16).padStart(4, '0')}:${productId
+            .toString(16)
+            .padStart(4, '0')}`.toUpperCase()
+        : undefined
+
+    const push = () => {
+      void pushTrayBattery({
+        percent,
+        charging: Boolean(state.info.charging),
+        deviceKey,
+        deviceLabel: `${driver.identity.brand} ${driver.identity.model}`,
+        vendorId,
+        productId,
+      })
+    }
+
+    push()
+    const id = window.setInterval(push, 2500)
+    const onUnload = () => {
+      void releaseTrayHid()
+    }
+    window.addEventListener('pagehide', onUnload)
+    return () => {
+      window.clearInterval(id)
+      window.removeEventListener('pagehide', onUnload)
+      void releaseTrayHid()
+    }
+  }, [
+    transportKind,
+    driver,
+    state?.info.batteryPercent,
+    state?.info.charging,
+    state?.info.connection,
+  ])
+
   const disconnect = useCallback(async () => {
     connectGenRef.current += 1
     if (saveTimer.current) clearTimeout(saveTimer.current)
     setConnectError(null)
     await driverRef.current?.detach()
+    void releaseTrayHid()
     publish(null)
     setTransportKind(null)
     setConnectingCatalogId(null)

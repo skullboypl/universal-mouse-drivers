@@ -16,6 +16,10 @@ internal sealed class BridgeServer : IDisposable
     private readonly Func<string?, Task<object>> _setPreferredDevice;
     private readonly Action<AppSettings> _onSettingsChanged;
     private readonly Action _openSettings;
+    private readonly Action _onWebHidYield;
+    private readonly Action<int, bool, string?, string?> _onBatteryPush;
+    private readonly Action _onWebHidRelease;
+    private readonly Func<bool> _webOwnsHid;
     private CancellationTokenSource? _cts;
     private Task? _loop;
 
@@ -42,7 +46,11 @@ internal sealed class BridgeServer : IDisposable
         Func<object> getDevicesPayload,
         Func<string?, Task<object>> setPreferredDevice,
         Action<AppSettings> onSettingsChanged,
-        Action openSettings)
+        Action openSettings,
+        Action onWebHidYield,
+        Action<int, bool, string?, string?> onBatteryPush,
+        Action onWebHidRelease,
+        Func<bool> webOwnsHid)
     {
         _settings = settings;
         _getReading = getReading;
@@ -51,6 +59,10 @@ internal sealed class BridgeServer : IDisposable
         _setPreferredDevice = setPreferredDevice;
         _onSettingsChanged = onSettingsChanged;
         _openSettings = openSettings;
+        _onWebHidYield = onWebHidYield;
+        _onBatteryPush = onBatteryPush;
+        _onWebHidRelease = onWebHidRelease;
+        _webOwnsHid = webOwnsHid;
         _listener.Prefixes.Add($"http://127.0.0.1:{AppConstants.BridgePort}/");
     }
 
@@ -129,8 +141,69 @@ internal sealed class BridgeServer : IDisposable
                         charging = reading is { Status: BatteryStatus.Charging or BatteryStatus.Full },
                         device = _getDeviceLabel(),
                         preferredDeviceKey = _settings.PreferredDeviceKey,
+                        webHidRelay = _webOwnsHid(),
                         devices,
                     });
+                    break;
+                }
+
+                // Browser about to open WebHID — tray must drop exclusive native handles.
+                case "/hid/yield" when req.HttpMethod == "POST":
+                    _onWebHidYield();
+                    await WriteJson(res, new { ok = true, webHidRelay = true });
+                    break;
+
+                // Browser finished / closed WebHID — tray may reclaim native HID.
+                case "/hid/release" when req.HttpMethod == "POST":
+                    _onWebHidRelease();
+                    await WriteJson(res, new { ok = true, webHidRelay = false });
+                    break;
+
+                // Live battery from WebHID while the browser holds the device.
+                case "/battery/push" when req.HttpMethod == "POST":
+                {
+                    using var reader = new StreamReader(req.InputStream, req.ContentEncoding);
+                    var body = await reader.ReadToEndAsync();
+                    using var doc = JsonDocument.Parse(string.IsNullOrWhiteSpace(body) ? "{}" : body);
+                    var root = doc.RootElement;
+                    if (!root.TryGetProperty("percent", out var pEl)
+                        || pEl.ValueKind is not (JsonValueKind.Number or JsonValueKind.String))
+                    {
+                        res.StatusCode = 400;
+                        await WriteJson(res, new { error = "percent_required" });
+                        break;
+                    }
+
+                    var percent = pEl.ValueKind == JsonValueKind.Number
+                        ? pEl.GetInt32()
+                        : int.TryParse(pEl.GetString(), out var parsed) ? parsed : -1;
+                    if (percent is < 0 or > 100)
+                    {
+                        res.StatusCode = 400;
+                        await WriteJson(res, new { error = "percent_range" });
+                        break;
+                    }
+
+                    var charging = root.TryGetProperty("charging", out var cEl)
+                        && cEl.ValueKind == JsonValueKind.True;
+                    string? key = root.TryGetProperty("deviceKey", out var kEl) && kEl.ValueKind == JsonValueKind.String
+                        ? kEl.GetString()
+                        : null;
+                    if (key is null
+                        && root.TryGetProperty("vendorId", out var vEl)
+                        && root.TryGetProperty("productId", out var pidEl)
+                        && vEl.TryGetInt32(out var vid)
+                        && pidEl.TryGetInt32(out var pid))
+                    {
+                        key = $"{vid:X4}:{pid:X4}";
+                    }
+
+                    string? label = root.TryGetProperty("deviceLabel", out var lEl) && lEl.ValueKind == JsonValueKind.String
+                        ? lEl.GetString()
+                        : null;
+
+                    _onBatteryPush(percent, charging, key, label);
+                    await WriteJson(res, new { ok = true, webHidRelay = true });
                     break;
                 }
 
