@@ -62,13 +62,12 @@ internal sealed class OmPortedBatteryReader : IDisposable
 
     private bool ConnectProbe((Kind kind, int minLen, bool feature) probe, int vendorId, int productId, string brand)
     {
-        HidDevice? device = probe.feature
-            ? OmHid.PickByMaxFeature(vendorId, productId, probe.minLen)
-            : OmHid.PickByMaxOutput(vendorId, productId, probe.minLen);
-        device ??= OmHid.PickAny(vendorId, productId);
-        if (device is null) return false;
+        if (!OmHid.TryOpenBest(vendorId, productId, probe.minLen, probe.feature, out var stream, out var device)
+            || stream is null
+            || device is null)
+            return false;
 
-        _stream = OmHid.Open(device);
+        _stream = stream;
         _device = device;
         _kind = probe.kind;
         if (probe.kind is Kind.SteelPrime)

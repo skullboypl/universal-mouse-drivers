@@ -6,7 +6,8 @@ namespace UmdBatteryTray.Protocol.Mice.Razer.ViperV4Pro;
 /// <summary>
 /// Native Razer V4 control-channel battery reader for Viper V4 Pro (1532:00E5 / 00E6).
 /// Mirrors web protocol.ts: 90-byte feature report id 0, CRC XOR bytes 2..87 @88,
-/// battery 07/80 → 0..255 %, charging 07/84. Close Synapse / Chrome WebHID if exclusive.
+/// battery 07/80 → 0..255 %, charging 07/84.
+/// Tries every HID interface (Synapse/WebHID often lock only the vendor page).
 /// </summary>
 internal sealed class ViperV4ProBatteryReader : IDisposable
 {
@@ -24,33 +25,64 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
     {
         Disconnect();
 
-        var device = PickDevice(preferredProductId)
-            ?? throw new InvalidOperationException(
+        var candidates = ListCandidates(preferredProductId);
+        if (candidates.Count == 0)
+        {
+            throw new InvalidOperationException(
                 preferredProductId is int pid
                     ? $"No Viper V4 Pro found (VID 1532, PID {pid:X4}). Close Synapse / Chrome WebHID."
                     : "No Viper V4 Pro found (VID 1532, PID 00E5/00E6). Close Synapse / Chrome WebHID.");
-
-        if (!device.TryOpen(out var stream))
-            throw new InvalidOperationException(
-                "Could not open Viper V4 Pro control interface (exclusive?). Close Synapse / WebHID.");
-
-        _device = device;
-        _stream = stream;
-        _stream.ReadTimeout = 500;
-        _stream.WriteTimeout = 500;
-        try
-        {
-            var max = device.GetMaxFeatureReportLength();
-            _reportLength = Math.Max(ViperV4ProConstants.ReportLength, max);
-        }
-        catch
-        {
-            _reportLength = ViperV4ProConstants.ReportLength;
         }
 
-        _deviceLabel =
-            $"{device.GetProductName() ?? ViperV4ProConstants.DefaultLabel} ({device.VendorID:X4}:{device.ProductID:X4})";
-        _txn = ViperV4ProConstants.DefaultTxn;
+        Exception? lastOpen = null;
+        foreach (var device in candidates)
+        {
+            if (!device.TryOpen(out var stream))
+            {
+                lastOpen ??= new InvalidOperationException(
+                    "HID exclusive — another app holds this interface.");
+                continue;
+            }
+
+            _device = device;
+            _stream = stream;
+            _stream.ReadTimeout = 500;
+            _stream.WriteTimeout = 500;
+            try
+            {
+                var max = device.GetMaxFeatureReportLength();
+                _reportLength = Math.Max(ViperV4ProConstants.ReportLength, max);
+            }
+            catch
+            {
+                _reportLength = ViperV4ProConstants.ReportLength;
+            }
+
+            _deviceLabel =
+                $"{device.GetProductName() ?? ViperV4ProConstants.DefaultLabel} ({device.VendorID:X4}:{device.ProductID:X4})";
+            _txn = ViperV4ProConstants.DefaultTxn;
+
+            // Prefer an interface that actually answers battery (skip mouse/keyboard pages).
+            try
+            {
+                _ = ReadBattery();
+                return;
+            }
+            catch (Exception ex)
+            {
+                lastOpen = ex;
+                _stream.Dispose();
+                _stream = null;
+                _device = null;
+                _deviceLabel = null;
+            }
+        }
+
+        throw new InvalidOperationException(
+            "Could not open Viper V4 Pro control interface. " +
+            "Close Razer Synapse / RazerAppEngine and Chrome tabs with WebHID (umdrivers.com), then retry. " +
+            (lastOpen?.Message ?? ""),
+            lastOpen);
     }
 
     public BatteryReading ReadBattery()
@@ -69,8 +101,6 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
                     dataSize: 0x02);
                 if (bat is null || bat.Length < 10) continue;
 
-                // OpenRazer / Synapse: level is typically args[1] (index 9); some
-                // firmwares put a usable 0..255 in args[0] (index 8).
                 var percent = DecodePercent(bat[9]);
                 if (percent is null) percent = DecodePercent(bat[8]);
                 if (percent is null) continue;
@@ -86,7 +116,7 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
                 }
                 catch
                 {
-                    /* Basilisk-style: level OK, charging unsupported */
+                    /* level OK, charging unsupported */
                 }
 
                 var status = charging
@@ -162,10 +192,6 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
         return null;
     }
 
-    /// <summary>
-    /// Report id 0 → HidSharp buffer is the report itself (no extra leading id).
-    /// CRC covers bytes 2..87 @88 (same as web / OpenRazer V4).
-    /// </summary>
     internal static byte[] BuildReport(
         byte commandClass,
         byte commandId,
@@ -186,40 +212,63 @@ internal sealed class ViperV4ProBatteryReader : IDisposable
         return report;
     }
 
-    private static HidDevice? PickDevice(int? preferredProductId)
+    private static List<HidDevice> ListCandidates(int? preferredProductId)
     {
         var pids = preferredProductId is int only
             ? (int[])[only]
             : ViperV4ProConstants.ProductIds;
 
-        var ordered = pids
+        var orderedPids = pids
             .OrderByDescending(p => ViperV4ProConstants.IsWirelessDongle(p) ? 1 : 0)
             .ToArray();
 
-        foreach (var pid in ordered)
+        var scored = new List<(HidDevice Device, int Score)>();
+        foreach (var pid in orderedPids)
         {
-            var devices = DeviceList.Local
-                .GetHidDevices(ViperV4ProConstants.VendorId, pid)
-                .ToList();
-            if (devices.Count == 0) continue;
-
-            // Prefer the largest feature interface (≥90B Razer V4 control).
-            var best = devices
-                .OrderByDescending(SafeMaxFeat)
-                .FirstOrDefault(d => SafeMaxFeat(d) >= ViperV4ProConstants.ReportLength);
-            if (best is not null) return best;
-
-            // Last resort: any interface on this PID (OM fallback may still help).
-            best = devices.OrderByDescending(SafeMaxFeat).FirstOrDefault();
-            if (best is not null) return best;
+            foreach (var d in DeviceList.Local.GetHidDevices(ViperV4ProConstants.VendorId, pid))
+                scored.Add((d, ScoreDevice(d)));
         }
 
-        return null;
+        return scored
+            .OrderByDescending(x => x.Score)
+            .Select(x => x.Device)
+            .ToList();
     }
 
-    private static int SafeMaxFeat(HidDevice d)
+    private static int ScoreDevice(HidDevice device)
     {
-        try { return d.GetMaxFeatureReportLength(); }
-        catch { return 0; }
+        var score = 0;
+        try
+        {
+            var feat = device.GetMaxFeatureReportLength();
+            if (feat >= ViperV4ProConstants.ReportLength) score += 80;
+            else if (feat >= 64) score += 20;
+            score += Math.Min(feat, 120);
+        }
+        catch { /* ignore */ }
+
+        // Prefer Razer vendor usage page 0xFF00 (control channel), not mouse/keyboard.
+        try
+        {
+            var raw = device.GetRawReportDescriptor();
+            if (raw is { Length: > 2 })
+            {
+                for (var i = 0; i + 2 < raw.Length; i++)
+                {
+                    // Usage Page (Vendor) 0xFF00 → 06 00 FF
+                    if (raw[i] == 0x06 && raw[i + 1] == 0x00 && raw[i + 2] == 0xFF)
+                    {
+                        score += 200;
+                        break;
+                    }
+                }
+            }
+        }
+        catch { /* descriptor optional */ }
+
+        if (ViperV4ProConstants.IsWirelessDongle(device.ProductID))
+            score += 10;
+
+        return score;
     }
 }

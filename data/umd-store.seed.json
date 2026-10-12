@@ -38,7 +38,7 @@
       "id": "trayBattery",
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
-      "version": "1.12.2",
+      "version": "1.12.3",
       "signed": true,
       "notes": "EV-signed; native-first battery with OpenMouse fallback, Viper V4 Pro reader hardened"
     }

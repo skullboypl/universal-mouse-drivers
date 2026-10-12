@@ -25,10 +25,46 @@ internal static class OmHid
     {
         if (!device.TryOpen(out var stream))
             throw new InvalidOperationException(
-                $"Could not open HID {device.VendorID:X4}:{device.ProductID:X4} (exclusive?).");
+                $"Could not open HID {device.VendorID:X4}:{device.ProductID:X4} " +
+                "(exclusive — close Synapse / OEM app / Chrome WebHID).");
         stream.ReadTimeout = 400;
         stream.WriteTimeout = 400;
         return stream;
+    }
+
+    /// <summary>
+    /// Try every matching interface (largest feature/output first) until one opens.
+    /// Razer / Logitech receivers expose many collections; OEM software often locks only one.
+    /// </summary>
+    public static bool TryOpenBest(
+        int vendorId,
+        int productId,
+        int minLen,
+        bool feature,
+        out HidStream? stream,
+        out HidDevice? device)
+    {
+        stream = null;
+        device = null;
+        var devices = (feature
+                ? Devices(vendorId, productId).OrderByDescending(SafeMaxFeat)
+                : Devices(vendorId, productId).OrderByDescending(SafeMaxOut))
+            .Where(d => feature ? SafeMaxFeat(d) >= minLen : SafeMaxOut(d) >= minLen)
+            .Concat(Devices(vendorId, productId))
+            .Distinct()
+            .ToList();
+
+        foreach (var candidate in devices)
+        {
+            if (!candidate.TryOpen(out var opened)) continue;
+            opened.ReadTimeout = 400;
+            opened.WriteTimeout = 400;
+            stream = opened;
+            device = candidate;
+            return true;
+        }
+
+        return false;
     }
 
     public static string Label(HidDevice device, string fallback)
