@@ -38,9 +38,9 @@
       "id": "trayBattery",
       "filename": "UmdBatteryTray.exe",
       "displayName": "UMD Battery Tray",
-      "version": "1.12.1",
+      "version": "1.12.2",
       "signed": true,
-      "notes": "EV-signed; Viper V4 Pro battery reader, OpenMouse Razer/codec battery fixes, tray 1.12.1"
+      "notes": "EV-signed; native-first battery with OpenMouse fallback, Viper V4 Pro reader hardened"
     }
   }
 }

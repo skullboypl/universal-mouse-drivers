@@ -48,8 +48,19 @@ internal sealed class OpenMouseCommunityBatteryReader : IDisposable
 
         var entry = OpenMouseCatalog.Devices.FirstOrDefault(e =>
             e.VendorId == vendorId && e.ProductId == productId);
-        var brand = entry.Brand ?? "";
-        var nameHint = string.IsNullOrWhiteSpace(entry.Name) ? "OpenMouse device" : entry.Name;
+        // Native SKU fallback may call us for a VID:PID not in the OM catalog
+        // (or catalog Brand empty) — still probe by VID (e.g. Razer 0x1532).
+        var brand = !string.IsNullOrWhiteSpace(entry.Brand)
+            ? entry.Brand
+            : vendorId switch
+            {
+                0x1532 => "Razer",
+                0x046D => "Logitech",
+                0x33E4 => "G-Wolves",
+                0x3554 => "VGN",
+                _ => "",
+            };
+        var nameHint = !string.IsNullOrWhiteSpace(entry.Name) ? entry.Name : "OpenMouse device";
 
         if (IsGwolves(vendorId, brand))
         {

@@ -9,8 +9,9 @@ using UmdBatteryTray.Protocol.OpenMouse;
 namespace UmdBatteryTray.Protocol;
 
 /// <summary>
-/// Multi-device battery facade: preferred VID:PID, else first available
-/// (King → Blitz → Fenrir → Superlight → PRO X3 → Viper V4 Pro → OpenMouse community).
+/// Multi-device battery facade: preferred VID:PID, else first available.
+/// Order: native UMD SKU first, then OpenMouse codec fallback for the same
+/// VID:PID (King → Blitz → Fenrir → Superlight → PRO X3 → Viper → OpenMouse).
 /// </summary>
 internal sealed class UmdBatteryReader : IDisposable
 {
@@ -22,30 +23,51 @@ internal sealed class UmdBatteryReader : IDisposable
     private ViperV4ProBatteryReader? _viper;
     private OpenMouseCommunityBatteryReader? _openMouse;
     private UmdDeviceInfo? _active;
+    private bool _usingOpenMouseFallback;
 
     public bool IsConnected => _active?.Kind switch
     {
-        UmdDeviceKind.KingUltra => _king?.IsConnected == true,
-        UmdDeviceKind.BlitzUltimate => _blitz?.IsConnected == true,
-        UmdDeviceKind.FenrirMax => _fenrir?.IsConnected == true,
-        UmdDeviceKind.Superlight => _superlight?.IsConnected == true,
-        UmdDeviceKind.ProX3Superstrike => _proX3?.IsConnected == true,
-        UmdDeviceKind.ViperV4Pro => _viper?.IsConnected == true,
+        UmdDeviceKind.KingUltra => _usingOpenMouseFallback
+            ? _openMouse?.IsConnected == true
+            : _king?.IsConnected == true,
+        UmdDeviceKind.BlitzUltimate => _usingOpenMouseFallback
+            ? _openMouse?.IsConnected == true
+            : _blitz?.IsConnected == true,
+        UmdDeviceKind.FenrirMax => _usingOpenMouseFallback
+            ? _openMouse?.IsConnected == true
+            : _fenrir?.IsConnected == true,
+        UmdDeviceKind.Superlight => _usingOpenMouseFallback
+            ? _openMouse?.IsConnected == true
+            : _superlight?.IsConnected == true,
+        UmdDeviceKind.ProX3Superstrike => _usingOpenMouseFallback
+            ? _openMouse?.IsConnected == true
+            : _proX3?.IsConnected == true,
+        UmdDeviceKind.ViperV4Pro => _usingOpenMouseFallback
+            ? _openMouse?.IsConnected == true
+            : _viper?.IsConnected == true,
         UmdDeviceKind.OpenMouseCommunity => _openMouse?.IsConnected == true,
         _ => false,
     };
 
-    public string? DeviceLabel => _active?.Kind switch
+    public string? DeviceLabel
     {
-        UmdDeviceKind.KingUltra => _king?.DeviceLabel,
-        UmdDeviceKind.BlitzUltimate => _blitz?.DeviceLabel,
-        UmdDeviceKind.FenrirMax => _fenrir?.DeviceLabel,
-        UmdDeviceKind.Superlight => _superlight?.DeviceLabel,
-        UmdDeviceKind.ProX3Superstrike => _proX3?.DeviceLabel,
-        UmdDeviceKind.ViperV4Pro => _viper?.DeviceLabel,
-        UmdDeviceKind.OpenMouseCommunity => _openMouse?.DeviceLabel,
-        _ => null,
-    };
+        get
+        {
+            if (_usingOpenMouseFallback && _openMouse?.DeviceLabel is string om)
+                return om;
+            return _active?.Kind switch
+            {
+                UmdDeviceKind.KingUltra => _king?.DeviceLabel,
+                UmdDeviceKind.BlitzUltimate => _blitz?.DeviceLabel,
+                UmdDeviceKind.FenrirMax => _fenrir?.DeviceLabel,
+                UmdDeviceKind.Superlight => _superlight?.DeviceLabel,
+                UmdDeviceKind.ProX3Superstrike => _proX3?.DeviceLabel,
+                UmdDeviceKind.ViperV4Pro => _viper?.DeviceLabel,
+                UmdDeviceKind.OpenMouseCommunity => _openMouse?.DeviceLabel,
+                _ => null,
+            };
+        }
+    }
 
     public string? ActiveDeviceKey => _active?.Key;
 
@@ -104,50 +126,124 @@ internal sealed class UmdBatteryReader : IDisposable
     {
         Disconnect();
 
+        if (target.Kind == UmdDeviceKind.OpenMouseCommunity)
+        {
+            ConnectOpenMouse(target);
+            _active = target;
+            _usingOpenMouseFallback = false;
+            return;
+        }
+
+        Exception? nativeErr = null;
+        try
+        {
+            ConnectNative(target);
+            // Viper: open alone is not enough — verify battery answers before claiming native.
+            if (target.Kind == UmdDeviceKind.ViperV4Pro)
+                _ = ReadBatteryViaActiveBackend();
+            _active = target;
+            _usingOpenMouseFallback = false;
+            return;
+        }
+        catch (Exception ex)
+        {
+            nativeErr = ex;
+            ClearNativeReaders();
+        }
+
+        try
+        {
+            ConnectOpenMouse(target);
+            _ = ReadBatteryViaActiveBackend();
+            _active = target;
+            _usingOpenMouseFallback = true;
+        }
+        catch (Exception omErr)
+        {
+            Disconnect();
+            throw new InvalidOperationException(
+                $"Native battery failed for {target.DisplayLabel}, OpenMouse fallback also failed. " +
+                $"{nativeErr?.Message} | {omErr.Message}",
+                omErr);
+        }
+    }
+
+    private void ConnectNative(UmdDeviceInfo target)
+    {
         switch (target.Kind)
         {
             case UmdDeviceKind.KingUltra:
                 _king = new KingUltraBatteryReader();
                 _king.Connect(target.ProductId);
-                _active = target;
                 break;
             case UmdDeviceKind.BlitzUltimate:
                 _blitz = new BlitzUltimateBatteryReader();
                 _blitz.Connect(target.ProductId);
-                _active = target;
                 break;
             case UmdDeviceKind.FenrirMax:
                 _fenrir = new GwolvesBatteryReader();
                 _fenrir.Connect(target.ProductId);
-                _active = target;
                 break;
             case UmdDeviceKind.Superlight:
                 _superlight = new SuperlightBatteryReader();
                 _superlight.Connect(target.ProductId);
-                _active = target;
                 break;
             case UmdDeviceKind.ProX3Superstrike:
                 _proX3 = new ProX3BatteryReader();
                 _proX3.Connect(target.ProductId);
-                _active = target;
                 break;
             case UmdDeviceKind.ViperV4Pro:
                 _viper = new ViperV4ProBatteryReader();
                 _viper.Connect(target.ProductId);
-                _active = target;
-                break;
-            case UmdDeviceKind.OpenMouseCommunity:
-                _openMouse = new OpenMouseCommunityBatteryReader();
-                _openMouse.Connect(target.VendorId, target.ProductId);
-                _active = target;
                 break;
             default:
-                throw new InvalidOperationException($"Unknown device kind: {target.Kind}");
+                throw new InvalidOperationException($"Unknown native device kind: {target.Kind}");
         }
+    }
+
+    private void ConnectOpenMouse(UmdDeviceInfo target)
+    {
+        _openMouse = new OpenMouseCommunityBatteryReader();
+        _openMouse.Connect(target.VendorId, target.ProductId);
     }
 
     public BatteryReading ReadBattery()
     {
+        if (_active is null)
+            throw new InvalidOperationException("Device not connected.");
+
+        try
+        {
+            return ReadBatteryViaActiveBackend();
+        }
+        catch (Exception nativeReadErr) when (!_usingOpenMouseFallback
+            && _active.Kind != UmdDeviceKind.OpenMouseCommunity)
+        {
+            // Mid-session: native open worked earlier but battery stopped answering —
+            // one-shot OpenMouse fallback for the same VID:PID.
+            var target = _active;
+            ClearNativeReaders();
+            try
+            {
+                ConnectOpenMouse(target);
+                _usingOpenMouseFallback = true;
+                return ReadBatteryViaActiveBackend();
+            }
+            catch (Exception omErr)
+            {
+                Disconnect();
+                throw new InvalidOperationException(
+                    $"Battery read failed (native then OpenMouse). {nativeReadErr.Message} | {omErr.Message}",
+                    omErr);
+            }
+        }
+    }
+
+    private BatteryReading ReadBatteryViaActiveBackend()
+    {
+        if (_usingOpenMouseFallback && _openMouse is not null)
+            return _openMouse.ReadBattery();
+
         return _active?.Kind switch
         {
             UmdDeviceKind.KingUltra when _king is not null => _king.ReadBattery(),
@@ -161,7 +257,7 @@ internal sealed class UmdBatteryReader : IDisposable
         };
     }
 
-    public void Disconnect()
+    private void ClearNativeReaders()
     {
         _king?.Dispose();
         _king = null;
@@ -175,9 +271,15 @@ internal sealed class UmdBatteryReader : IDisposable
         _proX3 = null;
         _viper?.Dispose();
         _viper = null;
+    }
+
+    public void Disconnect()
+    {
+        ClearNativeReaders();
         _openMouse?.Dispose();
         _openMouse = null;
         _active = null;
+        _usingOpenMouseFallback = false;
     }
 
     public void Dispose() => Disconnect();
