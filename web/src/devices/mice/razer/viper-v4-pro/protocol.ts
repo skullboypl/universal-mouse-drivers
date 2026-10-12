@@ -263,7 +263,7 @@ export function encodeButtonAssignment(
   const mode = opts?.hypershift
     ? VIPER_V4_BTN_MODE.hypershift
     : VIPER_V4_BTN_MODE.normal
-  let fnId = VIPER_V4_FN.Off
+  let fnId: number = VIPER_V4_FN.Off
   let fnData = new Uint8Array(0)
   switch (assignment.kind) {
     case 'off':

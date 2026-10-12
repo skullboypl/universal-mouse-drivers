@@ -419,7 +419,7 @@ export class ViperV4ProDriver implements DeviceDriver {
       args,
       tid,
     )
-    await this.device.sendFeatureReport(VIPER_V4_REPORT_ID, request)
+    await this.device.sendFeatureReport(VIPER_V4_REPORT_ID, request as BufferSource)
     await sleep(POST_SEND_DELAY_MS)
     for (let attempt = 0; attempt < RESPONSE_ATTEMPTS; attempt += 1) {
       const view = await this.device.receiveFeatureReport(VIPER_V4_REPORT_ID)
@@ -546,7 +546,7 @@ export class ViperV4ProDriver implements DeviceDriver {
       this.lastVerifyNote = `Buttons flushed (${ids.length}) · ${
         this.viperExtras.hypershift ? 'Hypershift' : 'Standard'
       }`
-      this.setPhase('verified')
+      this.setPhase('ok')
     } catch (err) {
       this.lastWriteOk = false
       this.lastWriteError = err instanceof Error ? err.message : String(err)
